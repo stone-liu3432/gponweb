@@ -8,7 +8,7 @@ Mock.setup({
     timeout: "200-600"
 });
 
-// 自定义指令，调用"@STATUS"
+// 自定义指令，调用"@STATUS" 有参数时，直接 "@RANGE(min,max)"
 Random.extend({
     status(date) {
         const _status = [0, 1];
@@ -19,6 +19,13 @@ Random.extend({
             code: 1,
             message: "success"
         };
+    },
+    range(start, end) {
+        const data = [];
+        for (; start < end; start++) {
+            data.push(start);
+        }
+        return this.pick(data);
     }
 });
 
