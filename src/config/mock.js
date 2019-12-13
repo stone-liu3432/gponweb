@@ -1,3 +1,4 @@
+"use strict";
 /**
  * mock.js入口文件
  * 所有的mock数据由此引入
@@ -13,3 +14,5 @@ Mock.mock("/system_lang", "get", {
 
 import "@/mock/page/login";
 import "@/mock/page/main";
+import "@/mock/page/header";
+import "@/mock/page/status";
