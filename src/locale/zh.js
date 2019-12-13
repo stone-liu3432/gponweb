@@ -252,9 +252,9 @@ var zh = {
     login_success: "登录成功,欢迎使用",
     login_user: "登录",
     current_user_list: "当前已有用户列表",
-    password_length_fail: "密码限定长度为5-16位,且不能使用空格 / \\ ' \"",
+    password_length_fail: "密码限定长度为4-64位",
     username_length_fail:
-        "请输入符合规范的4-16位用户名，不能输入中文、空格和特殊字符",
+        "请输入符合规范的4-32位用户名，不能输入中文、空格和特殊字符",
     pwd_not_match: "两次输入的密码不一致",
     current_pwd: "当前密码",
     new_pwd: "新密码",
@@ -263,7 +263,7 @@ var zh = {
     user_reenter: "最大登录次数",
     modify_success: "修改成功，请使用新密码重新登录",
     login_out: "成功退出登陆",
-    login_page_login_hit: "请登录以管理EPON OLT",
+    login_page_login_hit: "请登录以管理OLT",
     login_timeout: "登录超时，请重新登录",
     illegal_login_info: "非法登录信息",
     logout: "退出登录",
@@ -765,7 +765,8 @@ var zh = {
     refreshOrReset: "刷新/复位",
     saveAsImage: "保存为图片",
     p2p_flag: "P2P状态",
-    rogue_mode: "流氓ONU检测"
+    rogue_mode: "流氓ONU检测",
+    click_enter: "点击进入"
 };
 
 export default zh;
