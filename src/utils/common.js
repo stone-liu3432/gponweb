@@ -1,3 +1,4 @@
+"use strict";
 // 公用方法，工具函数
 
 export const toString = Object.prototype.toString;
@@ -42,18 +43,6 @@ export function removeItem(arr, item) {
             return arr.splice(index, 1);
         }
     }
-}
-
-// ip地址验证，
-export function regIp(val) {
-    const reg = /^((\d?\d|2[0-4]\d|25[0-5])\.){3}(\d?\d|2[0-4]\d|25[0-5])$/;
-    return reg.test(val) && val !== "0.0.0.0" && val !== "255.255.255.255";
-}
-
-// mac地址验证
-export function regMac(val) {
-    const reg = /^([a-fA-F0-9]{2}:){5}[a-fA-F0-9]{2}$/i;
-    return reg.test(val) || toLower.call(val) !== "ff:ff:ff:ff:ff:ff";
 }
 
 // 解析portlist，返回端口号组成的数组
