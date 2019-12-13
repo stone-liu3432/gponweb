@@ -1,12 +1,38 @@
+"use strict";
 import Vue from "vue";
 import VueRouter from "vue-router";
+import routes from "./route";
 
 Vue.use(VueRouter);
 
-const routes = [];
-
 const router = new VueRouter({
-  routes
+    routes
 });
+
+router.beforeEach((to, from, next) => {
+    if (to.path === from.path) {
+        return;
+    }
+    if (to.meta.requireAuth) {
+        if (process.env.NODE_ENV === "development") {
+            next();
+        } else {
+            if (sessionStorage.getItem("x-token")) {
+                next();
+            } else {
+                sessionStorage.removeItem("user");
+                next({ path: "/login" });
+            }
+        }
+    } else {
+        if (!sessionStorage.getItem("x-token")) {
+            next();
+        } else {
+            next("/main");
+        }
+    }
+});
+
+router.afterEach((to, from) => {});
 
 export default router;
