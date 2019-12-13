@@ -1,5 +1,9 @@
 const state = {
-    lang: "en"
+    lang: "en",
+    system: {},
+    pon: {},
+    port: {},
+    portName: {}
 };
 
 export default state;
