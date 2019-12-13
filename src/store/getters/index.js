@@ -1,3 +1,3 @@
-import getters from './getters';
+import getters from "./getters";
 
 export default getters;
