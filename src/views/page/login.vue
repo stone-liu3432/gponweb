@@ -144,6 +144,7 @@ export default {
 
 <style lang="less" scoped>
 .login-form {
+    border: 1px solid #ddd;
     h3 {
         text-align: center;
         & + div {
