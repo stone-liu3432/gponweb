@@ -10,9 +10,6 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    if (to.path === from.path) {
-        return;
-    }
     if (to.meta.requireAuth) {
         if (process.env.NODE_ENV === "development") {
             next();
