@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <el-container>
         <el-header style="border-bottom: 1px solid #E6E6E6;" height="70px">
             <page-header :nav-data="nav"></page-header>
         </el-header>
         <el-main>
             <router-view></router-view>
         </el-main>
-    </div>
+    </el-container>
 </template>
 
 <script>
