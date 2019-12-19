@@ -791,7 +791,10 @@ var en = {
     saveAsImage: "Save As Image",
     p2p_flag: "P2P Status",
     rogue_mode: "Rogue ONU",
-    click_enter: "Click To Enter"
+    click_enter: "Click To Enter",
+    more_features: "More features",
+    auth: "Authenticate",
+    unAuth: "Unauthenticated"
 };
 
 export default en;

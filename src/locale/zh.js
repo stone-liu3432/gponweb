@@ -766,7 +766,10 @@ var zh = {
     saveAsImage: "保存为图片",
     p2p_flag: "P2P状态",
     rogue_mode: "流氓ONU检测",
-    click_enter: "点击进入"
+    click_enter: "点击进入",
+    more_features: "更多功能",
+    auth: "认证",
+    unAuth: "解除认证"
 };
 
 export default zh;
