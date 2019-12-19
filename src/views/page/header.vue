@@ -113,8 +113,13 @@ export default {
     },
     watch: {
         navData() {
-            if (this.navData[0]) {
-                this.activeIndex = this.navData[0].name;
+            const nav = sessionStorage.getItem("nav");
+            if (nav) {
+                this.activeIndex = nav;
+            } else {
+                if (this.navData[0]) {
+                    this.activeIndex = this.navData[0].name;
+                }
             }
         }
     }
