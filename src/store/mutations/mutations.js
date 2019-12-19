@@ -14,6 +14,12 @@ const mutations = {
     },
     updatePortNames(state, data) {
         state.portName = data;
+    },
+    updateOnuResource(state, data) {
+        state.onuResource = data;
+    },
+    updateOnulist(state, data) {
+        state.onulist = data;
     }
 };
 
