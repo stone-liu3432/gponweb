@@ -4,7 +4,8 @@ import {
     isPlainObject,
     isArray,
     isDef,
-    isUndef
+    isUndef,
+    parsePort
 } from "@/utils/common";
 
 // portName生成，根据端口号和端口数量生成显示在界面上的 name
@@ -94,6 +95,35 @@ const actions = {
                     }
                 } else {
                     commit("updatePort", []);
+                }
+            })
+            .catch(err => {});
+    },
+    getOnuResource({ commit }, port_id) {
+        commit("updateOnuResource", []);
+        axios
+            .get("/onu_allow_list", { params: { form: "resource", port_id } })
+            .then(res => {
+                if (res.data.code === 1) {
+                    if (isPlainObject(res.data.data)) {
+                        commit(
+                            "updateOnuResource",
+                            parsePort(res.data.data.resource)
+                        );
+                    }
+                }
+            })
+            .catch(err => {});
+    },
+    getOnuList({ commit }, port_id) {
+        commit("updateOnulist", []);
+        axios
+            .get("/onu_allow_list", { params: { port_id } })
+            .then(res => {
+                if (res.data.code === 1) {
+                    if (isArray(res.data.data)) {
+                        commit("updateOnulist", res.data.data);
+                    }
                 }
             })
             .catch(err => {});
