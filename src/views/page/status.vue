@@ -39,13 +39,18 @@ export default {
         ...mapState(["system", "pon", "port"]),
         ...mapGetters(["getPortName"])
     },
-    created() {
-        this.getSystemInfo();
-        this.getPort();
-        this.getPon();
+    mounted() {
+        // 定时刷新数据
+        const interval = setInterval(_ => {
+            this.getPon();
+            this.getPort();
+        }, 5000);
+        this.$once("hook:beforeDestroy", _ => {
+            clearInterval(interval);
+        });
     },
     methods: {
-        ...mapActions(["getSystemInfo", "getPon", "getPort"])
+        ...mapActions(["getPon", "getPort"])
     }
 };
 </script>
