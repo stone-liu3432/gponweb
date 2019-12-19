@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import pageComponents from "@/router/dynamicRouter";
 import { isDef, isArray } from "@/utils/common";
 const pageHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
@@ -38,12 +39,21 @@ export default {
                     });
                     this.$router.addRoutes(sub);
                     // 路由加载完成后，跳转默认路由
-                    this.$router.push("/status");
+                    this.$nextTick(_ => {
+                        const nav = sessionStorage.getItem("nav");
+                        nav
+                            ? this.$router.push(`/${nav}`)
+                            : this.$router.push("/status");
+                    });
                 })
             )
             .catch(err => {});
+        this.getSystemInfo();
+        this.getPort();
+        this.getPon();
     },
     methods: {
+        ...mapActions(["getSystemInfo", "getPon", "getPort"]),
         getNav() {
             return this.$http.get("/board?info=nav");
         },
