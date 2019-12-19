@@ -16,3 +16,4 @@ import "@/mock/page/login";
 import "@/mock/page/main";
 import "@/mock/page/header";
 import "@/mock/page/status";
+import "@/mock/page/onuAllow";

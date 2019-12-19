@@ -6,6 +6,7 @@ import zhLocale from "element-ui/lib/locale/lang/zh-CN";
 import axios from "@/config/axios";
 import { isFunction, isPlainObject } from "@/utils/common";
 import store from "../store";
+import pageHeader from "@/views/common/pageHeader";
 
 const __DEV__ = process.env.NODE_ENV === "development";
 
@@ -13,6 +14,7 @@ if (__DEV__) {
     require("./mock.js");
 }
 
+// 覆盖element的部分方法，添加一些默认配置
 const overrideMethods = Vue => {
     const cfm = Vue.prototype.$confirm;
     const msg = Vue.prototype.$message;
@@ -46,6 +48,7 @@ const baseConfig = Vue => {
     Vue.config.productionTip = false;
 
     Vue.use(VueI18n);
+    Vue.use(pageHeader);
     const i18n = new VueI18n({
         locale: sessionStorage.getItem("lang") || "en",
         messages: {
