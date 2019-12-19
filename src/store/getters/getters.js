@@ -1,7 +1,11 @@
 import en from "@/locale/en";
 import zh from "@/locale/zh";
+import msg_en from "@/locale/validateMsg/en";
+import msg_zh from "@/locale/validateMsg/zh";
+import { isFunction } from "@/utils/common";
 
 const langMap = { zh, en };
+const msgMap = { en: msg_en, zh: msg_zh };
 
 const getters = {
     $lang: state => (...keys) => {
@@ -20,7 +24,11 @@ const getters = {
         }
     },
     getPortName: state => port_id =>
-        state.portName[port_id] ? state.portName[port_id].name : port_id
+        state.portName[port_id] ? state.portName[port_id].name : port_id,
+    validateMsg: state => (msg, ...args) =>
+        isFunction(msgMap[state.lang][msg])
+            ? msgMap[state.lang][msg].apply(null, args)
+            : ""
 };
 
 export default getters;
