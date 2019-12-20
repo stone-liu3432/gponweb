@@ -1,11 +1,13 @@
 const state = {
     lang: "en",
     system: {},
+    advMenu: [],
     pon: [],
     port: [],
     portName: {},
     onuResource: [],
-    onulist: []
+    onulist: [],
+    time: {}
 };
 
 export default state;
