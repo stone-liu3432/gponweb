@@ -1,0 +1,75 @@
+<script>
+"use strict";
+import { mapGetters, mapState } from "vuex";
+export default {
+    name: "adv-aside",
+    computed: {
+        ...mapState(["advMenu"]),
+        ...mapGetters(["$lang"])
+    },
+    data() {
+        return {
+            activedItem: "running_status",
+            openeds: []
+        };
+    },
+    methods: {
+        advSelected(key, path) {
+            sessionStorage.setItem("advMenu", key);
+            // 点击无子菜单的菜单项时，收起已打开的子菜单
+            if (path.length === 1) {
+                this.openeds = [key];
+            }
+        }
+    },
+    created() {
+        const nav = sessionStorage.getItem("nav"),
+            adv = sessionStorage.getItem("advMenu");
+        if (nav === "advanced_setting" && !!adv) {
+            this.activedItem = adv;
+            this.$router.push(`/${adv}`);
+        }
+    },
+    render(h) {
+        return (
+            <el-menu
+                default-active={this.activedItem}
+                router
+                unique-opened
+                onSelect={this.advSelected}
+                default-openeds={this.openeds}
+            >
+                {this.advMenu.map(item => {
+                    if (!item.children) {
+                        return (
+                            <el-menu-item index={item.name}>
+                                {this.$lang(item.name)}
+                            </el-menu-item>
+                        );
+                    } else {
+                        const sub = item.children;
+                        return (
+                            <el-submenu index={item.name}>
+                                <template slot="title">
+                                    {this.$lang(item.name) || item.name}
+                                </template>
+                                {sub.map(_item => {
+                                    return (
+                                        <el-menu-item index={_item.name}>
+                                            {this.$lang(_item.name) ||
+                                                _item.name}
+                                        </el-menu-item>
+                                    );
+                                })}
+                            </el-submenu>
+                        );
+                    }
+                })}
+            </el-menu>
+        );
+    }
+};
+</script>
+
+<style lang="less" scoped>
+</style>
