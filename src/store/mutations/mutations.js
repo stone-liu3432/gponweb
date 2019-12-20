@@ -6,6 +6,9 @@ const mutations = {
     updateSystem(state, data) {
         state.system = data;
     },
+    updateAdvMenu(state, data) {
+        state.advMenu = data;
+    },
     updatePon(state, data) {
         state.pon = data;
     },
@@ -20,6 +23,9 @@ const mutations = {
     },
     updateOnulist(state, data) {
         state.onulist = data;
+    },
+    updateTime(state, data) {
+        state.time = data;
     }
 };
 
