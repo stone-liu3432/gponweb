@@ -127,6 +127,19 @@ const actions = {
                 }
             })
             .catch(err => {});
+    },
+    getTime({ commit }) {
+        commit("updateTime", {});
+        axios
+            .get("/time?form=info")
+            .then(res => {
+                if (res.data.code === 1) {
+                    if (isPlainObject(res.data.data)) {
+                        commit("updateTime", res.data.data);
+                    }
+                }
+            })
+            .catch(err => {});
     }
 };
 
