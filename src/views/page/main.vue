@@ -1,7 +1,7 @@
 <template>
     <el-container>
         <el-header style="border-bottom: 1px solid #E6E6E6;" height="70px">
-            <page-header :nav-data="nav"></page-header>
+            <nav-header :nav-data="nav"></nav-header>
         </el-header>
         <el-main>
             <router-view></router-view>
@@ -10,13 +10,13 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 import pageComponents from "@/router/dynamicRouter";
 import { isDef, isArray } from "@/utils/common";
-const pageHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
+const navHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
 export default {
     name: "mainContent",
-    components: { pageHeader },
+    components: { navHeader },
     data() {
         return {
             nav: [],
@@ -30,6 +30,7 @@ export default {
                 this.$http.spread((navData, advData) => {
                     (this.nav = navData.data.data.menu),
                         (this.adv = advData.data.data.menu);
+                    this.updateAdvMenu(this.adv);
                     const routes = this.$router.options.routes;
                     const rts = this.cerateRoutes(this.nav, routes, {
                         root: "main"
@@ -54,6 +55,7 @@ export default {
     },
     methods: {
         ...mapActions(["getSystemInfo", "getPon", "getPort"]),
+        ...mapMutations(["updateAdvMenu"]),
         getNav() {
             return this.$http.get("/board?info=nav");
         },
