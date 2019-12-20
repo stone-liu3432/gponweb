@@ -14,6 +14,14 @@ const data = {
     advanced_setting: () =>
         import(
             /* webpackChunkName: "main-page" */ "@/views/page/advancedSetting"
+        ),
+    running_status: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/runningStatus"
+        ),
+    dev_mgmt: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/devMgmt"
         )
 };
 
