@@ -17,3 +17,6 @@ import "@/mock/page/main";
 import "@/mock/page/header";
 import "@/mock/page/status";
 import "@/mock/page/onuAllow";
+import "@/mock/content/system/runningStatus";
+import "@/mock/content/system/devMgmt";
+import "@/mock/content/system/diagonose";
