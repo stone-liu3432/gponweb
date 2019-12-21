@@ -794,7 +794,8 @@ var en = {
     click_enter: "Click To Enter",
     more_features: "More features",
     auth: "Authenticate",
-    unAuth: "Unauthenticated"
+    unAuth: "Unauthenticated",
+    confirm_download_file: "Confirm to download this file ?"
 };
 
 export default en;

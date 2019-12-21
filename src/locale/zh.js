@@ -769,7 +769,8 @@ var zh = {
     click_enter: "点击进入",
     more_features: "更多功能",
     auth: "认证",
-    unAuth: "解除认证"
+    unAuth: "解除认证",
+    confirm_download_file: "是否确认下载此文件?"
 };
 
 export default zh;
