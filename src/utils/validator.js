@@ -3,7 +3,7 @@ import { toLower } from "./common";
 
 // ip地址验证，
 export function regIp(val) {
-    const reg = /^((\d?\d|2[0-4]\d|25[0-5])\.){3}(\d?\d|2[0-4]\d|25[0-5])$/;
+    const reg = /^((1?\d?\d|2[0-4]\d|25[0-5])\.){3}(1?\d?\d|2[0-4]\d|25[0-5])$/;
     return reg.test(val) && val !== "0.0.0.0" && val !== "255.255.255.255";
 }
 
