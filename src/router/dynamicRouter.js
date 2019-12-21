@@ -22,6 +22,10 @@ const data = {
     dev_mgmt: () =>
         import(
             /* webpackChunkName: "system" */ "@/views/advSetting/system/devMgmt"
+        ),
+    diagonose: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/diagonose"
         )
 };
 
