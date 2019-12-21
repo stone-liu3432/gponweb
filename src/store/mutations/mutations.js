@@ -26,6 +26,9 @@ const mutations = {
     },
     updateTime(state, data) {
         state.time = data;
+    },
+    updateInterfaces(state, data) {
+        state.interfaces = data;
     }
 };
 

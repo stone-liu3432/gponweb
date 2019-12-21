@@ -7,7 +7,8 @@ const state = {
     portName: {},
     onuResource: [],
     onulist: [],
-    time: {}
+    time: {},
+    interfaces: []
 };
 
 export default state;

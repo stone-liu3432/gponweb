@@ -140,6 +140,35 @@ const actions = {
                 }
             })
             .catch(err => {});
+    },
+    getInterfaces({ commit }) {
+        commit("updateInterfaces", []);
+        let interfaces = [];
+        axios
+            .get("/system?form=outbound")
+            .then(res => {
+                if (res.data.code === 1) {
+                    if (isPlainObject(res.data.data)) {
+                        interfaces.push(res.data.data);
+                    }
+                    axios
+                        .get("/system?form=inbound")
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                if (isArray(res.data.data)) {
+                                    interfaces = interfaces.concat(
+                                        res.data.data
+                                    );
+                                }
+                            }
+                            commit("updateInterfaces", interfaces);
+                        })
+                        .catch(err => {});
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 };
 
