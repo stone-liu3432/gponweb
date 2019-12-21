@@ -1,7 +1,7 @@
 <template>
     <div class="page-header">
         <h2>
-            <slot name="title"></slot>
+            <slot name="title">{{ title }}</slot>
         </h2>
         <el-form inline :model="portData" v-if="type !== 'none'">
             <el-form-item :label="$lang('port_id')">
@@ -70,6 +70,9 @@ export default {
         onuid: {
             type: Number,
             default: 0
+        },
+        title: {
+            type: String
         }
     },
     data() {
