@@ -10,13 +10,18 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
 import pageComponents from "@/router/dynamicRouter";
 import { isDef, isArray } from "@/utils/common";
+import provider from "@/utils/provider";
 const navHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
 export default {
     name: "mainContent",
+    computed: {
+        ...mapGetters(["validateMsg"])
+    },
     components: { navHeader },
+    mixins: [provider],
     data() {
         return {
             nav: [],

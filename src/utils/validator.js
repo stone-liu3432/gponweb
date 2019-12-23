@@ -30,3 +30,14 @@ export function regDesc(val) {
     const reg = /^.{0,128}$/;
     return reg.test(val);
 }
+
+// 数字范围
+export function regRange(val, min, max) {
+    return val >= min && val <= max && !isNaN(val);
+}
+
+// 字符长度
+export function regLength(val, min, max) {
+    const reg = new RegExp(`^.{${min},${max}}$`);
+    return reg.test(val);
+}
