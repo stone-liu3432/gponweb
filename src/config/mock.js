@@ -20,3 +20,4 @@ import "@/mock/page/onuAllow";
 import "@/mock/content/system/runningStatus";
 import "@/mock/content/system/devMgmt";
 import "@/mock/content/system/diagonose";
+import "@/mock/content/system/remoteMgmt";
