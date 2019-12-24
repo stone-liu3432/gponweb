@@ -26,6 +26,22 @@ const data = {
     diagonose: () =>
         import(
             /* webpackChunkName: "system" */ "@/views/advSetting/system/diagonose"
+        ),
+    remote_mgmt: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/remoteMgmt"
+        ),
+    upgrade: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/upgrade"
+        ),
+    time: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/time"
+        ),
+    service: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/service"
         )
 };
 
