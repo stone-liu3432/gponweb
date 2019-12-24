@@ -42,6 +42,10 @@ const data = {
     service: () =>
         import(
             /* webpackChunkName: "system" */ "@/views/advSetting/system/service"
+        ),
+    alarm: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/alarm"
         )
 };
 
