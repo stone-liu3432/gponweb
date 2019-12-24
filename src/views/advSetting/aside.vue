@@ -13,9 +13,11 @@ export default {
             openeds: []
         };
     },
+    inject: ["updateAdvAsideScrollbar"],
     methods: {
         advSelected(key, path) {
             sessionStorage.setItem("advMenu", key);
+            this.updateAdvAsideScrollbar();
             // 点击无子菜单的菜单项时，收起已打开的子菜单
             if (path.length === 1) {
                 this.openeds = [key];
@@ -38,6 +40,7 @@ export default {
                 unique-opened
                 onSelect={this.advSelected}
                 default-openeds={this.openeds}
+                style="padding: 20px 0;"
             >
                 {this.advMenu.map(item => {
                     if (!item.children) {

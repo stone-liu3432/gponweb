@@ -51,6 +51,12 @@ export default {
             )[0];
         }
     },
+    inject: ["updateAdvMainScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     data() {
         return {
             dialogVisible: false,

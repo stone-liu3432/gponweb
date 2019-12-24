@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin: 20px;">
         <h3>PON</h3>
         <el-row :gutter="40">
             <template v-for="item in pon">
@@ -35,9 +35,15 @@ export default {
     data() {
         return {};
     },
+    inject: ["updateNavScrollbar"],
     computed: {
         ...mapState(["system", "pon", "port"]),
         ...mapGetters(["getPortName"])
+    },
+    updated() {
+        this.$nextTick(_ => {
+            this.updateNavScrollbar();
+        });
     },
     mounted() {
         // 定时刷新数据
@@ -47,6 +53,9 @@ export default {
         }, 5000);
         this.$once("hook:beforeDestroy", _ => {
             clearInterval(interval);
+        });
+        this.$nextTick(_ => {
+            this.updateNavScrollbar();
         });
     },
     methods: {

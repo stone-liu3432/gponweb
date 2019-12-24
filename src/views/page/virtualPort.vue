@@ -1,5 +1,5 @@
 <template>
-    <div>virtual port</div>
+    <div style="margin: 20px;">virtual port</div>
 </template>
 
 <script>

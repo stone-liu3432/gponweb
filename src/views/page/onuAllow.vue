@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin: 20px;">
         <page-header @port-change="portChange" type="pon">
             <div slot="title">{{ $lang('onu_allow') }}</div>
         </page-header>
@@ -187,7 +187,13 @@ export default {
             dialogVisible: false
         };
     },
+    inject: ["updateNavScrollbar"],
     created() {},
+    updated() {
+        this.$nextTick(_ => {
+            this.updateNavScrollbar();
+        });
+    },
     methods: {
         ...mapActions(["getSystemInfo", "getPon", "getOnuList"]),
         portChange(port_id) {

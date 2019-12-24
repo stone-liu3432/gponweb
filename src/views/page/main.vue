@@ -3,9 +3,16 @@
         <el-header style="border-bottom: 1px solid #E6E6E6;" height="70px">
             <nav-header :nav-data="nav"></nav-header>
         </el-header>
-        <el-main>
-            <router-view></router-view>
-        </el-main>
+        <el-scrollbar
+            :native="false"
+            :noresize="true"
+            :viewStyle="{height: `${height}px`}"
+            ref="nav-scrollbar"
+        >
+            <el-main style="padding: 0;">
+                <router-view></router-view>
+            </el-main>
+        </el-scrollbar>
     </el-container>
 </template>
 
@@ -25,7 +32,8 @@ export default {
     data() {
         return {
             nav: [],
-            adv: []
+            adv: [],
+            height: 0
         };
     },
     created() {
@@ -58,6 +66,10 @@ export default {
         this.getPort();
         this.getPon();
     },
+    mounted() {
+        const height = document.documentElement.clientHeight;
+        this.height = height - 70;
+    },
     methods: {
         ...mapActions(["getSystemInfo", "getPon", "getPort"]),
         ...mapMutations(["updateAdvMenu"]),
@@ -81,7 +93,10 @@ export default {
                     const parent = this.findParent(routes, root)[0];
                     if (isDef(parent)) {
                         parent.children = menu.reduce((prev, item) => {
-                            if (item.children && isArray(item.children)) {
+                            if (
+                                isDef(item.children) &&
+                                isArray(item.children)
+                            ) {
                                 item.children.forEach(_item => {
                                     prev.push(this.createRoute(_item, 4));
                                 });
@@ -127,6 +142,9 @@ export default {
                 }
             });
             return result;
+        },
+        updateNavScrollbar() {
+            this.$refs["nav-scrollbar"].update();
         }
     }
 };
