@@ -27,6 +27,14 @@ export function isFunction(fn) {
     return typeof fn === "function";
 }
 
+export function isPromise(val) {
+    return (
+        isDef(val) &&
+        typeof val.then === "function" &&
+        typeof val.catch === "function"
+    );
+}
+
 export function isPlainObject(val) {
     return val !== null && toRawType(val) === "Object";
 }
