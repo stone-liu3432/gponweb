@@ -21,3 +21,7 @@ import "@/mock/content/system/runningStatus";
 import "@/mock/content/system/devMgmt";
 import "@/mock/content/system/diagonose";
 import "@/mock/content/system/remoteMgmt";
+import "@/mock/content/system/upgrade";
+import "@/mock/content/system/time";
+import "@/mock/content/system/service";
+import "@/mock/content/system/alarm";
