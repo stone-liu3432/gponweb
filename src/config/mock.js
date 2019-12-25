@@ -25,3 +25,4 @@ import "@/mock/content/system/upgrade";
 import "@/mock/content/system/time";
 import "@/mock/content/system/service";
 import "@/mock/content/system/alarm";
+import "@/mock/content/system/userMgmt";
