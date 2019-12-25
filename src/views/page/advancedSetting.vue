@@ -16,7 +16,7 @@
                 :noresize="true"
                 :viewStyle="{height: `${height}px`}"
                 ref="adv-main-scrollbar"
-                style="z-index: 9999;"
+                style="z-index: 10;"
             >
                 <adv-content></adv-content>
             </el-scrollbar>

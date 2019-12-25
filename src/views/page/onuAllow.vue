@@ -143,6 +143,7 @@
             :title="`${$lang('add')} ONU`"
             :visible.sync="dialogVisible"
             :before-close="beforeClose"
+            append-to-body
         >
             <add-onu-form ref="add-onu-form"></add-onu-form>
             <span slot="footer">

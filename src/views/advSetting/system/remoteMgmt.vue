@@ -16,7 +16,7 @@
         <template v-for="item in inbound">
             <remote-card :type="dialogType" :bound-data="item" @handle-config="setBound"></remote-card>
         </template>
-        <el-dialog :visible.sync="dialogVisible" :before-close="closeDialog">
+        <el-dialog :visible.sync="dialogVisible" :before-close="closeDialog" append-to-body>
             <template slot="title">{{ $lang(dialogType === 'add' ? 'add' : 'set') }}</template>
             <remote-form :type="dialogType" :form-data="formData" ref="remote-form"></remote-form>
             <span slot="footer">
