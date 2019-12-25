@@ -46,6 +46,10 @@ const data = {
     alarm: () =>
         import(
             /* webpackChunkName: "system" */ "@/views/advSetting/system/alarm"
+        ),
+    user_mgmt: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/userMgmt"
         )
 };
 
