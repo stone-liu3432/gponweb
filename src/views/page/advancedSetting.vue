@@ -14,6 +14,7 @@
             <el-scrollbar
                 :native="false"
                 :noresize="true"
+                wrapClass="backtop-target"
                 :viewStyle="{height: `${height}px`}"
                 ref="adv-main-scrollbar"
                 style="z-index: 10;"
@@ -39,7 +40,9 @@ export default {
     provide() {
         return {
             updateAdvAsideScrollbar: this.updateAdvAsideScrollbar,
-            updateAdvMainScrollbar: this.updateAdvMainScrollbar
+            updateAdvMainScrollbar: this.updateAdvMainScrollbar,
+            // 有需要添加 backtop组件的 target
+            backTopTarget: ".backtop-target"
         };
     },
     mounted() {
