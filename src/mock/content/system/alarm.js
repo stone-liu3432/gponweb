@@ -13,3 +13,11 @@ Mock.mock("/alarm?form=info", "get", ({ url }) => {
         data
     };
 });
+
+Mock.mock("/alarm?form=download", "get", {
+    code: 1,
+    message: "success",
+    data: {
+        filename: "sdkfsafs.txt"
+    }
+});
