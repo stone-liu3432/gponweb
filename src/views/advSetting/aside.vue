@@ -32,6 +32,12 @@ export default {
             this.$router.push(`/${adv}`);
         }
     },
+    watch: {
+        $route() {
+            const path = this.$route.path;
+            this.activedItem = path.substr(1);
+        }
+    },
     render(h) {
         return (
             <el-menu
