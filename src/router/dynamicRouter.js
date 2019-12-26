@@ -50,6 +50,18 @@ const data = {
     user_mgmt: () =>
         import(
             /* webpackChunkName: "system" */ "@/views/advSetting/system/userMgmt"
+        ),
+    port_info: () =>
+        import(
+            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portInfo"
+        ),
+    perf_info: () =>
+        import(
+            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/perfInfo"
+        ),
+    port_cfg: () =>
+        import(
+            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portConfig"
         )
 };
 
