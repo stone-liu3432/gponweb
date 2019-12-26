@@ -348,7 +348,7 @@ var en = {
     if_sure: "Please confirm",
 
     flush_page_retry: "Please refresh and try it again...",
-    sw_port_cfg: "Switch port basic configuration",
+    sw_port_cfg: "Switch port configuration",
     no_more_data: "No more data...",
     no_onu_info: "No more ONU information...",
     add_to_deny: "Add to deny list",
