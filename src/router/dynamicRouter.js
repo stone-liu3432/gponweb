@@ -62,6 +62,10 @@ const data = {
     port_cfg: () =>
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portConfig"
+        ),
+    port_vlan: () =>
+        import(
+            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portVlan"
         )
 };
 
