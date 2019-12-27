@@ -261,7 +261,11 @@ export default {
                     const { data: post_param, url } = result;
                     console.log("post params -> ", post_param, ",url -> ", url);
                     this.postData(url, post_param)
-                        .then(_ => {})
+                        .then(_ => {
+                            type === "sw_port_cfg" && this.getBasic();
+                            type === "stormctrl" && this.getStorm();
+                            type === "mirror" && this.getMirror();
+                        })
                         .catch(_ => {});
                 }
                 this.closeDialog();
