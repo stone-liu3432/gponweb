@@ -66,6 +66,10 @@ const data = {
     port_vlan: () =>
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portVlan"
+        ),
+    loop_detect: () =>
+        import(
+            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/loopDetect"
         )
 };
 
