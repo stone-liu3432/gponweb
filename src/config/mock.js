@@ -29,3 +29,4 @@ import "@/mock/content/system/userMgmt";
 import "@/mock/content/switch/perfInfo";
 import "@/mock/content/switch/portConfig";
 import "@/mock/content/switch/portVlan";
+import "@/mock/content/switch/loopDetect";
