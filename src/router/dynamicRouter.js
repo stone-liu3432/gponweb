@@ -74,6 +74,10 @@ const data = {
     port_isolation: () =>
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portIsolation"
+        ),
+    rstp: () =>
+        import(
+            /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/rstp"
         )
 };
 
