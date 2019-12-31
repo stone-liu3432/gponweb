@@ -31,3 +31,4 @@ import "@/mock/content/switch/portConfig";
 import "@/mock/content/switch/portVlan";
 import "@/mock/content/switch/loopDetect";
 import "@/mock/content/switch/portIsolation";
+import "@/mock/content/protocol/rstp";
