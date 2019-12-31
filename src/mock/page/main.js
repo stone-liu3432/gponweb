@@ -51,7 +51,8 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "perf_info" },
                     { name: "port_cfg" },
                     { name: "port_vlan" },
-                    { name: "loop_detect" }
+                    { name: "loop_detect" },
+                    { name: "port_isolation" }
                 ]
             },
             {
