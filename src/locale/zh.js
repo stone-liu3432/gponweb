@@ -770,7 +770,12 @@ var zh = {
     more_features: "更多功能",
     auth: "认证",
     unAuth: "解除认证",
-    confirm_download_file: "是否确认下载此文件?"
+    confirm_download_file: "是否确认下载此文件?",
+    port: "端口",
+    pon_isolate_portlist: "PON隔离端口成员",
+    uplink_isolate_portlist: "上联隔离端口成员",
+    uplink: "上联",
+    sn: "SN"
 };
 
 export default zh;

@@ -795,7 +795,12 @@ var en = {
     more_features: "More features",
     auth: "Authenticate",
     unAuth: "Unauthenticated",
-    confirm_download_file: "Confirm to download this file ?"
+    confirm_download_file: "Confirm to download this file ?",
+    port: " Port",
+    pon_isolate_portlist: "PON Isolate Port Member",
+    uplink_isolate_portlist: "Uplink Isolate Port Member",
+    uplink: "Uplink",
+    sn: "SN"
 };
 
 export default en;
