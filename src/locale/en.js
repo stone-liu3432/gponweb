@@ -800,7 +800,8 @@ var en = {
     pon_isolate_portlist: "PON Isolate Port Member",
     uplink_isolate_portlist: "Uplink Isolate Port Member",
     uplink: "Uplink",
-    sn: "SN"
+    sn: "SN",
+    no_allow_special: "Not allowed to enter special characters"
 };
 
 export default en;

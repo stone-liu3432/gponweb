@@ -775,7 +775,8 @@ var zh = {
     pon_isolate_portlist: "PON隔离端口成员",
     uplink_isolate_portlist: "上联隔离端口成员",
     uplink: "上联",
-    sn: "SN"
+    sn: "SN",
+    no_allow_special: "不允许输入特殊字符"
 };
 
 export default zh;
