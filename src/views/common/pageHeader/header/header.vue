@@ -1,5 +1,5 @@
 <template>
-    <div class="page-header">
+    <div class="page-header" :style="{ margin: type === 'none' ? '20px 0' : '' }">
         <h2>
             <slot name="title">{{ title }}</slot>
         </h2>
