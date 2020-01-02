@@ -54,7 +54,7 @@ export default {
         ...mapState(["interfaces"])
     },
     inject: ["updateAdvMainScrollbar"],
-    updated() {
+    mounted() {
         this.$nextTick(_ => {
             this.updateAdvMainScrollbar();
         });
