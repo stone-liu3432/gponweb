@@ -94,6 +94,12 @@ export default {
             loading: null
         };
     },
+    inject: ["updateAdvMainScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     computed: {
         ...mapGetters(["$lang"])
     },

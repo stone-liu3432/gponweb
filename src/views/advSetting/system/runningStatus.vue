@@ -103,6 +103,12 @@ export default {
             );
         }
     },
+    inject: ["updateAdvMainScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     data() {
         return {
             usage: {},

@@ -93,6 +93,12 @@ export default {
             }
         };
     },
+    inject: ["updateAdvMainScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     created() {
         this.getTime();
         this.getData();

@@ -53,6 +53,12 @@ export default {
         ...mapGetters(["$lang", "validateMsg"]),
         ...mapState(["interfaces"])
     },
+    inject: ["updateAdvMainScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     data() {
         return {
             result: "The device is ready!",

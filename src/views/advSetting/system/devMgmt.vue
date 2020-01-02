@@ -120,7 +120,12 @@ export default {
             fileList: []
         };
     },
-    created() {},
+    inject: ["updateAdvMainScrollbar"],
+    mounted() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     methods: {
         fileChange(file, list) {
             this.configFile = file.raw;

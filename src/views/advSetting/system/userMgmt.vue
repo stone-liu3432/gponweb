@@ -71,6 +71,12 @@ export default {
             dialogType: ""
         };
     },
+    inject: ["updateAdvMainScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     created() {
         this.getData();
     },
