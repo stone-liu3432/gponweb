@@ -95,7 +95,7 @@ export default {
         };
     },
     inject: ["updateAdvMainScrollbar"],
-    updated() {
+    mounted() {
         this.$nextTick(_ => {
             this.updateAdvMainScrollbar();
         });
