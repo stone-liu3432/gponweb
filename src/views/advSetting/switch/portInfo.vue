@@ -45,7 +45,11 @@
             <el-table-column :label="$lang('pvid')" prop="pvid"></el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="jump(scope.row.port_id)">{{ $lang('config') }}</el-button>
+                    <el-button
+                        type="text"
+                        style="padding: 3px 0;"
+                        @click="jump(scope.row.port_id)"
+                    >{{ $lang('config') }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -65,6 +69,12 @@ export default {
     },
     created() {
         this.getPort();
+    },
+    inject: ["updateAdvMainScrollbar"],
+    mounted() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
     },
     methods: {
         ...mapActions(["getPort"]),

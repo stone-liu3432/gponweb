@@ -109,6 +109,12 @@ export default {
             dialogVisible: false
         };
     },
+    inject: ["updateAdvMainScrollbar"],
+    mounted() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     created() {},
     methods: {
         ...mapActions(["getPort"]),

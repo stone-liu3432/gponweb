@@ -83,6 +83,12 @@ export default {
             devAction: ""
         };
     },
+    inject: ["updateAdvMainScrollbar"],
+    mounted() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     created() {
         this.getData();
     },

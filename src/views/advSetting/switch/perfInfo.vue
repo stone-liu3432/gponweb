@@ -22,10 +22,12 @@
                     <el-button
                         type="text"
                         @click="showDetail(scope.row.port_id)"
+                        style="padding: 3px 0;"
                     >{{ $lang('detail') }}</el-button>
                     <el-button
                         type="text"
                         @click="clearPerf(scope.row.port_id)"
+                        style="padding: 3px 0;"
                     >{{ $lang('clear') }}</el-button>
                 </template>
             </el-table-column>
@@ -56,6 +58,12 @@ export default {
     },
     created() {
         this.getPerf();
+    },
+    inject: ["updateAdvMainScrollbar"],
+    mounted() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
     },
     methods: {
         getPerf() {
