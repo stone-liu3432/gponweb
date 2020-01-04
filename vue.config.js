@@ -1,8 +1,14 @@
 "use strict";
 const path = require("path");
+const CallbackAfterBuildDoneWebpackPlugins = require("./src/config/webpackConfig");
 
 module.exports = {
     productionSourceMap: false,
+    configureWebpack: config => {
+        if (process.env.NODE_ENV === "production") {
+            config.plugins.push(new CallbackAfterBuildDoneWebpackPlugins());
+        }
+    },
     pluginOptions: {
         "style-resources-loader": {
             preProcessor: "less",
