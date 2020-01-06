@@ -17,7 +17,10 @@
                 </el-select>
             </el-form-item>
             <el-form-item :label="$lang('auto_neg')" prop="auto_neg">
-                <el-select v-model.number="formData.auto_neg">
+                <el-select
+                    v-model.number="formData.auto_neg"
+                    :disabled="disabled('auto_neg', data.port_id)"
+                >
                     <el-option :label="$lang('disable')" :value="0"></el-option>
                     <el-option :label="$lang('enable')" :value="1"></el-option>
                 </el-select>
@@ -277,7 +280,7 @@ export default {
         },
         disabled(key, port_id) {
             const { ponports, geports } = this.system;
-            const keys = ["admin_status", "duplex", "speed"];
+            const keys = ["admin_status", "duplex", "speed", "auto_neg"];
             if (keys.includes(key) && port_id <= ponports) {
                 return true;
             }
