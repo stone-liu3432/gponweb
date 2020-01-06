@@ -1,6 +1,11 @@
 <template>
     <div>
-        <page-header :title="$lang('port_cfg')" type="port" @port-change="portChange"></page-header>
+        <page-header
+            :title="$lang('port_cfg')"
+            type="port"
+            :portid="port_id"
+            @port-change="portChange"
+        ></page-header>
         <el-row :gutter="30">
             <el-col :span="8">
                 <el-card shadow="never">
@@ -115,7 +120,12 @@ export default {
             this.updateAdvMainScrollbar();
         });
     },
-    created() {},
+    created() {
+        const portid = this.$route.query.port_id;
+        if (portid) {
+            this.port_id = portid >>> 0;
+        }
+    },
     methods: {
         ...mapActions(["getPort"]),
         portChange(port_id) {
