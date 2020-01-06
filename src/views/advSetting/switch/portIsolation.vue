@@ -56,7 +56,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isDef, parsePort } from "@/utils/common";
+import { isDef, parseStringAsList } from "@/utils/common";
 import portIsolationForm from "./portIsolation/form";
 import postData from "@/mixin/postData";
 export default {
@@ -66,10 +66,10 @@ export default {
     computed: {
         ...mapGetters(["$lang", "getPortName"]),
         ponlist() {
-            return parsePort(this.portIsolate.pon_isolate_portlist);
+            return parseStringAsList(this.portIsolate.pon_isolate_portlist);
         },
         gelist() {
-            return parsePort(this.portIsolate.uplink_isolate_portlist);
+            return parseStringAsList(this.portIsolate.uplink_isolate_portlist);
         },
         list() {
             return this.devType === "pon" ? this.ponlist : this.gelist;
