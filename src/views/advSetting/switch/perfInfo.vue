@@ -8,7 +8,9 @@
             :header-cell-style="{ 'text-align': 'center' }"
             :cell-style="{ 'text-align': 'center' }"
         >
-            <el-table-column :label="$lang('port_id')" prop="port_id"></el-table-column>
+            <el-table-column :label="$lang('port_id')">
+                <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+            </el-table-column>
             <el-table-column :label="$lang('rx_octets')" prop="rx_octets"></el-table-column>
             <el-table-column :label="$lang('rx_frame')" prop="rx_frame"></el-table-column>
             <el-table-column :label="$lang('rx_discard_frame')" prop="rx_discard_frame"></el-table-column>
@@ -47,7 +49,7 @@ export default {
     name: "perfInfo",
     components: { perfDetail },
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang", "getPortName"])
     },
     data() {
         return {
