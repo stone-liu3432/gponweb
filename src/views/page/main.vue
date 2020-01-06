@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapGetters } from "vuex";
+import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import pageComponents from "@/router/dynamicRouter";
-import { isDef, isArray } from "@/utils/common";
+import { isDef, isArray, isUndef } from "@/utils/common";
 import provider from "@/utils/provider";
 const navHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
 export default {
@@ -62,8 +62,41 @@ export default {
                 })
             )
             .catch(err => {});
-        this.getSystemInfo();
-        this.getPort();
+        Promise.all([this.getSystemInfo(), this.getPort()])
+            .then(([sys, port]) => {
+                const { ponports, geports, xgeports } = sys;
+                const portName = port.reduce((prev, item) => {
+                    const id = item.port_id;
+                    if (isUndef(prev[id])) {
+                        prev[id] = {};
+                    }
+                    const o = prev[id];
+                    let name =
+                        id <= ponports
+                            ? `PON${id < 10 ? "0" + id : id}`
+                            : id <= ponports + geports
+                            ? `GE${
+                                  id - ponports < 10
+                                      ? "0" + (id - ponports)
+                                      : id - ponports
+                              }`
+                            : xgeports
+                            ? `XGE${
+                                  id - ponports - geports < 10
+                                      ? "0" + (id - ponports - geports)
+                                      : id - ponports - geports
+                              }`
+                            : "";
+                    if (item.link_aggregation) {
+                        name += `(LAG${item.link_aggregation})`;
+                    }
+                    o.port_id = id;
+                    o.name = name;
+                    return prev;
+                }, {});
+                this.updatePortNames(portName);
+            })
+            .catch(err => {});
         this.getPon();
     },
     mounted() {
@@ -72,7 +105,7 @@ export default {
     },
     methods: {
         ...mapActions(["getSystemInfo", "getPon", "getPort"]),
-        ...mapMutations(["updateAdvMenu"]),
+        ...mapMutations(["updateAdvMenu", "updatePortNames"]),
         getNav() {
             return this.$http.get("/board?info=nav");
         },
