@@ -2,6 +2,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import routes from "./route";
+import store from "@/store";
+// 高级菜单的路径key
+const ADVANCED_MENU = "advanced_setting";
 
 Vue.use(VueRouter);
 
@@ -30,6 +33,13 @@ router.beforeEach((to, from, next) => {
     }
 });
 
-router.afterEach((to, from) => {});
+router.afterEach((to, from) => {
+    const path = to.path.slice(1),
+        nav = store.state.navMenu,
+        isNav = nav.some(item => item.name === path);
+    if (isNav && path !== ADVANCED_MENU) {
+        sessionStorage.removeItem("advMenu");
+    }
+});
 
 export default router;

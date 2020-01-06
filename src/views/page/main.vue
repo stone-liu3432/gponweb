@@ -37,30 +37,28 @@ export default {
         };
     },
     created() {
-        this.$http
-            .all([this.getNav(), this.getAdvMenu()])
-            .then(
-                this.$http.spread((navData, advData) => {
-                    (this.nav = navData.data.data.menu),
-                        (this.adv = advData.data.data.menu);
-                    this.updateAdvMenu(this.adv);
-                    const routes = this.$router.options.routes;
-                    const rts = this.cerateRoutes(this.nav, routes, {
-                        root: "main"
-                    });
-                    const sub = this.cerateRoutes(this.adv, rts, {
-                        root: "advanced_setting"
-                    });
-                    this.$router.addRoutes(sub);
-                    // 路由加载完成后，跳转默认路由
-                    this.$nextTick(_ => {
-                        const nav = sessionStorage.getItem("nav");
-                        nav
-                            ? this.$router.push(`/${nav}`)
-                            : this.$router.push("/status");
-                    });
-                })
-            )
+        Promise.all([this.getNav(), this.getAdvMenu()])
+            .then(([nav, adv]) => {
+                this.nav = nav;
+                this.adv = adv;
+                this.updateNavMenu(this.nav);
+                this.updateAdvMenu(this.adv);
+                const routes = this.$router.options.routes;
+                const rts = this.cerateRoutes(this.nav, routes, {
+                    root: "main"
+                });
+                const sub = this.cerateRoutes(this.adv, rts, {
+                    root: "advanced_setting"
+                });
+                this.$router.addRoutes(sub);
+                // 路由加载完成后，跳转默认路由
+                this.$nextTick(_ => {
+                    const nav = sessionStorage.getItem("nav");
+                    nav
+                        ? this.$router.push(`/${nav}`)
+                        : this.$router.push("/status");
+                });
+            })
             .catch(err => {});
         Promise.all([this.getSystemInfo(), this.getPort()])
             .then(([sys, port]) => {
@@ -105,12 +103,46 @@ export default {
     },
     methods: {
         ...mapActions(["getSystemInfo", "getPon", "getPort"]),
-        ...mapMutations(["updateAdvMenu", "updatePortNames"]),
+        ...mapMutations(["updateAdvMenu", "updatePortNames", "updateNavMenu"]),
         getNav() {
-            return this.$http.get("/board?info=nav");
+            return new Promise((resolve, reject) => {
+                this.$http
+                    .get("/board?info=nav")
+                    .then(res => {
+                        if (res.data.code === 1) {
+                            if (isDef(res.data.data)) {
+                                if (isArray(res.data.data.menu)) {
+                                    resolve(res.data.data.menu);
+                                }
+                            }
+                        } else {
+                            reject(res.data);
+                        }
+                    })
+                    .catch(err => {
+                        reject(err);
+                    });
+            });
         },
         getAdvMenu() {
-            return this.$http.get("/board?info=menu");
+            return new Promise((resolve, reject) => {
+                this.$http
+                    .get("/board?info=menu")
+                    .then(res => {
+                        if (res.data.code === 1) {
+                            if (isDef(res.data.data)) {
+                                if (isArray(res.data.data.menu)) {
+                                    resolve(res.data.data.menu);
+                                }
+                            }
+                        } else {
+                            reject(res.data);
+                        }
+                    })
+                    .catch(err => {
+                        reject(err);
+                    });
+            });
         },
         /**
          * @method 创建符合routes选项的数组

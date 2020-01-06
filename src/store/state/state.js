@@ -1,6 +1,7 @@
 const state = {
     lang: "en",
     system: {},
+    navMenu: [],
     advMenu: [],
     pon: [],
     port: [],

@@ -6,6 +6,9 @@ const mutations = {
     updateSystem(state, data) {
         state.system = data;
     },
+    updateNavMenu(state, data) {
+        state.navMenu = data;
+    },
     updateAdvMenu(state, data) {
         state.advMenu = data;
     },
