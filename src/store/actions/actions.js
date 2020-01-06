@@ -14,10 +14,12 @@ const actions = {
                         }
                     } else {
                         commit("updateSystem", {});
-                        reject({});
+                        reject(res.data);
                     }
                 })
-                .catch(err => {});
+                .catch(err => {
+                    reject(err);
+                });
         });
     },
     getPon({ commit }) {
@@ -46,10 +48,12 @@ const actions = {
                         }
                     } else {
                         commit("updatePort", []);
-                        reject([]);
+                        reject(res.data);
                     }
                 })
-                .catch(err => {});
+                .catch(err => {
+                    reject(err);
+                });
         });
     },
     getOnuResource({ commit }, port_id) {
