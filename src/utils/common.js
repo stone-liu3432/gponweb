@@ -53,9 +53,9 @@ export function removeItem(arr, item) {
     }
 }
 
-// 解析portlist，返回端口号组成的数组
+// 解析list字符串，返回数组
 //  e.x. "1,3,5-9" -> [1, 3, 5, 6, 7, 8, 9]
-export function parsePort(str) {
+export function parseStringAsList(str) {
     if (!str) return [];
     const result = [];
     const arr = str.split(",");
