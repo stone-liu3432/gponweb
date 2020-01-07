@@ -17,7 +17,6 @@ export default {
     inject: ["updateAdvAsideScrollbar"],
     methods: {
         advSelected(key, path) {
-            sessionStorage.setItem("advMenu", key);
             this.updateAdvAsideScrollbar();
             // 点击无子菜单的菜单项时，收起已打开的子菜单
             if (path.length === 1) {
