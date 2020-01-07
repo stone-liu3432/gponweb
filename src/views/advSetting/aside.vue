@@ -1,6 +1,7 @@
 <script>
 "use strict";
 import { mapGetters, mapState } from "vuex";
+import { ADVANCED_MENU } from "@/utils/commonData";
 export default {
     name: "adv-aside",
     computed: {
@@ -27,7 +28,7 @@ export default {
     created() {
         const nav = sessionStorage.getItem("nav"),
             adv = sessionStorage.getItem("advMenu");
-        if (nav === "advanced_setting" && !!adv) {
+        if (nav === ADVANCED_MENU && !!adv) {
             this.activedItem = adv;
             this.$router.push(`/${adv}`);
         }
