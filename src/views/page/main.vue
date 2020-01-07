@@ -20,6 +20,7 @@
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import pageComponents from "@/router/dynamicRouter";
 import { isDef, isArray, isUndef } from "@/utils/common";
+import { ADVANCED_MENU } from "@/utils/commonData";
 import provider from "@/utils/provider";
 const navHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
 export default {
@@ -48,7 +49,7 @@ export default {
                     root: "main"
                 });
                 const sub = this.cerateRoutes(this.adv, rts, {
-                    root: "advanced_setting"
+                    root: ADVANCED_MENU
                 });
                 this.$router.addRoutes(sub);
                 // 路由加载完成后，跳转默认路由
@@ -60,39 +61,9 @@ export default {
                 });
             })
             .catch(err => {});
-        Promise.all([this.getSystemInfo(), this.getPort()])
-            .then(([sys, port]) => {
-                const { ponports, geports, xgeports } = sys;
-                const portName = port.reduce((prev, item) => {
-                    const id = item.port_id;
-                    if (isUndef(prev[id])) {
-                        prev[id] = {};
-                    }
-                    const o = prev[id];
-                    let name =
-                        id <= ponports
-                            ? `PON${id < 10 ? "0" + id : id}`
-                            : id <= ponports + geports
-                            ? `GE${
-                                  id - ponports < 10
-                                      ? "0" + (id - ponports)
-                                      : id - ponports
-                              }`
-                            : xgeports
-                            ? `XGE${
-                                  id - ponports - geports < 10
-                                      ? "0" + (id - ponports - geports)
-                                      : id - ponports - geports
-                              }`
-                            : "";
-                    if (item.link_aggregation) {
-                        name += `(LAG${item.link_aggregation})`;
-                    }
-                    o.port_id = id;
-                    o.name = name;
-                    return prev;
-                }, {});
-                this.updatePortNames(portName);
+        this.getSystemInfo()
+            .then(_ => {
+                this.getPort();
             })
             .catch(err => {});
         this.getPon();
@@ -103,7 +74,7 @@ export default {
     },
     methods: {
         ...mapActions(["getSystemInfo", "getPon", "getPort"]),
-        ...mapMutations(["updateAdvMenu", "updatePortNames", "updateNavMenu"]),
+        ...mapMutations(["updateAdvMenu", "updatePortName", "updateNavMenu"]),
         getNav() {
             return new Promise((resolve, reject) => {
                 this.$http
