@@ -1,18 +1,24 @@
 <template>
     <div id="login">
+        <canvas ref="login-canvas"></canvas>
         <div class="login-form">
             <h3>{{ $lang('login_user') }}</h3>
             <div>{{ $lang('login_page_login_hit') }}</div>
             <el-form label-width="150px" :model="form" :rules="rules" ref="loginForm">
                 <el-form-item :label="$lang('user_name')" prop="uname" style="margin-bottom: 30px;">
-                    <el-input v-model="form.uname"></el-input>
+                    <el-input v-model="form.uname" style="width: 300px;"></el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('password')"
                     prop="password"
                     style="margin-bottom: 30px;"
                 >
-                    <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
+                    <el-input
+                        type="password"
+                        v-model="form.password"
+                        autocomplete="off"
+                        style="width: 300px;"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item :label="$lang('lang')">
                     <el-radio-group v-model="language">
@@ -36,6 +42,7 @@
 import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
 import { regName, regPwd } from "@/utils/validator";
 import md5 from "md5";
+import Stellar from "@/views/common/stellar";
 export default {
     name: "login",
     data() {
@@ -67,6 +74,16 @@ export default {
     },
     created() {
         this.language = this.lang;
+    },
+    mounted() {
+        document.body.style.overflow = "hidden";
+        const canv = new Stellar(this.$refs["login-canvas"]);
+        canv.run();
+
+        this.$once("hook:beforeDestroy", _ => {
+            document.body.style.overflow = "";
+            canv.destroy();
+        });
     },
     methods: {
         ...mapMutations(["updateLang"]),
@@ -143,6 +160,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+#login {
+    background-image: radial-gradient(
+        ellipse farthest-corner at center top,
+        #000d4d 0%,
+        #000105 100%
+    );
+    // IE9
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#000d4d, endColorstr=#000105);
+}
 .login-form {
     border: 1px solid #ddd;
     h3 {
