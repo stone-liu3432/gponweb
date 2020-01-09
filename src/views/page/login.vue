@@ -42,7 +42,7 @@
 import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
 import { regName, regPwd } from "@/utils/validator";
 import md5 from "md5";
-import Stellar from "@/views/common/stellar";
+import StellarMap from "@/views/common/stellar";
 export default {
     name: "login",
     data() {
@@ -77,7 +77,7 @@ export default {
     },
     mounted() {
         document.body.style.overflow = "hidden";
-        const canv = new Stellar(this.$refs["login-canvas"]);
+        const canv = new StellarMap(this.$refs["login-canvas"]);
         canv.run();
 
         this.$once("hook:beforeDestroy", _ => {
