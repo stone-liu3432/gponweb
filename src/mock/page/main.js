@@ -91,6 +91,7 @@ Mock.mock("/board?info=nav", "get", {
         menu: [
             { name: "status" },
             { name: "onu_allow" },
+            { name: "template_mgmt" },
             { name: "virtual_port" },
             { name: "advanced_setting" }
         ]
