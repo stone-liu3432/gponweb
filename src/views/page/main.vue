@@ -26,7 +26,7 @@ const navHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
 export default {
     name: "mainContent",
     computed: {
-        ...mapGetters(["validateMsg"])
+        ...mapGetters(["validateMsg", "$lang"])
     },
     components: { navHeader },
     mixins: [provider],
@@ -38,6 +38,7 @@ export default {
         };
     },
     created() {
+        this.httpInterceptors();
         Promise.all([this.getNav(), this.getAdvMenu()])
             .then(([nav, adv]) => {
                 this.nav = nav;
@@ -181,6 +182,32 @@ export default {
         },
         updateNavScrollbar() {
             this.$refs["nav-scrollbar"].update();
+        },
+        httpInterceptors() {
+            this.$http.interceptors.response.use(
+                response => {
+                    const jumpToLogin = () => {
+                        const lang = sessionStorage.getItem("lang");
+                        sessionStorage.clear();
+                        sessionStorage.setItem("lang", lang);
+                        this.$router.push("/login");
+                    };
+                    //  返回 0 ，非法登录信息
+                    if (response.data.code === 0) {
+                        this.$messgae.error(this.$lang("illegal_login_info"));
+                        jumpToLogin();
+                    }
+                    //  返回 -1，登录超时
+                    if (response.data.code === -1) {
+                        this.$message.error(this.$lang("login_timeout"));
+                        jumpToLogin();
+                    }
+                    return response;
+                },
+                err => {
+                    return Promise.reject(err);
+                }
+            );
         }
     }
 };
