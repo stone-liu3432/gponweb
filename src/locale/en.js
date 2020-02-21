@@ -829,7 +829,8 @@ var en = {
     gemindex: "Gemport ID",
     tcontid: "T-CONT ID",
     mapping: "Mapping",
-    bindtimes: "BindTimes"
+    bindtimes: "BindTimes",
+    pagination_display: "Pagination Display"
 };
 
 export default en;

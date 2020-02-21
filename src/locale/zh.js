@@ -804,7 +804,8 @@ var zh = {
     gemindex: "GEM端口ID",
     tcontid: "T-CONT ID",
     mapping: "映射规则",
-    bindtimes: "绑定次数"
+    bindtimes: "绑定次数",
+    pagination_display: "分页显示"
 };
 
 export default zh;
