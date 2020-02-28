@@ -15,3 +15,10 @@ export const DBA_PROFILE_TYPES = {
     4: ["max"],
     5: ["fix", "assure", "max"]
 };
+
+// 线路模板，映射模式枚举
+export const MAPPING_MODES = {
+    1: "VLAN",
+    2: "Priority",
+    3: "TCI"
+};
