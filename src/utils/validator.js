@@ -3,13 +3,13 @@ import { toLower } from "./common";
 
 // ip地址验证，
 export function regIp(val) {
-    const reg = /^((1?\d?\d|2[0-4]\d|25[0-5])\.){3}(1?\d?\d|2[0-4]\d|25[0-5])$/;
+    const reg = /^((25[0-5]|2[0-4]\d|1?\d?\d)(\.(?!$)|$)){4}/;
     return reg.test(val) && val !== "0.0.0.0" && val !== "255.255.255.255";
 }
 
 // mac地址验证
 export function regMac(val) {
-    const reg = /^([a-fA-F0-9]{2}:){5}[a-fA-F0-9]{2}$/i;
+    const reg = /^([0-9a-zA-Z]{2}(:(?!$)|$)){6}/;
     return reg.test(val) && toLower.call(val) !== "ff:ff:ff:ff:ff:ff";
 }
 
