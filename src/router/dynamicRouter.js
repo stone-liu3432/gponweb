@@ -10,7 +10,7 @@ const data = {
     onu_allow: () =>
         import(/* webpackChunkName: "main-page" */ "@/views/page/onuAllow"),
     template_mgmt: () =>
-        import(/* webpackChunkName: "protocol" */ "@/views/page/tempMgmt"),
+        import(/* webpackChunkName: "main-page" */ "@/views/page/tempMgmt"),
     virtual_port: () =>
         import(/* webpackChunkName: "main-page" */ "@/views/page/virtualPort"),
     advanced_setting: () =>
