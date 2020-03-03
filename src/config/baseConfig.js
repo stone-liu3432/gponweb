@@ -1,4 +1,4 @@
-import ElementUI from "@/config/element";
+import "@/config/element";
 import VueI18n from "vue-i18n";
 import locale from "element-ui/lib/locale";
 import enLocale from "element-ui/lib/locale/lang/en";
@@ -8,11 +8,7 @@ import { isFunction, isPlainObject } from "@/utils/common";
 import store from "../store";
 import pageHeader from "@/views/common/pageHeader";
 
-const __DEV__ = process.env.NODE_ENV === "development";
-
-if (__DEV__) {
-    require("./mock.js");
-}
+process.env.NODE_ENV === "development" && require("./mock.js");
 
 // 覆盖element的部分方法，添加一些默认配置
 const overrideMethods = Vue => {
@@ -42,10 +38,16 @@ const overrideMethods = Vue => {
         }
         return cfm(content, title, options);
     };
+    // message 默认显示close按钮
+    ["success", "error", "warning", "info"].forEach(key => {
+        msg[key] = (message, options) => {
+            return msg({ message, ...options, showClose: true, type: key });
+        };
+    });
 };
 
 const baseConfig = Vue => {
-    Vue.config.productionTip = false;
+    Vue.config.productionTip = true;
 
     Vue.use(VueI18n);
     Vue.use(pageHeader);
@@ -57,10 +59,9 @@ const baseConfig = Vue => {
         }
     });
     locale.i18n((key, value) => i18n.t(key, value));
-    Vue.use(ElementUI, { size: "small", zIndex: 1000 });
+    // Vue.use(ElementUI, { size: "small", zIndex: 1000 });
 
     Vue.prototype.$http = axios;
-    Vue.prototype.$is_dev = _ => __DEV__;
 
     overrideMethods(Vue);
     return { i18n };
