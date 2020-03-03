@@ -20,13 +20,19 @@ router.beforeEach((to, from, next) => {
             if (sessionStorage.getItem("x-token")) {
                 next();
             } else {
-                sessionStorage.removeItem("user");
-                next({ path: "/login" });
+                next("/login");
             }
         }
     } else {
+        // 页面刷新时，如果当前处于动态菜单（动态增加的菜单，非 route.js("/", "/login", "/main")里的原始路由）
+        // 则 to.meta是一个空对象
+        // 当 token不存在时直接跳转至 Login页
         if (!sessionStorage.getItem("x-token")) {
-            next();
+            if (to.path !== "/login") {
+                next("/login");
+            } else {
+                next();
+            }
         } else {
             next("/main");
         }
