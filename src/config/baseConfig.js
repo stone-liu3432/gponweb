@@ -51,8 +51,9 @@ const baseConfig = Vue => {
 
     Vue.use(VueI18n);
     Vue.use(pageHeader);
+    const lang = sessionStorage.getItem("lang");
     const i18n = new VueI18n({
-        locale: sessionStorage.getItem("lang") || "en",
+        locale: ["zh", "en"].includes(lang) ? lang : "en",
         messages: {
             en: enLocale,
             zh: zhLocale
