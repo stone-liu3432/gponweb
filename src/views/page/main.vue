@@ -187,18 +187,18 @@ export default {
             this.$http.interceptors.response.use(
                 response => {
                     const jumpToLogin = () => {
-                        const lang = sessionStorage.getItem("lang");
+                        const lang = sessionStorage.getItem("lang") || "en";
                         sessionStorage.clear();
                         sessionStorage.setItem("lang", lang);
                         this.$router.push("/login");
                     };
                     //  返回 0 ，非法登录信息
                     if (response.data.code === 0) {
-                        this.$messgae.error(this.$lang("illegal_login_info"));
+                        this.$message.error(this.$lang("illegal_login_info"));
                         jumpToLogin();
                     }
                     //  返回 -1，登录超时
-                    if (response.data.code === -1) {
+                    if (response.data.code === 2) {
                         this.$message.error(this.$lang("login_timeout"));
                         jumpToLogin();
                     }
