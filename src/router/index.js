@@ -67,7 +67,7 @@ router.afterEach((to, from) => {
         sessionStorage.setItem("advMenu", path);
     }
     if (path === "login") {
-        const lang = sessionStorage.getItem("lang");
+        const lang = sessionStorage.getItem("lang") || "en";
         sessionStorage.clear();
         sessionStorage.setItem("lang", lang);
     }
