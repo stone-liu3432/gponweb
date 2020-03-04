@@ -198,7 +198,7 @@ export default {
                         jumpToLogin();
                     }
                     //  返回 -1，登录超时
-                    if (response.data.code === 2) {
+                    if (response.data.code === -1) {
                         this.$message.error(this.$lang("login_timeout"));
                         jumpToLogin();
                     }
