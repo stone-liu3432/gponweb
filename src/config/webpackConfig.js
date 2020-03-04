@@ -1,3 +1,4 @@
+"use strict";
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
@@ -102,7 +103,7 @@ function appendFileAndDirectory(archive, excludes = []) {
     const filepath = path.join(__dirname, "../../dist");
     const files = fs.readdirSync(filepath);
     files.forEach(file => {
-        filedir = path.join(filepath, file);
+        const filedir = path.join(filepath, file);
         const stats = fs.statSync(filedir);
         if (stats.isFile()) {
             if (excludes.includes(file)) {
