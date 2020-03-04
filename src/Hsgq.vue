@@ -14,7 +14,9 @@ export default {
     created() {
         // 刷新时
         const lang = sessionStorage.getItem("lang");
-        if (isUndef(lang)) {
+        // sessionStorage的值会转换为 string类型
+        // 防止用户手动修改sessionStroage的内容并刷新页面
+        if (!["zh", "en"].includes(lang)) {
             this.getLang();
         } else {
             this.updateLang(lang);
