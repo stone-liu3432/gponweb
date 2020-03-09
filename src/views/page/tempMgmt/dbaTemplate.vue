@@ -37,7 +37,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog :visible.sync="dialogVisible">
+        <el-dialog :visible.sync="dialogVisible" width="500px">
             <div slot="title">{{ $lang(dialogType) }}</div>
             <dba-form :data="dbaData" :type="dialogType" ref="dba-form"></dba-form>
             <span slot="footer">
@@ -61,6 +61,11 @@ export default {
     computed: {
         ...mapGetters(["$lang"])
     },
+    props: {
+        dbaProfiles: {
+            type: Array
+        }
+    },
     data() {
         return {
             types: {
@@ -70,29 +75,15 @@ export default {
                 4: "type4",
                 5: "type5"
             },
-            dbaProfiles: [],
             dialogVisible: false,
             dialogType: "",
             dbaData: {}
         };
     },
     created() {
-        this.getData();
+        this.$emit("refreshData");
     },
     methods: {
-        getData() {
-            this.dbaProfiles = [];
-            this.$http
-                .get("/dbaprofile?form=table")
-                .then(res => {
-                    if (res.data.code === 1) {
-                        if (isArray(res.data.data)) {
-                            this.dbaProfiles = res.data.data;
-                        }
-                    }
-                })
-                .catch(err => {});
-        },
         showValue(row, key) {
             const { type } = row;
             return DBA_PROFILE_TYPES[type].includes(key) ? row[key] : "-";
@@ -114,7 +105,7 @@ export default {
                                 this.$message.success(
                                     this.$lang("delete", "st_success")
                                 );
-                                this.getData();
+                                this.$emit("refreshData");
                             } else {
                                 this.$message.error(
                                     `(${res.data.code}) ${res.data.message}`
@@ -182,7 +173,7 @@ export default {
                             this.postData("/dbaprofile", data)
                                 .then(res => {
                                     if (res.code === 1) {
-                                        this.getData();
+                                        this.$emit("refreshData");
                                     }
                                 })
                                 .catch(err => {});

@@ -4,7 +4,7 @@
             <el-input v-model="formData.profname"></el-input>
         </el-form-item>
         <el-form-item :label="$lang('profid')" prop="profid">
-            <el-input v-model.number="formData.profid"></el-input>
+            <el-input v-model.number="formData.profid" :disabled="type === 'set'"></el-input>
         </el-form-item>
         <el-form-item :label="$lang('type')" prop="type">
             <el-select v-model.number="formData.type">
@@ -123,9 +123,9 @@ export default {
             return this.validRange(val, cb);
         },
         validRange(val, cb) {
-            if (!regRange(val, 128, 1000000)) {
+            if (!regRange(val, 128, 1024000)) {
                 return cb(
-                    new Error(this.validateMsg("inputRange", 128, 1000000))
+                    new Error(this.validateMsg("inputRange", 128, 1024000))
                 );
             }
             cb();
