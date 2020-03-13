@@ -22,3 +22,23 @@ export const MAPPING_MODES = {
     2: "Priority",
     3: "TCI"
 };
+
+// VLAN模式枚举
+export const VLAN_MODES = {
+    1: "transparent",
+    2: "tag",
+    3: "translation",
+    4: "qinq"
+};
+
+// uni 端口类型
+export const UNI_TYPES = ["eth", "iphost"];
+
+// tag action
+export const TAG_ACTIONS = {
+    1: "default",
+    2: "transparent",
+    3: "translate",
+    4: "translate-and-add",
+    5: "add-double"
+};
