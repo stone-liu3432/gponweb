@@ -10,9 +10,9 @@ Mock.mock("/board?info=system", "get", {
         hw_ver: "I_V1.0.0_Rel",
         bl_ver: "V1.0_Rel",
         macaddr: "38:3a:21:f0:01:b0",
-        ponports: 4,
-        geports: 4,
-        xgeports: 4,
+        ponports: 16,
+        geports: 8,
+        xgeports: 8,
         vendor: "hsgq",
         build_time: "2017/11/22 09:32:48"
     }
