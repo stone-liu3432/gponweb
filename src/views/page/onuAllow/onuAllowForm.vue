@@ -7,7 +7,11 @@
             <el-input v-model="form.ont_name"></el-input>
         </el-form-item>
         <el-form-item label="ont_description" prop="ont_description">
-            <el-input v-model="form.ont_description"></el-input>
+            <el-input
+                v-model="form.ont_description"
+                type="textarea"
+                :autosize="{ minRows: 2, maxRows: 5 }"
+            ></el-input>
         </el-form-item>
     </el-form>
 </template>
