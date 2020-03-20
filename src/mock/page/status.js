@@ -1,5 +1,7 @@
 import Mock from "@/mock";
 
+const Random = Mock.Random;
+
 Mock.mock("/board?info=system", "get", {
     code: 1,
     message: "success",
@@ -18,192 +20,53 @@ Mock.mock("/board?info=system", "get", {
     }
 });
 
-Mock.mock("/board?info=pon", "get", {
-    code: 1,
-    message: "success",
-    data: [
-        {
-            port_id: 1,
-            status: "@STATUS",
-            online: 2,
-            offline: 3
-        },
-        {
-            port_id: 2,
-            status: "@STATUS",
-            online: 2,
-            offline: 3
-        },
-        {
-            port_id: 3,
-            status: "@STATUS",
-            online: 2,
-            offline: 3
-        },
-        {
-            port_id: 4,
-            status: "@STATUS",
-            online: 2,
-            offline: 3
-        }
-    ]
+Mock.mock("/board?info=pon", "get", () => {
+    let i = 1;
+    const data = Array.from({ length: 16 }).map(_ => ({
+        port_id: i++,
+        status: Random.range(0, 1),
+        online: Random.range(0, 64),
+        offline: Random.range(0, 64)
+    }));
+    return {
+        code: 1,
+        message: "success",
+        data
+    };
 });
 
-Mock.mock("/switch_port?form=portlist_info", "get", {
-    code: 1,
-    message: "success",
-    data: [
-        {
-            port_id: 1,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
+Mock.mock("/switch_port?form=portlist_info", "get", () => {
+    let i = 1;
+    const pon = Array.from({ length: 16 }).map(_ => ({
+        port_id: i++,
+        admin_status: Random.range(0, 1),
+        link_status: Random.range(0, 1),
+        auto_neg: Random.range(0, 1),
+        speed: "1000M",
+        duplex: 1,
+        flow_ctrl: Random.range(0, 1),
+        mtu: 1500,
+        media: "fiber",
+        pvid: 1
+    }));
+    const data = pon.concat(
+        Array.from({ length: 8 }).map(_ => ({
+            port_id: i++,
+            admin_status: Random.range(0, 1),
+            link_status: Random.range(0, 1),
+            auto_neg: Random.range(0, 1),
             speed: "1000M",
             duplex: 1,
-            flow_ctrl: "@STATUS",
+            flow_ctrl: Random.range(0, 1),
             mtu: 1500,
-            media: "fiber",
-            pvid: 1
-        },
-        {
-            port_id: 2,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "fiber",
-            pvid: 1
-        },
-        {
-            port_id: 3,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "fiber",
-            pvid: 1
-        },
-        {
-            port_id: 4,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "fiber",
-            pvid: 1
-        },
-        {
-            port_id: 5,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "copper",
+            media: i <= 20 ? "copper" : "fiber",
             pvid: 1,
-            link_aggregation: "@RANGE(0,8)"
-        },
-        {
-            port_id: 6,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "copper",
-            pvid: 1,
-            link_aggregation: "@RANGE(0,8)"
-        },
-        {
-            port_id: 7,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "copper",
-            pvid: 1,
-            link_aggregation: "@RANGE(0,8)"
-        },
-        {
-            port_id: 8,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "copper",
-            pvid: 1,
-            link_aggregation: "@RANGE(0,8)"
-        },
-        {
-            port_id: 9,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "fiber",
-            pvid: 1,
-            link_aggregation: "@RANGE(0,8)"
-        },
-        {
-            port_id: 10,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "fiber",
-            pvid: 1,
-            link_aggregation: "@RANGE(0,8)"
-        },
-        {
-            port_id: 11,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "fiber",
-            pvid: 1,
-            link_aggregation: "@RANGE(0,8)"
-        },
-        {
-            port_id: 12,
-            admin_status: "@STATUS",
-            link_status: "@STATUS",
-            auto_neg: "@STATUS",
-            speed: "1000M",
-            duplex: 1,
-            flow_ctrl: "@STATUS",
-            mtu: 1500,
-            media: "fiber",
-            pvid: 1,
-            link_aggregation: "@RANGE(0,8)"
-        }
-    ]
+            link_aggregation: Random.range(0, 8)
+        }))
+    );
+    return {
+        code: 1,
+        message: "success",
+        data
+    };
 });
