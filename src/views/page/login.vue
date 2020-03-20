@@ -152,6 +152,7 @@ export default {
         },
         language() {
             this.updateLang(this.language);
+            this.$i18n.locale = this.language;
         }
     }
 };
