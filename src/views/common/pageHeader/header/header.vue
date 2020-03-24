@@ -32,6 +32,11 @@
                     <el-form-item :label="$lang('no_onu_info')" style="margin-left: 30px;"></el-form-item>
                 </template>
             </template>
+            <template>
+                <el-form-item>
+                    <slot name="content"></slot>
+                </el-form-item>
+            </template>
         </el-form>
     </div>
 </template>
