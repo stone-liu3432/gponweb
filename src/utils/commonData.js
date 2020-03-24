@@ -42,3 +42,6 @@ export const TAG_ACTIONS = {
     4: "translate-and-add",
     5: "add-double"
 };
+
+// ont auth mode
+export const ONT_AUTH_MODES = ["SN AUTH", "LOID AUTH", "LOID+PASS AUTH"];
