@@ -88,7 +88,7 @@ Mock.mock("/switch_svp?form=svp_stat_get", "get", () => {
     let i = 1;
     const data = Array.from({ length: n }).map(item => ({
         svp_id: i++,
-        admin: Random.range(0, 1),
+        stat_admin: Random.range(0, 1),
         ig_packets: Random.range(0, 1024000),
         ig_bytes: Random.range(0, 1024000),
         eg_packets: Random.range(0, 1024000),

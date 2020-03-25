@@ -15,10 +15,10 @@
         </div>
         <el-table :data="showList" border stripe>
             <el-table-column :label="$lang('svp_id')" prop="svp_id"></el-table-column>
-            <el-table-column :label="$lang('admin')" prop="admin">
+            <el-table-column :label="$lang('stat_admin')" prop="stat_admin">
                 <template
                     slot-scope="scope"
-                >{{ scope.row.admin ? $lang('enable') : $lang('disable') }}</template>
+                >{{ scope.row.stat_admin ? $lang('enable') : $lang('disable') }}</template>
             </el-table-column>
             <el-table-column :label="$lang('ig_packets')" prop="ig_packets"></el-table-column>
             <el-table-column :label="$lang('ig_bytes')" prop="ig_bytes"></el-table-column>
@@ -29,7 +29,7 @@
                     <el-button
                         type="text"
                         @click="chagneState(scope.row)"
-                    >{{ $lang(scope.row.admin ? 'disable' : 'enable', 'statistical') }}</el-button>
+                    >{{ $lang(scope.row.stat_admin ? 'disable' : 'enable', 'statistical') }}</el-button>
                     <el-button type="text" @click="clearStat(scope.row)">{{ $lang('clear') }}</el-button>
                 </template>
             </el-table-column>
@@ -115,7 +115,7 @@ export default {
                 .catch(_ => {});
         },
         chagneState(row) {
-            const status = !!row.admin;
+            const status = !!row.stat_admin;
             this.$confirm(
                 this.$lang(
                     "if_sure",
