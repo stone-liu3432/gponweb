@@ -861,7 +861,35 @@ var en = {
     enable_all: "Enable All",
     flush_all: "Clear All Statistics",
     statistical: "Statistical",
-    all: "All"
+    all: "All",
+
+    loid: "LOID",
+    loid_password: "LOID Password",
+    ont_lineprofid: "Line Profile",
+    ont_srvprofid: "Service Profile",
+    ont_sn: "Serial Number",
+    ont_password: "Password",
+    vendorid: "Venddor ID",
+    ont_version: "Version",
+    equipmentid: "EquipmentID",
+    autofind_time: "Autofind time",
+    ont_name: "Name",
+    state: "State",
+    rstate: "Running state",
+    cstate: "Config state",
+    mstate: "Match state",
+    last_d_cause: "Last down cause",
+    last_d_time: "Last down time",
+    last_u_time: "Last up time",
+    ig_packets: "Ingress Packets",
+    ig_bytes: "Ingress Bytes",
+    eg_packets: "Egress Packets",
+    eg_bytes: "Egress Bytes",
+    stat_admin: "Statistics Switch",
+    auth_list: "Authenticate List",
+    auto_discover_list: "Auto Discovery List",
+    auto_config_temp: "Auto Configuration Template",
+    add_to_auth_list: "Add To Authenticate List"
 };
 
 export default en;

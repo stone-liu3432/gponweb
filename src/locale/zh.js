@@ -836,7 +836,35 @@ var zh = {
     enable_all: "启用全部",
     flush_all: "清除全部统计信息",
     statistical: "统计信息",
-    all: "所有"
+    all: "所有",
+
+    loid: "LOID",
+    loid_password: "LOID 密码",
+    ont_lineprofid: "线路模板",
+    ont_srvprofid: "业务模版",
+    ont_sn: "序列号",
+    ont_password: "密码",
+    vendorid: "厂商ID",
+    ont_version: "版本",
+    equipmentid: "设备ID",
+    autofind_time: "自动发现时间",
+    ont_name: "名称",
+    state: "状态",
+    rstate: "运行状态",
+    cstate: "配置状态",
+    mstate: "匹配状态",
+    last_d_cause: "掉线原因",
+    last_d_time: "掉线时间",
+    last_u_time: "上线时间",
+    ig_packets: "入口数据包",
+    ig_bytes: "入口字节数",
+    eg_packets: "出口数据包",
+    eg_bytes: "出口字节数",
+    stat_admin: "统计开关",
+    auth_list: "认证列表",
+    auto_discover_list: "自动发现列表",
+    auto_config_temp: "自动配置模板",
+    add_to_auth_list: "添加到认证列表"
 };
 
 export default zh;
