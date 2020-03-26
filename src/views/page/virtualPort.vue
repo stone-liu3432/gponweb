@@ -4,10 +4,10 @@
             <el-tab-pane :label="$lang('virtual_port', 'list')" name="virtualPort">
                 <virtual-port-mgmt v-if="activeName === 'virtualPort'"></virtual-port-mgmt>
             </el-tab-pane>
-            <el-tab-pane label="自动配置模板" name="autoTemp">
+            <el-tab-pane :label="$lang('auto_config_temp')" name="autoTemp">
                 <auto-config-temp v-if="activeName === 'autoTemp'"></auto-config-temp>
             </el-tab-pane>
-            <el-tab-pane label="自动发现列表" name="autoFindList">
+            <el-tab-pane :label="$lang('auto_discover_list')" name="autoFindList">
                 <auto-find-list v-if="activeName === 'autoFindList'"></auto-find-list>
             </el-tab-pane>
             <el-tab-pane :label="$lang('virtual_port','statistical')" name="stat">
