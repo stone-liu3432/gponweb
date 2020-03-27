@@ -2,13 +2,13 @@
     <div>
         <el-table :data="showList" border stripe>
             <el-table-column :label="$lang('traffic_profile_id')" prop="traffic_profile_id"></el-table-column>
-            <el-table-column :label="$lang('cir')" prop="cir"></el-table-column>
-            <el-table-column :label="$lang('cbs')" prop="cbs"></el-table-column>
-            <el-table-column :label="$lang('pir')" prop="pir"></el-table-column>
-            <el-table-column :label="$lang('pbs')" prop="pbs"></el-table-column>
+            <el-table-column label="cir" prop="cir"></el-table-column>
+            <el-table-column label="cbs" prop="cbs"></el-table-column>
+            <el-table-column label="pir" prop="pir"></el-table-column>
+            <el-table-column label="pbs" prop="pbs"></el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
-                    <el-button type="text">{{ $lang('delete') }}</el-button>
+                    <el-button type="text" @click="deleteTraffic(scope.row)">{{ $lang('delete') }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -65,6 +65,37 @@ export default {
                     }
                 })
                 .catch(err => {});
+        },
+        deleteTraffic(row) {
+            this.$confirm(this.$lang("if_sure", "delete") + " ?")
+                .then(_ => {
+                    this.$http
+                        .post("/switch_svp?form=traffic_profile_set", {
+                            method: "set",
+                            param: {
+                                traffic_profile_id: row.traffic_profile_id,
+                                action: 0, // delete
+                                cir: row.cir,
+                                cbs: row.cbs,
+                                pir: row.pir,
+                                pbs: row.pbs
+                            }
+                        })
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(
+                                    this.$lang("delete", "st_success")
+                                );
+                                this.getData();
+                            } else {
+                                this.$message.error(
+                                    `(${res.data.code}) ${res.data.message}`
+                                );
+                            }
+                        })
+                        .catch(err => {});
+                })
+                .catch(_ => {});
         }
     }
 };
