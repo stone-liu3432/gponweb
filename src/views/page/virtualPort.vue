@@ -13,10 +13,9 @@
             <el-tab-pane :label="$lang('virtual_port','statistical')" name="stat">
                 <virtual-port-stat v-if="activeName === 'stat'"></virtual-port-stat>
             </el-tab-pane>
-            <!-- to do -->
-            <!-- <el-tab-pane label="流量模板" name="traffic">
+            <el-tab-pane :label="$lang('traffic_prof')" name="traffic">
                 <virtual-port-traffic v-if="activeName === 'traffic'"></virtual-port-traffic>
-            </el-tab-pane>-->
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
