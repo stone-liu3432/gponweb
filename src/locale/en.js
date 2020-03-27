@@ -889,7 +889,9 @@ var en = {
     auth_list: "Authenticate List",
     auto_discover_list: "Auto Discovery List",
     auto_config_temp: "Auto Configuration Template",
-    add_to_auth_list: "Add To Authenticate List"
+    add_to_auth_list: "Add To Authenticate List",
+    traffic_prof: "Traffic Profile",
+    traffic_profile_id: "Traffic Profile ID"
 };
 
 export default en;

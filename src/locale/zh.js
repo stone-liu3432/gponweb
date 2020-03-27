@@ -864,7 +864,9 @@ var zh = {
     auth_list: "认证列表",
     auto_discover_list: "自动发现列表",
     auto_config_temp: "自动配置模板",
-    add_to_auth_list: "添加到认证列表"
+    add_to_auth_list: "添加到认证列表",
+    traffic_prof: "流量模板",
+    traffic_profile_id: "流量模板ID"
 };
 
 export default zh;
