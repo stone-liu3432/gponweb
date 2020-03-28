@@ -16,9 +16,16 @@
         <el-table :data="showList" border stripe>
             <el-table-column :label="$lang('svp_id')" prop="svp_id"></el-table-column>
             <el-table-column :label="$lang('stat_admin')" prop="stat_admin">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.stat_admin ? $lang('enable') : $lang('disable') }}</template>
+                <template slot-scope="scope">
+                    <el-switch
+                        v-model="scope.row.stat_admin"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949"
+                        @change="chagneState(scope.row)"
+                        :active-value="1"
+                        :inactive-value="0"
+                    ></el-switch>
+                </template>
             </el-table-column>
             <el-table-column :label="$lang('ig_packets')" prop="ig_packets"></el-table-column>
             <el-table-column :label="$lang('ig_bytes')" prop="ig_bytes"></el-table-column>
@@ -26,10 +33,6 @@
             <el-table-column :label="$lang('eg_bytes')" prop="eg_bytes"></el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
-                    <el-button
-                        type="text"
-                        @click="chagneState(scope.row)"
-                    >{{ $lang(scope.row.stat_admin ? 'disable' : 'enable', 'statistical') }}</el-button>
                     <el-button type="text" @click="clearStat(scope.row)">{{ $lang('clear') }}</el-button>
                 </template>
             </el-table-column>
@@ -115,6 +118,7 @@ export default {
                 .catch(_ => {});
         },
         chagneState(row) {
+            row.stat_admin ? (row.stat_admin = 0) : (row.stat_admin = 1);
             const status = !!row.stat_admin;
             this.$confirm(
                 this.$lang(

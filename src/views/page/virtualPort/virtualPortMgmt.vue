@@ -34,9 +34,16 @@
                 >{{ scope.row.state ? $lang('link_up') : $lang('link_down') }}</template>
             </el-table-column>
             <el-table-column :label="$lang('admin_status')" prop="admin_status">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.admin_status ? $lang('enable') : $lang('disable') }}</template>
+                <template slot-scope="scope">
+                    <el-switch
+                        v-model="scope.row.admin_status"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949"
+                        @change="changeAdminState(scope.row)"
+                        :active-value="1"
+                        :inactive-value="0"
+                    ></el-switch>
+                </template>
             </el-table-column>
             <el-table-column :label="$lang('desc')" prop="desc"></el-table-column>
             <el-table-column :label="$lang('config')" width="100px">
@@ -53,9 +60,6 @@
                             <el-dropdown-item
                                 :command="{ action: 'desc', data: scope.row }"
                             >{{ $lang('set', 'desc') }}</el-dropdown-item>
-                            <el-dropdown-item
-                                :command="{ action: 'status', data: scope.row }"
-                            >{{ $lang(scope.row.admin_status ? "disable" : "enable") }}</el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ action: 'delete', data: scope.row }"
                             >{{ $lang('delete') }}</el-dropdown-item>
@@ -254,9 +258,6 @@ export default {
                 },
                 desc(row) {
                     this.openDialog("desc", row);
-                },
-                status(row) {
-                    this.changeAdminState(row);
                 }
             };
             if (isFunction(ACTIONS[action])) {
@@ -264,6 +265,7 @@ export default {
             }
         },
         changeAdminState(row) {
+            row.admin_status ? (row.admin_status = 0) : (row.admin_status = 1);
             this.$confirm(
                 this.$lang(
                     "if_sure",
