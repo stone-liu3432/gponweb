@@ -36,6 +36,7 @@ Mock.mock(/\/gponmgmt\?form=optical_poninfo&port_id=\d+/, "get", ({ url }) => {
             work_voltage: "3.29 V" + port_id,
             transmit_bias: "13 mA" + port_id,
             transmit_power: "1.8295 dBm" + port_id,
+            receive_power: "1.8295 dBm" + port_id,
             vendor_name: "ODI" + port_id,
             vendor_oui: "unspecify" + port_id,
             vendor_rev: "1.0" + port_id,
