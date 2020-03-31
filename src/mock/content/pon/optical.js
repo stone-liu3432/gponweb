@@ -13,7 +13,8 @@ Mock.mock("/gponmgmt?form=optical_poninfo", "get", _ => {
         work_temprature: "21 C " + (i - 1),
         work_voltage: "3.29 V " + (i - 1),
         transmit_bias: "13 mA " + (i - 1),
-        transmit_power: "1.8295 dBm " + (i - 1)
+        transmit_power: "1.8295 dBm " + (i - 1),
+        receive_power: "1.0325 dBm " + (i - 1)
     }));
     return {
         code: 1,
