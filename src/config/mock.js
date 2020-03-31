@@ -36,3 +36,4 @@ import "@/mock/content/tempMgmt/dbaMgmt";
 import "@/mock/content/tempMgmt/lineMgmt";
 import "@/mock/content/tempMgmt/srvMgmt";
 import "@/mock/content/virtualPort/virtualPort";
+import "@/mock/content/pon/optical";
