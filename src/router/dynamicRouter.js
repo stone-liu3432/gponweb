@@ -80,6 +80,10 @@ const data = {
     rstp: () =>
         import(
             /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/rstp"
+        ),
+    pon_optical: () =>
+        import(
+            /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/optical"
         )
 };
 
