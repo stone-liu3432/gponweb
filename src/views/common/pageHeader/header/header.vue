@@ -21,9 +21,9 @@
             <template v-if="hasOnu">
                 <template v-if="!!onuResource.length">
                     <el-form-item :label="$lang('onu_id')" style="margin-left: 30px;">
-                        <el-select v-model.number="portData.onu_id">
+                        <el-select v-model.number="portData.onu_id" filterable>
                             <template v-for="item in onuResource">
-                                <el-option :label="composeOnuName(item)" :value="item"></el-option>
+                                <el-option :label="onuName(item)" :value="item"></el-option>
                             </template>
                         </el-select>
                     </el-form-item>
@@ -83,9 +83,10 @@ export default {
     data() {
         return {
             portData: {
-                port_id: "",
-                onu_id: ""
-            }
+                port_id: 0,
+                onu_id: 0xffff
+            },
+            isFirstLoad: true
         };
     },
     mounted() {
@@ -97,7 +98,7 @@ export default {
     },
     methods: {
         ...mapActions(["getOnuResource"]),
-        composeOnuName(onu_id) {
+        onuName(onu_id) {
             return `ONU${this.portData.port_id}/${onu_id}`;
         }
     },
@@ -108,22 +109,17 @@ export default {
                     // 没有传入onu id时，取onu列表第一项
                     this.portData.onu_id = this.onuResource[0];
                 } else {
-                    if (!this.portData.onu_id) {
-                        // 传入onu id，并且当前不存在onu id时，取传入的onu id
+                    if (this.isFirstLoad) {
+                        this.isFirstLoad = false;
                         this.portData.onu_id = this.onuid;
                     } else {
-                        // 当前存在onu id时，表明是切换pon口，此时忽略传入的onu id
                         this.portData.onu_id = this.onuResource[0];
                     }
                 }
-                this.$emit(
-                    "port-change",
-                    this.portData.port_id,
-                    this.portData.onu_id
-                );
             } else {
-                // onuResource无值时，表明当前pon口下没有onu，将onu id置0
-                this.$emit("port-change", this.portData.port_id, 0);
+                // onuResource无值时，表明当前pon口下没有onu，将onu id置 0xffff
+                // GPON 规则不一致，ont_id 起始为 0
+                this.$emit("port-change", this.portData.port_id, 0xffff);
             }
         },
         "portData.port_id"(nv, ov) {
@@ -131,8 +127,19 @@ export default {
             if (!this.hasOnu) {
                 this.$emit("port-change", this.portData.port_id);
             } else {
+                this.portData.onu_id = 0xffff;
                 this.getOnuResource(this.portData.port_id);
             }
+        },
+        "portData.onu_id"() {
+            if (this.portData.onu_id === 0xffff) {
+                return;
+            }
+            this.$emit(
+                "port-change",
+                this.portData.port_id,
+                this.portData.onu_id
+            );
         }
     }
 };
