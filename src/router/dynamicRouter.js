@@ -84,7 +84,11 @@ const data = {
     pon_optical: () =>
         import(
             /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/optical"
-        )
+        ),
+    onu_basic_info: () =>
+        import(
+            /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/ontBasicInfo"
+        ),
 };
 
 export default data;
