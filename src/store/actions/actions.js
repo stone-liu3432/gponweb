@@ -1,8 +1,14 @@
 import axios from "@/config/axios";
-import { isEmptyObject, isArray, isDef, isUndef } from "@/utils/common";
+import {
+    isEmptyObject,
+    isArray,
+    isDef,
+    isUndef,
+    parseStringAsList,
+} from "@/utils/common";
 
 // portName生成，根据端口号和端口数量生成显示在界面上的 name
-const createPortName = state => {
+const createPortName = (state) => {
     if (
         !isEmptyObject(state.system) &&
         isArray(state.port) &&
@@ -46,7 +52,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             axios
                 .get("/board?info=system")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             commit("updateSystem", res.data.data);
@@ -57,7 +63,7 @@ const actions = {
                         reject(res.data);
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     reject(err);
                 });
         });
@@ -65,7 +71,7 @@ const actions = {
     getPon({ commit }) {
         axios
             .get("/board?info=pon")
-            .then(res => {
+            .then((res) => {
                 if (res.data.code === 1) {
                     if (isArray(res.data.data)) {
                         commit("updatePon", res.data.data);
@@ -74,12 +80,12 @@ const actions = {
                     commit("updatePon", []);
                 }
             })
-            .catch(err => {});
+            .catch((err) => {});
     },
     getPort({ commit, state }) {
         axios
             .get("/switch_port?form=portlist_info")
-            .then(res => {
+            .then((res) => {
                 if (res.data.code === 1) {
                     if (isArray(res.data.data)) {
                         commit("updatePort", res.data.data);
@@ -94,13 +100,13 @@ const actions = {
                     commit("updatePort", []);
                 }
             })
-            .catch(err => {});
+            .catch((err) => {});
     },
     getOnuResource({ commit }, port_id) {
         commit("updateOnuResource", []);
         axios
             .get("/onu_allow_list", { params: { form: "resource", port_id } })
-            .then(res => {
+            .then((res) => {
                 if (res.data.code === 1) {
                     if (isDef(res.data.data)) {
                         commit(
@@ -110,47 +116,47 @@ const actions = {
                     }
                 }
             })
-            .catch(err => {});
+            .catch((err) => {});
     },
     getOnuList({ commit }, port_id) {
         commit("updateOnulist", []);
         axios
             .get("/onu_allow_list", { params: { port_id } })
-            .then(res => {
+            .then((res) => {
                 if (res.data.code === 1) {
                     if (isArray(res.data.data)) {
                         commit("updateOnulist", res.data.data);
                     }
                 }
             })
-            .catch(err => {});
+            .catch((err) => {});
     },
     getTime({ commit }) {
         commit("updateTime", {});
         axios
             .get("/time?form=info")
-            .then(res => {
+            .then((res) => {
                 if (res.data.code === 1) {
                     if (isDef(res.data.data)) {
                         commit("updateTime", res.data.data);
                     }
                 }
             })
-            .catch(err => {});
+            .catch((err) => {});
     },
     getInterfaces({ commit }) {
         commit("updateInterfaces", []);
         let interfaces = [];
         axios
             .get("/system?form=outbound")
-            .then(res => {
+            .then((res) => {
                 if (res.data.code === 1) {
                     if (isDef(res.data.data)) {
                         interfaces.push(res.data.data);
                     }
                     axios
                         .get("/system?form=inbound")
-                        .then(res => {
+                        .then((res) => {
                             if (res.data.code === 1) {
                                 if (isArray(res.data.data)) {
                                     interfaces = interfaces.concat(
@@ -160,11 +166,11 @@ const actions = {
                             }
                             commit("updateInterfaces", interfaces);
                         })
-                        .catch(err => {});
+                        .catch((err) => {});
                 }
             })
-            .catch(err => {});
-    }
+            .catch((err) => {});
+    },
 };
 
 export default actions;
