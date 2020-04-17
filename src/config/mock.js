@@ -9,7 +9,7 @@ import Mock from "@/mock";
 Mock.mock("/system_lang", "get", {
     code: 1,
     message: "success",
-    data: { lang: "zh" }
+    data: { lang: "zh" },
 });
 
 import "@/mock/page/login";
@@ -37,3 +37,4 @@ import "@/mock/content/tempMgmt/lineMgmt";
 import "@/mock/content/tempMgmt/srvMgmt";
 import "@/mock/content/virtualPort/virtualPort";
 import "@/mock/content/pon/optical";
+import "@/mock/content/pon/ontBasicInfo";
