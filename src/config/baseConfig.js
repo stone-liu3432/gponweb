@@ -4,14 +4,15 @@ import locale from "element-ui/lib/locale";
 import enLocale from "element-ui/lib/locale/lang/en";
 import zhLocale from "element-ui/lib/locale/lang/zh-CN";
 import axios from "@/config/axios";
-import { isFunction, isPlainObject } from "@/utils/common";
+import { isFunction, isPlainObject, isUndef } from "@/utils/common";
 import store from "../store";
 import pageHeader from "@/views/common/pageHeader";
+import nmsPanel from "@/views/common/panel";
 
 process.env.NODE_ENV === "development" && require("./mock.js");
 
 // 覆盖element的部分方法，添加一些默认配置
-const overrideMethods = Vue => {
+const overrideMethods = (Vue) => {
     const cfm = Vue.prototype.$confirm;
     const msg = Vue.prototype.$message;
     // 替换默认的 确认/取消 按钮的文本
@@ -21,16 +22,16 @@ const overrideMethods = Vue => {
             title = "";
         }
         const {
-            getters: { $lang }
+            getters: { $lang },
         } = store;
         if (isFunction($lang)) {
             return cfm(
-                content,
+                isUndef(content) ? $lang("if_sure") : content,
                 title,
                 Object.assign(
                     {
                         cancelButtonText: $lang("cancel"),
-                        confirmButtonText: $lang("apply")
+                        confirmButtonText: $lang("apply"),
                     },
                     options
                 )
@@ -39,25 +40,26 @@ const overrideMethods = Vue => {
         return cfm(content, title, options);
     };
     // message 默认显示close按钮
-    ["success", "error", "warning", "info"].forEach(key => {
+    ["success", "error", "warning", "info"].forEach((key) => {
         msg[key] = (message, options) => {
             return msg({ message, ...options, showClose: true, type: key });
         };
     });
 };
 
-const baseConfig = Vue => {
+const baseConfig = (Vue) => {
     Vue.config.productionTip = true;
 
     Vue.use(VueI18n);
     Vue.use(pageHeader);
+    Vue.use(nmsPanel);
     const lang = sessionStorage.getItem("lang");
     const i18n = new VueI18n({
         locale: ["zh", "en"].includes(lang) ? lang : "en",
         messages: {
             en: enLocale,
-            zh: zhLocale
-        }
+            zh: zhLocale,
+        },
     });
     locale.i18n((key, value) => i18n.t(key, value));
     // Vue.use(ElementUI, { size: "small", zIndex: 1000 });
