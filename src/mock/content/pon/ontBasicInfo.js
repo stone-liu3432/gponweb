@@ -15,7 +15,7 @@ Mock.mock(
                 identifier: (port_id << 8) | ont_id,
                 ont_name: Random.word(1, 32),
                 ont_sn: Random.word(1, 32),
-                state: Random.word(1, 8),
+                state: Random.pick(["active", "deactive"]),
                 rstate: Random.word(1, 8),
                 cstate: Random.word(1, 8),
                 mstate: Random.word(1, 8),
