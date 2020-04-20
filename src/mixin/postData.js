@@ -9,30 +9,29 @@ export default {
                 "add",
                 "delete",
                 "modify",
-                "set"
+                "set",
             ];
-            return new Promise((resolve, reject) => {
-                this.$http
-                    .post(url, data)
-                    .then(res => {
+            return this.$http
+                .post(url, data)
+                .then((res) => {
+                    if (flag) {
                         if (res.data.code === 1) {
-                            flag &&
-                                this.$message.success(
-                                    methods.includes(data.method)
-                                        ? this.$lang(data.method, "st_success")
-                                        : this.$lang("setting_ok")
-                                );
-                            resolve(res.data);
+                            this.$message.success(
+                                methods.includes(data.method)
+                                    ? this.$lang(data.method, "st_success")
+                                    : this.$lang("setting_ok")
+                            );
                         } else {
-                            flag &&
-                                this.$message.error(
-                                    `(${res.data.code}) ${res.data.message}`
-                                );
-                            resolve(res.data);
+                            this.$message.error(
+                                `(${res.data.code}) ${res.data.message}`
+                            );
+                            return Promise.reject();
                         }
-                    })
-                    .catch(err => {});
-            });
-        }
-    }
+                    } else {
+                        return Promise.resolve(res);
+                    }
+                })
+                .catch((err) => {});
+        },
+    },
 };
