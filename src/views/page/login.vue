@@ -1,5 +1,5 @@
 <template>
-    <div id="login">
+    <div id="login" @keyup.enter="submitForm('loginForm')">
         <canvas ref="login-canvas"></canvas>
         <div class="login-form">
             <h3>{{ $lang('login_user') }}</h3>
