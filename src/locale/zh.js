@@ -140,8 +140,8 @@ var zh = {
     onu_desc: "描述信息",
     auth_state: "认证状态",
     tips_cfm_onu: "表示当前ONU已认证,点击可以取消认证状态",
-    tips_auth_state: "是否确认认证此ONU",
-    tips_unauth_state: "是否确认要解除当前ONU的认证状态",
+    tips_active_state: "是否确认激活此ONT ?",
+    tips_deactive_state: "是否确认要解除当前ONT的激活状态 ?",
     tips_n_cfm_onu: "表示当前ONU未认证,点击可以进行认证",
     tips_authstate_error: "ONU未处于online状态，无法进行此操作",
     tips_onu_btn_detail: "查看ONU详细信息",
@@ -844,9 +844,6 @@ var zh = {
     ont_srvprofid: "业务模版",
     ont_sn: "序列号",
     ont_password: "密码",
-    vendorid: "厂商ID",
-    ont_version: "版本",
-    equipmentid: "设备ID",
     autofind_time: "自动发现时间",
     ont_name: "名称",
     state: "状态",
@@ -866,7 +863,41 @@ var zh = {
     auto_config_temp: "自动配置模板",
     add_to_auth_list: "添加到认证列表",
     traffic_prof: "流量模板",
-    traffic_profile_id: "流量模板ID"
+    traffic_profile_id: "流量模板ID",
+    vendorid: "厂商",
+    ont_version: "Ont版本",
+    equipmentid: "设备ID",
+    omcc_version: "OMCC版本",
+    product_code: "产品代码",
+    mainversion: "主分区版本号",
+    stbversion: "备份分区版本号",
+    ani_num: "PON端口数",
+    eth_uni: "以太网端口数",
+    pots_uni: "语音端口数",
+    gem_num: "GEM端口数",
+    tcont_num: "T-Cont数量",
+    iphost_num: "IP配置",
+    ethport_id: "端口号",
+    porttype: "端口类型",
+    epspeed: "端口速率(Mbps)", // 2
+    epduplex: "端口双工", // 2
+    epstatus: "端口状态", // 2
+    ring: "环路状态",
+    uniport: "端口号", // 2
+    unitype: "端口类型", // 2
+    na_vlan_id: "端口VLAN",
+    na_vlan_pri: "端口VLAN优先级",
+    ont_description: "Ont描述信息",
+    last_dg_time: "上次掉电时间",
+    lineprof_id: "线路模板ID",
+    lineprof_name: "线路模板Name",
+    srvprof_id: "业务模板ID",
+    srvprof_name: "业务模板Name",
+    uptime: "在线时间",
+    version: "版本",
+    switch: "切换",
+    ont: "Ont",
+    onu_port_info: "ONU端口信息",
 };
 
 export default zh;
