@@ -24,7 +24,7 @@ export default {
                                 this.$message.error(
                                     `(${res.data.code}) ${res.data.message}`
                                 );
-                                return Promise.reject();
+                                return Promise.reject(res.data);
                             }
                         })
                         .catch((err) => {});
