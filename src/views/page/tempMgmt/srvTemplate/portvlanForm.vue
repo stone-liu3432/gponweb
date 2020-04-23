@@ -1,7 +1,7 @@
 <template>
     <el-form label-width="120px" ref="portvlan-form" :model="form" :rules="rules">
         <el-form-item :label="$lang('uniport')" prop="uniport">
-            <el-input v-model.number="form.uniport" :disabled="unconcernPort"></el-input>
+            <el-input v-model.number="form.uniport"></el-input>
         </el-form-item>
         <el-form-item :label="$lang('unitype')" prop="unitype">
             <el-select v-model.number="form.unitype">
@@ -52,21 +52,12 @@
 <script>
 import { mapGetters } from "vuex";
 import { UNI_TYPES, VLAN_MODES } from "@/utils/commonData";
-import { isFunction, isArray } from "@/utils/common";
+import { isFunction, isArray, isDef } from "@/utils/common";
 import { regRange, regLength } from "@/utils/validator";
 export default {
     name: "portvlanForm",
     computed: {
         ...mapGetters(["$lang", "validateMsg"]),
-        unconcernPort() {
-            if (this.form.unitype === 1) {
-                this.form.uniport = "";
-                const el = this.$refs["portvlan-form"];
-                el && el.clearValidate("uniport");
-                return true;
-            }
-            return false;
-        },
         disabledCvlan() {
             return this.autoAssignCvlan || this.form.mode === 1;
         }
@@ -110,39 +101,66 @@ export default {
                     }
                 ]
             },
-            autoAssignCvlan: false
+            autoAssignCvlan: false,
+            dialogType: "",
+            dialogData: null
         };
     },
     methods: {
-        init() {
+        init(data) {
             this.$refs["portvlan-form"].resetFields();
+            this.dialogType = "";
+            this.dialogData = null;
+            if (isDef(data)) {
+                this.dialogType = "set";
+                this.dialogData = JSON.parse(JSON.stringify(data));
+                Object.keys(this.form).forEach(key => {
+                    if (isDef(data[key])) {
+                        this.form[key] = data[key];
+                    }
+                });
+            }
         },
         validate(fn) {
-            if (
-                this.data.some(
-                    item =>
-                        item.uniport === this.form.uniport &&
-                        item.unitype === this.form.unitype &&
-                        item.svlanid === this.form.svlanid &&
-                        item.svlanpri === this.form.svlanpri
-                )
-            ) {
-                return this.$message.error(
-                    `${this.$lang("duplicate_param")}: ${this.$lang("svlanid")}`
-                );
-            }
-            if (
-                this.data.some(
-                    item =>
-                        item.uniport === this.form.uniport &&
-                        item.unitype === this.form.unitype &&
-                        item.cvlanid === this.form.cvlanid &&
-                        item.cvlanpri === this.form.cvlanpri
-                )
-            ) {
-                return this.$message.error(
-                    `${this.$lang("duplicate_param")}: ${this.$lang("cvlanid")}`
-                );
+            if (this.dialogType !== "set") {
+                if (
+                    this.data.some(
+                        item =>
+                            item.uniport === this.form.uniport &&
+                            item.unitype === this.form.unitype &&
+                            item.svlanid === this.form.svlanid &&
+                            item.svlanpri === this.form.svlanpri
+                    )
+                ) {
+                    return this.$message.error(
+                        `${this.$lang("duplicate_param")}: ${this.$lang(
+                            "svlanid"
+                        )}`
+                    );
+                }
+                if (
+                    this.data.some(
+                        item =>
+                            item.uniport === this.form.uniport &&
+                            item.unitype === this.form.unitype &&
+                            item.cvlanid === this.form.cvlanid &&
+                            item.cvlanpri === this.form.cvlanpri
+                    )
+                ) {
+                    return this.$message.error(
+                        `${this.$lang("duplicate_param")}: ${this.$lang(
+                            "cvlanid"
+                        )}`
+                    );
+                }
+            } else {
+                if (
+                    Object.keys(this.dialogData).every(
+                        key => this.dialogData[key] === this.form[key]
+                    )
+                ) {
+                    return this.$message.info(this.$lang("modify_tips"));
+                }
             }
             this.$refs["portvlan-form"].validate(valid => {
                 if (isFunction(fn)) {
@@ -156,6 +174,9 @@ export default {
         },
         validatePort(rule, val, cb) {
             if (this.form.unitype === 1) {
+                if (!regRange(val, 0, 2)) {
+                    return cb(new Error(this.validateMsg("inputRange", 0, 2)));
+                }
                 return cb();
             }
             if (!regRange(val, 0, 8)) {
@@ -180,13 +201,14 @@ export default {
             }
             return this.validateVlan(rule, val, cb);
         },
-        // 只能出现一个iphost的端口
+        // 只能出现一个iphost的端口 ?  =>  待定
         disabledIphost(val) {
-            return (
-                val === "iphost" &&
-                this.data &&
-                this.data.some(item => item.unitype === 1)
-            );
+            return false;
+            // return (
+            //     val === "iphost" &&
+            //     this.data &&
+            //     this.data.some(item => item.unitype === 1)
+            // );
         }
     },
     watch: {
@@ -212,6 +234,10 @@ export default {
             } else {
                 this.form.cvlanid = "";
             }
+        },
+        "form.unitype"() {
+            const el = this.$refs["portvlan-form"];
+            el && el.clearValidate(["uniport"]);
         }
     }
 };
