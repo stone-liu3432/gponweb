@@ -84,13 +84,16 @@ export default {
 .has-border {
     border: @border-style;
     border-radius: 3px;
+    .nms-panel-row {
+        border-top: @border-style;
+    }
 }
 h3 {
     color: @titleColor;
 }
 .nms-panel-row {
     .base-font-style;
-    margin: 12px 0;
+    padding: 6px 0;
     .nms-panel-title {
         padding-left: 12px;
     }
