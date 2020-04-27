@@ -9,7 +9,9 @@ const state = {
     onuResource: [],
     onulist: [],
     time: {},
-    interfaces: []
+    interfaces: [],
+    lineProfs: [],
+    srvProfs: [],
 };
 
 export default state;
