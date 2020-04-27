@@ -23,7 +23,7 @@
                     @click="setInfo"
                 >{{ $lang('config', 'desc') }}</el-button>
             </div>
-            <el-row :gutter="30">
+            <el-row :gutter="30" style="width: 1030px;">
                 <el-col :span="12">
                     <nms-panel
                         :data="baseInfo"
@@ -51,6 +51,7 @@
                             :data="portInfo"
                             :excludes="['identifier']"
                             border
+                            :contentRender="contentRender"
                             v-if="Object.keys(portInfo).length"
                         >
                             <span slot="title">{{ $lang('port', 'info') }}</span>
@@ -100,6 +101,16 @@ export default {
             contentRender: {
                 auth_mode(key, val) {
                     return ONT_AUTH_MODES[val];
+                },
+                iphost_num(key, val) {
+                    return val
+                        ? this.$lang("support")
+                        : this.$lang("not_support");
+                },
+                veip_num(key, val) {
+                    return val
+                        ? this.$lang("support")
+                        : this.$lang("not_support");
                 }
             },
             dialogVisible: false
