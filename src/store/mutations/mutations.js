@@ -32,7 +32,13 @@ const mutations = {
     },
     updateInterfaces(state, data) {
         state.interfaces = data;
-    }
+    },
+    updateLineProfs(state, data) {
+        state.lineProfs = data;
+    },
+    updateSrvProfs(state, data) {
+        state.srvProfs = data;
+    },
 };
 
 export default mutations;
