@@ -171,6 +171,32 @@ const actions = {
             })
             .catch((err) => {});
     },
+    getLineProfs({ commit }) {
+        commit("updateLineProfs", []);
+        axios
+            .get("/lineprofile?form=table")
+            .then((res) => {
+                if (res.data.code === 1) {
+                    if (isArray(res.data.data)) {
+                        commit("updateLineProfs", res.data.data);
+                    }
+                }
+            })
+            .catch((err) => {});
+    },
+    getSrvProfs({ commit }) {
+        commit("updateSrvProfs", []);
+        axios
+            .get("/srvprofile?form=table")
+            .then((res) => {
+                if (res.data.code === 1) {
+                    if (isArray(res.data.data)) {
+                        commit("updateSrvProfs", res.data.data);
+                    }
+                }
+            })
+            .catch((err) => {});
+    },
 };
 
 export default actions;
