@@ -8,7 +8,7 @@ Mock.mock("/board?info=menu", "get", {
         page: "advanced",
         menu: [
             {
-                name: "running_status"
+                name: "running_status",
             },
             {
                 name: "system_mgmt",
@@ -20,8 +20,8 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "time" },
                     { name: "service" },
                     { name: "alarm" },
-                    { name: "user_mgmt" }
-                ]
+                    { name: "user_mgmt" },
+                ],
             },
             {
                 name: "pon_mgmt",
@@ -32,17 +32,19 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "loid_mgmt" },
                     { name: "onu_batch_upgrade" },
                     { name: "pon_optical" },
-                    { name: "batch_config" }
-                ]
+                    { name: "batch_config" },
+                ],
             },
             {
                 name: "onu_mgmt",
                 children: [
                     { name: "onu_basic_info" },
+                    { name: "onu_port_info" },
                     { name: "onu_port_cfg" },
+                    { name: "op_vlan" },
                     { name: "onu_multicast" },
-                    { name: "onu_perf_info" }
-                ]
+                    { name: "onu_perf_info" },
+                ],
             },
             {
                 name: "swport_mgmt",
@@ -52,15 +54,19 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "port_cfg" },
                     { name: "port_vlan" },
                     { name: "loop_detect" },
-                    { name: "port_isolation" }
-                ]
+                    { name: "port_isolation" },
+                ],
             },
             {
-                name: "mac_mgmt"
+                name: "mac_mgmt",
             },
             {
                 name: "protocol_mgmt",
-                children: [{ name: "rstp" }, { name: "igmp" }, { name: "dhcp" }]
+                children: [
+                    { name: "rstp" },
+                    { name: "igmp" },
+                    { name: "dhcp" },
+                ],
             },
             {
                 name: "ACL/QoS",
@@ -68,18 +74,18 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "time_range" },
                     { name: "acl_mgmt" },
                     { name: "packet_filter" },
-                    { name: "QoS" }
-                ]
+                    { name: "QoS" },
+                ],
             },
             {
                 name: "route",
-                children: [{ name: "route_mgmt" }, { name: "ARP" }]
+                children: [{ name: "route_mgmt" }, { name: "ARP" }],
             },
             {
-                name: "link_aggregation"
-            }
-        ]
-    }
+                name: "link_aggregation",
+            },
+        ],
+    },
 });
 
 // nav
@@ -93,7 +99,7 @@ Mock.mock("/board?info=nav", "get", {
             { name: "onu_allow" },
             { name: "template_mgmt" },
             { name: "virtual_port" },
-            { name: "advanced_setting" }
-        ]
-    }
+            { name: "advanced_setting" },
+        ],
+    },
 });
