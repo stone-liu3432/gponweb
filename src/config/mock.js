@@ -38,3 +38,6 @@ import "@/mock/content/tempMgmt/srvMgmt";
 import "@/mock/content/virtualPort/virtualPort";
 import "@/mock/content/pon/optical";
 import "@/mock/content/pon/ontBasicInfo";
+import "@/mock/content/pon/ontPortInfo";
+import "@/mock/content/pon/opVlan";
+import "@/mock/content/pon/ponSetting";
