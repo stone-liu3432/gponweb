@@ -89,6 +89,22 @@ const data = {
         import(
             /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/ontBasicInfo"
         ),
+    onu_port_info: () =>
+        import(
+            /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/ontPortInfo"
+        ),
+    op_vlan: () =>
+        import(
+            /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/opVlan"
+        ),
+    onu_port_cfg: () =>
+        import(
+            /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/ontPortConfig"
+        ),
+    pon_setting: () =>
+        import(
+            /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/ponSetting"
+        ),
 };
 
 export default data;
