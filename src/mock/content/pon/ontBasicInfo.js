@@ -77,6 +77,7 @@ Mock.mock(
                 gem_num: Random.range(1, 4),
                 tcont_num: Random.range(1, 4),
                 iphost_num: Random.range(1, 4),
+                veip_num: Random.range(0, 1),
             },
         };
     }
