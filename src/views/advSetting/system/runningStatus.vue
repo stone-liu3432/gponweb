@@ -9,14 +9,20 @@
                     <template slot="header">
                         <span class="company-info-title">{{ $lang('sys_info') }}</span>
                     </template>
-                    <template v-for="(item, key) in system">
-                        <template v-if="key !== 'bl_ver' && key !== 'vendor'">
-                            <p>
-                                <span>{{ $lang(key) }}</span>
-                                <span>{{ item }}</span>
-                            </p>
-                        </template>
+                    <template v-for="key in sysKey">
+                        <p>
+                            <span>{{ $lang(key) }}:</span>
+                            <span>{{ system[key] || '' }}</span>
+                        </p>
                     </template>
+                    <p>
+                        <span>{{ $lang('current_time') }}:</span>
+                        <span>{{ cur_time }}</span>
+                    </p>
+                    <p>
+                        <span>{{ $lang('run_time') }}:</span>
+                        <span>{{ run_time }}</span>
+                    </p>
                 </el-card>
             </el-col>
             <el-col :span="14">
@@ -34,15 +40,18 @@
                             <canvas width="200" height="200" ref="memory-detail"></canvas>
                         </el-col>
                     </el-row>
-                    <h3>{{ $lang('sys_run_time') }}</h3>
-                    <el-row style="padding: 6px;" class="base-font-style">
-                        <el-col :span="6">{{ $lang('current_time') }}:</el-col>
-                        <el-col :span="12">{{ cur_time }}</el-col>
-                    </el-row>
-                    <el-row style="padding: 6px;" class="base-font-style">
-                        <el-col :span="6">{{ $lang('run_time') }}:</el-col>
-                        <el-col :span="12">{{ run_time }}</el-col>
-                    </el-row>
+                    <h3>{{ $lang('fan_speed') }}</h3>
+                    <template v-for="item in fans">
+                        <el-row style="padding: 6px;" class="base-font-style">
+                            <el-col
+                                :span="6"
+                                style="line-height: 38px;"
+                            >{{ $lang('fanid') + item.fanid }}:</el-col>
+                            <el-col :span="12">
+                                <el-slider v-model="item.speed" :max="255" disabled></el-slider>
+                            </el-col>
+                        </el-row>
+                    </template>
                 </el-card>
             </el-col>
         </el-row>
@@ -78,6 +87,21 @@ export default {
     computed: {
         ...mapGetters(["$lang"]),
         ...mapState(["system", "time"]),
+        sysKey() {
+            return [
+                "product_name",
+                "sys_ver",
+                "fw_ver",
+                "hw_ver",
+                // "bl_ver",
+                "macaddr",
+                "ponports",
+                "geports",
+                "xgeports",
+                // "vendor",
+                "build_time"
+            ];
+        },
         cur_time() {
             if (isArray(this.now) && this.now.length) {
                 const t = this.now;
@@ -117,10 +141,12 @@ export default {
             company_name: "",
             company_addr: "",
             company_email: "",
-            company_phone: ""
+            company_phone: "",
+            fans: []
         };
     },
     created() {
+        this.getFanInfo();
         this.getTime();
         this.getUsage();
         this.getCompanyInfo();
@@ -158,6 +184,7 @@ export default {
         };
         const interval = setInterval(fn, 1000);
         const refreshTimer = setInterval(_ => {
+            this.getFanInfo();
             this.getUsage();
         }, 10000);
         this.$once("hook:beforeDestroy", _ => {
@@ -179,6 +206,18 @@ export default {
                             this.$nextTick(_ => {
                                 this.drawing(cpu_usage, memory_usage);
                             });
+                        }
+                    }
+                })
+                .catch(err => {});
+        },
+        getFanInfo() {
+            this.$http
+                .get("/board?info=fan")
+                .then(res => {
+                    if (res.data.code === 1) {
+                        if (isArray(res.data.data)) {
+                            this.fans = res.data.data;
                         }
                     }
                 })
