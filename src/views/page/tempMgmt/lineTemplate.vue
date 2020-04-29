@@ -71,6 +71,12 @@ export default {
             type: Array
         }
     },
+    inject: ["updateNavScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateNavScrollbar();
+        });
+    },
     data() {
         return {
             lineTable: [],

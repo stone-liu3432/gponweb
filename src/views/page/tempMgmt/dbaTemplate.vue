@@ -61,6 +61,12 @@ export default {
     computed: {
         ...mapGetters(["$lang"])
     },
+    inject: ["updateNavScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateNavScrollbar();
+        });
+    },
     props: {
         dbaProfiles: {
             type: Array

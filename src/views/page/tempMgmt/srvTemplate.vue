@@ -56,6 +56,12 @@ export default {
     computed: {
         ...mapGetters(["$lang"])
     },
+    inject: ["updateNavScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateNavScrollbar();
+        });
+    },
     data() {
         return {
             srvTable: [],
