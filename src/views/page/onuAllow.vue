@@ -20,7 +20,11 @@
         </page-header>
         <el-tabs v-model="activeName" type="card">
             <el-tab-pane :label="$lang('auth_list')" name="auth">
-                <ont-auth-list :port_id="port_id" v-if="activeName === 'auth'" ref="ont-auth-list"></ont-auth-list>
+                <ont-auth-list
+                    :port_id="port_id"
+                    v-if="activeName === 'auth' && port_id"
+                    ref="ont-auth-list"
+                ></ont-auth-list>
             </el-tab-pane>
             <el-tab-pane :label="$lang('auto_discover_list')" name="autofind">
                 <ont-auto-find
