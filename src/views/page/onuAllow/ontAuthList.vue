@@ -8,10 +8,18 @@
             </el-table-column>
             <el-table-column :label="$lang('ont_name')" prop="ont_name"></el-table-column>
             <el-table-column :label="$lang('ont_sn')" prop="ont_sn"></el-table-column>
-            <el-table-column :label="$lang('state')" prop="state"></el-table-column>
-            <el-table-column :label="$lang('rstate')" prop="rstate"></el-table-column>
-            <el-table-column :label="$lang('cstate')" prop="cstate"></el-table-column>
-            <el-table-column :label="$lang('mstate')" prop="mstate"></el-table-column>
+            <el-table-column :label="$lang('state')" prop="state">
+                <template slot-scope="scope">{{ ONT_STATES[scope.row.state] }}</template>
+            </el-table-column>
+            <el-table-column :label="$lang('rstate')" prop="rstate">
+                <template slot-scope="scope">{{ ONT_RSTATES[scope.row.rstate] }}</template>
+            </el-table-column>
+            <el-table-column :label="$lang('cstate')" prop="cstate">
+                <template slot-scope="scope">{{ ONT_CSTATES[scope.row.cstate] }}</template>
+            </el-table-column>
+            <el-table-column :label="$lang('mstate')" prop="mstate">
+                <template slot-scope="scope">{{ ONT_MSTATES[scope.row.mstate] }}</template>
+            </el-table-column>
             <el-table-column :label="$lang('last_u_time')" prop="last_u_time"></el-table-column>
             <el-table-column :label="$lang('last_d_time')" prop="last_d_time"></el-table-column>
             <el-table-column :label="$lang('last_d_cause')" prop="last_d_cause"></el-table-column>
@@ -47,6 +55,12 @@
 import { mapGetters } from "vuex";
 import { isArray, isFunction } from "@/utils/common";
 import postData from "@/mixin/postData";
+import {
+    ONT_STATES,
+    ONT_RSTATES,
+    ONT_MSTATES,
+    ONT_CSTATES
+} from "@/utils/commonData";
 export default {
     name: "onuAuthList",
     mixins: [postData],
@@ -70,7 +84,11 @@ export default {
         return {
             ontList: [],
             currentPage: 1,
-            pageSize: 10
+            pageSize: 10,
+            ONT_STATES,
+            ONT_CSTATES,
+            ONT_MSTATES,
+            ONT_RSTATES
         };
     },
     inject: ["updateNavScrollbar"],

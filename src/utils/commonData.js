@@ -13,14 +13,14 @@ export const DBA_PROFILE_TYPES = {
     2: ["assure"],
     3: ["assure", "max"],
     4: ["max"],
-    5: ["fix", "assure", "max"]
+    5: ["fix", "assure", "max"],
 };
 
 // 线路模板，映射模式枚举
 export const MAPPING_MODES = {
     1: "VLAN",
     2: "Priority",
-    3: "TCI"
+    3: "TCI",
 };
 
 // VLAN模式枚举
@@ -28,7 +28,7 @@ export const VLAN_MODES = {
     1: "transparent",
     2: "tag",
     3: "translation",
-    4: "qinq"
+    4: "qinq",
 };
 
 // uni 端口类型
@@ -40,8 +40,16 @@ export const TAG_ACTIONS = {
     2: "transparent",
     3: "translate",
     4: "translate-and-add",
-    5: "add-double"
+    5: "add-double",
 };
 
-// ont auth mode
+// ONT
 export const ONT_AUTH_MODES = ["SN AUTH", "LOID AUTH", "LOID+PASS AUTH"];
+export const ONT_STATES = ["inactive", "active"];
+export const ONT_RSTATES = ["initial", "online", "offline"];
+export const ONT_CSTATES = ["initial", "normal", "fail"];
+export const ONT_MSTATES = ["initial", "match", "mismatch"];
+
+// IGMP
+export const IGMP_MODES = ["disable", "snooping", "proxy"];
+export const IGMP_PROTOCOL_POLICIES = ["pass", "discard"];
