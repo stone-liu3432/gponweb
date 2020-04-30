@@ -87,12 +87,12 @@ export function parseStringAsList(str) {
 export function debounce(func, delay, context, ...args) {
     if (func.timer) {
         clearTimeout(func.timer);
-        func.timer = setTimeout(_ => {
+        func.timer = setTimeout(() => {
             func.apply(context, args);
             func.timer = null;
         }, delay);
     } else {
-        func.timer = setTimeout(_ => {
+        func.timer = setTimeout(() => {
             func.apply(context, args);
             func.timer = null;
         }, delay);
@@ -110,7 +110,7 @@ export function throttle(func, wait, context) {
             func.apply(context, arguments);
             last = current;
         } else {
-            timer = setTimeout(_ => {
+            timer = setTimeout(() => {
                 func.apply(context, arguments);
                 last = current;
             }, wait);
