@@ -50,7 +50,7 @@ import {
     Tag,
     Tree,
     Alert,
-    //   Slider,
+    Slider,
     Icon,
     Row,
     Col,
@@ -88,7 +88,7 @@ import {
     Message,
     Notification,
     Scrollbar,
-    Popconfirm
+    Popconfirm,
 } from "element-ui";
 
 Vue.use(Pagination);
@@ -131,7 +131,7 @@ Vue.use(TabPane);
 Vue.use(Tag);
 Vue.use(Tree);
 Vue.use(Alert);
-// Vue.use(Slider);
+Vue.use(Slider);
 Vue.use(Icon);
 Vue.use(Row);
 Vue.use(Col);
