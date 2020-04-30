@@ -83,7 +83,7 @@ Mock.mock(
     }
 );
 
-Mock.mock(/\/onu_allow_list\?form=resource&port_id=\d+/, "get", ({ url }) => {
+Mock.mock(/\/gponont_mgmt\?form=resource&port_id=\d+/, "get", ({ url }) => {
     const port_id = url.match(/(?<=port_id=)\d+/) >>> 0;
     return {
         code: 1,
