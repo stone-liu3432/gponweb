@@ -5,7 +5,7 @@
 import Mock, { Random } from "mockjs";
 
 Mock.setup({
-    timeout: "200-600"
+    timeout: "200-600",
 });
 
 const _hex = () => {
@@ -22,7 +22,7 @@ Random.extend({
     basesuccess(data) {
         return {
             code: 1,
-            message: "success"
+            message: "success",
         };
     },
     range(start, end) {
@@ -39,8 +39,29 @@ Random.extend({
             0,
             255
         )}.${this.natural(0, 255)}`;
-    }
+    },
+    portlist(flag = "port") {
+        const length =
+            flag === "port"
+                ? this.natural(0, 24) // all port
+                : flag === "pon"
+                ? this.natural(0, 16) // pon
+                : this.natural(0, 8); // switch
+        const data = Array.from({ length })
+            .map((item) =>
+                flag === "port"
+                    ? this.natural(1, 24)
+                    : flag === "pon"
+                    ? this.natural(1, 16)
+                    : this.natural(17, 24)
+            )
+            .filter((item, index, arr) => index === arr.indexOf(item));
+        data.sort((a, b) => a - b);
+        return data.join(",");
+    },
 });
+
+Mock.post = (url) => Mock.mock(url, "post", "@BASESUCCESS");
 
 console.log("mock loaded success");
 
