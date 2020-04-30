@@ -105,7 +105,7 @@ const actions = {
     getOnuResource({ commit }, port_id) {
         commit("updateOnuResource", []);
         axios
-            .get("/onu_allow_list", { params: { form: "resource", port_id } })
+            .get("/gponont_mgmt", { params: { form: "resource", port_id } })
             .then((res) => {
                 if (res.data.code === 1) {
                     if (isDef(res.data.data)) {
