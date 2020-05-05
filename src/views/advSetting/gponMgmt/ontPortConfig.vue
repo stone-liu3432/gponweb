@@ -12,7 +12,7 @@
                 <el-table-column :label="$lang('epspeed')">
                     <template
                         slot-scope="scope"
-                    >{{ scope.row.epspeed === 0xffff ? 'Auto-neg' : scope.row.epspeed }}</template>
+                    >{{ (scope.row.epspeed === 0xffff || scope.row.epspeed === 0) ? 'Auto' : scope.row.epspeed }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('epduplex')">
                     <template
@@ -128,7 +128,7 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate(formData => {
                 if (isDef(formData)) {
-                    const url = "/onumgmt?form=port_attr",
+                    const url = "/gponont_mgmt?form=port_attr",
                         post_params = {
                             method: "set",
                             param: formData

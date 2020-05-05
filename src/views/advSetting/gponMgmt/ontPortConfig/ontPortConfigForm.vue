@@ -1,5 +1,5 @@
 <template>
-    <el-form :model="form" label-width="140px" ref="ont-port-config-form">
+    <el-form :model="form" label-width="180px" ref="ont-port-config-form">
         <el-form-item :label="$lang('uniport')" prop="uniport">{{ form.uniport }}</el-form-item>
         <el-form-item :label="$lang('epspeed')" prop="epspeed">
             <el-select v-model.number="form.epspeed">
