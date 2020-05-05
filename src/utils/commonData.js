@@ -53,3 +53,7 @@ export const ONT_MSTATES = ["initial", "match", "mismatch"];
 // IGMP
 export const IGMP_MODES = ["disable", "snooping", "proxy"];
 export const IGMP_PROTOCOL_POLICIES = ["pass", "discard"];
+
+export const MULTICAST_ACTIONS = ["dynamic", "static"];
+
+export const MULTICAST_UNKNOWN_POLICYS = ["transparent", "discard"];
