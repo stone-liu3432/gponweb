@@ -57,3 +57,9 @@ export const IGMP_PROTOCOL_POLICIES = ["pass", "discard"];
 export const MULTICAST_ACTIONS = ["dynamic", "static"];
 
 export const MULTICAST_UNKNOWN_POLICYS = ["transparent", "discard"];
+
+export const RELAY_POLICY = ["standard", "option60"];
+export const OPTION82_POLICY = ["reserve", "drop", "replace"];
+
+// 对应状态的开关按钮文字， 0关闭状态时，文字应显示为开启(on)，反之则为关闭(off)
+export const BUTTON_TEXT = ["on", "off"];
