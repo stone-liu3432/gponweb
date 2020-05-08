@@ -513,6 +513,7 @@ var en = {
     loading: "Loading data, please wait ...",
     multicast_table: "Multicast Table",
     static_table: "Static Table",
+    dynamic_table: "Dynamic Table",
     tagged_portlist: "Tagged",
     untagged_portlist: "Untagged",
     onu_optical_tips:
@@ -923,6 +924,17 @@ var en = {
     switch: "Switch",
     ont: "Ont",
     onu_port_info: "ONU Port Info",
+    adminstate: "Port AdminStatus",
+    epautoneg: "Eth Port Autoneg",
+    veip_num: "VeIP",
+    support: "Support",
+    not_support: "Not Support",
+    autofind: "Auto Discovery",
+    af_aging_time: "Autofind table aging time",
+    af_interval: "Autofind interval",
+    laser: "Port laser state",
+    fanid: "Fan",
+    fan_speed: " Fan Speed",
 };
 
 export default en;

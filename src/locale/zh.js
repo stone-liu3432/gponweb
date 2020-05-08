@@ -498,6 +498,7 @@ var zh = {
     loading: "加载数据中，请稍候...",
     multicast_table: "组播表项",
     static_table: "静态表项",
+    dynamic_table: "动态表项",
     tagged_portlist: "Tagged",
     untagged_portlist: "Untagged",
     onu_optical_tips: "你需要手动刷新来获取光功率数据",
@@ -898,6 +899,17 @@ var zh = {
     switch: "切换",
     ont: "Ont",
     onu_port_info: "ONU端口信息",
+    adminstate: "端口管理状态",
+    epautoneg: "端口自适应",
+    veip_num: "VeIP",
+    support: "支持",
+    not_support: "不支持",
+    autofind: "自动发现",
+    af_aging_time: "自动发现列表老化时间",
+    af_interval: "自动发现间隔",
+    laser: "端口光状态",
+    fanid: "风扇",
+    fan_speed: " 风扇转速",
 };
 
 export default zh;
