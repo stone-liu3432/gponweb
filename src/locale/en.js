@@ -935,6 +935,9 @@ var en = {
     laser: "Port laser state",
     fanid: "Fan",
     fan_speed: " Fan Speed",
+    ipaddress_s: "Starting IP Address",
+    ipaddress_e: "End IP Address",
+    server_admin: "Server Status",
 };
 
 export default en;

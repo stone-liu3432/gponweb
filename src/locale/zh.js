@@ -910,6 +910,9 @@ var zh = {
     laser: "端口光状态",
     fanid: "风扇",
     fan_speed: " 风扇转速",
+    ipaddress_s: "起始IP地址",
+    ipaddress_e: "结束IP地址",
+    server_admin: "Server状态",
 };
 
 export default zh;
