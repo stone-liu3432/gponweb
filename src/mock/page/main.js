@@ -66,6 +66,7 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "rstp" },
                     { name: "igmp" },
                     { name: "dhcp" },
+                    { name: "mstp" },
                 ],
             },
             {
