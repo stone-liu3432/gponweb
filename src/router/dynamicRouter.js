@@ -105,6 +105,18 @@ const data = {
         import(
             /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/ponSetting"
         ),
+    igmp: () =>
+        import(
+            /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/igmp"
+        ),
+    dhcp: () =>
+        import(
+            /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/dhcp"
+        ),
+    mstp: () =>
+        import(
+            /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/mstp"
+        ),
 };
 
 export default data;
