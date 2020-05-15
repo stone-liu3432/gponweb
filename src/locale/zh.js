@@ -962,6 +962,8 @@ var zh = {
     root_time: "根桥时间",
     primary: "主DNS",
     secondary: "备用DNS",
+    true: "True",
+    false: "False",
 };
 
 export default zh;

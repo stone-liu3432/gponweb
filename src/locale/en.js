@@ -987,6 +987,8 @@ var en = {
     root_time: "Root Time",
     primary: "Primary DNS",
     secondary: "Secondary DNS",
+    true: "True",
+    false: "False",
 };
 
 export default en;
