@@ -64,3 +64,41 @@ export const OPTION82_POLICY = ["reserve", "drop", "replace"];
 export const OPTION82_CIRCUIT = ["", "VLAN+PORT"];
 export const OPTION82_REMOTE = ["", "OLT MAC"];
 export const ENTRY_STATUS = ["invalid", "valid"];
+
+// mstp
+export const PORT_STATE_MAP = [
+    "Discarding",
+    "Discarding",
+    "Learning",
+    "Forwarding",
+    "Discarding",
+];
+
+export const PORT_ROLE_MAP = [
+    "Disable",
+    "Root",
+    "Designated",
+    "Alternate",
+    "Backup",
+    "Master",
+];
+
+export const ADMIN_P2P_MAP = ["auto", "true", "false"];
+
+// acl-qos
+export const DAY_MAP = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+    "Daily",
+    "Weekend",
+    "Working-day",
+];
+
+export const ACL_ACTION_MAP = { 1: "Deny", 2: "Permit" };
+
+export const PROTOCOL_MAP = ["icmp", "udp", "tcp", "ip", "ipinip"];
