@@ -197,6 +197,19 @@ const actions = {
             })
             .catch((err) => {});
     },
+    getTimerange({ commit }) {
+        commit("updateTimerange", []);
+        axios
+            .get("/switch_acl?form=time_range&name=all")
+            .then((res) => {
+                if (res.data.code === 1) {
+                    if (isArray(res.data.data)) {
+                        commit("updateTimerange", res.data.data);
+                    }
+                }
+            })
+            .catch((err) => {});
+    },
 };
 
 export default actions;
