@@ -12,6 +12,7 @@ const state = {
     interfaces: [],
     lineProfs: [],
     srvProfs: [],
+    timerangeList: [],
 };
 
 export default state;
