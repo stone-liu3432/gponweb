@@ -39,6 +39,9 @@ const mutations = {
     updateSrvProfs(state, data) {
         state.srvProfs = data;
     },
+    updateTimerange(state, data) {
+        state.timerangeList = data;
+    },
 };
 
 export default mutations;
