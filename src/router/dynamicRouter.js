@@ -117,6 +117,22 @@ const data = {
         import(
             /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/mstp"
         ),
+    time_range: () =>
+        import(
+            /* webpackChunkName: "acl-qos" */ "@/views/advSetting/acl-qos/timerange"
+        ),
+    acl_mgmt: () =>
+        import(
+            /* webpackChunkName: "acl-qos" */ "@/views/advSetting/acl-qos/aclMgmt"
+        ),
+    packet_filter: () =>
+        import(
+            /* webpackChunkName: "acl-qos" */ "@/views/advSetting/acl-qos/packetFilter"
+        ),
+    QoS: () =>
+        import(
+            /* webpackChunkName: "acl-qos" */ "@/views/advSetting/acl-qos/qos"
+        ),
 };
 
 export default data;
