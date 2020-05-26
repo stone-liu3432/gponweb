@@ -44,3 +44,7 @@ import "@/mock/content/pon/ontBasicInfo";
 import "@/mock/content/pon/ontPortInfo";
 import "@/mock/content/pon/opVlan";
 import "@/mock/content/pon/ponSetting";
+import "@/mock/content/acl-qos/timerange";
+import "@/mock/content/acl-qos/aclMgmt";
+import "@/mock/content/acl-qos/packetFilter";
+import "@/mock/content/acl-qos/qos";
