@@ -46,7 +46,7 @@
                 hide-on-single-page
                 :current-page.sync="currentPage"
                 :page-sizes="[10, 20, 30, 50]"
-                :page-size="pageSize"
+                :page-size.sync="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :total="serverList.length"
             ></el-pagination>
