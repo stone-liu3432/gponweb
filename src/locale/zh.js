@@ -964,6 +964,12 @@ var zh = {
     secondary: "备用DNS",
     true: "True",
     false: "False",
+    svp_af_id: "虚端口自动发现ID",
+    untag: "Untag",
+    svp_type: "VLAN类型",
+    install_mode: "安装模式",
+    manual: "手动",
+    new_svlan: "S-VLAN",
 };
 
 export default zh;

@@ -579,10 +579,10 @@ var en = {
     state: "State ",
     port_list: "Port List ",
 
-    priority: "Priority ",
+    priority: "Priority",
     queue_scheduler: "Queue Scheduler ",
-    queue: "Queue ",
-    weight: "Weight ",
+    queue: "Queue",
+    weight: "Weight",
     delete_all: "Delete All ",
     show_detail: "View Details ",
     packet_filter: "Packet Filter ",
@@ -989,6 +989,12 @@ var en = {
     secondary: "Secondary DNS",
     true: "True",
     false: "False",
+    svp_af_id: "SVP Auto Find ID",
+    untag: "Untag",
+    svp_type: "VLAN Type",
+    install_mode: "Install Mode",
+    manual: "Manual",
+    new_svlan: "S-VLAN",
 };
 
 export default en;
