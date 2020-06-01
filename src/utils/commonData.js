@@ -38,12 +38,18 @@ export const UNI_TYPES = ["eth", "iphost"];
 
 // tag action
 export const TAG_ACTIONS = {
-    1: "default",
-    2: "transparent",
-    3: "translate",
-    4: "translate-and-add",
-    5: "add-double",
+    1: "Default",
+    2: "Transparent",
+    3: "Translate",
+    4: "Translate-and-add",
+    5: "Add-double",
+    6: "Untag",
 };
+
+// virtual port
+export const SVP_TYPE_MAP = { 1: "untag", 2: "user_vlan" };
+
+export const INSTALL_MODE_MAP = { 1: "auto", 2: "manual" };
 
 // ONT
 export const ONT_AUTH_MODES = ["SN AUTH", "LOID AUTH", "LOID+PASS AUTH"];
@@ -102,3 +108,7 @@ export const DAY_MAP = [
 export const ACL_ACTION_MAP = { 1: "Deny", 2: "Permit" };
 
 export const PROTOCOL_MAP = ["icmp", "udp", "tcp", "ip", "ipinip"];
+
+// static route
+export const STATIC_ROUTE_PROTOCOL_MAP = ["Static", "Direct"];
+export const STATIC_ROUTE_STATUS_MAP = { 1: "Reachable", 2: "Unreachable" };
