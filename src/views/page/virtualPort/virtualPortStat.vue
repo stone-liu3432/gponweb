@@ -1,17 +1,29 @@
 <template>
     <div>
         <div style="margin: 12px;">
-            <el-button type="primary" @click="chagneAllState(false)">{{ $lang('disable_all') }}</el-button>
             <el-button
                 type="primary"
+                size="mini"
+                @click="chagneAllState(false)"
+            >{{ $lang('disable_all') }}</el-button>
+            <el-button
+                type="primary"
+                size="mini"
                 @click="chagneAllState(true)"
                 style="margin-left: 30px;"
             >{{ $lang('enable_all') }}</el-button>
             <el-button
                 type="primary"
+                size="mini"
                 @click="clearStat()"
                 style="margin-left: 30px;"
             >{{ $lang('flush_all') }}</el-button>
+            <el-button
+                type="primary"
+                size="mini"
+                @click="refreshData"
+                style="margin-left: 30px;"
+            >{{ $lang('refresh') }}</el-button>
         </div>
         <el-table :data="showList" border stripe>
             <el-table-column :label="$lang('svp_id')" prop="svp_id"></el-table-column>
@@ -51,7 +63,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isArray, isDef } from "@/utils/common";
+import { isArray, isDef, debounce } from "@/utils/common";
 import postData from "@/mixin/postData";
 export default {
     name: "virtualProtStat",
@@ -175,6 +187,9 @@ export default {
                         .catch(_ => {});
                 })
                 .catch(_ => {});
+        },
+        refreshData() {
+            debounce(this.getData, 1000, this);
         }
     }
 };
