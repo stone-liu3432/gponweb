@@ -13,8 +13,8 @@
                 style="margin-left: 30px;"
             >{{ $lang('select_all') }}</el-checkbox>
         </el-form-item>
-        <el-form-item :label="$lang('svlan')" prop="svlan">
-            <el-input v-model.number="form.svlan"></el-input>
+        <el-form-item :label="$lang('new_svlan')" prop="new_svlan">
+            <el-input v-model.number="form.new_svlan"></el-input>
         </el-form-item>
         <el-form-item :label="$lang('tag_action')" prop="tag_action">
             <el-select v-model.number="form.tag_action">
@@ -25,7 +25,7 @@
             </el-select>
         </el-form-item>
         <el-form-item :label="$lang('inner_vlan')" prop="inner_vlan">
-            <el-input v-model.number="form.inner_vlan"></el-input>
+            <el-input v-model.number="form.inner_vlan" :disabled="disabledInnervlan"></el-input>
         </el-form-item>
     </el-form>
 </template>
@@ -38,7 +38,14 @@ export default {
     name: "autoTempForm",
     computed: {
         ...mapGetters(["$lang", "getPortName"]),
-        ...mapState(["system"])
+        ...mapState(["system"]),
+        disabledInnervlan() {
+            if (this.form.tag_action === 5 || this.form.tag_action === 4) {
+                return false;
+            }
+            this.form.inner_vlan = "";
+            return true;
+        }
     },
     props: {
         type: {
@@ -54,12 +61,12 @@ export default {
             TAG_ACTIONS,
             form: {
                 port_id: 1,
-                svlan: "",
-                tag_action: 1,
+                new_svlan: "",
+                tag_action: 0,
                 inner_vlan: ""
             },
             rules: {
-                svlan: [
+                new_svlan: [
                     {
                         validator: this.validateVlan,
                         trigger: ["change", "blur"]
