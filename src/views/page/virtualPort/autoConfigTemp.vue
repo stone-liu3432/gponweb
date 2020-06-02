@@ -2,14 +2,26 @@
     <div>
         <div style="margin: 12px;">
             <el-button type="primary" size="mini" @click="openDialog('add')">{{ $lang('add') }}</el-button>
+            <el-button
+                type="primary"
+                size="mini"
+                style="margin-left: 30px;"
+                @click="deleteAllTemp"
+            >{{ $lang('delete_all') }}</el-button>
+            <el-button
+                type="primary"
+                size="mini"
+                style="margin-left: 30px;"
+                @click="refreshData"
+            >{{ $lang('refresh') }}</el-button>
         </div>
         <el-table :data="tempTable" border>
             <el-table-column :label="$lang('port_id')">
                 <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('svlan')" prop="svlan"></el-table-column>
+            <el-table-column :label="$lang('new_svlan')" prop="new_svlan"></el-table-column>
             <el-table-column :label="$lang('tag_action')">
-                <template slot-scope="scope">{{ TAG_ACTIONS[scope.row.tag_action] }}</template>
+                <template slot-scope="scope">{{ TAG_ACTIONS[scope.row.tag_action] || '-' }}</template>
             </el-table-column>
             <el-table-column :label="$lang('inner_vlan')" prop="inner_vlan">
                 <template
@@ -40,7 +52,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { TAG_ACTIONS } from "@/utils/commonData";
-import { isArray, isDef, isFunction } from "@/utils/common";
+import { isArray, isDef, isFunction, debounce } from "@/utils/common";
 import postData from "@/mixin/postData";
 import autoTempForm from "./autoTempForm";
 export default {
@@ -89,7 +101,7 @@ export default {
                         method: "set",
                         param: {
                             port_id: row.port_id,
-                            svlan: row.svlan,
+                            new_svlan: row.new_svlan,
                             tag_action: row.tag_action,
                             inner_vlan: row.inner_vlan
                         }
@@ -120,31 +132,50 @@ export default {
                         method: "set",
                         param: {
                             port_id: formData.port_id,
-                            svlan: formData.svlan,
+                            new_svlan: formData.new_svlan,
                             tag_action: formData.tag_action,
                             inner_vlan: formData.inner_vlan >>> 0
                         }
                     };
                     const ACTIONS = {
-                        add() {
-                            return "/switch_svp?form=svp_auto_profile_set";
-                        },
-                        set() {
-                            return "/switch_svp?form=svp_auto_profile_del";
-                        }
+                        add() {},
+                        set() {}
                     };
                     if (isFunction(ACTIONS[this.dialogType])) {
-                        const url = ACTIONS[this.dialogType].call(this);
-                        url &&
-                            this.postData(url, data)
-                                .then(_ => {
-                                    this.getData();
-                                    this.dialogVisible = false;
-                                })
-                                .catch(_ => {});
+                        const url = "/switch_svp?form=svp_auto_profile_set";
+                        this.postData(url, data)
+                            .then(_ => {
+                                this.getData();
+                                this.dialogVisible = false;
+                            })
+                            .catch(_ => {});
                     }
                 }
             });
+        },
+        deleteAllTemp() {
+            this.$confirm(
+                this.$lang("if_sure", "delete_all", "auto_config_temp") + " ?"
+            )
+                .then(_ => {
+                    this.postData("/switch_svp?form=svp_auto_profile_del", {
+                        method: "set",
+                        param: {
+                            port_id: 0,
+                            new_svlan: 0,
+                            tag_action: 0,
+                            inner_vlan: 0
+                        }
+                    })
+                        .then(_ => {
+                            this.getData();
+                        })
+                        .catch(_ => {});
+                })
+                .catch(_ => {});
+        },
+        refreshData() {
+            debounce(this.getData, 1000, this);
         }
     }
 };
