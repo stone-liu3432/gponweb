@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div style="margin: 12px;">
+            <el-button type="primary" size="mini" @click="refreshData">{{ $lang('refresh') }}</el-button>
+        </div>
         <el-table :data="showList" border stripe>
             <el-table-column :label="$lang('traffic_profile_id')" prop="traffic_profile_id"></el-table-column>
             <el-table-column label="cir" prop="cir"></el-table-column>
@@ -26,7 +29,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isArray } from "@/utils/common";
+import { isArray, debounce } from "@/utils/common";
 export default {
     name: "virtualPortTraffic",
     computed: {
@@ -96,6 +99,9 @@ export default {
                         .catch(err => {});
                 })
                 .catch(_ => {});
+        },
+        refreshData() {
+            debounce(this.getData, 1000, this);
         }
     }
 };
