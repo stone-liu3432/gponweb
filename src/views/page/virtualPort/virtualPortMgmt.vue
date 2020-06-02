@@ -1,22 +1,31 @@
 <template>
     <div>
         <div style="margin: 12px;">
-            <el-button type="primary" size="mini" @click="deleteVp">{{ $lang('delete_all') }}</el-button>
+            <el-button type="primary" size="mini" @click="openDialog('add')">{{ $lang('add') }}</el-button>
             <el-button
                 type="primary"
-                style="margin-left: 30px;"
                 size="mini"
-                @click="openDialog('add')"
-            >{{ $lang('add') }}</el-button>
+                style="margin-left: 30px;"
+                @click="deleteVp()"
+            >{{ $lang('delete_all') }}</el-button>
+            <el-button
+                type="primary"
+                size="mini"
+                style="margin-left: 30px;"
+                @click="refreshData"
+            >{{ $lang('refresh') }}</el-button>
         </div>
         <el-table :data="vpTable" border stripe>
             <el-table-column :label="$lang('svp_id')" prop="svp_id"></el-table-column>
-            <el-table-column :label="$lang('svlan')" prop="svlan"></el-table-column>
+            <el-table-column :label="$lang('new_svlan')" prop="new_svlan"></el-table-column>
             <el-table-column :label="$lang('port_id')" prop="port_id">
                 <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
             </el-table-column>
             <el-table-column :label="$lang('ont_id')" prop="ont_id"></el-table-column>
             <el-table-column :label="$lang('gemport')" prop="gemport"></el-table-column>
+            <el-table-column :label="$lang('svp_type')" prop="svp_type">
+                <template slot-scope="scope">{{ $lang(SVP_TYPE_MAP[scope.row.svp_type]) }}</template>
+            </el-table-column>
             <el-table-column :label="$lang('user_vlan')" prop="user_vlan">
                 <template slot-scope="scope">{{ scope.row.user_vlan ? scope.row.user_vlan : '-' }}</template>
             </el-table-column>
@@ -45,6 +54,9 @@
                     ></el-switch>
                 </template>
             </el-table-column>
+            <el-table-column :label="$lang('install_mode')" prop="install_mode">
+                <template slot-scope="scope">{{ $lang(INSTALL_MODE_MAP[scope.row.install_mode]) }}</template>
+            </el-table-column>
             <el-table-column :label="$lang('desc')" prop="desc"></el-table-column>
             <el-table-column :label="$lang('config')" width="100px">
                 <template slot-scope="scope">
@@ -56,7 +68,7 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
                                 :command="{ action: 'set', data: scope.row }"
-                            >{{ $lang('config') }}</el-dropdown-item>
+                            >{{ $lang('modify') }}</el-dropdown-item>
                             <el-dropdown-item
                                 :command="{ action: 'desc', data: scope.row }"
                             >{{ $lang('set', 'desc') }}</el-dropdown-item>
@@ -74,11 +86,11 @@
             :page-sizes="[10, 20, 30, 50]"
             :page-size.sync="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="vpData.length"
+            :total="virtualPorts.length"
             hide-on-single-page
         ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" width="600px">
-            <template slot="title">{{ $lang(dialogType) }}</template>
+            <template slot="title">{{ $lang(dialogType === 'set' ? 'modify' : dialogType) }}</template>
             <virtual-port-form ref="virtual-port-form" :type="dialogType" :data="dialogData"></virtual-port-form>
             <div slot="footer">
                 <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
@@ -92,27 +104,33 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { isArray, isDef, isFunction } from "@/utils/common";
-import { TAG_ACTIONS } from "@/utils/commonData";
+import { mapGetters, mapActions, mapState } from "vuex";
+import { isArray, isDef, isFunction, debounce } from "@/utils/common";
+import {
+    TAG_ACTIONS,
+    SVP_TYPE_MAP,
+    INSTALL_MODE_MAP
+} from "@/utils/commonData";
 import postData from "@/mixin/postData";
 import virtualPortForm from "./virtualPortForm";
 export default {
     name: "virtualPortMgmt",
     components: { virtualPortForm },
     computed: {
+        ...mapState(["virtualPorts"]),
         ...mapGetters(["$lang", "getPortName"]),
         vpTable() {
             const start = this.pageSize * (this.currentPage - 1);
-            return this.vpData.slice(start, start + this.pageSize);
+            return this.virtualPorts.slice(start, start + this.pageSize);
         }
     },
     mixins: [postData],
     props: {},
     data() {
         return {
-            vpData: [],
             TAG_ACTIONS,
+            SVP_TYPE_MAP,
+            INSTALL_MODE_MAP,
             currentPage: 1,
             pageSize: 10,
             dialogVisible: false,
@@ -127,22 +145,10 @@ export default {
         });
     },
     created() {
-        this.getData();
+        this.getVirtualPort();
     },
     methods: {
-        getData() {
-            this.vpData = [];
-            this.$http
-                .get("/switch_svp?form=svp_table")
-                .then(res => {
-                    if (res.data.code === 1) {
-                        if (isArray(res.data.data)) {
-                            this.vpData = res.data.data;
-                        }
-                    }
-                })
-                .catch(err => {});
-        },
+        ...mapActions(["getVirtualPort"]),
         deleteVp(row) {
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
                 .then(_ => {
@@ -153,10 +159,11 @@ export default {
                             method: "delete",
                             param: {
                                 svp_id: row.svp_id,
-                                svlan: row.svlan,
+                                new_svlan: row.new_svlan,
                                 port_id: row.port_id,
                                 ont_id: row.ont_id,
                                 gemport: row.gemport,
+                                svp_type: row.svp_type,
                                 user_vlan: row.user_vlan,
                                 tag_action: row.tag_action,
                                 inner_vlan: row.inner_vlan
@@ -168,7 +175,7 @@ export default {
                     }
                     this.postData(url, post_param)
                         .then(_ => {
-                            this.getData();
+                            this.getVirtualPort();
                         })
                         .catch(_ => {});
                 })
@@ -193,10 +200,11 @@ export default {
                                     method: "add",
                                     param: {
                                         svp_id: formData.svp_id,
-                                        svlan: formData.svlan,
+                                        new_svlan: formData.new_svlan,
                                         port_id: formData.port_id,
                                         ont_id: formData.ont_id,
                                         gemport: formData.gemport,
+                                        svp_type: formData.svp_type,
                                         user_vlan: formData.user_vlan,
                                         tag_action: formData.tag_action,
                                         inner_vlan: formData.inner_vlan
@@ -211,6 +219,7 @@ export default {
                                     method: "modify",
                                     param: {
                                         svp_id: formData.svp_id,
+                                        new_svlan: formData.new_svlan,
                                         tag_action: formData.tag_action,
                                         inner_vlan: formData.inner_vlan
                                     }
@@ -239,7 +248,7 @@ export default {
                             data &&
                             this.postData(url, data)
                                 .then(_ => {
-                                    this.getData();
+                                    this.getVirtualPort();
                                 })
                                 .catch(_ => {});
                         this.dialogVisible = false;
@@ -284,11 +293,14 @@ export default {
                         };
                     this.postData(url, data)
                         .then(_ => {
-                            this.getData();
+                            this.getVirtualPort();
                         })
                         .catch(_ => {});
                 })
                 .catch(_ => {});
+        },
+        refreshData() {
+            debounce(this.getVirtualPort, 1000, this);
         }
     }
 };
