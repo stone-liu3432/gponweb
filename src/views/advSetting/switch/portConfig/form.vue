@@ -226,7 +226,7 @@ export default {
             ) {
                 return cb();
             }
-            if (!regRange(val, 64, 1024000)) {
+            if (!regRange(val, 64, 1024000) && val !== 0 && val !== "") {
                 return cb(
                     new Error(this.validateMsg("inputLength", 64, 1024000))
                 );
