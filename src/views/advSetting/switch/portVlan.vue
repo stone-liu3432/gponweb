@@ -5,12 +5,12 @@
             <el-tab-pane :label="$lang('vlan_cfg')" name="vlan_cfg">
                 <vlan-config :base-data="base" @refresh="getData"></vlan-config>
             </el-tab-pane>
-            <el-tab-pane label="VLAN Translate" name="vlan_translate">
+            <!-- <el-tab-pane label="VLAN Translate" name="vlan_translate">
                 <vlan-translate :base-data="translate" :port_id="port_id" @refresh="getData"></vlan-translate>
             </el-tab-pane>
             <el-tab-pane label="VLAN QinQ" name="vlan_qinq">
                 <vlan-qinq :base-data="qinq" :port_id="port_id" @refresh="getData"></vlan-qinq>
-            </el-tab-pane>
+            </el-tab-pane>-->
         </el-tabs>
     </div>
 </template>
@@ -18,15 +18,15 @@
 <script>
 import { mapGetters } from "vuex";
 import vlanConfig from "./portVlan/vlanConfig";
-import vlanTranslate from "./portVlan/vlanTranslate";
-import vlanQinq from "./portVlan/vlanQinq";
+// import vlanTranslate from "./portVlan/vlanTranslate";
+// import vlanQinq from "./portVlan/vlanQinq";
 import { isPlainObject, isArray, isFunction } from "@/utils/common";
 export default {
     name: "portVlan",
     computed: {
         ...mapGetters(["$lang"])
     },
-    components: { vlanConfig, vlanTranslate, vlanQinq },
+    components: { vlanConfig /* vlanTranslate, vlanQinq*/ },
     data() {
         return {
             activeName: "vlan_cfg",
