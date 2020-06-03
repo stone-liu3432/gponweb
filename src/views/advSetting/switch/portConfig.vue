@@ -34,9 +34,16 @@
                         >{{ basic.flow_ctrl ? $lang('enable') : $lang('disable') }}</el-form-item>
                         <el-form-item :label="$lang('mtu')">{{ basic.mtu }}</el-form-item>
                         <el-form-item :label="$lang('media')">{{ $lang(basic.media) }}</el-form-item>
-                        <el-form-item :label="$lang('erate')">{{ basic.erate }}</el-form-item>
-                        <el-form-item :label="$lang('irate')">{{ basic.irate }}</el-form-item>
+                        <template v-if="port_id > system.ponports">
+                            <el-form-item :label="$lang('erate')">{{ basic.erate }}</el-form-item>
+                            <el-form-item :label="$lang('irate')">{{ basic.irate }}</el-form-item>
+                        </template>
                         <el-form-item :label="$lang('pvid')">{{ basic.pvid }}</el-form-item>
+                        <el-form-item :label="$lang('port_desc')">
+                            <div
+                                style="word-wrap: break-word; word-break: break-all;"
+                            >{{ basic.port_desc }}</div>
+                        </el-form-item>
                     </el-form>
                 </el-card>
             </el-col>
@@ -76,7 +83,7 @@
                 </el-card>
             </el-col>
         </el-row>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="600px">
             <template slot="title">{{ $lang(dialogType) }}</template>
             <port-config-form :type="dialogType" :data="dialogData" ref="port-config-form"></port-config-form>
             <span slot="footer">
@@ -91,7 +98,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import { isDef, isFunction } from "@/utils/common";
 import portConfigForm from "./portConfig/form";
 import postData from "@/mixin/postData";
@@ -100,6 +107,7 @@ export default {
     mixins: [postData],
     components: { portConfigForm },
     computed: {
+        ...mapState(["system"]),
         ...mapGetters(["$lang", "getPortName"])
     },
     data() {
@@ -123,7 +131,7 @@ export default {
     created() {
         const portid = this.$route.query.port_id;
         if (portid) {
-            this.port_id = portid >>> 0;
+            this.port_id = Number(portid) || 0;
         }
     },
     methods: {
@@ -205,7 +213,8 @@ export default {
                         mtu: 0x80,
                         erate: 0x100,
                         irate: 0x200,
-                        pvid: 0x400
+                        pvid: 0x400,
+                        port_desc: 0x800
                     };
                     const flag = this.computedFlag(flags, data, this.basic);
                     if (flag === 0) {
@@ -275,16 +284,16 @@ export default {
                 const result = ACTIONS[type].call(this, data, type);
                 if (result) {
                     const { data: post_param, url } = result;
-                    console.log("post params -> ", post_param, ",url -> ", url);
                     this.postData(url, post_param)
                         .then(_ => {
-                            type === "sw_port_cfg" && this.getBasic();
-                            type === "stormctrl" && this.getStorm();
-                            type === "mirror" && this.getMirror();
+                            type === "sw_port_cfg" &&
+                                this.getBasic(this.port_id);
+                            type === "stormctrl" && this.getStorm(this.port_id);
+                            type === "mirror" && this.getMirror(this.port_id);
                         })
                         .catch(_ => {});
+                    this.closeDialog();
                 }
-                this.closeDialog();
             }
         },
         computedFlag(flags, data, baseData) {

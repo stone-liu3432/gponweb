@@ -52,14 +52,19 @@
             <el-form-item :label="$lang('mtu')" prop="mtu">
                 <el-input v-model="formData.mtu" style="width: 200px;"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('erate')" prop="erate">
-                <el-input v-model="formData.erate" style="width: 200px;"></el-input>
-            </el-form-item>
-            <el-form-item :label="$lang('irate')" prop="irate">
-                <el-input v-model="formData.irate" style="width: 200px;"></el-input>
-            </el-form-item>
+            <template v-if="data.port_id > system.ponports">
+                <el-form-item :label="$lang('erate')" prop="erate">
+                    <el-input v-model="formData.erate" style="width: 200px;"></el-input>
+                </el-form-item>
+                <el-form-item :label="$lang('irate')" prop="irate">
+                    <el-input v-model="formData.irate" style="width: 200px;"></el-input>
+                </el-form-item>
+            </template>
             <el-form-item :label="$lang('pvid')" prop="pvid">
                 <el-input v-model="formData.pvid" style="width: 200px;"></el-input>
+            </el-form-item>
+            <el-form-item :label="$lang('port_desc')" prop="port_desc">
+                <el-input type="textarea" v-model.trim="formData.port_desc"></el-input>
             </el-form-item>
         </template>
         <template v-if="type === 'stormctrl'">
@@ -99,7 +104,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { regRange } from "@/utils/validator";
+import { regRange, regLength } from "@/utils/validator";
 import { isFunction, isDef, toLower } from "@/utils/common";
 export default {
     name: "portConfigForm",
@@ -130,6 +135,7 @@ export default {
                 erate: "",
                 irate: "",
                 pvid: "",
+                port_desc: "",
                 broadcast: 0,
                 multicast: 0,
                 unicast: 0,
@@ -191,6 +197,12 @@ export default {
                         validator: this.validatePort,
                         trigger: ["change", "blur"]
                     }
+                ],
+                port_desc: [
+                    {
+                        validator: this.validateDesc,
+                        trigger: ["change", "blur"]
+                    }
                 ]
             }
         };
@@ -208,7 +220,10 @@ export default {
             cb();
         },
         validateRate(rule, val, cb) {
-            if (this.type !== "sw_port_cfg") {
+            if (
+                this.type !== "sw_port_cfg" ||
+                this.data.port_id < this.system.ponports
+            ) {
                 return cb();
             }
             if (!regRange(val, 64, 1024000)) {
@@ -235,6 +250,12 @@ export default {
                 return cb(
                     new Error(this.validateMsg("inputLength", 0, 1488100))
                 );
+            }
+            cb();
+        },
+        validateDesc(rule, val, cb) {
+            if (!regLength(val, 0, 64)) {
+                return cb(new Error(this.validateMsg("inputLength", 0, 64)));
             }
             cb();
         },
