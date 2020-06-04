@@ -180,7 +180,7 @@ export default {
                         if (isArray(res.data.data)) {
                             return Promise.resolve(res.data.data);
                         }
-                        return Promise.reject(res);
+                        return Promise.resolve([]);
                     }
                 })
                 .catch(err => {});
