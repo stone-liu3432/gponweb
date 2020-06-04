@@ -112,3 +112,24 @@ export const PROTOCOL_MAP = ["icmp", "udp", "tcp", "ip", "ipinip"];
 // static route
 export const STATIC_ROUTE_PROTOCOL_MAP = ["Static", "Direct"];
 export const STATIC_ROUTE_STATUS_MAP = { 1: "Reachable", 2: "Unreachable" };
+
+// mac flags
+export const MAC_FLAGS_MAP = {
+    1: "mac_type",
+    2: "port_id",
+    4: "vlan_id",
+    8: "macaddr",
+};
+
+//  mac type
+export const MAC_TYPE_MAP = ["dynamic", "static", "blackhole", "all"];
+
+// link aggregation
+export const PSC_MAP = {
+    1: "src-mac",
+    2: "dest-mac",
+    3: "src-dest-mac",
+    4: "src-ip",
+    5: "dest-ip",
+    6: "src-dest-ip",
+};
