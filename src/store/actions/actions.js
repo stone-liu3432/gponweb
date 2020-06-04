@@ -210,6 +210,19 @@ const actions = {
             })
             .catch((err) => {});
     },
+    getVirtualPort({ commit }) {
+        commit("updateVirtualPort", []);
+        axios
+            .get("/switch_svp?form=svp_table")
+            .then((res) => {
+                if (res.data.code === 1) {
+                    if (isArray(res.data.data)) {
+                        commit("updateVirtualPort", res.data.data);
+                    }
+                }
+            })
+            .catch((err) => {});
+    },
 };
 
 export default actions;

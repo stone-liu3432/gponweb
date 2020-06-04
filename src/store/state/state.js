@@ -13,6 +13,7 @@ const state = {
     lineProfs: [],
     srvProfs: [],
     timerangeList: [],
+    virtualPorts: [],
 };
 
 export default state;

@@ -42,6 +42,9 @@ const mutations = {
     updateTimerange(state, data) {
         state.timerangeList = data;
     },
+    updateVirtualPort(state, data) {
+        state.virtualPorts = data;
+    },
 };
 
 export default mutations;
