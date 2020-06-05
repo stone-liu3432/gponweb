@@ -970,6 +970,7 @@ var zh = {
     install_mode: "安装模式",
     manual: "手动",
     new_svlan: "S-VLAN",
+    port_desc: "端口描述",
 };
 
 export default zh;

@@ -995,6 +995,7 @@ var en = {
     install_mode: "Install Mode",
     manual: "Manual",
     new_svlan: "S-VLAN",
+    port_desc: "Description",
 };
 
 export default en;
