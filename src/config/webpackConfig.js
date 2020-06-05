@@ -9,12 +9,12 @@ function timeStramp() {
         1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}`;
 }
 
-const autoSync = filename => {
-    let filePath = "\\\\192.168.5.28\\HSGQ File Server\\鸿升研发\\WEB版本";
+const autoSync = (filename) => {
+    let filePath = "\\\\192.168.5.28\\鸿升研发\\WEB版本";
     // latest文件夹只存放最新一次的编译版本
     // backup存放所有的历史版本
     let files = fs.readdirSync(path.join(filePath, "gpon-latest"));
-    files.forEach(file => {
+    files.forEach((file) => {
         var filedir = path.join(filePath, "gpon-latest", file);
         const stats = fs.statSync(filedir);
         const isFile = stats.isFile();
@@ -25,7 +25,7 @@ const autoSync = filename => {
     });
     let data = fs.readFileSync(filename);
     const paths = ["gpon-latest", "gpon-backup"];
-    paths.forEach(item => {
+    paths.forEach((item) => {
         fs.writeFile(
             path.join(
                 filePath,
@@ -58,7 +58,7 @@ const autoArchiver = () => {
     // 创建文件输出流
     const output = fs.createWriteStream(filename);
     const archive = archiver("zip", {
-        zlib: { level: 9 } // 设置压缩级别
+        zlib: { level: 9 }, // 设置压缩级别
     });
     // 文件输出流结束
     output.on("close", function() {
@@ -88,7 +88,7 @@ const autoArchiver = () => {
     archive.pipe(output);
     // 追加文件
     appendFileAndDirectory(archive, [
-        filename.slice(filename.lastIndexOf("\\") + 1)
+        filename.slice(filename.lastIndexOf("\\") + 1),
     ]);
     // 完成归档
     archive.finalize();
@@ -102,7 +102,7 @@ const autoArchiver = () => {
 function appendFileAndDirectory(archive, excludes = []) {
     const filepath = path.join(__dirname, "../../dist");
     const files = fs.readdirSync(filepath);
-    files.forEach(file => {
+    files.forEach((file) => {
         const filedir = path.join(filepath, file);
         const stats = fs.statSync(filedir);
         if (stats.isFile()) {
@@ -123,7 +123,7 @@ function appendFileAndDirectory(archive, excludes = []) {
 const pluginName = "CallbackAfterBuildDoneWebpackPlugins";
 class CallbackAfterBuildDoneWebpackPlugins {
     apply(compiler) {
-        compiler.hooks.done.tap(pluginName, compilation => {
+        compiler.hooks.done.tap(pluginName, (compilation) => {
             autoArchiver();
         });
     }
