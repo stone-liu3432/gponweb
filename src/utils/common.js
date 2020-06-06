@@ -117,3 +117,41 @@ export function throttle(func, wait, context) {
         }
     };
 }
+
+/**
+ * @method intersectArray
+ * @param {Array} arr1
+ * @param {Array} arr2
+ * @return {Array} 返回两个数组的交集
+ */
+export function intersectArray(arr1, arr2) {
+    return arr1.reduce((pre, item) => {
+        if (arr2.includes(item)) {
+            pre.push(item);
+        }
+        return pre;
+    }, []);
+}
+
+/**
+ * @method distinctArray
+ * @param {Array} arr1
+ * @param {Array} arr2
+ * @return {Array} 返回两个数组的不同项
+ */
+export function distinctArray(arr1, arr2) {
+    return arr1.reduce(
+        (pre, item) => {
+            if (!arr2.includes(item)) {
+                pre.push(item);
+            }
+            return pre;
+        },
+        arr2.reduce((pre, item) => {
+            if (!arr1.includes(item)) {
+                pre.push(item);
+            }
+            return pre;
+        }, [])
+    );
+}
