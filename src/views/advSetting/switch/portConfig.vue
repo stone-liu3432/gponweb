@@ -71,6 +71,11 @@
                         <el-button
                             type="text"
                             style="float: right; padding: 3px 0;"
+                            @click="flushMirror"
+                        >{{ $lang('flush') }}</el-button>
+                        <el-button
+                            type="text"
+                            style="float: right; padding: 3px 0; margin-right: 20px;"
                             @click="openDialog('mirror')"
                         >{{ $lang('config') }}</el-button>
                     </template>
@@ -307,6 +312,22 @@ export default {
         },
         closeDialog() {
             this.dialogVisible = false;
+        },
+        flushMirror() {
+            this.$confirm(this.$lang("if_sure", "flush", "mirror") + " ?")
+                .then(_ => {
+                    this.postData("/switch_port?form=mirror", {
+                        method: "clear",
+                        param: {
+                            src_port: this.port_id
+                        }
+                    })
+                        .then(_ => {
+                            this.getMirror(this.port_id);
+                        })
+                        .catch(_ => {});
+                })
+                .catch(_ => {});
         }
     }
 };
