@@ -58,6 +58,9 @@ Mock.mock("/board?info=menu", "get", {
                 ],
             },
             {
+                name: "vlan_mgmt",
+            },
+            {
                 name: "mac_mgmt",
             },
             {
