@@ -48,3 +48,8 @@ import "@/mock/content/acl-qos/timerange";
 import "@/mock/content/acl-qos/aclMgmt";
 import "@/mock/content/acl-qos/packetFilter";
 import "@/mock/content/acl-qos/qos";
+import "@/mock/content/route/staticRoute";
+import "@/mock/content/route/arp";
+import "@/mock/content/macMgmt/macMgmt";
+import "@/mock/content/linkAggregation/linkAggregation";
+import "@/mock/content/vlanMgmt/vlanMgmt";
