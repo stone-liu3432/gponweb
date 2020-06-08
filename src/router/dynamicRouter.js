@@ -77,9 +77,9 @@ const data = {
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portIsolation"
         ),
-    rstp: () =>
+    link_aggregation: () =>
         import(
-            /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/rstp"
+            /* webpackChunkName: "switch" */ "@/views/advSetting/linkAggregation/linkAggregation"
         ),
     pon_optical: () =>
         import(
@@ -117,6 +117,10 @@ const data = {
         import(
             /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/mstp"
         ),
+    rstp: () =>
+        import(
+            /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/rstp"
+        ),
     time_range: () =>
         import(
             /* webpackChunkName: "acl-qos" */ "@/views/advSetting/acl-qos/timerange"
@@ -132,6 +136,20 @@ const data = {
     QoS: () =>
         import(
             /* webpackChunkName: "acl-qos" */ "@/views/advSetting/acl-qos/qos"
+        ),
+    route_mgmt: () =>
+        import(
+            /* webpackChunkName: "route" */ "@/views/advSetting/route/staticRoute"
+        ),
+    ARP: () =>
+        import(/* webpackChunkName: "route" */ "@/views/advSetting/route/arp"),
+    mac_mgmt: () =>
+        import(
+            /* webpackChunkName: "layer2-mgmt" */ "@/views/advSetting/macMgmt/macMgmt"
+        ),
+    vlan_mgmt: () =>
+        import(
+            /* webpackChunkName: "layer2-mgmt" */ "@/views/advSetting/vlanMgmt/vlanMgmt"
         ),
 };
 
