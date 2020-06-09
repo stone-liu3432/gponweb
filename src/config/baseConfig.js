@@ -8,6 +8,7 @@ import { isFunction, isPlainObject, isUndef } from "@/utils/common";
 import store from "../store";
 import pageHeader from "@/views/common/pageHeader";
 import nmsPanel from "@/views/common/panel";
+import nmsPortCheckbox from "@/views/common/portCheckbox";
 
 process.env.NODE_ENV === "development" && require("./mock.js");
 
@@ -53,6 +54,7 @@ const baseConfig = (Vue) => {
     Vue.use(VueI18n);
     Vue.use(pageHeader);
     Vue.use(nmsPanel);
+    Vue.use(nmsPortCheckbox);
     const lang = sessionStorage.getItem("lang");
     const i18n = new VueI18n({
         locale: ["zh", "en"].includes(lang) ? lang : "en",
