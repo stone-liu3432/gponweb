@@ -74,7 +74,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { isDef } from "@/utils/common";
-import { ONT_AUTH_MODES } from "@/utils/commonData";
+import { ONT_AUTH_MODES, ONT_STATES } from "@/utils/commonData";
 import ontBasicForm from "./ontBasicInfo/ontBasicForm";
 import postData from "@/mixin/postData";
 import rebootOnt from "@/mixin/onu/rebootOnt";
@@ -111,6 +111,9 @@ export default {
                     return val
                         ? this.$lang("support")
                         : this.$lang("not_support");
+                },
+                state(key, val) {
+                    return ONT_STATES[val];
                 }
             },
             dialogVisible: false
