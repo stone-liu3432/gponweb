@@ -971,6 +971,7 @@ var zh = {
     manual: "手动",
     new_svlan: "S-VLAN",
     port_desc: "端口描述",
+    show_binding: "查看绑定",
 };
 
 export default zh;

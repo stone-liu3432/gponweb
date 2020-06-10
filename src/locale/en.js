@@ -996,6 +996,7 @@ var en = {
     manual: "Manual",
     new_svlan: "S-VLAN",
     port_desc: "Description",
+    show_binding: "View Binding",
 };
 
 export default en;
