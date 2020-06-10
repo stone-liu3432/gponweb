@@ -29,18 +29,16 @@ Mock.mock(
     }
 );
 
-Mock.mock("/onumgmt?form=natvie_vlan", "post", "@BASESUCCESS");
-
-Mock.mock("/onumgmt?form=port_vlan", "post", "@BASESUCCESS");
-
-Mock.mock("/onumgmt?form=port_attr", "post", "@BASESUCCESS");
+Mock.post("/gponont_mgmt?form=natvie_vlan");
+Mock.post("/gponont_mgmt?form=port_attr");
+Mock.post("/gponont_mgmt?form=port_vlan");
 
 Mock.mock(
     /\/gponont_mgmt\?form=port_attr&port_id=\d+&ont_id=\d+/,
     "get",
     ({ url }) => {
         const identifier =
-            url.match(/(?<=port_id=)\d+/ << 8) |
+            (url.match(/(?<=port_id=)\d+/) << 8) |
             (url.match(/(?<=ont_id=)\d+/) >>> 0);
         const data = Array.from({ length: Random.range(1, 8) }).map(
             (item, index) => ({
@@ -52,8 +50,8 @@ Mock.mock(
                 epautoneg: Random.range(0, 1),
                 flow_ctrl: Random.range(0, 1),
                 adminstate: Random.range(0, 1),
-                na_vlan_id: Random.range(1, 4094),
-                na_vlan_pri: Random.range(0, 8),
+                na_vlan_id: Random.range(1, 4096),
+                na_vlan_pri: Random.pick([Random.range(0, 7), 15]),
                 ring: Random.range(1, 2),
             })
         );
