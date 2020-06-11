@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-table :data="dbaProfiles" border stripe>
+        <el-table :data="dbaTable" border stripe>
             <el-table-column prop="profname" :label="$lang('profname')"></el-table-column>
             <el-table-column prop="profid" :label="$lang('profid')"></el-table-column>
             <el-table-column prop="type" :label="$lang('type')">
@@ -20,6 +20,7 @@
                     <span>{{ $lang('config') }}</span>
                     <el-button
                         type="primary"
+                        size="mini"
                         style="margin-left: 20px;"
                         @click="openDialog('add')"
                     >{{ $lang('add') }}</el-button>
@@ -37,6 +38,15 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+            style="margin: 12px 0; float: right;"
+            :current-page.sync="currentPage"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size.sync="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="dbaProfiles.length"
+            hide-on-single-page
+        ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" width="500px">
             <div slot="title">{{ $lang(dialogType) }}</div>
             <dba-form :data="dbaData" :type="dialogType" ref="dba-form"></dba-form>
@@ -59,7 +69,11 @@ export default {
     components: { dbaForm },
     mixins: [postData],
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang"]),
+        dbaTable() {
+            const start = (this.currentPage - 1) * this.pageSize;
+            return this.dbaProfiles.slice(start, start + this.pageSize);
+        }
     },
     inject: ["updateNavScrollbar"],
     updated() {
@@ -83,7 +97,9 @@ export default {
             },
             dialogVisible: false,
             dialogType: "",
-            dbaData: {}
+            dbaData: {},
+            currentPage: 1,
+            pageSize: 10
         };
     },
     created() {
