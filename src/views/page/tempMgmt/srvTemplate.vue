@@ -24,6 +24,15 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination
+            style="margin: 12px 0; float: right;"
+            :current-page.sync="currentPage"
+            :page-sizes="[10, 20, 30, 50]"
+            :page-size.sync="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="srvProfs.length"
+            hide-on-single-page
+        ></el-pagination>
         <el-dialog
             :visible.sync="detailVisible"
             width="850px"
@@ -44,7 +53,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 import { isArray, isDef } from "@/utils/common";
 import postData from "@/mixin/postData";
 import srvDetail from "./srvTemplate/srvDetail";
@@ -54,7 +63,12 @@ export default {
     mixins: [postData],
     components: { srvDetail, srvForm },
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapState(["srvProfs"]),
+        ...mapGetters(["$lang"]),
+        srvTable() {
+            const start = (this.currentPage - 1) * this.pageSize;
+            return this.srvProfs.slice(start, start + this.pageSize);
+        }
     },
     inject: ["updateNavScrollbar"],
     updated() {
@@ -64,31 +78,20 @@ export default {
     },
     data() {
         return {
-            srvTable: [],
             detailVisible: false,
             detail: {},
             setVisible: false,
             dialogType: "",
-            dialogData: {}
+            dialogData: {},
+            currentPage: 1,
+            pageSize: 10
         };
     },
     created() {
-        this.getSrvTable();
+        this.getSrvProfs();
     },
     methods: {
-        getSrvTable() {
-            this.srvTable = [];
-            this.$http
-                .get("/srvprofile?form=table")
-                .then(res => {
-                    if (res.data.code === 1) {
-                        if (isArray(res.data.data)) {
-                            this.srvTable = res.data.data;
-                        }
-                    }
-                })
-                .catch(err => {});
-        },
+        ...mapActions(["getSrvProfs"]),
         showDetail(row) {
             this.getDetail(row);
         },
@@ -129,7 +132,7 @@ export default {
                         }
                     };
                     this.postData("/srvprofile", post_param).then(_ => {
-                        this.getSrvTable();
+                        this.getSrvProfs();
                     });
                 })
                 .catch(_ => {});
@@ -164,7 +167,7 @@ export default {
                     };
                     this.postData("/srvprofile", post_param)
                         .then(_ => {
-                            this.getSrvTable();
+                            this.getSrvProfs();
                             this.setVisible = false;
                         })
                         .catch(_ => {});
