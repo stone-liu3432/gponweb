@@ -1,21 +1,20 @@
 import Mock from "@/mock";
 
+const { Random } = Mock;
+
 Mock.mock("/srvprofile?form=table", "get", () => {
     const Random = Mock.Random;
-    const n = Random.range(1, 8);
-    const data = [];
-    for (let i = 0; i < n; i++) {
-        data.push({
+    const data = Array.from({ length: Random.range(0, 2048) }).map(
+        (item, index) => ({
             profname: Random.word(1, 32),
-            profid: n < 6 ? Random.range(0, 2048) : 0xfffe,
-            bindtimes: Random.range(1, 5)
-        });
-    }
-    data.sort((a, b) => a.profid - b.profid);
+            profid: index,
+            bindtimes: Random.range(1, 5),
+        })
+    );
     return {
         code: 1,
         message: "success",
-        data
+        data,
     };
 });
 
@@ -36,7 +35,7 @@ Mock.mock(
                 svlanid: Random.range(1, 4094),
                 svlanpri: Random.range(0, 8),
                 cvlanid: Random.range(1, 4094),
-                cvlanpri: Random.range(0, 8)
+                cvlanpri: Random.range(0, 8),
             });
         }
         return {
@@ -49,8 +48,8 @@ Mock.mock(
                 ont_potsport: Random.range(0, 2),
                 ont_catvport: Random.range(0, 1),
                 native_vlan_flag: Random.range(0, 1),
-                portvlan
-            }
+                portvlan,
+            },
         };
     }
 );
