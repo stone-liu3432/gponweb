@@ -43,7 +43,7 @@ const overrideMethods = (Vue) => {
     // message 默认显示close按钮
     ["success", "error", "warning", "info"].forEach((key) => {
         msg[key] = (message, options) => {
-            return msg({ message, ...options, showClose: true, type: key });
+            return msg({ showClose: true, type: key, message, ...options });
         };
     });
 };
