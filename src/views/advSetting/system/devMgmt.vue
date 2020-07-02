@@ -47,7 +47,7 @@
                         </span>
                     </template>
                     <p>{{ $lang('reboot_olt') }}</p>
-                    <el-button type="primary" @click="rebootOlt">{{ $lang('reboot') }}</el-button>
+                    <el-button type="primary" @click="rebootOlt()">{{ $lang('reboot') }}</el-button>
                 </el-card>
             </el-col>
         </el-row>
