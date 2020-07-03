@@ -997,6 +997,9 @@ var en = {
     new_svlan: "S-VLAN",
     port_desc: "Description",
     show_binding: "View Binding",
+    shortcut: "Shortcut",
+    open_rt_alarm: "Open real-time alarm",
+    close_rt_alarm: "Turn off real-time alerts",
 };
 
 export default en;

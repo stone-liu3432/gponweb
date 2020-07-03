@@ -972,6 +972,9 @@ var zh = {
     new_svlan: "S-VLAN",
     port_desc: "端口描述",
     show_binding: "查看绑定",
+    shortcut: "快捷访问",
+    open_rt_alarm: "打开实时告警",
+    close_rt_alarm: "关闭实时告警",
 };
 
 export default zh;
