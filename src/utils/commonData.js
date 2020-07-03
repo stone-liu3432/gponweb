@@ -133,3 +133,12 @@ export const PSC_MAP = {
     5: "dest-ip",
     6: "src-dest-ip",
 };
+
+// alarm 相关
+export const LEVEL = ["error", "warning", "warning", "info"];
+export const ALARM_TYPE_MAP = { 1: "alarm", 2: "message" };
+export const MESSAGE_ACTION_MAP = {
+    1: "register",
+    2: "timeout",
+    3: "heartbeats",
+};
