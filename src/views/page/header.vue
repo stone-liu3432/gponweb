@@ -2,19 +2,7 @@
     <div id="header">
         <div id="logo">logo区域，最大240px*70px</div>
         <div>
-            <div>
-                <el-tooltip disabled>
-                    <template slot="content"></template>
-                    <el-button type="text" @click="logout">{{ $lang('logout') }}</el-button>
-                </el-tooltip>
-            </div>
-            <div @mouseenter="showTips" @mouseleave="hideTips">
-                <el-tooltip :open-delay="200" v-model="saveVisible" :manual="true">
-                    <template slot="content">{{ $lang('save_cfg_info') }}</template>
-                    <el-button type="text" @click="saveConfig">{{ $lang('save') }}</el-button>
-                </el-tooltip>
-            </div>
-            <div style="max-width: 100px;">
+            <div style="max-width: 150px;">
                 <el-tooltip v-model="userVisible" :open-delay="200">
                     <template slot="content">{{ $lang('click_enter','user_mgmt') }}</template>
                     <el-button
@@ -25,14 +13,20 @@
                 </el-tooltip>
             </div>
             <div>
-                <el-dropdown @command="changeLang">
+                <el-dropdown @command="shortcutCommand" style="line-height: normal;">
                     <span>
                         <el-button type="text">
-                            {{ langMap[lang] }}
+                            {{ $lang('shortcut') }}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                     </span>
                     <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="socket">{{ wsTips }}</el-dropdown-item>
+                        <el-dropdown-item command="save">{{ $lang('save_config') }}</el-dropdown-item>
+                        <el-dropdown-item command="logout">{{ $lang('logout') }}</el-dropdown-item>
+                        <el-dropdown-item command="reboot">{{ $lang('reboot') }}</el-dropdown-item>
+                        <el-dropdown-item command="ponOptical">{{ $lang('pon_optical') }}</el-dropdown-item>
+                        <el-dropdown-item command="viewConfig">{{ $lang('view_cfg') }}</el-dropdown-item>
                         <el-dropdown-item command="zh">简体中文</el-dropdown-item>
                         <el-dropdown-item command="en">English</el-dropdown-item>
                     </el-dropdown-menu>
@@ -58,21 +52,31 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from "vuex";
+import { isFunction } from "@/utils/common";
+import { LEVEL, ALARM_TYPE_MAP, MESSAGE_ACTION_MAP } from "@/utils/commonData";
 import logout from "@/mixin/logout";
 import saveConfig from "@/mixin/saveConfig";
+import rebootOlt from "@/mixin/rebootOlt";
+
+const protocol = location.protocol.indexOf("https") > -1 ? "wss:" : "ws:";
+const wsUrl =
+    process.env.NODE_ENV === "production"
+        ? `${protocol}//${window.location.host}/ws`
+        : `${protocol}//${window.location.hostname}:8201/ws`;
 export default {
     name: "pageHeader",
-    mixins: [logout, saveConfig],
+    mixins: [logout, saveConfig, rebootOlt],
     data() {
         return {
             activeIndex: "",
             username: "",
-            langMap: {
-                zh: "简体中文",
-                en: "English"
-            },
-            saveVisible: false,
-            userVisible: false
+            userVisible: false,
+            isOpenSocket: true,
+            ws: null,
+            ws_limit: 0,
+            heartbeat: 30000,
+            msgs: [],
+            msgQueue: []
         };
     },
     props: {
@@ -83,14 +87,101 @@ export default {
     },
     computed: {
         ...mapGetters(["$lang"]),
-        ...mapState(["lang"])
+        ...mapState(["lang"]),
+        wsTips() {
+            if (this.isOpenSocket) {
+                return this.$lang("close_rt_alarm");
+            }
+            return this.$lang("open_rt_alarm");
+        }
     },
     created() {
         this.username = sessionStorage.getItem("uname");
     },
-    mounted() {},
+    mounted() {
+        this.initSocket();
+        this.$once("hook:beforeDestroy", _ => {
+            this.closeWs();
+        });
+    },
     methods: {
         ...mapMutations(["updateLang"]),
+        shortcutCommand(command) {
+            const ACTIONS = {
+                socket() {
+                    if (this.isOpenSocket) {
+                        this.closeWs();
+                    } else {
+                        this.initSocket();
+                    }
+                    this.isOpenSocket = !this.isOpenSocket;
+                },
+                save() {
+                    this.saveConfig();
+                },
+                logout() {
+                    this.logout();
+                },
+                reboot() {
+                    this.rebootOlt();
+                },
+                ponOptical() {
+                    this.changeView("pon_optical");
+                },
+                viewConfig() {
+                    this.viewCurrentConfig();
+                },
+                zh(lang) {
+                    this.changeLang(lang);
+                },
+                en(lang) {
+                    this.changeLang(lang);
+                }
+            };
+            if (isFunction(ACTIONS[command])) {
+                ACTIONS[command].call(this, command);
+            }
+        },
+        navClick(path, subPath) {
+            sessionStorage.setItem("nav", path);
+        },
+        changeView(path) {
+            this.userVisible = false;
+            const p = `/${path}`;
+            if (p === this.$route.path) {
+                return;
+            }
+            this.$router.push(p);
+        },
+        viewCurrentConfig() {
+            this.$confirm(this.$lang("confirm_download_file"))
+                .then(_ => {
+                    this.$http
+                        .get("/system_running_config")
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                try {
+                                    const anchor = document.createElement("a");
+                                    anchor.href = "/oltconfigtmp.txt";
+                                    anchor.setAttribute(
+                                        "download",
+                                        "oltconfigtmp.txt"
+                                    );
+                                    anchor.style.display = "none";
+                                    document.body.appendChild(anchor);
+                                    anchor.click();
+                                    document.body.removeChild(anchor);
+                                } catch (e) {}
+                            } else {
+                                this.$message.error(
+                                    `(${res.data.code}) ${res.data.message}`
+                                );
+                            }
+                        })
+                        .catch(err => {});
+                })
+                .catch(_ => {});
+        },
         changeLang(lang) {
             if (lang === this.lang) {
                 return;
@@ -98,17 +189,116 @@ export default {
             this.$i18n.locale = lang;
             this.updateLang(lang);
         },
-        navClick(path, subPath) {
-            sessionStorage.setItem("nav", path);
+        initSocket() {
+            if ("WebSocket" in window) {
+                let ws = new WebSocket(wsUrl);
+                ws.onopen = e => {
+                    if (ws.readyState === 1) {
+                        this.sendRegisterMsg();
+                        //  心跳检测
+                        this.startHeartBeat();
+                    }
+                };
+                ws.onmessage = e => {
+                    this.wsHandle(e.data);
+                };
+                ws.onclose = e => {
+                    if (e.code !== 0x3e8) {
+                        if (this.ws_limit >= 3) {
+                            this.$message.error(this.$lang("conn_error"));
+                            this.$router.replace("/login");
+                        } else {
+                            this.ws_limit++;
+                            this.initSocket();
+                        }
+                    } else {
+                        this.ws_limit = 0;
+                    }
+                };
+                ws.onerror = e => {};
+                this.ws = ws;
+            }
         },
-        changeView(path) {
-            this.userVisible = false;
+        wsHandle(msg) {
+            //  type: 1-alarm 2-message
+            const { type, ...data } = JSON.parse(msg);
+
+            const messageActions = {
+                //  server推送，登录超时
+                timeout() {
+                    this.$message.error(this.$lang("login_timeout"));
+                    this.$router.replace("/login");
+                },
+                //  接收到服务器返回的register消息直接忽略，不作任何处理
+                register() {},
+                //  接收到server发送的pong包时的动作
+                heartbeats() {
+                    this.resetHeartBeat();
+                }
+            };
+            const typeActions = {
+                alarm(data) {
+                    const { content, alarm_id } = data;
+                    this.msgs.push(data);
+                    //  设备重启告警
+                    if (alarm_id === 0x1001) {
+                        this.$message.warning({
+                            message: content,
+                            duration: 0
+                        });
+                        this.msgs = [];
+                        this.$router.replace("/login");
+                    }
+                },
+                message(data) {
+                    //  action:  1-resgister，2-timeout，3-heartbeats
+                    const { action } = data;
+                    action &&
+                        isFunction(
+                            messageActions[MESSAGE_ACTION_MAP[action]]
+                        ) &&
+                        messageActions[MESSAGE_ACTION_MAP[action]].call(this);
+                }
+            };
+            type &&
+                isFunction(typeActions[ALARM_TYPE_MAP[type]]) &&
+                typeActions[ALARM_TYPE_MAP[type]].call(this, data);
         },
-        showTips() {
-            this.saveVisible = true;
+        closeWs(code = 0x3e8) {
+            if (this.ws) {
+                this.ws.onclose = e => {};
+                this.ws.close(code);
+                this.ws = null;
+            }
         },
-        hideTips() {
-            this.saveVisible = false;
+        startHeartBeat() {
+            this.timeout = setTimeout(_ => {
+                this.ws &&
+                    this.ws.send(
+                        JSON.stringify({
+                            type: 2,
+                            action: 3
+                        })
+                    );
+            }, this.heartbeat);
+        },
+        resetHeartBeat() {
+            clearTimeout(this.timeout);
+            this.startHeartBeat();
+        },
+        sendRegisterMsg() {
+            const xtoken = sessionStorage.getItem("x-token"),
+                username = sessionStorage.getItem("uname");
+            xtoken &&
+                username &&
+                this.ws.send(
+                    JSON.stringify({
+                        type: 2, // message
+                        action: 1, // register
+                        xtoken,
+                        username
+                    })
+                );
         }
     },
     watch: {
@@ -120,6 +310,25 @@ export default {
                 if (this.navData[0]) {
                     this.activeIndex = this.navData[0].name;
                 }
+            }
+        },
+        msgs() {
+            if (this.msgs.length) {
+                if (this.msgQueue.length > 5) {
+                    const notify = this.msgQueue.shift();
+                    isFunction(notify.close) && notify.close(notify.id);
+                }
+                this.$nextTick(_ => {
+                    const { content, level, alarm_id } = this.msgs.shift();
+                    content &&
+                        this.msgQueue.push(
+                            this.$notify({
+                                message: content,
+                                position: "bottom-right",
+                                type: LEVEL[level] || "info"
+                            })
+                        );
+                });
             }
         }
     }
