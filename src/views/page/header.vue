@@ -39,6 +39,7 @@
             @select="navClick"
             style="float: right; height: 69px;"
             router
+            ref="nav-menu"
         >
             <template v-for="item in navData">
                 <el-menu-item
@@ -52,8 +53,13 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from "vuex";
-import { isFunction } from "@/utils/common";
-import { LEVEL, ALARM_TYPE_MAP, MESSAGE_ACTION_MAP } from "@/utils/commonData";
+import { isFunction, clearSessionStorage } from "@/utils/common";
+import {
+    LEVEL,
+    ALARM_TYPE_MAP,
+    MESSAGE_ACTION_MAP,
+    ADVANCED_MENU
+} from "@/utils/commonData";
 import logout from "@/mixin/logout";
 import saveConfig from "@/mixin/saveConfig";
 import rebootOlt from "@/mixin/rebootOlt";
@@ -151,6 +157,13 @@ export default {
             if (p === this.$route.path) {
                 return;
             }
+            const isNav =
+                path === "login" ||
+                path === "main" ||
+                this.navData.some(item => item.name === path);
+            if (!isNav) {
+                this.$refs["nav-menu"].activeIndex = ADVANCED_MENU;
+            }
             this.$router.push(p);
         },
         viewCurrentConfig() {
@@ -247,7 +260,8 @@ export default {
                             duration: 0
                         });
                         this.msgs = [];
-                        this.$router.replace("/login");
+                        clearSessionStorage();
+                        this.$router.push("/login");
                     }
                 },
                 message(data) {
@@ -323,6 +337,7 @@ export default {
                     content &&
                         this.msgQueue.push(
                             this.$notify({
+                                title: this.$lang("tips"),
                                 message: content,
                                 position: "bottom-right",
                                 type: LEVEL[level] || "info"
