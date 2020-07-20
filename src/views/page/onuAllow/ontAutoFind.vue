@@ -14,7 +14,7 @@
             <el-table-column :label="$lang('ont_version')" prop="ont_version"></el-table-column>
             <el-table-column :label="$lang('equipmentid')" prop="equipmentid"></el-table-column>
             <el-table-column :label="$lang('autofind_time')" prop="autofind_time"></el-table-column>
-            <el-table-column :label="$lang('config')" width="160px">
+            <el-table-column :label="$lang('config')" width="180px">
                 <template slot-scope="scope">
                     <el-button
                         type="text"

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-table :data="showTable" border stripe ref="ont-info-table" size="mini">
+        <el-table :data="showTable" border stripe ref="ont-info-table">
             <el-table-column :label="$lang('ont_id')">
                 <template
                     slot-scope="scope"
