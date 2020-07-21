@@ -74,7 +74,13 @@
 <script>
 import { mapGetters } from "vuex";
 import { isDef } from "@/utils/common";
-import { ONT_AUTH_MODES, ONT_STATES } from "@/utils/commonData";
+import {
+    ONT_AUTH_MODES,
+    ONT_STATES,
+    ONT_RSTATES,
+    ONT_MSTATES,
+    ONT_CSTATES
+} from "@/utils/commonData";
 import ontBasicForm from "./ontBasicInfo/ontBasicForm";
 import postData from "@/mixin/postData";
 import rebootOnt from "@/mixin/onu/rebootOnt";
@@ -114,6 +120,15 @@ export default {
                 },
                 state(key, val) {
                     return ONT_STATES[val];
+                },
+                rstate(key, val) {
+                    return ONT_RSTATES[val];
+                },
+                cstate(key, val) {
+                    return ONT_CSTATES[val];
+                },
+                mstate(key, val) {
+                    return ONT_MSTATES[val];
                 }
             },
             dialogVisible: false
