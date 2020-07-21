@@ -23,6 +23,14 @@
                         <span>{{ $lang('run_time') }}:</span>
                         <span>{{ run_time }}</span>
                     </p>
+                    <p>
+                        <span>{{ $lang('panel_temp') }}:</span>
+                        <span>{{ (system['panel_temp'] / 1000).toFixed(2) }}</span>
+                    </p>
+                    <p>
+                        <span>{{ $lang('right_temp') }}:</span>
+                        <span>{{ (system['right_temp'] / 1000).toFixed(2) }}</span>
+                    </p>
                 </el-card>
             </el-col>
             <el-col :span="14">
@@ -93,12 +101,10 @@ export default {
                 "sys_ver",
                 "fw_ver",
                 "hw_ver",
-                // "bl_ver",
                 "macaddr",
                 "ponports",
                 "geports",
                 "xgeports",
-                // "vendor",
                 "build_time"
             ];
         },
