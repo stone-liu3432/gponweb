@@ -23,6 +23,7 @@ export const MAPPING_MODES = {
     1: "VLAN",
     2: "Priority",
     3: "TCI",
+    4: "Port",
 };
 
 // VLAN模式枚举
