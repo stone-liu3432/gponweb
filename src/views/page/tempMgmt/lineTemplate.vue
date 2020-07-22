@@ -4,7 +4,7 @@
             <el-table-column prop="profname" :label="$lang('profname')"></el-table-column>
             <el-table-column prop="profid" :label="$lang('profid')"></el-table-column>
             <el-table-column prop="bindtimes" :label="$lang('bindtimes')"></el-table-column>
-            <el-table-column width="240px">
+            <el-table-column width="280px">
                 <template slot="header">
                     <span>{{ $lang('config') }}</span>
                     <el-button
