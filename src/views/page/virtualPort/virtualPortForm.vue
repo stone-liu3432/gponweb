@@ -116,7 +116,7 @@ export default {
             SVP_TYPE_MAP,
             INSTALL_MODE_MAP,
             form: {
-                svp_id: "", // 0-8191
+                svp_id: "", // 0-8190
                 new_svlan: "", // 1-4094
                 port_id: 1,
                 ont_id: "", // 1-128
@@ -198,8 +198,8 @@ export default {
             if (this.autoAssignSvpid) {
                 return cb();
             }
-            if (!regRange(val, 0, 8191)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 8191)));
+            if (!regRange(val, 0, 8190)) {
+                return cb(new Error(this.validateMsg("inputRange", 0, 8190)));
             }
             cb();
         },
