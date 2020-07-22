@@ -5,9 +5,9 @@ const Random = Mock.Random;
 /**
  * 虚端口列表
  */
-
-Mock.mock("/switch_svp?form=svp_table", "get", () => {
-    const n = Random.range(0, 8191);
+Mock.mock("/switch_svp?form=svp_table", "get", "@BASESUCCESS");
+Mock.mock("/serviceport", "get", () => {
+    const n = Random.range(0, 8190);
     const data = Array.from({ length: n }).map((item, index) => ({
         svp_id: index + 1,
         new_svlan: Random.range(1, 4094),
@@ -63,9 +63,9 @@ Mock.mock("/switch_svp?form=svp_auto_profile_del", "post", "@BASESUCCESS");
 /**
  * 虚端口自动发现列表
  */
-
-Mock.mock("/switch_svp?form=svp_auto_find", "get", () => {
-    const n = Random.range(0, 8192);
+Mock.mock("/switch_svp?form=svp_auto_find", "get", "@BASESUCCESS");
+Mock.mock("/serviceport_af", "get", () => {
+    const n = Random.range(0, 8190);
     const data = Array.from({ length: n }).map((item, index) => ({
         svp_af_id: index + 1,
         port_id: Random.range(1, 16),
@@ -85,7 +85,7 @@ Mock.mock("/switch_svp?form=svp_auto_find", "get", () => {
  */
 
 Mock.mock("/switch_svp?form=svp_stat_get", "get", () => {
-    const n = Random.range(0, 8191);
+    const n = Random.range(0, 8190);
     let i = 1;
     const data = Array.from({ length: n }).map((item) => ({
         svp_id: i++,
