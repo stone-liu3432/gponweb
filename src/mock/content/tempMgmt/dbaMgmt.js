@@ -21,3 +21,15 @@ Mock.mock("/dbaprofile?form=table", "get", (req) => {
 });
 
 Mock.mock("/dbaprofile", "post", "@BASESUCCESS");
+
+Mock.mock(
+    /\/dbaprofile\?form=boundinfo&profid=\d+&profname=\w+/,
+    "get",
+    ({ url }) => {
+        return {
+            code: 1,
+            message: "success",
+            data: [1, 2, 3],
+        };
+    }
+);

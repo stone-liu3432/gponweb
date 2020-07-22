@@ -15,7 +15,7 @@
             <el-table-column prop="max" :label="$lang('max')">
                 <template slot-scope="scope">{{ showValue(scope.row, 'max') }}</template>
             </el-table-column>
-            <el-table-column>
+            <el-table-column width="240px">
                 <template slot="header">
                     <span>{{ $lang('config') }}</span>
                     <el-button
@@ -26,6 +26,10 @@
                     >{{ $lang('add') }}</el-button>
                 </template>
                 <template slot-scope="scope">
+                    <el-button
+                        type="text"
+                        @click="showBinding(scope.row)"
+                    >{{ $lang('show_binding') }}</el-button>
                     <el-button
                         type="text"
                         @click="openDialog('set', scope.row)"
@@ -54,6 +58,18 @@
                 <el-button @click="dialogVisible = false">{{ $lang('cancel') }}</el-button>
                 <el-button type="primary" @click="submitForm('dba-form')">{{ $lang('apply') }}</el-button>
             </span>
+        </el-dialog>
+        <el-dialog :visible.sync="bindVisible" width="800px">
+            <div slot="title">
+                <span>{{ $lang('profid') }}:</span>
+                <span style="margin: 0 50px 0 12px;">{{ dbaData.profid }}</span>
+                <span>{{ $lang('profname') }}:</span>
+                <span style="margin: 0 50px 0 12px;">{{ dbaData.profname }}</span>
+            </div>
+            <div class="binding-line-temp">
+                <span style="margin: 0 20px 0 0;">{{ $lang('binding_temp') }}:</span>
+                <span>{{ bindingInfo.join(', ') || '-' }}</span>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -99,7 +115,9 @@ export default {
             dialogType: "",
             dbaData: {},
             currentPage: 1,
-            pageSize: 10
+            pageSize: 10,
+            bindVisible: false,
+            bindingInfo: []
         };
     },
     created() {
@@ -204,10 +222,45 @@ export default {
                     }
                 }
             });
+        },
+        showBinding(row) {
+            this.dbaData = row;
+            const loading = this.$loading();
+            this.bindingInfo = [];
+            this.$http
+                .get(
+                    `/dbaprofile?form=boundinfo&profid=${row.profid}&profname=${row.profname}`
+                )
+                .then(res => {
+                    if (res.data.code === 1) {
+                        this.bindVisible = true;
+                        if (isArray(res.data.data)) {
+                            this.bindingInfo = res.data.data;
+                        }
+                    }
+                })
+                .catch(err => {})
+                .finally(_ => {
+                    loading.close();
+                });
         }
     }
 };
 </script>
 
 <style lang="less" scoped>
+div.binding-line-temp {
+    > span {
+        display: inline-block;
+        vertical-align: middle;
+        width: 160px;
+        text-align: right;
+    }
+    > span:last-child {
+        width: calc(~"100% - 200px");
+        text-align: left;
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+}
 </style>
