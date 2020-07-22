@@ -85,9 +85,16 @@ export default {
                 .get("/switch_svp?form=svp_auto_find")
                 .then(res => {
                     if (res.data.code === 1) {
-                        if (isArray(res.data.data)) {
-                            this.findList = res.data.data;
-                        }
+                        this.$http
+                            .get("/serviceport_af")
+                            .then(res => {
+                                if (res.data.code === 1) {
+                                    if (isArray(res.data.data)) {
+                                        this.findList = res.data.data;
+                                    }
+                                }
+                            })
+                            .catch(err => {});
                     }
                 })
                 .catch(err => {});
