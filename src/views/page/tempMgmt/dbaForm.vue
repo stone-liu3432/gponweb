@@ -99,7 +99,8 @@ export default {
             cb();
         },
         validProfid(rule, val, cb) {
-            if (!regRange(val, 10, 512)) {
+            const min = this.type === "set" ? 0 : 10;
+            if (!regRange(val, min, 512)) {
                 return cb(new Error(this.validateMsg("inputRange", 10, 512)));
             }
             cb();
