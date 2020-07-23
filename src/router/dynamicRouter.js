@@ -53,6 +53,10 @@ const data = {
         import(
             /* webpackChunkName: "system" */ "@/views/advSetting/system/userMgmt"
         ),
+    log: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/log"
+        ),
     port_info: () =>
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portInfo"
