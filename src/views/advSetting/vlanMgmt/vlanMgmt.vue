@@ -288,7 +288,9 @@ export default {
                         url &&
                             data &&
                             this.postData(url, data)
-                                .then(_ => {})
+                                .then(_ => {
+                                    this.getVlan();
+                                })
                                 .catch(_ => {});
                         this.dialogVisible = false;
                     }
