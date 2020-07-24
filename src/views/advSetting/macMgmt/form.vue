@@ -136,8 +136,8 @@ export default {
             if (this.type !== "add" || this.form.mac_type !== 1) {
                 return cb();
             }
-            if (!regRange(val, 0, 8191)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 8191)));
+            if (!regRange(val, 0, 8190)) {
+                return cb(new Error(this.validateMsg("inputRange", 0, 8190)));
             }
             cb();
         },
