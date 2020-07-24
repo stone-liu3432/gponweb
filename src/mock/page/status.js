@@ -16,28 +16,30 @@ Mock.mock("/board?info=system", "get", {
         geports: 8,
         xgeports: 8,
         vendor: "hsgq",
-        build_time: "2017/11/22 09:32:48"
-    }
+        build_time: "2017/11/22 09:32:48",
+        panel_temp: 1000,
+        right_temp: 1000,
+    },
 });
 
 Mock.mock("/board?info=pon", "get", () => {
     let i = 1;
-    const data = Array.from({ length: 16 }).map(_ => ({
+    const data = Array.from({ length: 16 }).map((_) => ({
         port_id: i++,
         status: Random.range(0, 1),
         online: Random.range(0, 64),
-        offline: Random.range(0, 64)
+        offline: Random.range(0, 64),
     }));
     return {
         code: 1,
         message: "success",
-        data
+        data,
     };
 });
 
 Mock.mock("/switch_port?form=portlist_info", "get", () => {
     let i = 1;
-    const pon = Array.from({ length: 16 }).map(_ => ({
+    const pon = Array.from({ length: 16 }).map((_) => ({
         port_id: i++,
         admin_status: Random.range(0, 1),
         link_status: Random.range(0, 1),
@@ -47,10 +49,10 @@ Mock.mock("/switch_port?form=portlist_info", "get", () => {
         flow_ctrl: Random.range(0, 1),
         mtu: 1500,
         media: "fiber",
-        pvid: 1
+        pvid: 1,
     }));
     const data = pon.concat(
-        Array.from({ length: 8 }).map(_ => ({
+        Array.from({ length: 8 }).map((_) => ({
             port_id: i++,
             admin_status: Random.range(0, 1),
             link_status: Random.range(0, 1),
@@ -61,12 +63,12 @@ Mock.mock("/switch_port?form=portlist_info", "get", () => {
             mtu: 1500,
             media: i <= 20 ? "copper" : "fiber",
             pvid: 1,
-            link_aggregation: Random.range(0, 8)
+            link_aggregation: Random.range(0, 8),
         }))
     );
     return {
         code: 1,
         message: "success",
-        data
+        data,
     };
 });
