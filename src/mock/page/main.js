@@ -21,6 +21,7 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "service" },
                     { name: "alarm" },
                     { name: "user_mgmt" },
+                    { name: "log" },
                 ],
             },
             {
