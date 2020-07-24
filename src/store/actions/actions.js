@@ -216,9 +216,16 @@ const actions = {
             .get("/switch_svp?form=svp_table")
             .then((res) => {
                 if (res.data.code === 1) {
-                    if (isArray(res.data.data)) {
-                        commit("updateVirtualPort", res.data.data);
-                    }
+                    axios
+                        .get("/serviceport")
+                        .then((res) => {
+                            if (res.data.code === 1) {
+                                if (isArray(res.data.data)) {
+                                    commit("updateVirtualPort", res.data.data);
+                                }
+                            }
+                        })
+                        .catch((err) => {});
                 }
             })
             .catch((err) => {});
