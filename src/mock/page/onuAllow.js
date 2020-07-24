@@ -54,3 +54,4 @@ Mock.mock(/\/gponont_mgmt\?form=autofind&port_id=\d+/, "get", ({ url }) => {
 
 Mock.mock(/\/gponont_mgmt\?form=auth&port_id=\d+/, "post", "@BASESUCCESS");
 Mock.mock("/gponont_mgmt?form=auth", "post", "@BASESUCCESS");
+Mock.post("/gponont_mgmt?form=autofind");
