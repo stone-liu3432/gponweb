@@ -6,10 +6,14 @@ import store from "@/store";
 import { ADVANCED_MENU } from "@/utils/commonData";
 import { isArray } from "@/utils/common";
 
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+    return originalPush.call(this, location).catch((err) => err);
+};
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-    routes
+    routes,
 });
 
 router.beforeEach((to, from, next) => {
@@ -42,15 +46,15 @@ router.beforeEach((to, from, next) => {
 // 路由跳转完成后缓存当前页的path，用于刷新页面后恢复
 router.afterEach((to, from) => {
     const path = to.path.slice(1),
-        isNav = store.state.navMenu.some(item => item.name === path),
+        isNav = store.state.navMenu.some((item) => item.name === path),
         adv = store.state.advMenu;
     let isAdv = false;
     if (!isNav && path !== "main" && path !== "login") {
-        adv.forEach(item => {
+        adv.forEach((item) => {
             // 带折叠菜单(children)的一级菜单不会产生路由跳转
             // 要判断的是不带子菜单的一级菜单和所有二级菜单
             if (isArray(item.children)) {
-                item.children.forEach(_item => {
+                item.children.forEach((_item) => {
                     if (_item.name === path) {
                         isAdv = true;
                     }
@@ -64,6 +68,7 @@ router.afterEach((to, from) => {
         sessionStorage.removeItem("advMenu");
     }
     if (isAdv) {
+        sessionStorage.setItem("nav", ADVANCED_MENU);
         sessionStorage.setItem("advMenu", path);
     }
     if (path === "login") {
