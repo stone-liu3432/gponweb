@@ -1,6 +1,24 @@
 <template>
     <div>
-        <el-table :data="showTable" border stripe>
+        <div style="margin: 10px 0 20px 10px;">
+            <el-button type="primary" size="mini" @click="changeBatch">
+                <template v-if="!isBatch">{{ $lang('batch_config') }}</template>
+                <template v-else>{{ $lang('exit_batch_onu') }}</template>
+            </el-button>
+            <template v-if="isBatch">
+                <el-button type="primary" size="mini" @click="submitBatch">{{ $lang('delete') }}</el-button>
+            </template>
+        </div>
+        <el-table
+            :data="showTable"
+            border
+            stripe
+            @selection-change="selectionChange"
+            ref="ont-auto-find-table"
+        >
+            <template v-if="isBatch">
+                <el-table-column type="selection"></el-table-column>
+            </template>
             <el-table-column :label="$lang('ont_id')">
                 <template
                     slot-scope="scope"
@@ -20,6 +38,7 @@
                         type="text"
                         @click="addOntToAuth(scope.row)"
                     >{{ $lang('add_to_auth_list') }}</el-button>
+                    <el-button type="text" @click="deleteAutofind(scope.row)">{{ $lang('delete') }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -38,6 +57,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { isArray } from "@/utils/common";
+import postData from "@/mixin/postData";
 export default {
     name: "ontAutoFind",
     computed: {
@@ -47,6 +67,7 @@ export default {
             return this.autofindList.slice(start, start + this.pageSize);
         }
     },
+    mixins: [postData],
     props: {
         port_id: {
             type: Number,
@@ -57,7 +78,9 @@ export default {
         return {
             autofindList: [],
             currentPage: 1,
-            pageSize: 10
+            pageSize: 10,
+            isBatch: false,
+            ontlist: []
         };
     },
     inject: ["updateNavScrollbar"],
@@ -90,6 +113,49 @@ export default {
         },
         addOntToAuth(row) {
             this.$emit("add-ont", row);
+        },
+        deleteAutofind(row) {
+            this.$confirm(this.$lang("if_sure", "delete") + " ?")
+                .then(_ => {
+                    this.submitDelete([row.identifier]);
+                })
+                .catch(_ => {});
+        },
+        submitDelete(rows) {
+            const data = {
+                method: "delete",
+                param: {
+                    identifier: rows
+                }
+            };
+            this.postData("/gponont_mgmt?form=autofind", data)
+                .then(_ => {
+                    this.getData(this.port_id);
+                })
+                .catch(_ => {});
+        },
+        changeBatch() {
+            this.isBatch = !this.isBatch;
+            // 退出时清空所有已选项
+            if (!this.isBatch) {
+                this.$refs["ont-auto-find-table"].clearSelection();
+            }
+        },
+        selectionChange(rows) {
+            this.ontlist = rows;
+        },
+        submitBatch() {
+            if (!this.ontlist.length) {
+                return this.$message.info(this.$lang("modify_tips"));
+            }
+            this.$confirm(this.$lang("if_sure", "delete") + " ?")
+                .then(_ => {
+                    const rows = this.ontlist.map(item => item.identifier);
+                    rows.sort((a, b) => a - b);
+                    this.submitDelete(rows);
+                    this.changeBatch();
+                })
+                .catch(_ => {});
         }
     },
     watch: {
