@@ -1,25 +1,26 @@
+import { clearSessionStorage } from "@/utils/common";
+
 export default {
     methods: {
         logout() {
             this.$confirm(this.$lang("logout") + " ?")
-                .then(_ => {
+                .then(() => {
                     const data = {
                         method: "set",
                         param: {
-                            name: sessionStorage.getItem("uname")
-                        }
+                            name: sessionStorage.getItem("uname"),
+                        },
                     };
                     this.$http
                         .post("/userlogin?form=logout", data)
-                        .then(res => {
+                        .then((res) => {
                             this.$message.success(this.$lang("login_out"));
-                            sessionStorage.removeItem("x-token");
-                            sessionStorage.removeItem("uname");
+                            clearSessionStorage();
                             this.$router.push("/login");
                         })
-                        .catch(err => {});
+                        .catch((err) => {});
                 })
-                .catch(_ => {});
-        }
-    }
+                .catch(() => {});
+        },
+    },
 };
