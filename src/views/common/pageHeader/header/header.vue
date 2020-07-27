@@ -6,7 +6,7 @@
         <el-form inline :model="portData">
             <template v-if="type !== 'none'">
                 <el-form-item :label="$lang('port_id')">
-                    <el-select v-model.number="portData.port_id">
+                    <el-select v-model.number="portData.port_id" size="small" style="width: 150px;">
                         <template v-if="type === 'pon' || type === 'port'">
                             <template v-for="item in ponData">
                                 <el-option :value="item.port_id" :label="getPortName(item.port_id)"></el-option>
@@ -22,7 +22,12 @@
                 <template v-if="hasOnu">
                     <template v-if="!!onuResource.length">
                         <el-form-item :label="$lang('onu_id')" style="margin-left: 30px;">
-                            <el-select v-model.number="portData.onu_id" filterable>
+                            <el-select
+                                v-model.number="portData.onu_id"
+                                filterable
+                                size="small"
+                                style="width: 150px;"
+                            >
                                 <template v-for="item in onuResource">
                                     <el-option :label="onuName(item)" :value="item"></el-option>
                                 </template>
