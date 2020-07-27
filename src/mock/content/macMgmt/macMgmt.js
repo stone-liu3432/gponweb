@@ -32,14 +32,14 @@ Mock.mock("/switch_mac?form=table", "post", ({ body }) => {
     */
     const { flags, mac_type, port_id, vlan_id, vlan_id_e } = param;
     const data = Array.from({
-        length: flags === 4 ? vlan_id_e - vlan_id : Random.range(0, 8192),
+        length: flags === 4 ? vlan_id_e - vlan_id : Random.range(0, 8190),
     }).map((item, index) => ({
         macaddr: Random.mac(),
         vlan_id: flags === 4 ? vlan_id + index : Random.range(1, 4094),
         port_id: flags === 2 ? port_id : Random.range(1, 24),
         mac_type: mac_type !== 3 ? mac_type : Random.range(0, 2),
         link_aggregation: Random.range(0, 8),
-        svp_id: Random.range(0, 8191) || 0xffff,
+        svp_id: Random.range(0, 8190) || 0xffff,
         ont_id: Random.range(0, 127),
         gemport: Random.range(1, 32),
     }));
