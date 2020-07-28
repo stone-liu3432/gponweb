@@ -10,7 +10,9 @@
         </div>
         <el-table :data="logInfo" border stripe>
             <el-table-column :label="$lang('module_name')" prop="module_name"></el-table-column>
-            <el-table-column :label="$lang('level')" prop="level"></el-table-column>
+            <el-table-column :label="$lang('level')">
+                <template slot-scope="scope">{{ LOG_LEVEL[scope.row.level] || '-' }}</template>
+            </el-table-column>
             <el-table-column :label="$lang('config')" width="150px">
                 <template slot-scope="scope">
                     <el-button type="text" @click="openDialog(scope.row)">{{ $lang('config') }}</el-button>
@@ -31,6 +33,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { isDef, isArray } from "@/utils/common";
+import { LOG_LEVEL } from "@/utils/commonData";
 import logForm from "./log/logForm";
 import postData from "@/mixin/postData";
 export default {
@@ -42,6 +45,7 @@ export default {
     mixins: [postData],
     data() {
         return {
+            LOG_LEVEL,
             logInfo: [],
             logServer: "",
             dialogVisible: false
