@@ -1,10 +1,14 @@
 <template>
-    <el-form :model="form" ref="log-form" :rules="rules" label-width="120px">
+    <el-form :model="form" ref="log-form" label-width="120px">
         <el-form-item :label="$lang('module_name')" prop="module_name">
             <span>{{ form.module_name }}</span>
         </el-form-item>
         <el-form-item :label="$lang('level')" prop="level">
-            <el-input v-model.number="form.level"></el-input>
+            <el-select v-model.number="form.level">
+                <template v-for="(item, index) in LOG_LEVEL">
+                    <el-option :value="index" :label="item"></el-option>
+                </template>
+            </el-select>
         </el-form-item>
     </el-form>
 </template>
@@ -13,6 +17,7 @@
 import { mapGetters } from "vuex";
 import { regRange } from "@/utils/validator";
 import { isFunction, isDef } from "@/utils/common";
+import { LOG_LEVEL } from "@/utils/commonData";
 export default {
     name: "logForm",
     computed: {
@@ -20,17 +25,10 @@ export default {
     },
     data() {
         return {
+            LOG_LEVEL,
             form: {
                 module_name: "",
                 level: ""
-            },
-            rules: {
-                level: [
-                    {
-                        validator: this.validateLevel,
-                        trigger: ["change", "blur"]
-                    }
-                ]
             }
         };
     },
@@ -41,12 +39,6 @@ export default {
                     this.form[key] = row[key];
                 }
             });
-        },
-        validateLevel(rule, val, cb) {
-            if (!regRange(val, 0, 7)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 7)));
-            }
-            cb();
         },
         validate(fn) {
             this.$refs["log-form"].validate(valid => {
