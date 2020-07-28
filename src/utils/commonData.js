@@ -143,3 +143,15 @@ export const MESSAGE_ACTION_MAP = {
     2: "timeout",
     3: "heartbeats",
 };
+
+// log level
+export const LOG_LEVEL = [
+    "emergency",
+    "alert",
+    "critical",
+    "error",
+    "warning",
+    "information",
+    "notice",
+    "debug",
+];
