@@ -152,7 +152,7 @@ export default {
         deleteVp(row) {
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
                 .then(_ => {
-                    let url, post_param;
+                    let url, post_param, loading;
                     if (isDef(row)) {
                         url = "/switch_svp?form=svp_delete";
                         post_param = {
@@ -172,9 +172,15 @@ export default {
                     } else {
                         url = "/switch_svp?form=svp_delete_all";
                         post_param = { method: "delete", param: {} };
+                        loading = this.$loading();
                     }
                     this.postData(url, post_param)
                         .then(_ => {
+                            if (loading && isFunction(loading.close)) {
+                                this.$nextTick(_ => {
+                                    loading.close();
+                                });
+                            }
                             this.getVirtualPort();
                         })
                         .catch(_ => {});
