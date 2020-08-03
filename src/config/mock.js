@@ -54,3 +54,4 @@ import "@/mock/content/macMgmt/macMgmt";
 import "@/mock/content/linkAggregation/linkAggregation";
 import "@/mock/content/vlanMgmt/vlanMgmt";
 import "@/mock/content/system/log";
+import "@/mock/content/pon/ontPerf";
