@@ -109,6 +109,10 @@ const data = {
         import(
             /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/ponSetting"
         ),
+    onu_perf_info: () =>
+        import(
+            /* webpackChunkName: "pon" */ "@/views/advSetting/gponMgmt/ontPerf"
+        ),
     igmp: () =>
         import(
             /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/igmp"
