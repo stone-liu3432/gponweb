@@ -10,22 +10,26 @@ export default {
                     this.reboot();
                     return Promise.resolve();
                 })
-                .catch(() => {
+                .catch(() => {})
+                .finally(() => {
                     clearTimeout(timer);
                 });
         },
         reboot() {
             this.$http
                 .get("/system_reboot")
-                .then((res) => {})
+                .then((res) => {
+                    clearSessionStorage();
+                    this.$router.push("/login");
+                    // 特殊处理，在打开confirm的情况下自动完成跳转到登录页时，关闭confirm
+                    const el = document.querySelector(
+                        ".el-message-box__wrapper"
+                    );
+                    if (el && isFunction(el.click)) {
+                        el.click();
+                    }
+                })
                 .catch((err) => {});
-            clearSessionStorage();
-            this.$router.push("/login");
-            // 特殊处理，在打开confirm的情况下自动完成跳转到登录页时，关闭confirm
-            const el = document.querySelector(".el-message-box__wrapper");
-            if (el && isFunction(el.click)) {
-                el.click();
-            }
         },
     },
 };
