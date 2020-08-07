@@ -219,6 +219,7 @@ export default {
                     if (e.code !== 0x3e8) {
                         if (this.ws_limit >= 3) {
                             this.$message.error(this.$lang("conn_error"));
+                            clearSessionStorage();
                             this.$router.replace("/login");
                         } else {
                             this.ws_limit++;
@@ -240,7 +241,8 @@ export default {
                 //  server推送，登录超时
                 timeout() {
                     this.$message.error(this.$lang("login_timeout"));
-                    this.$router.replace("/login");
+                    clearSessionStorage();
+                    this.$router.push("/login");
                 },
                 //  接收到服务器返回的register消息直接忽略，不作任何处理
                 register() {},
