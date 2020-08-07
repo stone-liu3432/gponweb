@@ -2,7 +2,7 @@
     <div>
         <page-header type="none" :title="$lang('packet_filter')">
             <div slot="content">
-                <el-button type="primary" size="mini" @click="openDialog('add')">{{ $lang('add') }}</el-button>
+                <el-button type="primary" size="small" @click="openDialog('add')">{{ $lang('add') }}</el-button>
             </div>
         </page-header>
         <el-table :data="pkts" border>

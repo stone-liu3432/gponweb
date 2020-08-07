@@ -36,7 +36,7 @@
                     trigger="manual"
                     v-model="tcontPopVisible"
                 >
-                    <el-table :data="tconts" border size="mini" max-height="500px">
+                    <el-table :data="tconts" border size="small" max-height="500px">
                         <el-table-column width="89" prop="tcid" :label="$lang('tcid')"></el-table-column>
                         <el-table-column width="110" prop="dba_profid" :label="$lang('dba_profid')"></el-table-column>
                         <el-table-column
@@ -72,7 +72,7 @@
             </el-form-item>
             <el-form-item :label="$lang('gem')" prop="gem">
                 <el-popover placement="right" width="680" trigger="manual" v-model="gemPopVisible">
-                    <el-table :data="gems" border size="mini" max-height="500px">
+                    <el-table :data="gems" border size="small" max-height="500px">
                         <el-table-column width="99" prop="gemindex" :label="$lang('gemindex')"></el-table-column>
                         <el-table-column width="100" prop="tcontid" :label="$lang('tcontid')"></el-table-column>
                         <el-table-column width="380" prop="mapping" :label="$lang('mapping')">
@@ -80,7 +80,7 @@
                                 <!-- 无key时，vue无法实时更新数据变化 -->
                                 <el-table
                                     :data="scope.row.mapping"
-                                    size="mini"
+                                    size="small"
                                     max-height="500px"
                                     :key="scope.row.gemindex"
                                 >
@@ -103,7 +103,7 @@
                                         <template slot="header">
                                             <el-button
                                                 type="primary"
-                                                size="mini"
+                                                size="small"
                                                 @click="openAddDialog('mapping', scope.row)"
                                             >{{ $lang('add') }}</el-button>
                                         </template>

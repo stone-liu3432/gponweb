@@ -9,7 +9,7 @@
                 <span>{{ ponInfo.af_aging_time }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('time', ponInfo)"
                 >{{ $lang('config') }}</el-button>
@@ -19,7 +19,7 @@
                 <span>{{ ponInfo.af_interval }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('interval', ponInfo)"
                 >{{ $lang('config') }}</el-button>

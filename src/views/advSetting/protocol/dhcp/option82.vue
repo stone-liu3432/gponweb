@@ -5,7 +5,7 @@
             <span>{{ $lang(SWITCH[data.option82_admin]) }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="chagneOption82Admin"
             >{{ $lang(BUTTON_TEXT[data.option82_admin]) }}</el-button>
         </div>
@@ -15,7 +15,7 @@
                 <span>{{ $lang(OPTION82_POLICY[data.option82_policy]) }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="openDialog('policy')"
                 >{{ $lang('config') }}</el-button>
             </div>

@@ -10,7 +10,7 @@
                     <el-button
                         type="primary"
                         style="margin-left: 30px;"
-                        size="mini"
+                        size="small"
                         @click="openDialog('add')"
                     >{{ $lang('add') }}</el-button>
                 </template>

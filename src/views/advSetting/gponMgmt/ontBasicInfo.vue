@@ -7,18 +7,18 @@
             <div style="margin: 12px 0;">
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="changeState"
                 >{{ $lang('switch', 'ont','state') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="reboot"
                 >{{ $lang('reboot', 'ont') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="setInfo"
                 >{{ $lang('config', 'desc') }}</el-button>

@@ -4,7 +4,7 @@
             <template slot="title">{{ $lang('op_vlan') }}</template>
         </page-header>
         <div style="margin: 12px 0;" v-if="ont_id !== 0xffff">
-            <el-button type="primary" size="mini" @click="openDialog()">{{ $lang('add') }}</el-button>
+            <el-button type="primary" size="small" @click="openDialog()">{{ $lang('add') }}</el-button>
         </div>
         <template v-if="ont_id !== 0xffff && vlanList.portvlan && vlanList.portvlan.length">
             <el-table :data="vlanList.portvlan || []" border>

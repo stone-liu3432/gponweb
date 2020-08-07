@@ -8,10 +8,14 @@
             <div class="mstp-region-item">
                 <span>{{ $lang('regional_name') }}:</span>
                 <span>{{ regionInfo.regional_name }}</span>
-                <el-button type="primary" size="mini" @click="setRegionalName">{{ $lang('config') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
+                    @click="setRegionalName"
+                >{{ $lang('config') }}</el-button>
+                <el-button
+                    type="primary"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="resetRegionalName"
                 >{{ $lang('reset') }}</el-button>
@@ -21,7 +25,7 @@
                 <span>{{ regionInfo.revision_level }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="setRevisionLevel"
                 >{{ $lang('config') }}</el-button>
             </div>

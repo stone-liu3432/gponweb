@@ -31,7 +31,7 @@
             <el-col :span="12">
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="setProfile(data)"
                 >{{ $lang('config') }}</el-button>
             </el-col>

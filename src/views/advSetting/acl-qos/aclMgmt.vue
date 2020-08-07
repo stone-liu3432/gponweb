@@ -4,12 +4,12 @@
             <div slot="content">
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="openDialog('add')"
                 >{{ $lang('add') }} ACL</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('delete')"
                 >{{ $lang('delete') }} ACL</el-button>

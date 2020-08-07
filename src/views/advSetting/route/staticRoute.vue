@@ -6,7 +6,7 @@
             <span>{{ $lang(SWITCH[routeStatus]) }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="changeAdmin"
             >{{ $lang(BUTTON_TEXT[routeStatus]) }}</el-button>
         </h4>
@@ -15,13 +15,13 @@
                 <span>{{ $lang('static_route') }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="addStaticRoute"
                 >{{ $lang('add') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="refreshData"
                 >{{ $lang('refresh') }}</el-button>

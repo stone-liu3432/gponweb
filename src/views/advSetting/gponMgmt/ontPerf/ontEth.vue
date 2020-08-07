@@ -3,7 +3,7 @@
         <template v-if="perfs.length">
             <div style="margin: 10px 0 10px 10px;">
                 <span>{{ $lang('ethport_id') }}</span>
-                <el-select v-model="ethport_id" style="margin-left: 30px;" size="mini">
+                <el-select v-model="ethport_id" style="margin-left: 30px;" size="small">
                     <template v-for="item in perfs">
                         <el-option :value="item.ethport_id"></el-option>
                     </template>

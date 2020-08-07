@@ -1,7 +1,7 @@
 <template>
     <div>
         <div style="margin: 12px;">
-            <el-button type="primary" size="mini" @click="refreshData">{{ $lang('refresh') }}</el-button>
+            <el-button type="primary" size="small" @click="refreshData">{{ $lang('refresh') }}</el-button>
         </div>
         <el-table :data="showList" border>
             <el-table-column :label="$lang('svp_af_id')" prop="svp_af_id"></el-table-column>

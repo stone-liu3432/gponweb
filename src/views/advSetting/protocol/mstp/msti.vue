@@ -4,7 +4,7 @@
             <span>{{ $lang('msti', 'info') }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('create')"
             >{{ $lang('add') }}</el-button>

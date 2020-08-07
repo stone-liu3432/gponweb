@@ -9,7 +9,7 @@
             <span>{{ row.mvlan_desc }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="setData('desc', row)"
             >{{ $lang('config') }}</el-button>
@@ -19,13 +19,13 @@
             <span>{{ generateList(row.router_portlist) }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="setData('add_router', row)"
             >{{ $lang('add') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="setData('del_router', row)"
             >{{ $lang('delete') }}</el-button>
@@ -35,7 +35,7 @@
             <span>{{ $lang(MULTICAST_UNKNOWN_POLICYS[mcUnknown.mc_unknown_policy]) || '' }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="setData('policy', row, mcUnknown)"
             >{{ $lang('config') }}</el-button>

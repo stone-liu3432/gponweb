@@ -5,12 +5,12 @@
             <span>{{ $lang(SWITCH[data.server_admin]) }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="changeServerAdmin"
             >{{ $lang(BUTTON_TEXT[data.server_admin]) }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 v-if="data.server_admin"
                 @click="openDialog('info')"
@@ -22,7 +22,7 @@
                 <span>{{ getInterface(data.interface) }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="openDialog('interface')"
                 >{{ $lang('config', 'interface') }}</el-button>
             </div>

@@ -5,7 +5,7 @@
             <span>{{ $lang('dhcp_admin') }}:</span>
             <span>{{ $lang(SWITCH[info.dhcp_admin || 0]) }}</span>
             <el-button
-                size="mini"
+                size="small"
                 type="primary"
                 @click="setGlobalAdmin"
             >{{ $lang(BUTTON_TEXT[info.dhcp_admin]) || 'Config' }}</el-button>

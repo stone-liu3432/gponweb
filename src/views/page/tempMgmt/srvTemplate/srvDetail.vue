@@ -8,7 +8,7 @@
             <el-col :span="4">
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="setProfile(data)"
                 >{{ $lang('config') }}</el-button>
             </el-col>

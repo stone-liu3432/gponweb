@@ -6,7 +6,7 @@
             <span>{{ SWITCH[mstp_status] }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="changeMstpState"
             >{{ $lang(BUTTON_TEXT[mstp_status]) }}</el-button>
         </div>

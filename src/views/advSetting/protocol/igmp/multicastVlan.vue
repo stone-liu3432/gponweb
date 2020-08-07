@@ -4,7 +4,7 @@
             <span>{{ $lang('mvlan') }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('add')"
             >{{ $lang('add') }}</el-button>

@@ -4,7 +4,7 @@
             <div slot="content">
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="openDialog('create')"
                 >{{ $lang('create') }}</el-button>
             </div>

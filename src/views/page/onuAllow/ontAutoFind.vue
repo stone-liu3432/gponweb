@@ -1,12 +1,12 @@
 <template>
     <div>
         <div style="margin: 10px 0 20px 10px;">
-            <el-button type="primary" size="mini" @click="changeBatch">
+            <el-button type="primary" size="small" @click="changeBatch">
                 <template v-if="!isBatch">{{ $lang('batch_config') }}</template>
                 <template v-else>{{ $lang('exit_batch_onu') }}</template>
             </el-button>
             <template v-if="isBatch">
-                <el-button type="primary" size="mini" @click="submitBatch">{{ $lang('delete') }}</el-button>
+                <el-button type="primary" size="small" @click="submitBatch">{{ $lang('delete') }}</el-button>
             </template>
         </div>
         <el-table

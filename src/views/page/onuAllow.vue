@@ -6,13 +6,13 @@
                 <el-button
                     type="primary"
                     style="margin-left: 30px;"
-                    size="mini"
+                    size="small"
                     @click="openDialog()"
                 >{{ $lang('add') }} ONT</el-button>
                 <el-button
                     v-if="gpon_setting.length"
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="changeAutofindState"
                 >{{ $lang(isAutofind ? 'off' : 'on', 'autofind') }}</el-button>

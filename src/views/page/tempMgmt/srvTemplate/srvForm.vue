@@ -90,11 +90,11 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-button slot="reference" size="mini">{{ $lang('show', 'is_exists') }}</el-button>
+                    <el-button slot="reference" size="small">{{ $lang('show', 'is_exists') }}</el-button>
                 </el-popover>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="openDialog"
                 >{{ $lang('add') }}</el-button>

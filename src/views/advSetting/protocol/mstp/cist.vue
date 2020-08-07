@@ -4,13 +4,13 @@
             <span>{{ $lang('info') }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('info')"
             >{{ $lang('config') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('prio')"
             >{{ $lang('config', 'priority') }}</el-button>

@@ -10,7 +10,7 @@
                 <span>{{ $lang('igmp', 'info') }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="openDialog"
                 >{{ $lang('config') }}</el-button>

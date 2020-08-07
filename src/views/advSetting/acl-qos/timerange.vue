@@ -2,10 +2,10 @@
     <div>
         <page-header type="none" :title="$lang('timerange')">
             <div slot="content">
-                <el-button type="primary" size="mini" @click="openDialog">{{ $lang('add') }}</el-button>
+                <el-button type="primary" size="small" @click="openDialog">{{ $lang('add') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     v-if="timerangeList.length"
                     @click="deleteAllTimerange"

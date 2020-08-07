@@ -5,7 +5,7 @@
             <span>{{ $lang(SWITCH[data.snooping_admin]) }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="changeSnoopingAdmin"
             >{{ $lang(BUTTON_TEXT[data.snooping_admin]) }}</el-button>
         </div>
@@ -15,7 +15,7 @@
                 <span>{{ $lang(SWITCH[data.chaddr_check]) }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="openDialog('chaddr_check')"
                 >{{ $lang(BUTTON_TEXT[data.chaddr_check]) }}</el-button>
             </div>
@@ -24,7 +24,7 @@
                 <span>{{ data.response_time }} s</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="openDialog('response_time')"
                 >{{ $lang('config') }}</el-button>
             </div>
@@ -33,12 +33,12 @@
                 <span>{{ portlist }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="openDialog('add_port')"
                 >{{ $lang('add') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('delete_port')"
                 >{{ $lang('delete') }}</el-button>
@@ -48,13 +48,13 @@
                     <span>{{ $lang('snooping_table') }}</span>
                     <el-button
                         type="primary"
-                        size="mini"
+                        size="small"
                         style="margin-left: 30px;"
                         @click="clearSnoopingTable"
                     >{{ $lang('clear') }}</el-button>
                     <el-button
                         type="primary"
-                        size="mini"
+                        size="small"
                         style="margin-left: 30px;"
                         @click="refreshData"
                     >{{ $lang('refresh') }}</el-button>

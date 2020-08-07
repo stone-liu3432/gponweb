@@ -2,10 +2,10 @@
     <div>
         <page-header title="ARP" type="none">
             <div slot="content">
-                <el-button type="primary" size="mini" @click="deleteAll">{{ $lang('delete_all') }}</el-button>
+                <el-button type="primary" size="small" @click="deleteAll">{{ $lang('delete_all') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="refreshData"
                 >{{ $lang('refresh') }}</el-button>

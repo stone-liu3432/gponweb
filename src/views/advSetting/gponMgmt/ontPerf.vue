@@ -5,7 +5,7 @@
             <template slot="content">
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="refreshData"
                 >{{ $lang('refresh') }}</el-button>

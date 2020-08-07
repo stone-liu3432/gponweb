@@ -1,16 +1,16 @@
 <template>
     <div>
         <div style="margin: 12px;">
-            <el-button type="primary" size="mini" @click="openDialog('add')">{{ $lang('add') }}</el-button>
+            <el-button type="primary" size="small" @click="openDialog('add')">{{ $lang('add') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="deleteVp()"
             >{{ $lang('delete_all') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="refreshData"
             >{{ $lang('refresh') }}</el-button>

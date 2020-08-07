@@ -3,24 +3,24 @@
         <div style="margin: 12px;">
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="chagneAllState(false)"
             >{{ $lang('disable_all') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="chagneAllState(true)"
                 style="margin-left: 30px;"
             >{{ $lang('enable_all') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="clearStat()"
                 style="margin-left: 30px;"
             >{{ $lang('flush_all') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="refreshData"
                 style="margin-left: 30px;"
             >{{ $lang('refresh') }}</el-button>

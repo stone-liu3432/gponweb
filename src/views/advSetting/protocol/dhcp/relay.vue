@@ -4,7 +4,7 @@
             <span>{{ $lang('relay_admin') }}:</span>
             <span>{{ $lang(SWITCH[data.relay_admin || 0]) }}</span>
             <el-button
-                size="mini"
+                size="small"
                 type="primary"
                 @click="chagneAdmin"
             >{{ $lang(BUTTON_TEXT[data.relay_admin]) }}</el-button>
@@ -15,12 +15,12 @@
                 <span>{{ $lang(RELAY_POLICY[data.relay_policy]) }}</span>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="openDialog('set')"
                 >{{ $lang('config') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     @click="openDialog('add')"
                 >{{ $lang('add', 'server_ip') }}</el-button>
             </div>

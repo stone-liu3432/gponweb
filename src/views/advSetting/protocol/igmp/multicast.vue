@@ -5,19 +5,19 @@
             <el-button
                 type="primary"
                 style="margin-left: 30px;"
-                size="mini"
+                size="small"
                 @click="openDialog"
             >{{ $lang('add', 'static_table') }}</el-button>
             <el-button
                 type="primary"
                 style="margin-left: 30px;"
-                size="mini"
+                size="small"
                 @click="deleteAll('static')"
             >{{ $lang('delete_all', 'static_table') }}</el-button>
             <el-button
                 type="primary"
                 style="margin-left: 30px;"
-                size="mini"
+                size="small"
                 @click="deleteAll('dynamic')"
             >{{ $lang('delete_all', 'dynamic_table') }}</el-button>
         </h3>

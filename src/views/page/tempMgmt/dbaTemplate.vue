@@ -20,7 +20,7 @@
                     <span>{{ $lang('config') }}</span>
                     <el-button
                         type="primary"
-                        size="mini"
+                        size="small"
                         style="margin-left: 20px;"
                         @click="openDialog('add')"
                     >{{ $lang('add') }}</el-button>

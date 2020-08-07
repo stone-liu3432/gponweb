@@ -4,19 +4,19 @@
             <span>{{ $lang('msti', 'info') }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="dispatchEvent('add')"
             >{{ $lang('add', 'vlan_list') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="dispatchEvent('delete')"
             >{{ $lang('delete', 'vlan_list') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="dispatchEvent('prio')"
             >{{ $lang('set', 'priority') }}</el-button>

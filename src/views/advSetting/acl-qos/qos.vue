@@ -9,7 +9,7 @@
             <span>{{ $lang('priority') }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('cosq', cosq)"
             >{{ $lang('config') }}</el-button>
@@ -32,7 +32,7 @@
             <span>{{ $lang('queue_scheduler') }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('queue', queue)"
             >{{ $lang('config') }}</el-button>
