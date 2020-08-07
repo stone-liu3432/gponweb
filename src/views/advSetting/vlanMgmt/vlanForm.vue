@@ -3,12 +3,14 @@
         <el-form-item :label="$lang('vlan_id')" prop="vlan_id">
             <template v-if="type !== 'config'">
                 <el-input
+                    size="small"
                     v-model.number="form.vlanid_s"
                     v-validator="form.vlanid_s"
                     style="width: 120px;"
                 ></el-input>
                 <span style="margin: 0 6px;">-</span>
                 <el-input
+                    size="small"
                     v-model.number="form.vlanid_e"
                     v-validator="form.vlanid_e"
                     style="width: 120px;"
@@ -20,10 +22,10 @@
             </template>
         </el-form-item>
         <template v-if="type !== 'delete'">
-            <el-form-item :label="$lang('tagged_portlist')" prop="tagged_portlist">
+            <el-form-item :label="$lang('tagged_portlist') + ':'" prop="tagged_portlist">
                 <nms-port-checkbox v-model="form.tagged_portlist" :disabled="disabledItem"></nms-port-checkbox>
             </el-form-item>
-            <el-form-item :label="$lang('untagged_portlist')" prop="untagged_portlist">
+            <el-form-item :label="$lang('untagged_portlist') + ':'" prop="untagged_portlist">
                 <nms-port-checkbox v-model="form.untagged_portlist" :disabled="disabledItem"></nms-port-checkbox>
             </el-form-item>
         </template>

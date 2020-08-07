@@ -25,6 +25,7 @@
         <el-form label-width="160px" label-position="left">
             <el-form-item :label="$lang('vlan_list')" class="search-title">
                 <el-input
+                    size="small"
                     placeholder="VLAN ID: 1 - 4094"
                     prefix-icon="el-icon-search"
                     style="width: 200px;"
