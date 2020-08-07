@@ -428,6 +428,9 @@ export default {
     i + i {
         margin: 0 12px;
     }
+    span:first-child {
+        margin-left: 12px;
+    }
 }
 .not-allowed {
     cursor: not-allowed;
