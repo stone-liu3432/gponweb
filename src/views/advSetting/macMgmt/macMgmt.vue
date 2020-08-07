@@ -4,19 +4,19 @@
         <div class="mag-mgmt-agetime">
             <span>{{ $lang('age') }}:</span>
             <span>{{ age }}</span>
-            <el-button type="primary" size="mini" @click="setAge">{{ $lang('config') }}</el-button>
+            <el-button type="primary" size="small" @click="setAge">{{ $lang('config') }}</el-button>
         </div>
         <h4>
             <span>{{ $lang('mac_mgmt') }}</span>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('add')"
             >{{ $lang('add_mac') }}</el-button>
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('flush')"
             >{{ $lang('flush_mac') }}</el-button>
@@ -55,7 +55,7 @@
         <div style="margin: 12px 0; text-align: center;">
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 v-if="isLoadMore"
                 @click="loadMoreData"
             >{{ $lang('loadmore') }}</el-button>
