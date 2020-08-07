@@ -4,7 +4,7 @@
         <div style="margin: 10px 0 20px 10px;">
             <el-button
                 type="primary"
-                size="mini"
+                size="small"
                 @click="downloadLog"
             >{{ $lang('download', 'log') }}</el-button>
         </div>

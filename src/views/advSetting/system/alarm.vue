@@ -4,11 +4,13 @@
         <div>
             <span>{{ $lang('alarm_info') }}</span>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="refreshData"
             >{{ $lang('refresh') }}</el-button>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="downloadAlarm"

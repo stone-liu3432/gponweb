@@ -7,6 +7,7 @@
         <h3>
             {{ $lang('inbound') }}
             <el-button
+                size="small"
                 plain
                 type="primary"
                 style="margin-left: 30px;"

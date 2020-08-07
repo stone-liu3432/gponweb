@@ -32,11 +32,13 @@
         </el-row>
         <el-row :gutter="30" style="padding: 10px 0;">
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 10px;"
                 @click="openDialog('add')"
             >{{ $lang('add_vlan_list') }}</el-button>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('delete')"

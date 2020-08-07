@@ -47,7 +47,11 @@
                         </span>
                     </template>
                     <p>{{ $lang('reboot_olt') }}</p>
-                    <el-button type="primary" @click="rebootOlt()">{{ $lang('reboot') }}</el-button>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="rebootOlt()"
+                    >{{ $lang('reboot') }}</el-button>
                 </el-card>
             </el-col>
         </el-row>
@@ -60,7 +64,11 @@
                         </span>
                     </template>
                     <p>{{ $lang('bkup_cfg_info') }}</p>
-                    <el-button type="primary" @click="backupConfig">{{ $lang('backup_config') }}</el-button>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="backupConfig"
+                    >{{ $lang('backup_config') }}</el-button>
                 </el-card>
             </el-col>
             <el-col :span="12">
@@ -71,7 +79,11 @@
                         </span>
                     </template>
                     <p>{{ $lang('def_cfg_info') }}</p>
-                    <el-button type="primary" @click="defaultConfig">{{ $lang('default_config') }}</el-button>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="defaultConfig"
+                    >{{ $lang('default_config') }}</el-button>
                 </el-card>
             </el-col>
         </el-row>
@@ -84,7 +96,11 @@
                         </span>
                     </template>
                     <p>{{ $lang('save_cfg_info') }}</p>
-                    <el-button type="primary" @click="saveConfig">{{ $lang('save_config') }}</el-button>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="saveConfig"
+                    >{{ $lang('save_config') }}</el-button>
                 </el-card>
             </el-col>
             <el-col :span="12">
@@ -95,7 +111,11 @@
                         </span>
                     </template>
                     <p>{{ $lang('view_cfg_tips') }}</p>
-                    <el-button type="primary" @click="viewCurrentConfig">{{ $lang('view_cfg') }}</el-button>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="viewCurrentConfig"
+                    >{{ $lang('view_cfg') }}</el-button>
                 </el-card>
             </el-col>
         </el-row>

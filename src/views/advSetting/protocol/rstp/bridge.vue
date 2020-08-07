@@ -3,6 +3,7 @@
         <h3>
             {{ $lang('rstp_b_info') }}
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog"

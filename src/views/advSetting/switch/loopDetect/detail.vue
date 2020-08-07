@@ -4,7 +4,7 @@
             <el-col :span="6">{{ $lang('ld_status') }}</el-col>
             <el-col :span="4">{{ status ? $lang('enable') : $lang('disable') }}</el-col>
             <el-col :span="4">
-                <el-button type="primary" @click="setLdStatus">{{ $lang('config') }}</el-button>
+                <el-button size="small" type="primary" @click="setLdStatus">{{ $lang('config') }}</el-button>
             </el-col>
         </el-row>
         <template v-if="status">
@@ -12,15 +12,24 @@
                 <el-col :span="6">{{ $lang('detect_interval') }}</el-col>
                 <el-col :span="4">{{ ldStatus.detect_interval }}</el-col>
                 <el-col :span="4">
-                    <el-button type="primary" @click="setDetectInterval">{{ $lang('config') }}</el-button>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="setDetectInterval"
+                    >{{ $lang('config') }}</el-button>
                 </el-col>
             </el-row>
             <el-row class="loop-detect-status">
                 <el-col :span="6">{{ $lang('recover_mode') }}</el-col>
                 <el-col :span="4">{{ ldStatus.recover_mode ? 'Manual' : 'Auto' }}</el-col>
                 <el-col :span="8">
-                    <el-button type="primary" @click="setLdRecoverMode">{{ $lang('config') }}</el-button>
                     <el-button
+                        size="small"
+                        type="primary"
+                        @click="setLdRecoverMode"
+                    >{{ $lang('config') }}</el-button>
+                    <el-button
+                        size="small"
                         type="primary"
                         v-if="isManual"
                         @click="recoverManualDebounce"
@@ -31,7 +40,11 @@
                 <el-col :span="6">{{ $lang('recover_time') }}</el-col>
                 <el-col :span="4">{{ ldStatus.recover_time }}</el-col>
                 <el-col :span="4">
-                    <el-button type="primary" @click="setRecoverTime">{{ $lang('config') }}</el-button>
+                    <el-button
+                        size="small"
+                        type="primary"
+                        @click="setRecoverTime"
+                    >{{ $lang('config') }}</el-button>
                 </el-col>
             </el-row>
             <h3>{{ $lang('ld_info') }}</h3>

@@ -4,16 +4,19 @@
         <div class="user-mgmt-table">
             <span>{{ $lang('current_user_list') }}</span>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('add')"
             >{{ $lang('add', 'user') }}</el-button>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('delete')"
             >{{ $lang('delete', 'user') }}</el-button>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('modify')"

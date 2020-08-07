@@ -45,10 +45,11 @@
                 </el-form-item>
             </template>
         </el-form>
-        <el-button type="primary" @click="refreshTime">{{ $lang('time_get_serv') }}</el-button>
+        <el-button type="primary" size="small" @click="refreshTime">{{ $lang('time_get_serv') }}</el-button>
         <span style="margin-left: 30px;">{{ $lang('notice_time_sync') }}</span>
         <div style="margin: 30px 0;">
             <el-button
+                size="small"
                 type="primary"
                 style="width: 200px;"
                 @click="submitForm('time-form')"

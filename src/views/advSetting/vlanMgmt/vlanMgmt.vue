@@ -4,19 +4,19 @@
             <div slot="content">
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('create')"
                 >{{ $lang('create') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('delete')"
                 >{{ $lang('delete') }}</el-button>
                 <el-button
                     type="primary"
-                    size="mini"
+                    size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('batch')"
                 >{{ $lang('batch_cfg_vlan') }}</el-button>

@@ -4,11 +4,13 @@
         <h3 class="port-isolation-item">
             <span>PON {{ $lang('port_isolation') }}</span>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('add', 'pon')"
             >{{ $lang('add', 'port') }}</el-button>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('delete', 'pon')"
@@ -21,11 +23,13 @@
         <h3 class="port-isolation-item">
             <span>{{ $lang('uplink', 'port_isolation') }}</span>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('add', 'ge')"
             >{{ $lang('add', 'port') }}</el-button>
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('delete', 'ge')"
