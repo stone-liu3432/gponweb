@@ -13,10 +13,10 @@
                 <span>{{ $lang('diag_type') }}</span>
             </el-form-item>
             <el-form-item :label="$lang('dest_ping_ip')" prop="dest_ip">
-                <el-input v-model="diag.dest_ip"></el-input>
+                <el-input size="small" v-model="diag.dest_ip"></el-input>
             </el-form-item>
             <el-form-item :label="$lang('diag_ping_intf')">
-                <el-select v-model="diag.diag_intf">
+                <el-select size="small" v-model="diag.diag_intf">
                     <template v-for="item in interfaces">
                         <el-option
                             :value="item.ipaddr"
@@ -26,13 +26,14 @@
                 </el-select>
             </el-form-item>
             <el-form-item :label="$lang('diag_ping_count')" prop="diag_count">
-                <el-input v-model="diag.diag_count"></el-input>
+                <el-input size="small" v-model.number="diag.diag_count"></el-input>
             </el-form-item>
             <el-form-item :label="$lang('diag_ping_pktsize')" prop="diag_pktsize">
-                <el-input v-model="diag.diag_pktsize"></el-input>
+                <el-input size="small" v-model.number="diag.diag_pktsize"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button
+                    size="small"
                     type="primary"
                     style="width: 200px;"
                     @click="startPing('diagonose-form')"
