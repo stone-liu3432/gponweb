@@ -19,7 +19,7 @@
 <script>
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import pageComponents from "@/router/dynamicRouter";
-import { isDef, isArray, isUndef } from "@/utils/common";
+import { isDef, isArray, isUndef, clearSessionStorage } from "@/utils/common";
 import { ADVANCED_MENU } from "@/utils/commonData";
 import provider from "@/utils/provider";
 const navHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
@@ -187,9 +187,7 @@ export default {
             this.$http.interceptors.response.use(
                 response => {
                     const jumpToLogin = () => {
-                        const lang = sessionStorage.getItem("lang") || "en";
-                        sessionStorage.clear();
-                        sessionStorage.setItem("lang", lang);
+                        clearSessionStorage();
                         this.$router.push("/login");
                     };
                     //  返回 0 ，非法登录信息
