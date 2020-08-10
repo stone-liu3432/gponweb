@@ -200,6 +200,10 @@ export default {
                         this.$message.error(this.$lang("login_timeout"));
                         jumpToLogin();
                     }
+                    // 返回 warning 时(code > 1)，有时需刷新数据或者是执行其他操作
+                    if (/^\s*warning/i.test(response.data.message)) {
+                        response.data.type = "warning";
+                    }
                     return response;
                 },
                 err => {
