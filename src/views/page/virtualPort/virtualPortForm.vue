@@ -30,7 +30,7 @@
             <el-form-item :label="$lang('svp_type')" prop="svp_type">
                 <el-select v-model.number="form.svp_type">
                     <template v-for="(item, index) in SVP_TYPE_MAP">
-                        <el-option :label="$lang(item)" :value="index >>> 0"></el-option>
+                        <el-option :label="$lang(item)" :value="Number(index)"></el-option>
                     </template>
                 </el-select>
             </el-form-item>
@@ -50,9 +50,9 @@
                 <el-select v-model.number="form.tag_action">
                     <template v-for="(item, index) in TAG_ACTIONS">
                         <el-option
-                            :value="index >>> 0"
+                            :value="Number(index)"
                             :label="item"
-                            :disabled="disabledTagaction(index >>> 0)"
+                            :disabled="disabledTagaction(Number(index))"
                         ></el-option>
                     </template>
                 </el-select>
@@ -182,6 +182,7 @@ export default {
             if (this.type === "set" || this.type === "desc") {
                 this.form.svp_id = this.data.svp_id;
                 if (this.type === "set") {
+                    this.form.svp_type = this.data.svp_type;
                     this.form.tag_action = this.data.tag_action;
                     this.form.inner_vlan = this.data.inner_vlan;
                     this.form.new_svlan = this.data.new_svlan;
