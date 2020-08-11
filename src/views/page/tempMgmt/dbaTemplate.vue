@@ -36,6 +36,7 @@
                     >{{ $lang('config') }}</el-button>
                     <el-button
                         type="text"
+                        v-if="scope.row.profid > 9"
                         style="margin-left: 20px;"
                         @click="delTemplate(scope.row)"
                     >{{ $lang('delete') }}</el-button>
