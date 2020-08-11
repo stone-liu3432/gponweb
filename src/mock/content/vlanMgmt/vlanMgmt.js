@@ -23,3 +23,5 @@ Mock.mock("/vlantable", "get", () => {
 Mock.post("/switch_vlan");
 
 Mock.post("/switch_vlanlist");
+
+Mock.post("/switch_vlan_pvid");
