@@ -1,7 +1,7 @@
 <template>
     <el-form :model="form" :rules="rules" label-width="120px" ref="vlan-form">
         <el-form-item :label="$lang('vlan_id')" prop="vlan_id">
-            <template v-if="type !== 'config'">
+            <template v-if="type !== 'config' && type !== 'port_default_vlan'">
                 <el-input
                     size="small"
                     v-model.number="form.vlanid_s"
@@ -21,12 +21,21 @@
                 <span style="margin-left: 12px;">{{ form.vlanid_s }}</span>
             </template>
         </el-form-item>
-        <template v-if="type !== 'delete'">
+        <template v-if="type !== 'delete' && type !== 'port_default_vlan'">
             <el-form-item :label="$lang('tagged_portlist') + ':'" prop="tagged_portlist">
                 <nms-port-checkbox v-model="form.tagged_portlist" :disabled="disabledItem"></nms-port-checkbox>
             </el-form-item>
             <el-form-item :label="$lang('untagged_portlist') + ':'" prop="untagged_portlist">
                 <nms-port-checkbox v-model="form.untagged_portlist" :disabled="disabledItem"></nms-port-checkbox>
+            </el-form-item>
+        </template>
+        <template v-if="type === 'port_default_vlan'">
+            <el-form-item
+                :label="$lang('default_vlan_portlist') + ':'"
+                prop="default_vlan_portlist"
+                label-width="160px"
+            >
+                <nms-port-checkbox v-model="form.default_vlan_portlist"></nms-port-checkbox>
             </el-form-item>
         </template>
     </el-form>
@@ -80,9 +89,8 @@ export default {
             this.form.default_vlan_portlist = [];
             this.form.vlanid_s = "";
             this.form.vlanid_e = "";
-
             this.type = type;
-            if (type === "config") {
+            if (type === "config" || type === "port_default_vlan") {
                 this.form.vlanid_s = data.vlan_id;
                 this.form.tagged_portlist = parseStringAsList(
                     data.tagged_portlist

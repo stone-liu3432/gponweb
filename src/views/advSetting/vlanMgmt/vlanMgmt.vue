@@ -47,15 +47,25 @@
             </el-table-column>
             <el-table-column :label="$lang('config')" width="120px">
                 <template slot-scope="scope">
-                    <el-button
-                        type="text"
-                        @click="openDialog('config', scope.row)"
-                    >{{ $lang('config') }}</el-button>
-                    <el-button
-                        type="text"
-                        v-if="scope.row.vlan_id !== 1"
-                        @click="deleteVlan(scope.row)"
-                    >{{ $lang('delete') }}</el-button>
+                    <el-dropdown @command="commandHandler">
+                        <span class="el-dropdown-link">
+                            {{ $lang('config') }}
+                            <i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item
+                                :command="{ action: 'config', row: scope.row }"
+                            >{{ $lang('config') }}</el-dropdown-item>
+                            <template v-if="scope.row.vlan_id !== 1">
+                                <el-dropdown-item
+                                    :command="{ action: 'delete', row: scope.row }"
+                                >{{ $lang('delete') }}</el-dropdown-item>
+                            </template>
+                            <el-dropdown-item
+                                :command="{ action: 'port_default_vlan', row: scope.row }"
+                            >{{ $lang('port_default_vlan') }}</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </template>
             </el-table-column>
         </el-table>
@@ -280,6 +290,21 @@ export default {
                                 }
                             }
                         };
+                    },
+                    port_default_vlan(form) {
+                        const default_vlan_portlist = form.default_vlan_portlist.join(
+                            ","
+                        );
+                        return {
+                            url: "/switch_vlan_pvid",
+                            data: {
+                                method: "set",
+                                param: {
+                                    vlan_id: form.vlanid_s,
+                                    default_vlan_portlist
+                                }
+                            }
+                        };
                     }
                 };
                 if (isFunction(ACTIONS[type])) {
@@ -292,11 +317,29 @@ export default {
                                 .then(_ => {
                                     this.getVlan();
                                 })
-                                .catch(_ => {});
+                                .catch(err => {
+                                    if (err.type === "warning") {
+                                        this.getVlan();
+                                    }
+                                });
                         this.dialogVisible = false;
                     }
                 }
             });
+        },
+        commandHandler({ action, row }) {
+            switch (action) {
+                case "config":
+                    this.openDialog("config", row);
+                    break;
+                case "delete": {
+                    this.deleteVlan(row);
+                    break;
+                }
+                case "port_default_vlan":
+                    this.openDialog("port_default_vlan", row);
+                    break;
+            }
         }
     }
 };
@@ -307,5 +350,12 @@ export default {
     color: @titleColor;
     font-size: 16px;
     font-weight: 600;
+}
+.el-dropdown-link {
+    cursor: pointer;
+    color: #409eff;
+}
+.el-icon-arrow-down {
+    font-size: 12px;
 }
 </style>
