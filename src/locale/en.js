@@ -1046,6 +1046,7 @@ var en = {
     olt_gem_statistics: "OLT Side GEM Port Statistics",
     ont_gem_statistics: "ONT Side GEM Port Statistics",
     ont_eth_statistics: "ONT Ethernet Port Statistics",
+    port_default_vlan: "Port Default VLAN",
 };
 
 export default en;
