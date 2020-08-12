@@ -240,6 +240,11 @@ export default {
                                 data &&
                                 this.postData(url, data)
                                     .then(_ => {
+                                        // 策略改变时，获取对应策略的 url
+                                        if (type === "set") {
+                                            this.data.relay_policy =
+                                                form.relay_policy;
+                                        }
                                         this.getRelay();
                                     })
                                     .catch(_ => {});
