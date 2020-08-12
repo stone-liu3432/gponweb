@@ -16,7 +16,7 @@
                 <el-button
                     type="primary"
                     size="small"
-                    @click="openDialog('chaddr_check')"
+                    @click="changeCheck"
                 >{{ $lang(BUTTON_TEXT[data.chaddr_check]) }}</el-button>
             </div>
             <div class="dhcp-snooping-item">
@@ -208,6 +208,30 @@ export default {
                                 snooping_admin: Number(
                                     !this.data.snooping_admin
                                 )
+                            }
+                        };
+                    this.postData(url, post_params)
+                        .then(_ => {
+                            this.$emit("refresh-data");
+                        })
+                        .catch(_ => {});
+                })
+                .catch(_ => {});
+        },
+        changeCheck() {
+            this.$confirm(
+                this.$lang(
+                    "if_sure",
+                    BUTTON_TEXT[this.data.chaddr_check],
+                    "chaddr_check"
+                ) + " ?"
+            )
+                .then(_ => {
+                    const url = "/switch_dhcp?form=snooping_chaddr",
+                        post_params = {
+                            method: "set",
+                            param: {
+                                chaddr_check: !this.data.chaddr_check
                             }
                         };
                     this.postData(url, post_params)
