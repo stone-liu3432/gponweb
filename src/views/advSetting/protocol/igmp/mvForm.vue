@@ -13,16 +13,11 @@
         </template>
         <template v-if="type === 'add_router' || type === 'del_router'">
             <el-form-item :label="$lang('router_portlist')" prop="router_portlist">
-                <el-checkbox-group v-model="form.router_portlist">
-                    <template v-for="item in port">
-                        <template v-if="item.port_id > system.ponports">
-                            <el-checkbox
-                                :label="item.port_id"
-                                :disabled="disabledItem(item)"
-                            >{{ getPortName(item.port_id) }}</el-checkbox>
-                        </template>
-                    </template>
-                </el-checkbox-group>
+                <nms-port-checkbox
+                    v-model="form.router_portlist"
+                    type="uplink"
+                    :disabled="disabledItem"
+                ></nms-port-checkbox>
             </el-form-item>
         </template>
         <template v-if="type === 'policy'">
@@ -109,8 +104,8 @@ export default {
             this.$refs["mv-form"].resetFields();
             this.type = type;
             if (type !== "add") {
-                this.row = row;
-                this.item = item;
+                row && (this.row = row);
+                item && (this.item = item);
                 this.form.mvlan = row.mvlan;
                 if (type === "desc") {
                     this.form.mvlan_desc = row.mvlan_desc;
@@ -124,18 +119,13 @@ export default {
                 if (type === "policy") {
                     this.form.mc_unknown_policy = item.mc_unknown_policy;
                 }
-                if (type === "program") {
-                    this.form.program_s = item.program_s;
-                    this.form.program_e = item.program_e;
-                    this.form.program_desc = item.program_desc;
-                }
             }
         },
-        disabledItem(item) {
+        disabledItem(port_id) {
             if (this.type === "add_router") {
-                return this.router.includes(item.port_id);
+                return this.router.includes(port_id);
             }
-            return !this.router.includes(item.port_id);
+            return !this.router.includes(port_id);
         },
         validateDesc(rule, val, cb) {
             if (!regLength(val, 0, 128)) {
