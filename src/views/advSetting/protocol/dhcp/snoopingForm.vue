@@ -11,17 +11,11 @@
                 prop="trust_portlist"
                 key="trust_portlist"
             >
-                <el-checkbox-group v-model="form.trust_portlist">
-                    <template v-for="item in port">
-                        <!-- uplink -->
-                        <template v-if="item.port_id > system.ponports">
-                            <el-checkbox
-                                :label="item.port_id"
-                                :disabled="disabledItem(item)"
-                            >{{ getPortName(item.port_id) }}</el-checkbox>
-                        </template>
-                    </template>
-                </el-checkbox-group>
+                <nms-port-checkbox
+                    v-model="form.trust_portlist"
+                    type="uplink"
+                    :disabled="disabledItem"
+                ></nms-port-checkbox>
             </el-form-item>
         </template>
     </el-form>
@@ -70,11 +64,11 @@ export default {
             }
             cb();
         },
-        disabledItem(item) {
+        disabledItem(port_id) {
             if (this.type === "add_port") {
-                return this.portlist.includes(item.port_id);
+                return this.portlist.includes(port_id);
             }
-            return !this.portlist.includes(item.port_id);
+            return !this.portlist.includes(port_id);
         },
         validate(fn) {
             this.$refs["dhcp-snooping-form"].validate(valid => {
