@@ -19,7 +19,7 @@
                 <el-select size="small" v-model="diag.diag_intf">
                     <template v-for="item in interfaces">
                         <el-option
-                            :value="item.ipaddr"
+                            :value="item.interface"
                             :label="$lang(item.interface) || item.interface"
                         ></el-option>
                     </template>
@@ -67,8 +67,8 @@ export default {
             diag: {
                 dest_ip: "",
                 diag_intf: "",
-                diag_count: "",
-                diag_pktsize: ""
+                diag_count: 4,
+                diag_pktsize: 64
             },
             rules: {
                 dest_ip: [
@@ -173,7 +173,7 @@ export default {
         interfaces() {
             this.interfaces.forEach(item => {
                 if (item.interface === "outbound") {
-                    this.diag.diag_intf = item.ipaddr;
+                    this.diag.diag_intf = item.interface;
                 }
             });
         }
