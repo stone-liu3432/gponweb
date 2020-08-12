@@ -42,18 +42,20 @@
         </div>
         <div class="multicast-vlan-detail-item">
             <span>{{ $lang('program') }}:</span>
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px;"
+                @click="setData('program', row)"
+            >{{ $lang('add') }}</el-button>
         </div>
         <el-table :data="programTable" border>
             <el-table-column :label="$lang('ipaddr')" prop="ipaddr">
                 <template slot-scope="scope">{{ `${scope.row.program_s} - ${scope.row.program_e}` }}</template>
             </el-table-column>
             <el-table-column :label="$lang('program_desc')" prop="program_desc"></el-table-column>
-            <el-table-column :label="$lang('config')" width="120px">
+            <el-table-column :label="$lang('config')" width="80px">
                 <template slot-scope="scope">
-                    <el-button
-                        type="text"
-                        @click="setData('program', row, scope.row)"
-                    >{{ $lang('config') }}</el-button>
                     <el-button type="text" @click="deleteProgram(scope.row)">{{ $lang('delete') }}</el-button>
                 </template>
             </el-table-column>
