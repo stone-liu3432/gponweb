@@ -223,7 +223,9 @@ export default {
                                     method: "add",
                                     param: {
                                         mvlan: data.mvlan,
-                                        router_portlist: data.router_portlist
+                                        router_portlist: data.router_portlist.join(
+                                            ","
+                                        )
                                     }
                                 }
                             };
@@ -235,7 +237,9 @@ export default {
                                     method: "delete",
                                     param: {
                                         mvlan: data.mvlan,
-                                        router_portlist: data.router_portlist
+                                        router_portlist: data.router_portlist.join(
+                                            ","
+                                        )
                                     }
                                 }
                             };
