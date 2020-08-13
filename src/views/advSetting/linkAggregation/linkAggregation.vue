@@ -53,8 +53,14 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
-import { isArray, parseStringAsList, isDef, isFunction } from "@/utils/common";
+import { mapGetters, mapState, mapActions } from "vuex";
+import {
+    isArray,
+    parseStringAsList,
+    isDef,
+    isFunction,
+    distinctArray
+} from "@/utils/common";
 import { PSC_MAP } from "@/utils/commonData";
 import lagForm from "./lagForm";
 import postData from "@/mixin/postData";
@@ -79,13 +85,15 @@ export default {
         return {
             PSC_MAP,
             linkList: [],
-            dialogVisible: false
+            dialogVisible: false,
+            cacheData: {}
         };
     },
     created() {
         this.getLinkAggregation();
     },
     methods: {
+        ...mapActions(["getPort"]),
         getLinkAggregation() {
             this.linkList = [];
             this.$http
@@ -109,6 +117,7 @@ export default {
         },
         openDialog(type, data) {
             this.dialogVisible = true;
+            this.cacheData = data;
             this.$nextTick(_ => {
                 this.$refs["lag-form"].init(type, data);
             });
@@ -127,6 +136,7 @@ export default {
                 if (formData) {
                     const ACTIONS = {
                         create(form) {
+                            form.member_portlist.sort((a, b) => a - b);
                             return {
                                 url:
                                     "/switch_trunk?form=link_aggregation_member",
@@ -142,6 +152,18 @@ export default {
                             };
                         },
                         add(form) {
+                            // 已存在的端口无需下发
+                            const list = distinctArray(
+                                parseStringAsList(
+                                    this.cacheData.member_portlist
+                                ),
+                                form.member_portlist
+                            );
+                            if (!list.length) {
+                                this.$message.info(this.$lang("modify_tips"));
+                                return;
+                            }
+                            list.sort((a, b) => a - b);
                             return {
                                 url:
                                     "/switch_trunk?form=link_aggregation_member",
@@ -149,14 +171,13 @@ export default {
                                     method: "set",
                                     param: {
                                         trunk_id: form.trunk_id,
-                                        member_portlist: form.member_portlist.join(
-                                            ","
-                                        )
+                                        member_portlist: list.join(",")
                                     }
                                 }
                             };
                         },
                         delete(form) {
+                            form.member_portlist.sort((a, b) => a - b);
                             return {
                                 url:
                                     "/switch_trunk?form=link_aggregation_member",
@@ -193,6 +214,7 @@ export default {
                                 this.postData(url, data)
                                     .then(_ => {
                                         this.getLinkAggregation();
+                                        this.getPort();
                                     })
                                     .catch(_ => {});
                             this.dialogVisible = false;
