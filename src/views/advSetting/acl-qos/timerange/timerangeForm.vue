@@ -80,7 +80,7 @@ export default {
             this.$refs["timerange-form"].resetFields();
         },
         validateName(rule, val, cb) {
-            const reg = /^[a-zA-Z]\w{3,15}$/;
+            const reg = /^\w{4,16}$/;
             if (!reg.test(val)) {
                 return cb(new Error(this.validateMsg("inputLength", 4, 16)));
             }
