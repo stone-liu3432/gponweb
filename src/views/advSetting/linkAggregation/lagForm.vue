@@ -71,7 +71,7 @@ export default {
             if (isDef(row)) {
                 this.form.trunk_id = row.trunk_id;
                 this.cachePortlist = parseStringAsList(row.member_portlist);
-                if (type === "add") {
+                if (type === "add" || type === "delete") {
                     this.form.member_portlist = parseStringAsList(
                         row.member_portlist
                     );
@@ -106,11 +106,7 @@ export default {
                             this.type === "delete" ||
                             this.type === "create"
                         ) {
-                            if (
-                                this.form.member_portlist.length ===
-                                    this.cachePortlist.length ||
-                                !this.form.member_portlist.length
-                            ) {
+                            if (!this.form.member_portlist.length) {
                                 return this.$message.info(
                                     this.$lang("modify_tips")
                                 );
