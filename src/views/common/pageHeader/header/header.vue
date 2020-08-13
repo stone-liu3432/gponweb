@@ -100,7 +100,11 @@ export default {
         if (this.portid) {
             this.portData.port_id = this.portid;
         } else {
-            this.portData.port_id = this.port[0] ? this.port[0].port_id : 1;
+            if (this.type === "uplink") {
+                this.portData.port_id = this.ponports + 1;
+            } else {
+                this.portData.port_id = this.port[0] ? this.port[0].port_id : 1;
+            }
         }
     },
     methods: {
