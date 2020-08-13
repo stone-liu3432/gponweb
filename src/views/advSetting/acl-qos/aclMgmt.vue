@@ -24,42 +24,44 @@
         >
             <el-table-column type="expand">
                 <template slot-scope="scope">
-                    <template v-for="(item, index) in scope.row.rule">
-                        <el-row>
-                            <el-col :span="4" style="line-height: 32px;">
-                                <div class="arrow-container">
-                                    <span v-if="isShowPrio">
-                                        <i
-                                            :class="['el-icon-arrow-up', { 'not-allowed': index === 0 }]"
-                                            @click="moveToPrev(scope.row.rule, item)"
-                                        ></i>
-                                        <i
-                                            :class="['el-icon-arrow-down', { 'not-allowed': index + 1 === scope.row.rule.length }]"
-                                            @click="moveToNext(scope.row.rule, item)"
-                                        ></i>
-                                    </span>
-                                    <span>RULE ID: {{ item.rule_id }}</span>
-                                </div>
-                            </el-col>
-                            <el-col :span="18">
-                                <el-row>
-                                    <template v-for="key in itemList(scope.row)">
-                                        <el-col :span="8" style="line-height: 32px;">
-                                            <span style="margin: 0 10px 0 0;">{{ $lang(key) }}:</span>
-                                            <span>{{ renderItem(key, item) }}</span>
-                                        </el-col>
-                                    </template>
-                                    <el-col :span="8"></el-col>
-                                </el-row>
-                            </el-col>
-                            <el-col :span="2">
-                                <el-button
-                                    type="text"
-                                    @click="deleteRule(scope.row, item)"
-                                >{{ $lang('delete') }}</el-button>
-                            </el-col>
-                        </el-row>
-                        <el-divider></el-divider>
+                    <template v-if="scope.row.rule">
+                        <template v-for="(item, index) in scope.row.rule">
+                            <el-row>
+                                <el-col :span="4" style="line-height: 32px;">
+                                    <div class="arrow-container">
+                                        <span v-if="isShowPrio">
+                                            <i
+                                                :class="['el-icon-arrow-up', { 'not-allowed': index === 0 }]"
+                                                @click="moveToPrev(scope.row.rule, item)"
+                                            ></i>
+                                            <i
+                                                :class="['el-icon-arrow-down', { 'not-allowed': index + 1 === scope.row.rule.length }]"
+                                                @click="moveToNext(scope.row.rule, item)"
+                                            ></i>
+                                        </span>
+                                        <span>RULE ID: {{ item.rule_id }}</span>
+                                    </div>
+                                </el-col>
+                                <el-col :span="18">
+                                    <el-row>
+                                        <template v-for="key in itemList(scope.row)">
+                                            <el-col :span="8" style="line-height: 32px;">
+                                                <span style="margin: 0 10px 0 0;">{{ $lang(key) }}:</span>
+                                                <span>{{ renderItem(key, item) }}</span>
+                                            </el-col>
+                                        </template>
+                                        <el-col :span="8"></el-col>
+                                    </el-row>
+                                </el-col>
+                                <el-col :span="2">
+                                    <el-button
+                                        type="text"
+                                        @click="deleteRule(scope.row, item)"
+                                    >{{ $lang('delete') }}</el-button>
+                                </el-col>
+                            </el-row>
+                            <el-divider></el-divider>
+                        </template>
                     </template>
                 </template>
             </el-table-column>
