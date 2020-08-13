@@ -21,6 +21,7 @@ export default {
                                     ? this.$lang(data.method, "st_success")
                                     : this.$lang("setting_ok")
                             );
+                            return Promise.resolve(res);
                         } else {
                             this.$message.error(
                                 `(${res.data.code}) ${res.data.message}`
