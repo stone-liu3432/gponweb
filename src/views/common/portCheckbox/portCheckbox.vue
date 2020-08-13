@@ -66,6 +66,9 @@ export default {
             checkList: []
         };
     },
+    created() {
+        this.checkList = this.list;
+    },
     methods: {
         showItem(item) {
             return this.type === "pon"
