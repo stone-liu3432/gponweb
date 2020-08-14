@@ -49,24 +49,20 @@ const createPortName = (state) => {
 
 const actions = {
     getSystemInfo({ commit }) {
-        return new Promise((resolve, reject) => {
-            axios
-                .get("/board?info=system")
-                .then((res) => {
-                    if (res.data.code === 1) {
-                        if (isDef(res.data.data)) {
-                            commit("updateSystem", res.data.data);
-                            resolve(res.data.data);
-                        }
-                    } else {
-                        commit("updateSystem", {});
-                        reject(res.data);
+        return axios
+            .get("/board?info=system")
+            .then((res) => {
+                if (res.data.code === 1) {
+                    if (isDef(res.data.data)) {
+                        commit("updateSystem", res.data.data);
+                        return Promise.resolve(res.data.data);
                     }
-                })
-                .catch((err) => {
-                    reject(err);
-                });
-        });
+                } else {
+                    commit("updateSystem", {});
+                    return Promise.reject(res.data);
+                }
+            })
+            .catch((err) => {});
     },
     getPon({ commit }) {
         axios
