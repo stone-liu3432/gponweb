@@ -106,15 +106,15 @@ export default {
         };
     },
     created() {
-        this.getRelay();
+        this.getRelay(this.data.relay_policy);
     },
     methods: {
-        getRelay() {
+        getRelay(relay_policy) {
             const URLS = [
                 "/switch_dhcp?form=relay_standard",
                 "/switch_dhcp?form=relay_option60"
             ];
-            const url = URLS[this.data.relay_policy];
+            const url = URLS[relay_policy];
             if (!url || !this.data.relay_admin) {
                 return;
             }
@@ -154,7 +154,7 @@ export default {
                         };
                     this.postData(url, post_params)
                         .then(_ => {
-                            this.getRelay();
+                            this.getRelay(this.data.relay_policy);
                         })
                         .catch(_ => {});
                 })
@@ -173,11 +173,62 @@ export default {
                                 relay_admin: Number(!flag)
                             }
                         };
-                    this.postData(url, post_params)
-                        .then(_ => {
-                            this.$emit("refresh-data");
+                    this.postData(url, post_params, false)
+                        .then(res => {
+                            if (res.data.code === 1) {
+                                this.$message.success(this.$lang("setting_ok"));
+                                this.$emit("refresh-data");
+                            } else {
+                                if (
+                                    res.data.message.indexOf(
+                                        "dhcp realy function must be enable ip route"
+                                    ) > -1
+                                ) {
+                                    this.$confirm(this.$lang("dhcp_relay_tips"))
+                                        .then(_ => {
+                                            this.enableRoute();
+                                        })
+                                        .catch(_ => {});
+                                } else {
+                                    this.$message.error(
+                                        `(${res.data.code}) ${res.data.message}`
+                                    );
+                                }
+                            }
                         })
                         .catch(_ => {});
+                })
+                .catch(_ => {});
+        },
+        enableRoute() {
+            this.postData(
+                "/switch_route?form=admin",
+                {
+                    method: "set",
+                    param: {
+                        status: 1
+                    }
+                },
+                false
+            )
+                .then(res => {
+                    if (res.data.code === 1) {
+                        const data = {
+                            method: "set",
+                            param: {
+                                relay_admin: 1
+                            }
+                        };
+                        this.postData("/switch_dhcp?form=relay_admin", data)
+                            .then(_ => {
+                                this.$emit("refresh-data");
+                            })
+                            .catch(_ => {});
+                    } else {
+                        this.$message.error(
+                            `(${res.data.code}) ${res.data.message}`
+                        );
+                    }
                 })
                 .catch(_ => {});
         },
@@ -242,10 +293,11 @@ export default {
                                     .then(_ => {
                                         // 策略改变时，获取对应策略的 url
                                         if (type === "set") {
+                                            // this.$emit("refresh-data");
                                             this.data.relay_policy =
-                                                form.relay_policy;
+                                                formData.relay_policy;
                                         }
-                                        this.getRelay();
+                                        this.getRelay(this.data.relay_policy);
                                     })
                                     .catch(_ => {});
                             this.dialogVisible = false;
