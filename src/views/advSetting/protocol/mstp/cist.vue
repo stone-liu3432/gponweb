@@ -26,12 +26,17 @@
                     </template>
                 </el-row>
             </template>
-            <template v-for="item in timeEnum">
+            <template v-for="(item, key) in timeEnum">
                 <el-row class="cist-info-item">
-                    <template v-for="key in item">
-                        <el-col style="width: 230px;">
-                            <span>{{ $lang(key) }}:</span>
-                            <span>{{ cistBridge[key] }}</span>
+                    <el-col style="width: 120px;">
+                        <span>{{ $lang(key) }}:</span>
+                    </el-col>
+                    <template v-for="(_key, _index) in item">
+                        <el-col style="width: 200px;">
+                            <span
+                                :class="{'cist-info-item-first-item': _index === 0}"
+                            >{{ $lang(_key) }}:</span>
+                            <span>{{ cistBridge[_key] }}</span>
                         </el-col>
                     </template>
                 </el-row>
@@ -307,6 +312,15 @@ h4 {
         span {
             display: inline-block;
             vertical-align: middle;
+        }
+        span:first-child {
+            width: 120px;
+            text-align: right;
+        }
+        span.cist-info-item-first-item {
+            width: auto;
+            text-align: left;
+            margin-left: 20px;
         }
         span + span {
             margin: 0 0 0 20px;
