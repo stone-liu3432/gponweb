@@ -2,11 +2,12 @@
     <div>
         <h3>
             {{ $lang('rstp_p_info') }}
-            <!-- <el-button
+            <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
-                @click="openDialog"
-            >{{ $lang('config') }}</el-button>-->
+                @click="refreshData"
+            >{{ $lang('refresh') }}</el-button>
         </h3>
         <el-table
             border
@@ -51,6 +52,7 @@
 <script>
 import { mapGetters } from "vuex";
 import portForm from "./portForm";
+import { debounce } from "@/utils/common";
 import postData from "@/mixin/postData";
 export default {
     name: "rstpPort",
@@ -85,7 +87,7 @@ export default {
                     if (post_params) {
                         this.postData("/switch_rstp?form=port", post_params)
                             .then(_ => {
-                                this.$emit("refresh");
+                                this.getData();
                             })
                             .catch(_ => {});
                     }
@@ -121,6 +123,12 @@ export default {
                     admin_link_type: data.admin_link_type
                 }
             };
+        },
+        getData() {
+            this.$emit("refresh");
+        },
+        refreshData() {
+            debounce(this.getData, 1000, this);
         }
     }
 };
