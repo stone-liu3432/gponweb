@@ -103,6 +103,7 @@ import {
     isFunction,
     isArray,
     parseStringAsList,
+    distinctArray,
     debounce
 } from "@/utils/common";
 import { SWITCH, BUTTON_TEXT, ENTRY_STATUS } from "@/utils/commonData";
@@ -271,22 +272,21 @@ export default {
                             };
                         },
                         add_port(form) {
-                            if (
-                                form.trust_portlist.length ===
-                                parseStringAsList(this.data.trust_portlist)
-                                    .length
-                            ) {
+                            const list = distinctArray(
+                                parseStringAsList(this.data.trust_portlist),
+                                form.trust_portlist
+                            );
+                            if (!list.length) {
                                 this.$message.info(this.$lang("modify_tips"));
                                 return;
                             }
+                            list.sort((a, b) => a - b);
                             return {
                                 url: "/switch_dhcp?form=snooping_trust_add",
                                 data: {
                                     method: "set",
                                     param: {
-                                        trust_portlist: form.trust_portlist.join(
-                                            ","
-                                        )
+                                        trust_portlist: list.join(",")
                                     }
                                 }
                             };
