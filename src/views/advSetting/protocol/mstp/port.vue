@@ -125,7 +125,10 @@ export default {
                 .then(_ => {
                     this.postData("/switch_mstp?form=mcheck_trigger", {
                         method: "set",
-                        param: {}
+                        param: {
+                            port_id: row.port_id,
+                            mcheck: 0
+                        }
                     })
                         .then(_ => {
                             this.getPorts();
