@@ -155,3 +155,16 @@ export const LOG_LEVEL = [
     "notice",
     "debug",
 ];
+
+// user management
+export const USER_LEVEL = [
+    "manu",
+    "diag",
+    "super",
+    "admin",
+    "operator",
+    "common",
+];
+
+// port vlan
+export const PORT_TYPE_MAP = { 1: "Access", 2: "Trunk", 3: "Hybrid" };

@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item :label="$lang('user_level')" prop="user_level">
                 <el-select v-model.number="formData.user_level">
-                    <template v-for="(item, index) in u_level">
+                    <template v-for="(item, index) in USER_LEVEL">
                         <el-option :label="item" :value="index" v-if="index > 2"></el-option>
                     </template>
                 </el-select>
@@ -53,6 +53,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { regName, regPwd, regDesc, regRange } from "@/utils/validator";
+import { USER_LEVEL } from "@/utils/commonData";
 export default {
     name: "userMgmtForm",
     computed: {
@@ -69,7 +70,7 @@ export default {
     },
     data() {
         return {
-            u_level: ["manu", "diag", "super", "admin", "operator", "common"],
+            USER_LEVEL,
             formData: {
                 user: "",
                 user_pwd1: "",

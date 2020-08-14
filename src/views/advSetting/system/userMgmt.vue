@@ -36,7 +36,7 @@
                 >{{ scope.row.status ? $lang('online') : $lang('offline') }}</template>
             </el-table-column>
             <el-table-column :label="$lang('user_level')" prop="level" width="120px">
-                <template slot-scope="scope">{{ u_level[scope.row.level] }}</template>
+                <template slot-scope="scope">{{ USER_LEVEL[scope.row.level] }}</template>
             </el-table-column>
             <el-table-column :label="$lang('user_reenter')" prop="reenter" width="150px"></el-table-column>
             <el-table-column :label="$lang('logins')" prop="logins" width="150px"></el-table-column>
@@ -55,21 +55,28 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isDef, isArray, isFunction } from "@/utils/common";
+import {
+    isDef,
+    isArray,
+    isFunction,
+    clearSessionStorage
+} from "@/utils/common";
+import { USER_LEVEL } from "@/utils/commonData";
 import userMgmtForm from "./userMgmt/form";
 import md5 from "md5";
 import postData from "@/mixin/postData";
+import logout from "@/mixin/logout";
 export default {
     name: "userMgmt",
     components: { userMgmtForm },
-    mixins: [postData],
+    mixins: [postData, logout],
     computed: {
         ...mapGetters(["$lang"])
     },
     data() {
         return {
+            USER_LEVEL,
             userList: [],
-            u_level: ["manu", "diag", "super", "admin", "operator", "common"],
             dialogVisible: false,
             dialogType: ""
         };
@@ -162,13 +169,20 @@ export default {
                 }
             };
             if (isFunction(ACTIONS[type])) {
-                const { post_param, url } = ACTIONS[type].call(this, data);
-                this.postData(url, post_param)
-                    .then(res => {
-                        this.getData();
-                        this.closeDialog();
-                    })
-                    .catch(err => {});
+                const res = ACTIONS[type].call(this, data);
+                if (res) {
+                    const { post_param, url } = res;
+                    const flag = type !== "modify";
+                    this.postData(url, post_param, flag)
+                        .then(res => {
+                            if (!flag) {
+                                return this.logoutAction();
+                            }
+                            this.getData();
+                            this.closeDialog();
+                        })
+                        .catch(err => {});
+                }
             }
         }
     }
