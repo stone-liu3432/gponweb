@@ -23,10 +23,18 @@
         </el-form-item>
         <template v-if="type !== 'delete' && type !== 'port_default_vlan'">
             <el-form-item :label="$lang('tagged_portlist') + ':'" prop="tagged_portlist">
-                <nms-port-checkbox v-model="form.tagged_portlist" :disabled="disabledItem"></nms-port-checkbox>
+                <nms-port-checkbox
+                    v-model="form.tagged_portlist"
+                    type="uplink"
+                    :disabled="disabledItem"
+                ></nms-port-checkbox>
             </el-form-item>
             <el-form-item :label="$lang('untagged_portlist') + ':'" prop="untagged_portlist">
-                <nms-port-checkbox v-model="form.untagged_portlist" :disabled="disabledItem"></nms-port-checkbox>
+                <nms-port-checkbox
+                    v-model="form.untagged_portlist"
+                    type="uplink"
+                    :disabled="disabledItem"
+                ></nms-port-checkbox>
             </el-form-item>
         </template>
         <template v-if="type === 'port_default_vlan'">
@@ -35,7 +43,7 @@
                 prop="default_vlan_portlist"
                 label-width="160px"
             >
-                <nms-port-checkbox v-model="form.default_vlan_portlist"></nms-port-checkbox>
+                <nms-port-checkbox type="uplink" v-model="form.default_vlan_portlist"></nms-port-checkbox>
             </el-form-item>
         </template>
     </el-form>
