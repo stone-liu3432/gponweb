@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div style="margin: 10px 0 10px 10px;">
+            <el-button type="primary" size="small" @click="refreshData">{{ $lang('refresh') }}</el-button>
+        </div>
         <el-table :data="showTable" border stripe ref="ont-info-table">
             <el-table-column :label="$lang('ont_id')">
                 <template
@@ -12,7 +15,11 @@
                 <template slot-scope="scope">{{ ONT_STATES[scope.row.state] }}</template>
             </el-table-column>
             <el-table-column :label="$lang('rstate')" prop="rstate">
-                <template slot-scope="scope">{{ ONT_RSTATES[scope.row.rstate] }}</template>
+                <template slot-scope="scope">
+                    <el-tag
+                        :type="scope.row.rstate === 1 ? 'success' : 'danger'"
+                    >{{ ONT_RSTATES[scope.row.rstate] }}</el-tag>
+                </template>
             </el-table-column>
             <el-table-column :label="$lang('cstate')" prop="cstate">
                 <template slot-scope="scope">{{ ONT_CSTATES[scope.row.cstate] }}</template>
@@ -53,7 +60,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isArray, isFunction } from "@/utils/common";
+import { isArray, isFunction, debounce } from "@/utils/common";
 import postData from "@/mixin/postData";
 import {
     ONT_STATES,
@@ -143,6 +150,9 @@ export default {
                         .catch(_ => {});
                 })
                 .catch(_ => {});
+        },
+        refreshData() {
+            debounce(this.getData, 1000, this, this.port_id);
         }
     },
     watch: {
