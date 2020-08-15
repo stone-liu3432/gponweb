@@ -50,16 +50,7 @@
                     <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('ont_id')">
-                    <template slot-scope="scope">
-                        <!-- <template v-for="(item, index) in getOntList(scope.row)">
-                            <template v-if="index !== 0">,&nbsp;</template>
-                            <el-link
-                                type="primary"
-                                @click="jumpToOntConfig(item)"
-                            >{{ getOntName(item) }}</el-link>
-                        </template>-->
-                        {{ getOntRange(scope.row) }}
-                    </template>
+                    <template slot-scope="scope">{{ getOntRange(scope.row) }}</template>
                 </el-table-column>
             </el-table>
         </el-dialog>
@@ -270,8 +261,6 @@ export default {
                 item.ont_id < 10 ? "0" + item.ont_id : item.ont_id
             }`;
         },
-        // item: { port_id: <number>, ont_id: <number> }
-        jumpToOntConfig(item) {},
         getOntRange(row) {
             const range = parseStringAsList(row.resource);
             if (!range.length) {
