@@ -151,12 +151,12 @@ export default {
                     if (res.data.code === 1) {
                         this.result = res.data.data.result;
                         if (res.data.data.finish === 1) {
+                            this.result += "\r\nFinished";
+                            this.loading = false;
+                        } else {
                             setTimeout(_ => {
                                 this.getResult();
                             }, 1000);
-                        } else {
-                            this.result += "\r\nFinished";
-                            this.loading = false;
                         }
                     } else {
                         this.$message.error(
