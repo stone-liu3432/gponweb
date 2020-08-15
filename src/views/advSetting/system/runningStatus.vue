@@ -4,7 +4,7 @@
             <template slot="title">{{ $lang('running_status') }}</template>
         </page-header>
         <el-row :gutter="30" style="margin: 20px 0;">
-            <el-col :span="10">
+            <el-col :span="11">
                 <el-card shadow="never" class="company-info">
                     <template slot="header">
                         <span class="company-info-title">{{ $lang('sys_info') }}</span>
@@ -25,15 +25,15 @@
                     </p>
                     <p>
                         <span>{{ $lang('panel_temp') }}:</span>
-                        <span>{{ (system['panel_temp'] / 1000).toFixed(2) }}</span>
+                        <span>{{ (system['panel_temp'] / 1000).toFixed(2) }} °C</span>
                     </p>
                     <p>
                         <span>{{ $lang('right_temp') }}:</span>
-                        <span>{{ (system['right_temp'] / 1000).toFixed(2) }}</span>
+                        <span>{{ (system['right_temp'] / 1000).toFixed(2) }} °C</span>
                     </p>
                 </el-card>
             </el-col>
-            <el-col :span="14">
+            <el-col :span="13">
                 <el-card shadow="never" class="company-info">
                     <template slot="header">
                         <span class="company-info-title">{{ $lang('hw_status') }}</span>
