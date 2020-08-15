@@ -213,7 +213,7 @@ export default {
                         if (isDef(data)) {
                             this.postData("/dbaprofile", data)
                                 .then(res => {
-                                    if (res.code === 1) {
+                                    if (res.data.code === 1) {
                                         this.$emit("refreshData");
                                     }
                                 })
