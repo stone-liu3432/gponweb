@@ -241,7 +241,8 @@ export default {
                                 mtu: data.mtu,
                                 erate: data.erate,
                                 irate: data.irate,
-                                pvid: data.pvid
+                                pvid: data.pvid,
+                                port_desc: data.port_desc
                             }
                         }
                     };
