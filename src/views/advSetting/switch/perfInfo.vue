@@ -1,6 +1,10 @@
 <template>
     <div>
-        <page-header :title="$lang('perf_info')" type="none"></page-header>
+        <page-header :title="$lang('perf_info')" type="none">
+            <template slot="content">
+                <el-button type="primary" size="small" @click="refreshData">{{ $lang('refresh') }}</el-button>
+            </template>
+        </page-header>
         <el-table
             border
             stripe
@@ -19,7 +23,7 @@
             <el-table-column :label="$lang('tx_frame')" prop="tx_frame"></el-table-column>
             <el-table-column :label="$lang('tx_discard_frame')" prop="tx_discard_frame"></el-table-column>
             <el-table-column :label="$lang('tx_error_frame')" prop="tx_error_frame"></el-table-column>
-            <el-table-column :label="$lang('config')">
+            <el-table-column :label="$lang('config')" width="120px">
                 <template slot-scope="scope">
                     <el-button
                         type="text"
@@ -43,7 +47,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isDef, isArray } from "@/utils/common";
+import { isDef, isArray, debounce } from "@/utils/common";
 import perfDetail from "./perf/detail";
 export default {
     name: "perfInfo",
@@ -122,6 +126,9 @@ export default {
                         .catch(err => {});
                 })
                 .catch(_ => {});
+        },
+        refreshData() {
+            debounce(this.getPerf, 1000, this);
         }
     }
 };
