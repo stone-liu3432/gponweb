@@ -4,14 +4,17 @@
         <template v-if="type === 'port_type'">
             <el-form-item :label="$lang('port_type')">
                 <el-select v-model.number="formData.port_type">
-                    <template v-for="(item, index) in port_type_map">
+                    <template v-for="(item, index) in PORT_TYPE_MAP">
                         <el-option :label="item" :value="index >>> 0"></el-option>
                     </template>
                 </el-select>
             </el-form-item>
         </template>
         <template v-else>
-            <el-form-item :label="$lang('port_type')" v-if="type !== 'pvid'">{{ data.port_type }}</el-form-item>
+            <el-form-item
+                :label="$lang('port_type')"
+                v-if="type !== 'pvid'"
+            >{{ PORT_TYPE_MAP[data.port_type] }}</el-form-item>
             <el-form-item :label="$lang('pvid')" prop="pvid">
                 <template v-if="type === 'pvid'">
                     <el-input v-model.number="formData.pvid"></el-input>
@@ -22,7 +25,7 @@
                 <el-input v-model="formData.vlanlist"></el-input>
             </el-form-item>
             <el-form-item :label="$lang('vlan_mode')" v-if="type !== 'pvid'">
-                <el-select v-model.number="formData.vlan_mode">
+                <el-select v-model.number="formData.vlan_mode" :disabled="data.port_type === 2">
                     <el-option :label="$lang('tagged')" :value="1"></el-option>
                     <el-option :label="$lang('untagged')" :value="2"></el-option>
                 </el-select>
@@ -34,6 +37,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { isDef, isFunction } from "@/utils/common";
+import { PORT_TYPE_MAP } from "@/utils/commonData";
 export default {
     name: "vlanConfigForm",
     props: {
@@ -47,6 +51,7 @@ export default {
     inject: ["validateVlan"],
     data() {
         return {
+            PORT_TYPE_MAP,
             formData: {
                 port_id: 0,
                 port_type: 1,
@@ -67,8 +72,7 @@ export default {
                         trigger: ["change", "blur"]
                     }
                 ]
-            },
-            port_type_map: { 1: "Access", 2: "Trunk", 3: "Hybrid" }
+            }
         };
     },
     computed: {
@@ -92,6 +96,9 @@ export default {
                     this.formData[key] = this.data[key];
                 }
             });
+            if (this.data.port_type === 2) {
+                this.formData.vlan_mode = 1;
+            }
             this.formData.vlanlist = "";
             this.$nextTick(_ => {
                 this.$refs["port-vlan-config-form"].clearValidate("vlanlist");

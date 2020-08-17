@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-header :title="$lang('port_vlan')" type="port" @port-change="portChange"></page-header>
+        <page-header :title="$lang('port_vlan')" type="uplink" @port-change="portChange"></page-header>
         <el-tabs v-model="activeName" type="card" @tab-click="tabClick">
             <el-tab-pane :label="$lang('vlan_cfg')" name="vlan_cfg">
                 <vlan-config :base-data="base" @refresh="getData"></vlan-config>

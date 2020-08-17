@@ -2,7 +2,7 @@
     <div class="port-vlan-config">
         <el-row :gutter="30" class="port-vlan-config-item">
             <el-col :span="4">{{ $lang('port_type') }}</el-col>
-            <el-col :span="4">{{ port_type_map[baseData.port_type] }}</el-col>
+            <el-col :span="4">{{ PORT_TYPE_MAP[baseData.port_type] }}</el-col>
             <el-col :span="4">
                 <el-button
                     type="text"
@@ -31,18 +31,20 @@
             <el-col :span="20">{{ baseData.untagged_vlan }}</el-col>
         </el-row>
         <el-row :gutter="30" style="padding: 10px 0;">
-            <el-button
-                size="small"
-                type="primary"
-                style="margin-left: 10px;"
-                @click="openDialog('add')"
-            >{{ $lang('add_vlan_list') }}</el-button>
-            <el-button
-                size="small"
-                type="primary"
-                style="margin-left: 30px;"
-                @click="openDialog('delete')"
-            >{{ $lang('del_vlan_list') }}</el-button>
+            <template v-if="baseData.port_type !== 1">
+                <el-button
+                    size="small"
+                    type="primary"
+                    style="margin-left: 10px;"
+                    @click="openDialog('add')"
+                >{{ $lang('add_vlan_list') }}</el-button>
+                <el-button
+                    size="small"
+                    type="primary"
+                    style="margin-left: 30px;"
+                    @click="openDialog('delete')"
+                >{{ $lang('del_vlan_list') }}</el-button>
+            </template>
         </el-row>
         <el-dialog :visible.sync="dialogVisible" append-to-body>
             <template slot="title">{{ title }}</template>
@@ -62,6 +64,7 @@
 import { mapGetters } from "vuex";
 import vlanConfigForm from "./vlanConfigForm";
 import { isFunction, isDef } from "@/utils/common";
+import { PORT_TYPE_MAP } from "@/utils/commonData";
 import postData from "@/mixin/postData";
 export default {
     name: "vlanConfig",
@@ -90,9 +93,9 @@ export default {
     },
     data() {
         return {
+            PORT_TYPE_MAP,
             dialogVisible: false,
-            dialogType: "",
-            port_type_map: { 1: "Access", 2: "Trunk", 3: "Hybrid" }
+            dialogType: ""
         };
     },
     created() {},
