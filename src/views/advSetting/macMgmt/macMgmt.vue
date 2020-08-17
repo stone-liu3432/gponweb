@@ -20,6 +20,12 @@
                 style="margin-left: 30px;"
                 @click="openDialog('flush')"
             >{{ $lang('flush_mac') }}</el-button>
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px;"
+                @click="refreshMaclist"
+            >{{ $lang('refresh') }}</el-button>
         </h4>
         <query-form ref="query-form" @refresh-data="refreshData"></query-form>
         <el-table :data="macTable" border>
@@ -84,7 +90,13 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { isArray, isDef, removeItem, isFunction } from "@/utils/common";
+import {
+    isArray,
+    isDef,
+    removeItem,
+    isFunction,
+    debounce
+} from "@/utils/common";
 import { MAC_TYPE_MAP } from "@/utils/commonData";
 import postData from "@/mixin/postData";
 import queryForm from "./query";
@@ -303,6 +315,12 @@ export default {
         },
         loadMoreData() {
             this.$refs["query-form"].loadMore();
+        },
+        refresh() {
+            this.$refs["query-form"].getData();
+        },
+        refreshMaclist() {
+            debounce(this.refresh, 1000, this);
         }
     }
 };
