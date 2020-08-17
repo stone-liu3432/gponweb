@@ -1021,7 +1021,7 @@ var zh = {
     olt_gem_statistics: "OLT侧GEM端口统计信息",
     ont_gem_statistics: "ONT侧GEM端口统计信息",
     ont_eth_statistics: "ONT以太网端口统计信息",
-    port_default_vlan: "端口默认VLAN",
+    port_default_vlan: "端口缺省VLAN",
 };
 
 export default zh;
