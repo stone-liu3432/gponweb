@@ -739,10 +739,10 @@ var en = {
     // rx_frame: "Recieved Frames",
     rx_discard_frame: "Recieved Discard",
     rx_error_frame: "Recieved Error",
-    tx_octets: "Transmits Bytes",
+    tx_octets: "Sent Bytes",
     // tx_frame: "Transmits Frames",
-    tx_discard_frame: "Transmits Discard",
-    tx_error_frame: "Transmits Error",
+    tx_discard_frame: "Sent Discard",
+    tx_error_frame: "Sent Error",
 
     clear: "Clear",
     mtype: "Calibrated",
