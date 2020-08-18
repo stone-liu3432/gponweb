@@ -3,6 +3,12 @@
         <page-header :title="$lang('perf_info')" type="none">
             <template slot="content">
                 <el-button type="primary" size="small" @click="refreshData">{{ $lang('refresh') }}</el-button>
+                <el-button
+                    type="primary"
+                    size="small"
+                    style="margin-left: 30px;"
+                    @click="clearPerf(0)"
+                >{{ $lang('clear_all') }}</el-button>
             </template>
         </page-header>
         <el-table
