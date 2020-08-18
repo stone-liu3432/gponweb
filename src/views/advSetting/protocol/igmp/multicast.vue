@@ -20,6 +20,12 @@
                 size="small"
                 @click="deleteAll('dynamic')"
             >{{ $lang('delete_all', 'dynamic_table') }}</el-button>
+            <el-button
+                type="primary"
+                style="margin-left: 30px;"
+                size="small"
+                @click="refreshData"
+            >{{ $lang('refresh') }}</el-button>
         </h3>
         <el-table :data="multiTable" border>
             <el-table-column :label="$lang('multi_ip')" prop="multi_ip"></el-table-column>
@@ -61,7 +67,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isArray, parseStringAsList } from "@/utils/common";
+import { isArray, parseStringAsList, debounce } from "@/utils/common";
 import { MULTICAST_ACTIONS } from "@/utils/commonData";
 import postData from "@/mixin/postData";
 import multicastForm from "./multicastForm";
@@ -181,6 +187,9 @@ export default {
                     this.dialogVisible = false;
                 }
             });
+        },
+        refreshData() {
+            debounce(this.getData, 1000, this);
         }
     }
 };
