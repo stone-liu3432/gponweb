@@ -14,6 +14,12 @@
                 style="margin-left: 30px;"
                 @click="openDialog('prio')"
             >{{ $lang('config', 'priority') }}</el-button>
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px;"
+                @click="refreshData"
+            >{{ $lang('refresh') }}</el-button>
         </h4>
         <div class="cist-info">
             <template v-for="item in infoEnum">
@@ -42,7 +48,15 @@
                 </el-row>
             </template>
         </div>
-        <h4>{{ $lang('port_list') }}</h4>
+        <h4>
+            {{ $lang('port_list') }}
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px;"
+                @click="refreshPort"
+            >{{ $lang('refresh') }}</el-button>
+        </h4>
         <el-table :data="cistPorts" border>
             <el-table-column :label="$lang('port_id')">
                 <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
@@ -80,7 +94,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isDef, isArray, isFunction } from "@/utils/common";
+import { isDef, isArray, isFunction, debounce } from "@/utils/common";
 import { PORT_ROLE_MAP, PORT_STATE_MAP } from "@/utils/commonData";
 import postData from "@/mixin/postData";
 import cistForm from "./cistForm";
@@ -296,6 +310,12 @@ export default {
                     }
                 }
             });
+        },
+        refreshData() {
+            debounce(this.getBridge, 1000, this);
+        },
+        refreshPort() {
+            debounce(this.getCistPort, 1000, this);
         }
     }
 };
