@@ -8,6 +8,12 @@
                 style="margin-left: 30px;"
                 @click="openDialog('create')"
             >{{ $lang('add') }}</el-button>
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px;"
+                @click="refreshData"
+            >{{ $lang('refresh') }}</el-button>
         </h4>
         <el-table :data="mstiTable" border>
             <el-table-column :label="`${$lang('instance')} ID`" prop="mstid"></el-table-column>
@@ -63,7 +69,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isArray, isFunction } from "@/utils/common";
+import { isArray, isFunction, debounce } from "@/utils/common";
 import postData from "@/mixin/postData";
 import mstiDetail from "./mstiDetail";
 import mstiForm from "./mstiForm";
@@ -231,6 +237,9 @@ export default {
                     }
                 }
             });
+        },
+        refreshData() {
+            debounce(this.getMstiTable, 1000, this);
         }
     }
 };
