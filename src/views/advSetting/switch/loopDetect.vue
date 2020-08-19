@@ -2,20 +2,21 @@
     <div>
         <page-header type="none" :title="$lang('loop_detect')"></page-header>
         <el-tabs v-model="activeName" type="card" style="margin-top: 20px;" @tab-click="tabClick">
-            <el-tab-pane :label="$lang('pon_loop_detect')" name="pon_loop_detect">
+            <!-- <el-tab-pane :label="$lang('pon_loop_detect')" name="pon_loop_detect">
                 <loop-detect-detail
                     :ld-status="ldStatus"
                     :ld-info="ldInfo"
                     type="pon_loop_detect"
                     @refresh="getData"
                 ></loop-detect-detail>
-            </el-tab-pane>
+            </el-tab-pane>-->
             <el-tab-pane :label="$lang('ge_loop_detect')" name="ge_loop_detect">
                 <loop-detect-detail
                     :ld-status="ldStatus"
                     :ld-info="ldInfo"
                     type="ge_loop_detect"
                     @refresh="getData"
+                    @refresh-info="getGeInfo"
                 ></loop-detect-detail>
             </el-tab-pane>
         </el-tabs>
@@ -34,7 +35,7 @@ export default {
     },
     data() {
         return {
-            activeName: "pon_loop_detect",
+            activeName: "ge_loop_detect",
             ldInfo: [],
             ldStatus: {}
         };
