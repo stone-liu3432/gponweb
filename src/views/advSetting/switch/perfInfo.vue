@@ -8,7 +8,7 @@
                     size="small"
                     style="margin-left: 30px;"
                     @click="clearPerf(0)"
-                >{{ $lang('clear_all') }}</el-button>
+                >{{ $lang('clear_perf_all') }}</el-button>
             </template>
         </page-header>
         <el-table
