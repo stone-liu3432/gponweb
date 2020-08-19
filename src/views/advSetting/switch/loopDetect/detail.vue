@@ -47,7 +47,15 @@
                     >{{ $lang('config') }}</el-button>
                 </el-col>
             </el-row>
-            <h3>{{ $lang('ld_info') }}</h3>
+            <h3>
+                {{ $lang('ld_info') }}
+                <el-button
+                    type="primary"
+                    size="small"
+                    style="margin-left: 30px;"
+                    @click="refreshData"
+                >{{ $lang('refresh') }}</el-button>
+            </h3>
             <el-table
                 border
                 stripe
@@ -348,6 +356,9 @@ export default {
         },
         recoverManualDebounce() {
             debounce(this.recoverManual, 1000, this);
+        },
+        refreshData() {
+            debounce(this.$emit, 1000, this, "refresh-info");
         }
     }
 };
