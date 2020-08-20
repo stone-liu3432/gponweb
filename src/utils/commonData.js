@@ -106,6 +106,8 @@ export const DAY_MAP = [
     "Working-day",
 ];
 
+export const ACL_TYPE_MAP = ["basic", "advanced", "link"];
+
 export const ACL_ACTION_MAP = { 1: "Deny", 2: "Permit" };
 
 export const PROTOCOL_MAP = ["icmp", "udp", "tcp", "ip", "ipinip"];
