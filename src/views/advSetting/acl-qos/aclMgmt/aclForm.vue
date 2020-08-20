@@ -1,6 +1,15 @@
 <template>
     <el-form label-width="150px" :model="form" :rules="rules" ref="acl-form">
         <template v-if="type === 'add' || type === 'delete'">
+            <template v-if="type === 'add'">
+                <el-form-item :label="'ACL ' + $lang('type')">
+                    <el-select v-model="form.acl_type">
+                        <template v-for="(item, index) in ACL_TYPE_MAP">
+                            <el-option :value="index" :label="item + ' ACL'"></el-option>
+                        </template>
+                    </el-select>
+                </el-form-item>
+            </template>
             <el-form-item label="ACL ID" prop="acl_id">
                 <el-input v-model.number="form.acl_id"></el-input>
             </el-form-item>
@@ -106,7 +115,7 @@
 import { mapGetters, mapState } from "vuex";
 import { isFunction, isDef } from "@/utils/common";
 import { regRange, regLength } from "@/utils/validator";
-import { ACL_ACTION_MAP, PROTOCOL_MAP } from "@/utils/commonData";
+import { ACL_ACTION_MAP, PROTOCOL_MAP, ACL_TYPE_MAP } from "@/utils/commonData";
 export default {
     name: "aclForm",
     computed: {
@@ -126,7 +135,9 @@ export default {
     data() {
         return {
             ACL_ACTION_MAP,
+            ACL_TYPE_MAP,
             form: {
+                acl_type: 0,
                 acl_id: "", // 2000 - 5999
                 rule_id: 1,
                 action: 1,
@@ -265,6 +276,9 @@ export default {
         init(type, row) {
             this.$refs["acl-form"].resetFields();
             this.type = type;
+            if (type === "add") {
+                this.form.acl_type = 0;
+            }
             if (isDef(row)) {
                 this.form.acl_id = row.acl_id;
                 if (type === "config") {
@@ -273,10 +287,20 @@ export default {
             }
         },
         validateAcl(rule, val, cb) {
-            if (!regRange(val, 2000, 5999)) {
-                return cb(
-                    new Error(this.validateMsg("inputRange", 2000, 5999))
-                );
+            const min =
+                    this.form.acl_type === 0
+                        ? 2000
+                        : this.form.acl_type === 1
+                        ? 3000
+                        : 5000,
+                max =
+                    this.form.acl_type === 0
+                        ? 2999
+                        : this.form.acl_type === 1
+                        ? 4999
+                        : 5999;
+            if (!regRange(val, min, max)) {
+                return cb(new Error(this.validateMsg("inputRange", min, max)));
             }
             cb();
         },
@@ -408,6 +432,13 @@ export default {
                 }
             });
             return flags;
+        }
+    },
+    watch: {
+        "form.acl_type"() {
+            if (this.form.acl_id) {
+                this.$refs["acl-form"].validateField("acl_id");
+            }
         }
     }
 };
