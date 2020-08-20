@@ -67,7 +67,7 @@
             </el-table-column>
             <el-table-column label="ACL ID" prop="acl_id"></el-table-column>
             <el-table-column :label="$lang('rule_count')">
-                <template slot-scope="scope">{{ scope.row.rule.length }}</template>
+                <template slot-scope="scope">{{ scope.row.rule ? scope.row.rule.length : '-' }}</template>
             </el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
@@ -102,7 +102,7 @@
             ></el-pagination>
         </div>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="600px">
-            <div slot="title"></div>
+            <div slot="title">{{ $lang(dialogType) || $lang('config') }}</div>
             <acl-form ref="acl-form"></acl-form>
             <div slot="footer">
                 <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
@@ -137,6 +137,7 @@ export default {
             currentPage: 1,
             pageSize: 10,
             dialogVisible: false,
+            dialogType: "",
             expands: [],
             // 隐藏显示调整优先级按钮
             prio_acl: 0,
@@ -159,6 +160,7 @@ export default {
     methods: {
         ...mapActions(["getTimerange"]),
         getAcl() {
+            this.aclList = [];
             this.$http
                 .get(
                     `/switch_acl?form=acl&sacl_id=${MIN_ACL_ID}&eacl_id=${MAX_ACL_ID}`
@@ -255,6 +257,7 @@ export default {
             }
         },
         openDialog(type, row) {
+            this.dialogType = type;
             this.dialogVisible = true;
             this.$nextTick(_ => {
                 this.$refs["acl-form"].init(type, row);
