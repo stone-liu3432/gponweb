@@ -318,6 +318,11 @@ export default {
         }
     },
     watch: {
+        $route(route) {
+            if (route.path === "/main") {
+                this.$refs["nav-menu"].activeIndex = "status";
+            }
+        },
         navData() {
             const nav = sessionStorage.getItem("nav");
             if (nav) {
