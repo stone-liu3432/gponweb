@@ -106,3 +106,5 @@ Mock.mock(
 Mock.post("/switch_acl?form=rule");
 
 Mock.post("/switch_acl?form=rulepri");
+
+Mock.post("/switch_acl?form=acl");
