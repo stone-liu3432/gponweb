@@ -49,7 +49,7 @@ export default {
         const height = document.documentElement.clientHeight;
         // menu高度，屏高 - header高度 - main的内padding
         // content区域，屏高 - header高度 - main的内padding - content的内padding
-        this.height = height - 70;
+        this.height = height - 71;
 
         this.$nextTick(_ => {
             this.updateNavScrollbar();
