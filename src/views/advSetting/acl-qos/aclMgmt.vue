@@ -74,6 +74,7 @@
                     <el-button
                         type="text"
                         @click="openDialog('config', scope.row)"
+                        v-if="scope.row.rule && scope.row.rule.length"
                     >{{ $lang('config') }}</el-button>
                     <el-button
                         type="text"
@@ -81,7 +82,7 @@
                     >{{ $lang('add', 'rule') }}</el-button>
                     <el-button
                         type="text"
-                        v-if="expands.includes(scope.row.acl_id)"
+                        v-if="expands.includes(scope.row.acl_id) && scope.row.rule && scope.row.rule.length "
                         @click="changePriority(scope.row)"
                     >
                         <span v-if="!isShowPrio">{{ $lang('rule_priority') }}</span>
