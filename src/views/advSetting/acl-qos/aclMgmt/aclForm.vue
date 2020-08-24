@@ -2,7 +2,7 @@
     <el-form label-width="150px" :model="form" :rules="rules" ref="acl-form">
         <template v-if="type === 'add' || type === 'delete'">
             <template v-if="type === 'add'">
-                <el-form-item :label="'ACL ' + $lang('type')">
+                <el-form-item :label="'ACL ' + $lang('type')" key="acl-type">
                     <el-select v-model="form.acl_type">
                         <template v-for="(item, index) in ACL_TYPE_MAP">
                             <el-option :value="index" :label="item + ' ACL'"></el-option>
@@ -10,12 +10,12 @@
                     </el-select>
                 </el-form-item>
             </template>
-            <el-form-item label="ACL ID" prop="acl_id">
+            <el-form-item label="ACL ID" prop="acl_id" key="acl-id-delete">
                 <el-input v-model.number="form.acl_id"></el-input>
             </el-form-item>
         </template>
         <template v-if="type === 'config' || type === 'rule'">
-            <el-form-item label="ACL ID" prop="acl_id">{{ form.acl_id }}</el-form-item>
+            <el-form-item label="ACL ID" prop="acl_id" key="acl-id-config">{{ form.acl_id }}</el-form-item>
             <el-form-item label="Rule ID" prop="rule_id">
                 <el-select v-model.number="form.rule_id">
                     <template v-for="i in 16">
@@ -23,7 +23,7 @@
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('action')" prop="action">
+            <el-form-item :label="$lang('action')" prop="action" key="action">
                 <el-select v-model.number="form.action">
                     <template v-for="(item, index) in ACL_ACTION_MAP">
                         <el-option :label="item" :value="index >>> 0"></el-option>
@@ -31,10 +31,10 @@
                 </el-select>
             </el-form-item>
             <template v-if="acl_type === 'basic'">
-                <el-form-item :label="$lang('src_ipaddr')" prop="src_ipaddr">
+                <el-form-item :label="$lang('src_ipaddr')" prop="src_ipaddr" key="src-ipaddr">
                     <el-input v-model="form.src_ipaddr"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_ipmask')" prop="src_ipmask">
+                <el-form-item :label="$lang('src_ipmask')" prop="src_ipmask" key="src-ipmask">
                     <el-input
                         v-model="form.src_ipmask"
                         :disabled="acl_type!== 'basic' && !form.src_ipaddr"
@@ -42,66 +42,70 @@
                 </el-form-item>
             </template>
             <template v-if="acl_type === 'advanced'">
-                <el-form-item :label="$lang('protocol')" prop="protocol">
+                <el-form-item :label="$lang('protocol')" prop="protocol" key="protocol">
                     <el-input v-model="form.protocol"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_ipaddr')" prop="src_ipaddr">
+                <el-form-item :label="$lang('src_ipaddr')" prop="src_ipaddr" key="src-ipaddr-adv">
                     <el-input v-model="form.src_ipaddr"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_ipmask')" prop="src_ipmask">
+                <el-form-item :label="$lang('src_ipmask')" prop="src_ipmask" key="src-ipmask-adv">
                     <el-input v-model="form.src_ipmask" :disabled="!form.src_ipaddr"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_ipaddr')" prop="dst_ipaddr">
+                <el-form-item :label="$lang('dst_ipaddr')" prop="dst_ipaddr" key="dst-ipaddr">
                     <el-input v-model="form.dst_ipaddr"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_ipmask')" prop="dst_ipmask">
+                <el-form-item :label="$lang('dst_ipmask')" prop="dst_ipmask" key="dst-ipmask">
                     <el-input v-model="form.dst_ipmask" :disabled="!form.dst_ipaddr"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_port')" prop="src_port">
+                <el-form-item :label="$lang('src_port')" prop="src_port" key="src-port">
                     <el-input v-model="form.src_port"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_port')" prop="dst_port">
+                <el-form-item :label="$lang('dst_port')" prop="dst_port" key="dst-port">
                     <el-input v-model="form.dst_port"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('precedence')" prop="precedence">
+                <el-form-item :label="$lang('precedence')" prop="precedence" key="precedence">
                     <el-input v-model="form.precedence"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dscp')" prop="dscp">
+                <el-form-item :label="$lang('dscp')" prop="dscp" key="dscp">
                     <el-input v-model="form.dscp"></el-input>
                 </el-form-item>
             </template>
             <template v-if="acl_type === 'link'">
-                <el-form-item :label="$lang('eth_type')" prop="eth_type">
+                <el-form-item :label="$lang('eth_type')" prop="eth_type" key="eth-type">
                     <el-input v-model="form.eth_type"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('cos')" prop="cos">
+                <el-form-item :label="$lang('cos')" prop="cos" key="cos">
                     <el-input v-model="form.cos"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('inner_cos')" prop="inner_cos">
+                <el-form-item :label="$lang('inner_cos')" prop="inner_cos" key="inner-cos">
                     <el-input v-model="form.inner_cos"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('vlan_id')" prop="vlan_id">
+                <el-form-item :label="$lang('vlan_id')" prop="vlan_id" key="vlan-id">
                     <el-input v-model="form.vlan_id"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('inner_vlan_id')" prop="inner_vlan_id">
+                <el-form-item
+                    :label="$lang('inner_vlan_id')"
+                    prop="inner_vlan_id"
+                    key="inner-vlan-id"
+                >
                     <el-input v-model="form.inner_vlan_id"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_mac')" prop="src_mac">
+                <el-form-item :label="$lang('src_mac')" prop="src_mac" key="src-mac">
                     <el-input v-model="form.src_mac"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_mask')" prop="src_mask">
+                <el-form-item :label="$lang('src_mask')" prop="src_mask" key="src-mask">
                     <el-input v-model="form.src_mask" :disabled="!form.src_mask"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_mac')" prop="dst_mac">
+                <el-form-item :label="$lang('dst_mac')" prop="dst_mac" key="dst-mac">
                     <el-input v-model="form.dst_mac"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_mask')" prop="dst_mask">
+                <el-form-item :label="$lang('dst_mask')" prop="dst_mask" key="dst-mask">
                     <el-input v-model="form.dst_mask" :disabled="!form.dst_mask"></el-input>
                 </el-form-item>
             </template>
-            <el-form-item :label="$lang('timerange')" prop="timerange">
+            <el-form-item :label="$lang('timerange')" prop="timerange" key="timerange">
                 <el-select v-model="form.timerange">
-                    <el-option value label="-"></el-option>
+                    <el-option :value="''" label="-"></el-option>
                     <template v-for="item in timerangeList">
                         <el-option :value="item.name"></el-option>
                     </template>
@@ -113,7 +117,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { isFunction, isDef } from "@/utils/common";
+import { isFunction, isDef, isUndef } from "@/utils/common";
 import { regRange, regLength } from "@/utils/validator";
 import { ACL_ACTION_MAP, PROTOCOL_MAP, ACL_TYPE_MAP } from "@/utils/commonData";
 export default {
@@ -139,7 +143,7 @@ export default {
             form: {
                 acl_type: 0,
                 acl_id: "", // 2000 - 5999
-                rule_id: 1,
+                rule_id: 0,
                 action: 1,
                 timerange: "",
                 protocol: "", // icmp / udp / tcp / ip / ipinip / 0-255
@@ -278,11 +282,13 @@ export default {
             this.type = type;
             if (type === "add") {
                 this.form.acl_type = 0;
+                this.form.rule_id = 1;
             }
             if (isDef(row)) {
                 this.form.acl_id = row.acl_id;
                 if (type === "config") {
                     this.cacheData = JSON.parse(JSON.stringify(row));
+                    this.form.rule_id = row.rule[0].rule_id;
                 }
             }
         },
@@ -391,11 +397,25 @@ export default {
                     src_ipaddr: 0x01,
                     timerange: 0x02
                 };
-                Object.keys(BASE_FLAGS).forEach(key => {
-                    if (isDef(data[key])) {
-                        flags |= BASE_FLAGS[key];
-                    }
-                });
+                if (this.type === "add") {
+                    Object.keys(BASE_FLAGS).forEach(key => {
+                        if (data[key] !== "") {
+                            flags |= BASE_FLAGS[key];
+                        }
+                    });
+                } else if (this.type === "config") {
+                    const row = this.cacheData.rule.filter(
+                        item => item.rule_id === acl
+                    )[0];
+                    Object.keys[BASE_FLAGS].forEach(key => {
+                        if (
+                            (isUndef(row[key]) && data[key] !== "") ||
+                            row[key] !== data[key]
+                        ) {
+                            flags |= BASE_FLAGS[key];
+                        }
+                    });
+                }
                 return flags;
             }
             if (acl < 5000) {
@@ -409,11 +429,22 @@ export default {
                     dscp: 0x40,
                     timerange: 0x80
                 };
-                Object.keys(ADV_FLAGS).forEach(key => {
-                    if (isDef(data[key])) {
-                        flags |= ADV_FLAGS[key];
-                    }
-                });
+                if (this.type === "add") {
+                    Object.keys(ADV_FLAGS).forEach(key => {
+                        if (data[key] !== "") {
+                            flags |= ADV_FLAGS[key];
+                        }
+                    });
+                } else if (this.type === "config") {
+                    const row = this.cacheData.rule.filter(
+                        item => item.rule_id === acl
+                    )[0];
+                    Object.keys[ADV_FLAGS].forEach(key => {
+                        if (isUndef(row[key]) || row[key] !== data[key]) {
+                            flags |= ADV_FLAGS[key];
+                        }
+                    });
+                }
                 return flags;
             }
             const LINK_FLAGS = {
@@ -426,11 +457,22 @@ export default {
                 dst_mac: 0x40,
                 timerange: 0x80
             };
-            Object.keys(LINK_FLAGS).forEach(key => {
-                if (isDef(data[key])) {
-                    flags |= LINK_FLAGS[key];
-                }
-            });
+            if (this.type === "add") {
+                Object.keys(LINK_FLAGS).forEach(key => {
+                    if (data[key] !== "") {
+                        flags |= LINK_FLAGS[key];
+                    }
+                });
+            } else if (this.type === "config") {
+                const row = this.cacheData.rule.filter(
+                    item => item.rule_id === acl
+                )[0];
+                Object.keys[LINK_FLAGS].forEach(key => {
+                    if (isUndef(row[key]) || row[key] !== data[key]) {
+                        flags |= LINK_FLAGS[key];
+                    }
+                });
+            }
             return flags;
         }
     },
@@ -438,6 +480,19 @@ export default {
         "form.acl_type"() {
             if (this.form.acl_id) {
                 this.$refs["acl-form"].validateField("acl_id");
+            }
+        },
+        "form.rule_id"() {
+            if (this.type === "config") {
+                const row = this.cacheData.rule.filter(
+                    item => item.rule_id === this.form.rule_id
+                )[0];
+                row &&
+                    Object.keys(this.form).forEach(key => {
+                        if (isDef(row[key])) {
+                            this.form[key] = row[key];
+                        }
+                    });
             }
         }
     }
