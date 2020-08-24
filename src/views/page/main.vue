@@ -1,6 +1,6 @@
 <template>
     <el-container>
-        <el-header style="border-bottom: 1px solid #E6E6E6;" height="70px">
+        <el-header style="border-bottom: 1px solid #E6E6E6;" height="71px">
             <nav-header :nav-data="nav"></nav-header>
         </el-header>
         <el-scrollbar
@@ -34,7 +34,8 @@ export default {
         return {
             nav: [],
             adv: [],
-            height: 0
+            height: 0,
+            showMessage: true
         };
     },
     created() {
@@ -71,7 +72,7 @@ export default {
     },
     mounted() {
         const height = document.documentElement.clientHeight;
-        this.height = height - 70;
+        this.height = height - 71;
     },
     methods: {
         ...mapActions(["getSystemInfo", "getPon", "getPort"]),
@@ -192,12 +193,20 @@ export default {
                     };
                     //  返回 0 ，非法登录信息
                     if (response.data.code === 0) {
-                        this.$message.error(this.$lang("illegal_login_info"));
+                        if (this.showMessage) {
+                            this.$message.error(
+                                this.$lang("illegal_login_info")
+                            );
+                            this.showMessage = false;
+                        }
                         jumpToLogin();
                     }
                     //  返回 -1，登录超时
                     if (response.data.code === -1) {
-                        this.$message.error(this.$lang("login_timeout"));
+                        if (this.showMessage) {
+                            this.$message.error(this.$lang("login_timeout"));
+                            this.showMessage = false;
+                        }
                         jumpToLogin();
                     }
                     // 返回 warning 或 error 时(code > 1)，有时需刷新数据或者是执行其他操作
