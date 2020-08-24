@@ -181,7 +181,6 @@ export default {
                         const res = ACTIONS[type].call(this, formData);
                         if (res) {
                             const { url, data } = res;
-                            console.log(url, data);
                             url &&
                                 data &&
                                 this.postData(url, data)
