@@ -1,6 +1,15 @@
 <template>
     <div id="header">
-        <div id="logo">logo区域，最大240px*70px</div>
+        <template v-if="system && system.vendor">
+            <div id="logo" :style="{ 'font-size': system.vendor.length > 10 ? '30px' : '' }">
+                <template v-if="hasLogo">
+                    <img src="/logo.png" />
+                </template>
+                <template
+                    v-else
+                >{{ system.vendor ? system.vendor.length > 18 ? system.vendor.substring(0, 18) : system.vendor : "Neutral" }}</template>
+            </div>
+        </template>
         <div>
             <div style="max-width: 150px;">
                 <el-tooltip v-model="userVisible" :open-delay="200">
@@ -37,14 +46,14 @@
             :default-active="activeIndex"
             mode="horizontal"
             @select="navClick"
-            style="float: right; height: 69px;"
+            style="float: right; height: 70px;"
             router
             ref="nav-menu"
         >
             <template v-for="item in navData">
                 <el-menu-item
                     :index="item.name"
-                    style="height: 69px; line-height: 69px; user-select: none;"
+                    style="height: 70px; line-height: 70px; user-select: none;"
                 >{{ $lang(item.name) || item.name }}</el-menu-item>
             </template>
         </el-menu>
@@ -82,7 +91,8 @@ export default {
             ws_limit: 0,
             heartbeat: 30000,
             msgs: [],
-            msgQueue: []
+            msgQueue: [],
+            hasLogo: false
         };
     },
     props: {
@@ -93,7 +103,7 @@ export default {
     },
     computed: {
         ...mapGetters(["$lang"]),
-        ...mapState(["lang"]),
+        ...mapState(["lang", "system"]),
         wsTips() {
             if (this.isOpenSocket) {
                 return this.$lang("close_rt_alarm");
@@ -103,6 +113,12 @@ export default {
     },
     created() {
         this.username = sessionStorage.getItem("uname");
+        this.$http
+            .get("/logo.png")
+            .then(res => {
+                this.hasLogo = true;
+            })
+            .catch(err => {});
     },
     mounted() {
         this.initSocket();
@@ -154,15 +170,15 @@ export default {
         changeView(path) {
             this.userVisible = false;
             const p = `/${path}`;
-            if (p === this.$route.path) {
-                return;
-            }
             const isNav =
                 path === "login" ||
                 path === "main" ||
                 this.navData.some(item => item.name === path);
             if (!isNav) {
                 this.$refs["nav-menu"].activeIndex = ADVANCED_MENU;
+            }
+            if (p === this.$route.path) {
+                return;
             }
             this.$router.push(p);
         },
@@ -319,6 +335,7 @@ export default {
     },
     watch: {
         $route(route) {
+            this.changeView(route.path.slice(1));
             if (route.path === "/main") {
                 this.$refs["nav-menu"].activeIndex = "status";
             }
@@ -363,8 +380,17 @@ export default {
     float: left;
     line-height: 70px;
     margin: 0 20px;
-    max-width: 240px;
+    max-width: 280px;
+    min-width: 200px;
     overflow: hidden;
+    text-align: center;
+    font-size: 42px;
+    font-weight: bold;
+    color: @titleColor;
+    img {
+        max-width: 240px;
+        max-height: 70px;
+    }
     & + div {
         float: right;
         text-align: center;
