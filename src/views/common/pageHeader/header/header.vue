@@ -81,7 +81,7 @@ export default {
         },
         onuid: {
             type: Number,
-            default: 0
+            default: 0xffff
         },
         title: {
             type: String
@@ -92,8 +92,7 @@ export default {
             portData: {
                 port_id: 0,
                 onu_id: 0xffff
-            },
-            isFirstLoad: true
+            }
         };
     },
     mounted() {
@@ -116,16 +115,11 @@ export default {
     watch: {
         onuResource() {
             if (this.onuResource.length) {
-                if (!this.onuid) {
+                if (this.onuid !== 0xffff) {
+                    this.portData.onu_id = this.onuid;
+                } else {
                     // 没有传入onu id时，取onu列表第一项
                     this.portData.onu_id = this.onuResource[0];
-                } else {
-                    if (this.isFirstLoad) {
-                        this.isFirstLoad = false;
-                        this.portData.onu_id = this.onuid;
-                    } else {
-                        this.portData.onu_id = this.onuResource[0];
-                    }
                 }
             } else {
                 // onuResource无值时，表明当前pon口下没有onu，将onu id置 0xffff
