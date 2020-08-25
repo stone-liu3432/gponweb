@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-header type="pon" hasOnu @port-change="portChange">
+        <page-header type="pon" :portid="pid" :onuid="oid" hasOnu @port-change="portChange">
             <template slot="title">{{ $lang('onu_basic_info') }}</template>
         </page-header>
         <template v-if="ont_id !== 0xffff">
@@ -73,7 +73,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isDef } from "@/utils/common";
+import { isDef, isUndef } from "@/utils/common";
 import {
     ONT_AUTH_MODES,
     ONT_STATES,
@@ -99,6 +99,8 @@ export default {
     },
     data() {
         return {
+            pid: 0,
+            oid: 0xffff,
             port_id: 0,
             ont_id: 0xffff,
             baseInfo: {},
@@ -133,6 +135,17 @@ export default {
             },
             dialogVisible: false
         };
+    },
+    created() {
+        const port_id = sessionStorage.getItem("pid"),
+            ont_id = sessionStorage.getItem("oid");
+        if (isUndef(port_id) || isUndef(ont_id)) {
+            return;
+        }
+        sessionStorage.removeItem("pid");
+        sessionStorage.removeItem("oid");
+        this.pid = Number(port_id);
+        this.oid = Number(ont_id);
     },
     methods: {
         getBaseInfo(port_id, ont_id) {
@@ -198,6 +211,8 @@ export default {
                 this.versionInfo = {};
                 return;
             }
+            this.pid = 0;
+            this.oid = 0xffff;
             this.getBaseInfo(port_id, ont_id);
             this.getPortInfo(port_id, ont_id);
             this.getVersionInfo(port_id, ont_id);
