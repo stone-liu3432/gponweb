@@ -1,26 +1,7 @@
 <template>
     <el-form label-width="200px">
         <el-form-item :label="label">
-            <template v-if="type === 'pon'">
-                <el-checkbox-group v-model="portlist">
-                    <template v-for="item in ports">
-                        <el-checkbox
-                            :label="item.port_id"
-                            :disabled="disabled(item.port_id)"
-                        >{{ getPortName(item.port_id) }}</el-checkbox>
-                    </template>
-                </el-checkbox-group>
-            </template>
-            <template v-if="type === 'ge'">
-                <el-checkbox-group v-model="portlist">
-                    <template v-for="item in ports">
-                        <el-checkbox
-                            :label="item.port_id"
-                            :disabled="disabled(item.port_id)"
-                        >{{ getPortName(item.port_id) }}</el-checkbox>
-                    </template>
-                </el-checkbox-group>
-            </template>
+            <nms-port-checkbox :type="type" v-model="portlist" :disabled="disabled"></nms-port-checkbox>
         </el-form-item>
     </el-form>
 </template>
@@ -31,7 +12,7 @@ import { isFunction } from "@/utils/common";
 export default {
     name: "portIsolationForm",
     computed: {
-        ...mapGetters(["$lang", "getPortName"]),
+        ...mapGetters(["$lang"]),
         ...mapState(["port", "system"]),
         label() {
             return this.type === "pon"
