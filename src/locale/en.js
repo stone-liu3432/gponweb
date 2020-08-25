@@ -535,7 +535,7 @@ var en = {
     product_name_tips: "Product name cannot exceed 12 characters",
     sysinfo_set: "Logo, model, company information settings",
     goback_devmgmt: "Back to device management",
-    imagesize_tips: "The maximum image size is 200kb",
+    imagesize_tips: "The maximum image size is 50kb",
 
     acl_id_range_error:
         "The ACL ID is incorrect. The basic ACL is 2000-2999, the advanced ACL is 3000-4999, and the link ACL is 5000-5999.",
@@ -1048,6 +1048,17 @@ var en = {
     ont_eth_statistics: "ONT Ethernet Port Statistics",
     port_default_vlan: "Port Default VLAN",
     clear_perf_all: "Clear All Performance ",
+    supplier_info: "Supplier Information",
+    mid: "Mapping ID",
+    port_group_mode: "Port Group Mode",
+    inter_working: "Inter-working",
+    isolation: "Isolation",
+    ingress: " Ingress ",
+    egress: " Egress ",
+    port_group: "Port Group",
+    port_maps: "Port Mapping Table",
+    save_all_changes: "Save all changes",
+    uniport_vlan_limit: "Up to 8 rules can be assigned to each UNI port",
 };
 
 export default en;

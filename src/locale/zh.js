@@ -517,7 +517,7 @@ var zh = {
     product_name_tips: "产品名称不得多于12个字符",
     sysinfo_set: "Logo，型号，公司信息设置",
     goback_devmgmt: "回到设备管理",
-    imagesize_tips: "图片大小最大为200kb",
+    imagesize_tips: "图片大小最大为50kb",
 
     acl_id_range_error:
         "ACL ID取值范围错误，其中基础ACL为2000-2999，高级ACL为3000-4999，链路ACL为5000-5999",
@@ -1023,6 +1023,17 @@ var zh = {
     ont_eth_statistics: "ONT以太网端口统计信息",
     port_default_vlan: "端口缺省VLAN",
     clear_perf_all: "清除所有统计信息",
+    supplier_info: "供应商信息",
+    mid: "映射号",
+    port_group_mode: "端口组模式",
+    inter_working: "互通模式",
+    isolation: "隔离模式",
+    ingress: "入口",
+    egress: "出口",
+    port_group: "端口组",
+    port_maps: "端口映射表",
+    save_all_changes: "保存所有修改",
+    uniport_vlan_limit: "每个UNI端口最多可以分配8条规则",
 };
 
 export default zh;
