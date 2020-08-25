@@ -55,7 +55,7 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "port_cfg" },
                     { name: "port_vlan" },
                     { name: "loop_detect" },
-                    { name: "port_isolation" },
+                    { name: "port_group" },
                 ],
             },
             {
@@ -108,3 +108,9 @@ Mock.mock("/board?info=nav", "get", {
         ],
     },
 });
+
+Mock.post("/upgrade?type=logo");
+
+Mock.post("/board?info=setting_board");
+
+Mock.post("/upgrade?type=login_logo");
