@@ -90,7 +90,7 @@ Mock.mock(/\/gponont_mgmt\?form=resource&port_id=\d+/, "get", ({ url }) => {
         message: "success",
         data: {
             port_id,
-            resource: "1,3-8,15-29",
+            resource: "0-1,3-8,15-29",
         },
     };
 });
