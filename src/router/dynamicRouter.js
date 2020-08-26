@@ -77,7 +77,7 @@ const data = {
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/loopDetect"
         ),
-    port_isolation: () =>
+    port_group: () =>
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portIsolation"
         ),
