@@ -35,6 +35,7 @@ Mock.mock(
             if (!flag) {
                 return [
                     {
+                        mid: 0,
                         mode: Random.pick([1, 3]),
                         vlan_id: 0xffff,
                         vlan_pri: 0,
@@ -47,12 +48,13 @@ Mock.mock(
             // 同一个gemport下 vlan mode不可变
             for (let i = 0; i < j; i++) {
                 mapping.push({
+                    mid: i,
                     mode,
                     vlan_id: Random.range(1, 4094),
                     vlan_pri: Random.range(0, 7),
                 });
             }
-            mapping.sort((a, b) => a.vlan_id - b.vlan_id);
+            // mapping.sort((a, b) => a.vlan_id - b.vlan_id);
             return mapping;
         };
 
