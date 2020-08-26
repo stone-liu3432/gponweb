@@ -29,7 +29,7 @@ export const MAPPING_MODES = {
 // VLAN模式枚举
 export const VLAN_MODES = {
     1: "transparent",
-    2: "tag",
+    2: "natvie-vlan",
     3: "translation",
     4: "qinq",
 };
@@ -170,3 +170,6 @@ export const USER_LEVEL = [
 
 // port vlan
 export const PORT_TYPE_MAP = { 1: "Access", 2: "Trunk", 3: "Hybrid" };
+
+// port isolation
+export const PORT_GROUP_MODE_MAP = { 1: "isolation", 2: "inter_working" };
