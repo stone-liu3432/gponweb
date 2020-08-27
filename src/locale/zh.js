@@ -1034,6 +1034,7 @@ var zh = {
     port_maps: "端口映射表",
     save_all_changes: "保存所有修改",
     uniport_vlan_limit: "每个UNI端口最多可以分配8条规则",
+    unsave_info: "当前页面存在未保存的信息，是否保存 ?",
 };
 
 export default zh;

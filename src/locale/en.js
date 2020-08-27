@@ -1059,6 +1059,8 @@ var en = {
     port_maps: "Port Mapping Table",
     save_all_changes: "Save all changes",
     uniport_vlan_limit: "Up to 8 rules can be assigned to each UNI port",
+    unsave_info:
+        "There is unsaved information on the current page, do you want to save it ?",
 };
 
 export default en;
