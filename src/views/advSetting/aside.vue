@@ -25,11 +25,14 @@ export default {
         }
     },
     created() {
+        // 刷新页面时恢复原页面
         const nav = sessionStorage.getItem("nav"),
             adv = sessionStorage.getItem("advMenu");
         if (nav === ADVANCED_MENU && !!adv) {
             this.activedItem = adv;
-            this.$router.push(`/${adv}`);
+            if (this.$route.path !== `/${adv}`) {
+                this.$router.push(`/${adv}`);
+            }
         }
     },
     watch: {
