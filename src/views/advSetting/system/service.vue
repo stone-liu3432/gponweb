@@ -2,6 +2,9 @@
     <div>
         <page-header type="none" :title="$lang('service')"></page-header>
         <el-tabs v-model="activeName" type="card" @tab-click="getData">
+            <el-tab-pane :label="$lang('sys_port')" name="sys_port">
+                <sys-port :base-data="sysPortInfo" @refresh="getData"></sys-port>
+            </el-tab-pane>
             <el-tab-pane label="FRPC" name="frpc">
                 <service-frpc :base-data="frpcData" @refresh="getData"></service-frpc>
             </el-tab-pane>
@@ -20,20 +23,22 @@ import { mapActions, mapGetters, mapState } from "vuex";
 import serviceFrpc from "./service/frpc";
 import serviceSnmp from "./service/snmp";
 import serviceSsh from "./service/ssh";
+import sysPort from "./service/sysPort";
 import { isDef, isArray, isFunction } from "@/utils/common";
 export default {
     name: "sysService",
-    components: { serviceFrpc, serviceSnmp, serviceSsh },
+    components: { serviceFrpc, serviceSnmp, serviceSsh, sysPort },
     computed: {
         ...mapGetters(["$lang"])
     },
     data() {
         return {
-            activeName: "frpc",
+            activeName: "sys_port",
             frpcData: {},
             snmpTrap: {},
             snmpCommunity: {},
-            sshData: []
+            sshData: [],
+            sysPortInfo: {}
         };
     },
     created() {
@@ -48,6 +53,7 @@ export default {
     methods: {
         getData() {
             const ACTIONS = {
+                sys_port: this.getSysPort,
                 frpc: this.getFrpc,
                 snmp() {
                     this.getSnmpTrap();
@@ -106,6 +112,19 @@ export default {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.sshData = res.data.data;
+                        }
+                    }
+                })
+                .catch(err => {});
+        },
+        getSysPort() {
+            this.sysPortInfo = {};
+            this.$http
+                .get("/system_service?form=port")
+                .then(res => {
+                    if (res.data.code === 1) {
+                        if (isDef(res.data.data)) {
+                            this.sysPortInfo = res.data.data;
                         }
                     }
                 })
