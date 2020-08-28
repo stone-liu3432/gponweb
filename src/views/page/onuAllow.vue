@@ -1,6 +1,6 @@
 <template>
     <div style="margin: 20px;">
-        <page-header @port-change="portChange" type="pon">
+        <page-header @port-change="portChange" :portid="pid" type="pon">
             <div slot="title">{{ $lang('onu_allow') }}</div>
             <div slot="content">
                 <el-button
@@ -78,10 +78,14 @@ export default {
                 lineProfs: [],
                 srvProfs: []
             },
-            gpon_setting: []
+            gpon_setting: [],
+            // router query params
+            pid: 0
         };
     },
     created() {
+        // 路由参数，从其他页面带参跳转时，预设 port_id
+        this.pid = this.$route.query.port_id || 0;
         this.getLineProfs();
         this.getSrvProfs();
         this.getStatus();
@@ -171,8 +175,7 @@ export default {
                 })
                 .catch(_ => {});
         }
-    },
-    watch: {}
+    }
 };
 </script>
 
