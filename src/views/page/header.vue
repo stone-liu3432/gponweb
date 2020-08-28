@@ -167,16 +167,10 @@ export default {
         navClick(path, subPath) {
             sessionStorage.setItem("nav", path);
         },
+        // 跳转 user mgmt 或 pon optical
         changeView(path) {
             this.userVisible = false;
             const p = `/${path}`;
-            const isNav =
-                path === "login" ||
-                path === "main" ||
-                this.navData.some(item => item.name === path);
-            if (!isNav) {
-                this.$refs["nav-menu"].activeIndex = ADVANCED_MENU;
-            }
             if (p === this.$route.path) {
                 return;
             }
@@ -335,9 +329,20 @@ export default {
     },
     watch: {
         $route(route) {
-            this.changeView(route.path.slice(1));
             if (route.path === "/main") {
-                this.$refs["nav-menu"].activeIndex = "status";
+                return (this.$refs["nav-menu"].activeIndex = "status");
+            }
+            const path = route.path.slice(1);
+            const isNav =
+                path === "main" ||
+                this.navData.some(item => item.name === path);
+            if (!isNav) {
+                this.$refs["nav-menu"].activeIndex = ADVANCED_MENU;
+            } else if (path !== "login" || path !== "main") {
+                this.$refs["nav-menu"].activeIndex = path;
+            }
+            if (isNav) {
+                this.$refs["nav-menu"].activeIndex = path;
             }
         },
         navData() {
