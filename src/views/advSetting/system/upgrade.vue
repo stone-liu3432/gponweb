@@ -67,6 +67,17 @@
                 >{{ $lang('apply') }}</el-button>
             </el-upload>
         </el-card>
+        <div v-show="showLoading" class="el-loading-mask is-fullscreen" style="min-height: 500px;">
+            <div class="nms-dialog-container">
+                <span>loading...</span>
+                <el-progress
+                    :text-inside="true"
+                    :stroke-width="22"
+                    :percentage="randomNum"
+                    status="warning"
+                ></el-progress>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -91,7 +102,10 @@ export default {
             sysList: [],
             fullFile: null,
             fullList: [],
-            loading: null
+            randomNum: 0,
+            interval: null,
+            showLoading: false,
+            loadingType: ""
         };
     },
     inject: ["updateAdvMainScrollbar"],
@@ -152,7 +166,8 @@ export default {
             if (isFunction(ACTIONS[type])) {
                 const result = ACTIONS[type].call(this, URLS[type]);
                 if (isPromise(result)) {
-                    this.loading = this.$loading();
+                    this.showLoading = true;
+                    this.loadingType = type;
                     result
                         .then(res => {
                             if (res.data.code === 1) {
@@ -218,11 +233,7 @@ export default {
             }, 15000);
         },
         closeLoading() {
-            if (isFunction(this.loading.close)) {
-                this.$nextTick(_ => {
-                    this.loading.close();
-                });
-            }
+            this.showLoading = false;
         },
         upgradeTips(type) {
             const _this = this;
@@ -242,6 +253,35 @@ export default {
             };
             return TIPS[type];
         }
+    },
+    beforeDestroy() {
+        clearInterval(this.interval);
+    },
+    watch: {
+        showLoading() {
+            if (this.showLoading) {
+                this.interval = setInterval(_ => {
+                    switch (this.loadingType) {
+                        case "firmware": {
+                            this.randomNum += Math.round(Math.random() * 3 + 1);
+                            break;
+                        }
+                        case "system": {
+                            this.randomNum += Math.round(Math.random() * 3 + 1);
+                            break;
+                        }
+                        case "fullversion": {
+                            this.randomNum += Math.round(Math.random() * 2 + 1);
+                            break;
+                        }
+                    }
+                    this.randomNum > 95 && (this.randomNum = 95);
+                }, 1000);
+            } else {
+                clearInterval(this.interval);
+                this.randomNum = 0;
+            }
+        }
     }
 };
 </script>
@@ -249,5 +289,21 @@ export default {
 <style lang="less" scoped>
 p {
     .base-font-style;
+}
+.nms-dialog-container {
+    text-align: center;
+    width: 400px;
+    height: 200px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    span {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 6px 0;
+    }
 }
 </style>
