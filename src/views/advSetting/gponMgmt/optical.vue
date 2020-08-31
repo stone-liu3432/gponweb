@@ -1,48 +1,76 @@
 <template>
     <div>
-        <page-header type="none">
+        <page-header :type="headerType" @port-change="portChange">
             <div slot="title">{{ $lang('pon_optical') }}</div>
+            <template slot="content">
+                <el-button
+                    type="primary"
+                    size="small"
+                    style="margin-left: 30px;"
+                    @click="refreshData"
+                >{{ $lang('refresh') }}</el-button>
+            </template>
         </page-header>
-        <el-table :data="allOptInfo" border stripe>
-            <el-table-column :label="$lang('port_id')">
-                <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
-            </el-table-column>
-            <el-table-column :label="$lang('portstate')">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.portstate ? $lang('online') : $lang('offline') }}</template>
-            </el-table-column>
-            <el-table-column :label="$lang('mstate')">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.mstate ? $lang('detected') : $lang('undetected') }}</template>
-            </el-table-column>
-            <el-table-column :label="$lang('work_temprature')" prop="work_temprature"></el-table-column>
-            <el-table-column :label="$lang('work_voltage')" prop="work_voltage"></el-table-column>
-            <el-table-column :label="$lang('transmit_bias')" prop="transmit_bias"></el-table-column>
-            <el-table-column :label="$lang('transmit_power')" prop="transmit_power"></el-table-column>
-            <!-- <el-table-column :label="$lang('receive_power')" prop="receive_power"></el-table-column> -->
-            <el-table-column :label="$lang('show_detail')" width="100">
-                <template slot-scope="scope">
-                    <el-button type="text" @click="showDetail(scope.row)">{{ $lang('show_detail') }}</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="900px">
-            <div slot="title">
-                <div class="dialog-title-font">
-                    <span style="margin-right: 20px;">{{ $lang('port_id') }}:</span>
-                    <span>{{ getPortName(optDetail.port_id) }}</span>
-                </div>
-            </div>
-            <opt-module :data="optDetail"></opt-module>
-        </el-dialog>
+        <el-tabs v-model="activeName" type="card">
+            <el-tab-pane :label="$lang('pon_optical')" name="pon_optical">
+                <el-table :data="allOptInfo" border stripe>
+                    <el-table-column :label="$lang('port_id')">
+                        <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                    </el-table-column>
+                    <el-table-column :label="$lang('portstate')">
+                        <template
+                            slot-scope="scope"
+                        >{{ scope.row.portstate ? $lang('online') : $lang('offline') }}</template>
+                    </el-table-column>
+                    <el-table-column :label="$lang('mstate')">
+                        <template
+                            slot-scope="scope"
+                        >{{ scope.row.mstate ? $lang('detected') : $lang('undetected') }}</template>
+                    </el-table-column>
+                    <el-table-column :label="$lang('work_temprature')" prop="work_temprature"></el-table-column>
+                    <el-table-column :label="$lang('work_voltage')" prop="work_voltage"></el-table-column>
+                    <el-table-column :label="$lang('transmit_bias')" prop="transmit_bias"></el-table-column>
+                    <el-table-column :label="$lang('transmit_power')" prop="transmit_power"></el-table-column>
+                    <el-table-column :label="$lang('show_detail')" width="100">
+                        <template slot-scope="scope">
+                            <el-button
+                                type="text"
+                                @click="showDetail(scope.row)"
+                            >{{ $lang('show_detail') }}</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-dialog :visible.sync="dialogVisible" append-to-body width="900px">
+                    <div slot="title">
+                        <div class="dialog-title-font">
+                            <span style="margin-right: 20px;">{{ $lang('port_id') }}:</span>
+                            <span>{{ getPortName(optDetail.port_id) }}</span>
+                        </div>
+                    </div>
+                    <opt-module :data="optDetail"></opt-module>
+                </el-dialog>
+            </el-tab-pane>
+            <el-tab-pane :label="$lang('onu_optical_diagnose')" name="ont_optical">
+                <el-table :data="ontInfo" border stripe>
+                    <el-table-column :label="$lang('ont_id')">
+                        <template
+                            slot-scope="scope"
+                        >{{ scope.row.ont_name || `ONT${scope.row.port_id}/${scope.row.ont_id}` }}</template>
+                    </el-table-column>
+                    <el-table-column :label="$lang('work_temprature')" prop="work_temprature"></el-table-column>
+                    <el-table-column :label="$lang('work_voltage')" prop="work_voltage"></el-table-column>
+                    <el-table-column :label="$lang('transmit_bias')" prop="transmit_bias"></el-table-column>
+                    <el-table-column :label="$lang('transmit_power')" prop="transmit_power"></el-table-column>
+                    <el-table-column :label="$lang('receive_power')" prop="receive_power"></el-table-column>
+                </el-table>
+            </el-tab-pane>
+        </el-tabs>
     </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import { isArray, isDef } from "@/utils/common";
+import { isArray, isDef, debounce } from "@/utils/common";
 import optModule from "./optical/optModule";
 export default {
     name: "optical",
@@ -59,15 +87,20 @@ export default {
     data() {
         return {
             allOptInfo: [],
+            ontInfo: [],
             dialogVisible: false,
-            optDetail: {}
+            optDetail: {},
+            activeName: "pon_optical",
+            headerType: "none",
+            port_id: 0
         };
     },
     created() {
-        this.getData();
+        this.getPonOptical();
     },
     methods: {
-        getData() {
+        getPonOptical() {
+            this.allOptInfo = [];
             this.$http
                 .get("/gponmgmt?form=optical_poninfo")
                 .then(res => {
@@ -78,6 +111,25 @@ export default {
                     }
                 })
                 .catch(err => {});
+        },
+        getOntOptical(port_id) {
+            this.ontInfo = [];
+            this.$http
+                .get(`/gponmgmt?form=optical_onu&port_id=${port_id}`)
+                .then(res => {
+                    if (res.data.code === 1) {
+                        if (isArray(res.data.data)) {
+                            this.ontInfo = res.data.data;
+                        }
+                    }
+                })
+                .catch(err => {});
+        },
+        portChange(port_id) {
+            this.port_id = port_id;
+            if (this.activeName === "ont_optical") {
+                this.getOntOptical(port_id);
+            }
         },
         showDetail(row) {
             this.openDialog(row.port_id);
@@ -102,6 +154,23 @@ export default {
                 .catch(err => {
                     loading.close();
                 });
+        },
+        refreshData() {
+            if (this.activeName === "pon_optical") {
+                debounce(this.getPonOptical, 1000, this);
+            } else if (this.activeName === "ont_optical") {
+                debounce(this.getOntOptical, 1000, this, this.port_id);
+            }
+        }
+    },
+    watch: {
+        activeName() {
+            if (this.activeName === "pon_optical") {
+                this.headerType = "none";
+            } else if (this.activeName === "ont_optical") {
+                this.headerType = "pon";
+                this.getOntOptical(this.port_id);
+            }
         }
     }
 };
