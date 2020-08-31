@@ -4,9 +4,9 @@ import Mock from "@/mock";
 
 const Random = Mock.Random;
 
-Mock.mock("/gponmgmt?form=optical_poninfo", "get", _ => {
+Mock.mock("/gponmgmt?form=optical_poninfo", "get", (_) => {
     let i = 1;
-    const data = Array.from({ length: 16 }).map(_ => ({
+    const data = Array.from({ length: 16 }).map((_) => ({
         port_id: i++,
         portstate: Random.range(0, 1),
         mstate: Random.range(0, 1),
@@ -14,12 +14,12 @@ Mock.mock("/gponmgmt?form=optical_poninfo", "get", _ => {
         work_voltage: "3.29 V " + (i - 1),
         transmit_bias: "13 mA " + (i - 1),
         transmit_power: "1.8295 dBm " + (i - 1),
-        receive_power: "1.0325 dBm " + (i - 1)
+        receive_power: "1.0325 dBm " + (i - 1),
     }));
     return {
         code: 1,
         message: "success",
-        data
+        data,
     };
 });
 
@@ -44,7 +44,7 @@ Mock.mock(/\/gponmgmt\?form=optical_poninfo&port_id=\d+/, "get", ({ url }) => {
             vendor_pn: "LTE4302M-BC+HW" + port_id,
             vendor_sn: "F9842018765" + port_id,
             date_code: "18-09-03" + port_id,
-            vendor_specific: Array.from({ length: 32 }).map(_ =>
+            vendor_specific: Array.from({ length: 32 }).map((_) =>
                 Random.range(0, 16)
             ),
             module_type: "EPON" + port_id,
@@ -73,7 +73,28 @@ Mock.mock(/\/gponmgmt\?form=optical_poninfo&port_id=\d+/, "get", ({ url }) => {
             rxpwr_high_alarm: 123 + port_id,
             rxpwr_low_alarm: 123 + port_id,
             rxpwr_high_warning: 123 + port_id,
-            rxpwr_low_warning: 123 + port_id
-        }
+            rxpwr_low_warning: 123 + port_id,
+        },
+    };
+});
+
+Mock.mock(/\/gponmgmt\?form=optical_onu&port_id=\d+/, "get", ({ url }) => {
+    const port_id = url.match(/(?<=port_id=)\d+/) >>> 0;
+    const data = Array.from({ length: Random.range(1, 128) }).map(
+        (item, index) => ({
+            port_id,
+            ont_id: index,
+            ont_name: `ONU${port_id}/${index}`,
+            work_temprature: `${Random.range(0, 60)} C`,
+            work_voltage: `${(Math.random() * 3).toFixed(2)} V`,
+            transmit_bias: `${Random.range(1, 100)} mA`,
+            transmit_power: `${(Math.random() * 5).toFixed(4)} dBm`,
+            receive_power: `-${(Math.random() * 5).toFixed(4)} dBm`,
+        })
+    );
+    return {
+        code: 1,
+        message: "success",
+        data,
     };
 });
