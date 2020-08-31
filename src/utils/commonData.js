@@ -173,3 +173,23 @@ export const PORT_TYPE_MAP = { 1: "Access", 2: "Trunk", 3: "Hybrid" };
 
 // port isolation
 export const PORT_GROUP_MODE_MAP = { 1: "isolation", 2: "inter_working" };
+
+// pon 模块类型
+export const TRX_TYPE_MAP = [
+    "SourcePhotonics-0",
+    "Superxon B+",
+    "LIGENT LTE3680M",
+    "Source Photonics",
+    "LIGENT LTE3680P C+",
+    "Any",
+    "Any reset guard",
+    "Any reset preamble",
+    "WTD RTXM167 526 C+",
+    "WTD RTXM167 522 B+",
+    "LIGENT HiSense LTE3680P-BC",
+    "Superxon C+",
+    "WTD RTXM167 521",
+    "LTE3678",
+    "Superxon SOGP4321-PSGA",
+    "gpon general 1",
+];
