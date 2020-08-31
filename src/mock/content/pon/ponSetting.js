@@ -7,6 +7,7 @@ Mock.mock("/gponmgmt?form=gpon_setting", "get", () => {
         port_id: index + 1,
         autofind: Random.range(0, 1),
         laser: Random.range(0, 1),
+        trx_type: Random.range(0, 15),
         auth_type: Random.range(0, 1),
         lineprof_id: Random.range(1, 2048),
         srvprof_id: Random.range(1, 2048),
@@ -29,3 +30,5 @@ Mock.mock(/\/gponmgmt\?form=ont_autofind&port_id=\d+/, "post", "@BASESUCCESS");
 Mock.mock(/\/gponmgmt\?form=ont_auth&port_id=\d+/, "post", "@BASESUCCESS");
 
 Mock.mock(/\/gponmgmt\?form=af_param/, "post", "@BASESUCCESS");
+
+Mock.post(/\/gponmgmt\?form=trxtype&port_id=\d+/);
