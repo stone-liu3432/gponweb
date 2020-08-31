@@ -8,7 +8,21 @@
                 <el-input v-model.number="form.af_interval"></el-input>
             </el-form-item>
         </template>
-        <template v-else>
+        <template v-if="type === 'all'">
+            <el-form-item :label="$lang('autofind')" prop="autofind">
+                <el-select v-model.number="form.autofine">
+                    <el-option :value="0" :label="$lang('disable')"></el-option>
+                    <el-option :value="1" :label="$lang('enable')"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item :label="$lang('laser')" prop="laser">
+                <el-select v-model.number="form.laser">
+                    <el-option :value="0" :label="$lang('off')"></el-option>
+                    <el-option :value="1" :label="$lang('on')"></el-option>
+                </el-select>
+            </el-form-item>
+        </template>
+        <template v-if="type === 'auth' || type === 'all'">
             <el-form-item :label="$lang('auth_type')" prop="auth_type" key="auth_type">
                 <el-select v-model.number="form.auth_type">
                     <el-option :value="0" label="Manual"></el-option>
@@ -32,6 +46,15 @@
                 </el-form-item>
             </template>
         </template>
+        <template v-if="type === 'trx_type' || type === 'all'">
+            <el-form-item :label="$lang('trx_type')" prop="trx_type">
+                <el-select v-model.number="form.trx_type">
+                    <template v-for="(item, index) in TRX_TYPE_MAP">
+                        <el-option :label="item" :value="index"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+        </template>
     </el-form>
 </template>
 
@@ -39,6 +62,7 @@
 import { mapGetters, mapState } from "vuex";
 import { isDef, isFunction } from "@/utils/common";
 import { regRange } from "@/utils/validator";
+import { TRX_TYPE_MAP } from "@/utils/commonData";
 export default {
     name: "ponSettingForm",
     computed: {
@@ -47,12 +71,16 @@ export default {
     },
     data() {
         return {
+            TRX_TYPE_MAP,
             form: {
+                autofine: 0,
+                laser: 0,
                 auth_type: 0,
                 lineprof_id: 0,
                 srvprof_id: 0,
                 af_aging_time: "",
-                af_interval: ""
+                af_interval: "",
+                trx_type: 0
             },
             rules: {
                 af_aging_time: [
@@ -76,14 +104,16 @@ export default {
         init(type, data) {
             this.$refs["pon-setting-form"].resetFields();
             this.type = type;
-            Object.keys(this.form).forEach(key => {
-                if (isDef(data[key])) {
-                    this.form[key] = data[key];
-                }
-            });
+            if (isDef(data)) {
+                Object.keys(this.form).forEach(key => {
+                    if (isDef(data[key])) {
+                        this.form[key] = data[key];
+                    }
+                });
+            }
         },
         validateTime(rule, val, cb) {
-            if (this.type === "auth") {
+            if (this.type === "auth" || this.type === "trx_type") {
                 return cb();
             }
             if (val === 0) {
@@ -95,7 +125,7 @@ export default {
             cb();
         },
         validateInterval(rule, val, cb) {
-            if (this.type === "auth") {
+            if (this.type === "auth" || this.type === "trx_type") {
                 return cb();
             }
             if (!regRange(val, 2, 10)) {

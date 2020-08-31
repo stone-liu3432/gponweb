@@ -24,8 +24,17 @@
                     @click="openDialog('interval', ponInfo)"
                 >{{ $lang('config') }}</el-button>
             </div>
+            <div style="margin: 10px 0 10px 10px;">
+                <el-button
+                    type="primary"
+                    size="small"
+                    @click="openDialog('all')"
+                >{{ $lang('config', 'all', 'port') }}</el-button>
+            </div>
             <el-table :data="ponInfo.gpon_setting || []" border>
-                <el-table-column :label="$lang('port_id')" prop="port_id"></el-table-column>
+                <el-table-column :label="$lang('port_id')" prop="port_id">
+                    <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                </el-table-column>
                 <el-table-column :label="$lang('autofind')" prop="autofind">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
@@ -42,13 +51,27 @@
                 <el-table-column :label="$lang('laser')" prop="laser">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
-                            <span>{{ scope.row.laser ? $lang('on') : $lang('off') }}</span>
+                            <span
+                                style="width: 50px;"
+                            >{{ scope.row.laser ? $lang('on') : $lang('off') }}</span>
                             <el-switch
                                 v-model="scope.row.laser"
                                 @change="changeLaser(scope.row)"
                                 :active-value="1"
                                 :inactive-value="0"
                             ></el-switch>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column :label="$lang('trx_type')" width="300px">
+                    <template slot-scope="scope">
+                        <div class="pon-setting-info-item">
+                            <span style="width: 200px;">{{ TRX_TYPE_MAP[scope.row.trx_type] }}</span>
+                            <el-button
+                                type="text"
+                                style="margin-left: 12px;"
+                                @click="openDialog('trx_type', scope.row)"
+                            >{{ $lang('config') }}</el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -73,9 +96,33 @@
                         slot-scope="scope"
                     >{{ scope.row.auth_type ? scope.row.srvprof_id : "-" }}</template>
                 </el-table-column>
+                <!-- <el-table-column :label="$lang('config')" width="120px">
+                    <template slot-scope="scope">
+                        <el-dropdown @command="command">
+                            <span class="el-dropdown-link">
+                                {{ $lang('config') }}
+                                <i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item
+                                    :command="{ action: 'autofind', row: scope.row }"
+                                >{{ $lang(scope.row.autofind ? 'off' : 'on', 'autofind') }}</el-dropdown-item>
+                                <el-dropdown-item
+                                    :command="{ action: 'laser', row: scope.row }"
+                                >{{ $lang(scope.row.laser ? "off" : "on", "laser") }}</el-dropdown-item>
+                                <el-dropdown-item
+                                    :command="{ action: 'auth_type', row: scope.row }"
+                                >{{ $lang('config', 'auth_type') }}</el-dropdown-item>
+                                <el-dropdown-item
+                                    :command="{ action: 'trx_type', row: scope.row }"
+                                >{{ $lang('config', 'trx_type') }}</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </template>
+                </el-table-column>-->
             </el-table>
-            <el-dialog :visible.sync="dialogVisible" append-to-body>
-                <div slot="title">{{ $lang(dialogTitle) }}</div>
+            <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
+                <div slot="title">{{ $lang(dialogTitle) || $lang('config', 'all', 'port') }}</div>
                 <pon-setting-form ref="pon-setting-form"></pon-setting-form>
                 <div slot="footer">
                     <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
@@ -92,6 +139,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { isDef, isFunction } from "@/utils/common";
+import { TRX_TYPE_MAP } from "@/utils/commonData";
 import postData from "@/mixin/postData";
 import ponSettingForm from "./ponSetting/ponSettingForm";
 const TITLE_MAP = {
@@ -104,13 +152,20 @@ export default {
     mixins: [postData],
     components: { ponSettingForm },
     computed: {
-        ...mapGetters(["$lang"]),
+        ...mapGetters(["$lang", "getPortName"]),
         dialogTitle() {
             return TITLE_MAP[this.dialogType] || "";
         }
     },
+    inject: ["updateAdvMainScrollbar"],
+    updated() {
+        this.$nextTick(_ => {
+            this.updateAdvMainScrollbar();
+        });
+    },
     data() {
         return {
+            TRX_TYPE_MAP,
             ponInfo: {},
             dialogVisible: false,
             dialogType: "",
@@ -182,7 +237,9 @@ export default {
         openDialog(type, data) {
             this.dialogVisible = true;
             this.dialogType = type;
-            this.dialogData = JSON.parse(JSON.stringify(data));
+            if (data) {
+                this.dialogData = JSON.parse(JSON.stringify(data));
+            }
             this.$nextTick(_ => {
                 this.$refs["pon-setting-form"].init(type, data);
             });
@@ -194,6 +251,13 @@ export default {
                     ["auth_type", "lineprof_id", "srvprof_id"].every(
                         key => data[key] === this.dialogData[key]
                     )
+                ) {
+                    return this.$message.info(this.$lang("modify_tips"));
+                }
+                // pon 模块类型
+                if (
+                    type === "trx_type" &&
+                    this.dialogData["trx_type"] === data["trx_type"]
                 ) {
                     return this.$message.info(this.$lang("modify_tips"));
                 }
@@ -234,6 +298,17 @@ export default {
                                 }
                             }
                         };
+                    },
+                    trx_type(form) {
+                        return {
+                            url: `/gponmgmt?form=trxtype&port_id=${this.dialogData.port_id}`,
+                            param: {
+                                method: "set",
+                                param: {
+                                    trx_type: form.trx_type
+                                }
+                            }
+                        };
                     }
                 };
                 if (isFunction(ACTIONS[type])) {
@@ -248,6 +323,25 @@ export default {
                     this.dialogVisible = false;
                 }
             });
+        },
+        command({ action, row }) {
+            const ACTIONS = {
+                autofind(data) {
+                    this.changeAutofind(data);
+                },
+                laser(data) {
+                    this.changeLaser(data);
+                },
+                auth_type(data) {
+                    this.openDialog("auth", data);
+                },
+                trx_type(data) {
+                    this.openDialog("trx_type", data);
+                }
+            };
+            if (isFunction(ACTIONS[action])) {
+                ACTIONS[action].call(this, row);
+            }
         }
     }
 };
@@ -274,5 +368,9 @@ export default {
         width: 80px;
         vertical-align: middle;
     }
+}
+.el-dropdown-link {
+    cursor: pointer;
+    color: @titleColor;
 }
 </style>
