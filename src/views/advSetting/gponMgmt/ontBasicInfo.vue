@@ -137,13 +137,8 @@ export default {
         };
     },
     created() {
-        const port_id = sessionStorage.getItem("pid"),
-            ont_id = sessionStorage.getItem("oid");
-        if (isUndef(port_id) || isUndef(ont_id)) {
-            return;
-        }
-        sessionStorage.removeItem("pid");
-        sessionStorage.removeItem("oid");
+        const port_id = this.$route.query.port_id || 0,
+            ont_id = this.$route.query.ont_id || 0xffff;
         this.pid = Number(port_id);
         this.oid = Number(ont_id);
     },
