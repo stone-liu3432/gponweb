@@ -8,7 +8,7 @@ var en = {
     restore_config: "Restore Config",
     reboot: "Reboot",
     diagonose: "Diagnose",
-    remote_mgmt: "Remote",
+    remote_mgmt: "Network Interface",
     outbound: "Outbound Interface",
     inbound: "Inbound Interface",
     upgrade: "Upgrade",
@@ -1061,6 +1061,12 @@ var en = {
     uniport_vlan_limit: "Up to 8 rules can be assigned to each UNI port",
     unsave_info:
         "There is unsaved information on the current page, do you want to save it ?",
+    sys_port: "System Port",
+    batch_add_to_authlist_tips:
+        "Batch addition is only applicable to SN certified ONT, please add separately for LOID registration.",
+    trx_type: "Transceiver",
+    least_tcont_tips: "At least one TCONT is required",
+    display_type: "Display Type",
 };
 
 export default en;

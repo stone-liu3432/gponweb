@@ -8,7 +8,7 @@ var zh = {
     restore_config: "导入配置",
     reboot: "重启",
     diagonose: "诊断工具",
-    remote_mgmt: "远程管理",
+    remote_mgmt: "网络接口",
     outbound: "带外接口",
     inbound: "带内接口",
     upgrade: "升级管理",
@@ -1035,6 +1035,12 @@ var zh = {
     save_all_changes: "保存所有修改",
     uniport_vlan_limit: "每个UNI端口最多可以分配8条规则",
     unsave_info: "当前页面存在未保存的信息，是否保存 ?",
+    sys_port: "系统端口",
+    batch_add_to_authlist_tips:
+        "批量添加仅适用于SN认证的ONT，LOID注册的请单独添加。",
+    trx_type: "PON模块",
+    least_tcont_tips: "最少需要有一条TCONT",
+    display_type: "显示类型",
 };
 
 export default zh;
