@@ -114,6 +114,7 @@ export default {
         },
         getOntOptical(port_id) {
             this.ontInfo = [];
+            const loading = this.$loading();
             this.$http
                 .get(`/gponmgmt?form=optical_onu&port_id=${port_id}`)
                 .then(res => {
@@ -123,7 +124,10 @@ export default {
                         }
                     }
                 })
-                .catch(err => {});
+                .catch(err => {})
+                .finally(_ => {
+                    loading.close();
+                });
         },
         portChange(port_id) {
             this.port_id = port_id;
@@ -159,7 +163,7 @@ export default {
             if (this.activeName === "pon_optical") {
                 debounce(this.getPonOptical, 1000, this);
             } else if (this.activeName === "ont_optical") {
-                debounce(this.getOntOptical, 1000, this, this.port_id);
+                this.getOntOptical(this.port_id);
             }
         }
     },
