@@ -34,6 +34,7 @@ Mock.mock(/\/gponont_mgmt\?form=autofind&port_id=\d+/, "get", ({ url }) => {
     const data = Array.from({ length: Random.range(0, 127) }).map(
         (item, index) => ({
             identifier: (port_id << 8) | index,
+            ont_id: index,
             ont_sn: Random.word(1, 32),
             ont_password: Random.word(1, 32),
             loid: Random.word(1, 32),
@@ -55,3 +56,5 @@ Mock.mock(/\/gponont_mgmt\?form=autofind&port_id=\d+/, "get", ({ url }) => {
 Mock.mock(/\/gponont_mgmt\?form=auth&port_id=\d+/, "post", "@BASESUCCESS");
 Mock.mock("/gponont_mgmt?form=auth", "post", "@BASESUCCESS");
 Mock.post("/gponont_mgmt?form=autofind");
+
+Mock.post(/\/gponont_mgmt\?form=multiauth&port_id=\d/);
