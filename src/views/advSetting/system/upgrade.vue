@@ -69,7 +69,7 @@
         </el-card>
         <div v-show="showLoading" class="el-loading-mask is-fullscreen" style="min-height: 500px;">
             <div class="nms-dialog-container">
-                <span>loading...</span>
+                <span>{{ $lang('upgrade_tips') }}</span>
                 <el-progress
                     :text-inside="true"
                     :stroke-width="22"
