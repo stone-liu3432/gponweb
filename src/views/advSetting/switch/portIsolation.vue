@@ -157,7 +157,7 @@ export default {
                     };
                     this.postData(url, post_params)
                         .then(_ => {
-                            this.getData();
+                            this.getPortGroup();
                         })
                         .catch(_ => {});
                     this.dialogVisible = false;
