@@ -46,7 +46,9 @@ router.beforeEach((to, from, next) => {
 // 路由跳转完成后缓存当前页的path，用于刷新页面后恢复
 router.afterEach((to, from) => {
     const path = to.path.slice(1),
-        isNav = store.state.navMenu.some((item) => item.name === path),
+        isNav = store.state.navMenu.some((item) =>
+            new RegExp("^" + item.name).test(path)
+        ),
         adv = store.state.advMenu;
     let isAdv = false;
     if (!isNav && path !== "main" && path !== "login") {
