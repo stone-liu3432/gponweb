@@ -2,64 +2,80 @@
     <div>
         <page-header type="pon" :portid="pid" :onuid="oid" hasOnu @port-change="portChange">
             <template slot="title">{{ $lang('onu_basic_info') }}</template>
+            <template slot="content">
+                <el-button
+                    type="primary"
+                    size="small"
+                    style="margin-left: 30px;"
+                    @click="refreshData"
+                >{{ $lang('refresh') }}</el-button>
+            </template>
         </page-header>
-        <template v-if="ont_id !== 0xffff">
-            <div style="margin: 12px 0;">
-                <el-button
-                    type="primary"
-                    size="small"
-                    @click="changeState"
-                >{{ $lang('switch', 'ont','state') }}</el-button>
-                <el-button
-                    type="primary"
-                    size="small"
-                    style="margin-left: 30px;"
-                    @click="reboot"
-                >{{ $lang('reboot', 'ont') }}</el-button>
-                <el-button
-                    type="primary"
-                    size="small"
-                    style="margin-left: 30px;"
-                    @click="setInfo"
-                >{{ $lang('config', 'desc') }}</el-button>
-            </div>
-            <el-row :gutter="30" style="width: 1030px;">
-                <el-col :span="12">
-                    <nms-panel
-                        :data="baseInfo"
-                        :excludes="['identifier']"
-                        :contentRender="contentRender"
-                        border
-                        v-if="Object.keys(baseInfo).length"
-                    >
-                        <span slot="title">{{ $lang('ont', 'basic', 'info') }}</span>
-                    </nms-panel>
-                </el-col>
-                <el-col :span="12">
-                    <div>
+        <el-tabs v-model="activeName" type="card" v-if="ont_id !== 0xffff">
+            <el-tab-pane :label="$lang('onu_basic_info')" name="basic_info">
+                <div style="margin: 12px 0;">
+                    <el-button
+                        type="primary"
+                        size="small"
+                        @click="changeState"
+                    >{{ $lang('switch', 'ont','state') }}</el-button>
+                    <el-button
+                        type="primary"
+                        size="small"
+                        style="margin-left: 30px;"
+                        @click="reboot"
+                    >{{ $lang('reboot', 'ont') }}</el-button>
+                    <el-button
+                        type="primary"
+                        size="small"
+                        style="margin-left: 30px;"
+                        @click="setInfo"
+                    >{{ $lang('config', 'desc') }}</el-button>
+                </div>
+                <el-row :gutter="30" style="width: 1030px;">
+                    <el-col :span="12">
                         <nms-panel
-                            :data="versionInfo"
+                            :data="baseInfo"
                             :excludes="['identifier']"
-                            border
-                            v-if="Object.keys(versionInfo).length"
-                        >
-                            <span slot="title">{{ $lang('version', 'info') }}</span>
-                        </nms-panel>
-                    </div>
-                    <div style="margin-top: 30px;">
-                        <nms-panel
-                            :data="portInfo"
-                            :excludes="['identifier']"
-                            border
                             :contentRender="contentRender"
-                            v-if="Object.keys(portInfo).length"
+                            border
+                            v-if="Object.keys(baseInfo).length"
                         >
-                            <span slot="title">{{ $lang('port', 'info') }}</span>
+                            <span slot="title">{{ $lang('ont', 'basic', 'info') }}</span>
                         </nms-panel>
-                    </div>
-                </el-col>
-            </el-row>
-        </template>
+                    </el-col>
+                    <el-col :span="12">
+                        <div>
+                            <nms-panel
+                                :data="versionInfo"
+                                :excludes="['identifier']"
+                                border
+                                v-if="Object.keys(versionInfo).length"
+                            >
+                                <span slot="title">{{ $lang('version', 'info') }}</span>
+                            </nms-panel>
+                        </div>
+                        <div style="margin-top: 30px;">
+                            <nms-panel
+                                :data="portInfo"
+                                :excludes="['identifier']"
+                                border
+                                :contentRender="contentRender"
+                                v-if="Object.keys(portInfo).length"
+                            >
+                                <span slot="title">{{ $lang('port', 'info') }}</span>
+                            </nms-panel>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-tab-pane>
+            <el-tab-pane :label="$lang('onu_optical_diagnose')" name="optical">
+                <ont-optical :data="opticalInfo"></ont-optical>
+            </el-tab-pane>
+            <el-tab-pane :label="$lang('onu_alarm')" name="alarm">
+                <ont-alarm :data="alarmList"></ont-alarm>
+            </el-tab-pane>
+        </el-tabs>
         <el-dialog :visible.sync="dialogVisible" append-to-body>
             <span slot="title">{{ $lang(('config')) }}</span>
             <ont-basic-form ref="ont-basic-info"></ont-basic-form>
@@ -73,7 +89,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isDef, isUndef } from "@/utils/common";
+import { isDef, isUndef, isArray, debounce } from "@/utils/common";
 import {
     ONT_AUTH_MODES,
     ONT_STATES,
@@ -82,11 +98,13 @@ import {
     ONT_CSTATES
 } from "@/utils/commonData";
 import ontBasicForm from "./ontBasicInfo/ontBasicForm";
+import ontOptical from "./ontBasicInfo/ontOptical";
+import ontAlarm from "./ontBasicInfo/ontAlarm";
 import postData from "@/mixin/postData";
 import rebootOnt from "@/mixin/onu/rebootOnt";
 export default {
     name: "ontBasicInfo",
-    components: { ontBasicForm },
+    components: { ontBasicForm, ontAlarm, ontOptical },
     computed: {
         ...mapGetters(["$lang"])
     },
@@ -133,7 +151,10 @@ export default {
                     return ONT_MSTATES[val];
                 }
             },
-            dialogVisible: false
+            dialogVisible: false,
+            activeName: "basic_info",
+            opticalInfo: {},
+            alarmList: []
         };
     },
     created() {
@@ -208,9 +229,7 @@ export default {
             }
             this.pid = 0;
             this.oid = 0xffff;
-            this.getBaseInfo(port_id, ont_id);
-            this.getPortInfo(port_id, ont_id);
-            this.getVersionInfo(port_id, ont_id);
+            this.getData();
         },
         reboot() {
             this.rebootOnt(this.baseInfo.identifier)
@@ -274,6 +293,68 @@ export default {
                     this.dialogVisible = false;
                 }
             });
+        },
+        refreshData() {
+            debounce(this.getData, 1000, this);
+        },
+        getOpticalInfo(port_id, ont_id) {
+            this.opticalInfo = {};
+            this.$http
+                .get(
+                    `/gponont_mgmt?form=ont_optical&port_id=${port_id}&ont_id=${ont_id}`
+                )
+                .then(res => {
+                    if (res.data.code === 1) {
+                        if (isDef(res.data.data)) {
+                            this.opticalInfo = res.data.data;
+                        }
+                    }
+                })
+                .catch(err => {});
+        },
+        getAlarmList(port_id, ont_id) {
+            this.alarmList = [];
+            this.$http
+                .get(
+                    `/gponont_mgmt?form=ont_alarm&port_id=${port_id}&ont_id=${ont_id}`
+                )
+                .then(res => {
+                    if (res.data.code === 1) {
+                        if (isArray(res.data.data)) {
+                            this.alarmList = res.data.data;
+                        }
+                    }
+                })
+                .catch(err => {});
+        },
+        getData() {
+            switch (this.activeName) {
+                case "basic_info": {
+                    if (this.port_id && this.ont_id !== "0xffff") {
+                        this.getBaseInfo(this.port_id, this.ont_id);
+                        this.getPortInfo(this.port_id, this.ont_id);
+                        this.getVersionInfo(this.port_id, this.ont_id);
+                    }
+                    break;
+                }
+                case "optical": {
+                    if (this.port_id && this.ont_id !== "0xffff") {
+                        this.getOpticalInfo(this.port_id, this.ont_id);
+                    }
+                    break;
+                }
+                case "alarm": {
+                    if (this.port_id && this.ont_id !== "0xffff") {
+                        this.getAlarmList(this.port_id, this.ont_id);
+                    }
+                    break;
+                }
+            }
+        }
+    },
+    watch: {
+        activeName() {
+            this.getData();
         }
     }
 };
