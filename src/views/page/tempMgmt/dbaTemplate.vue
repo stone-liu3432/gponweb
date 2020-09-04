@@ -1,5 +1,11 @@
 <template>
     <div>
+        <nms-filter
+            style="margin-left: 10px;"
+            :data="dbaProfiles"
+            :primary="filterable"
+            @change="dataChange"
+        ></nms-filter>
         <el-table :data="dbaTable" border stripe>
             <el-table-column prop="profname" :label="$lang('profname')"></el-table-column>
             <el-table-column prop="profid" :label="$lang('profid')"></el-table-column>
@@ -49,7 +55,7 @@
             :page-sizes="[10, 20, 30, 50]"
             :page-size.sync="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="dbaProfiles.length"
+            :total="filterableList.length"
             hide-on-single-page
         ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" width="500px">
@@ -89,7 +95,31 @@ export default {
         ...mapGetters(["$lang"]),
         dbaTable() {
             const start = (this.currentPage - 1) * this.pageSize;
-            return this.dbaProfiles.slice(start, start + this.pageSize);
+            return this.filterableList.slice(start, start + this.pageSize);
+        },
+        filterable() {
+            return [
+                {
+                    prop: "profid",
+                    value: 0,
+                    label: this.$lang("profid")
+                },
+                {
+                    prop: "profname",
+                    value: 1,
+                    label: this.$lang("profname")
+                },
+                {
+                    prop: "type",
+                    value: 2,
+                    label: this.$lang("type"),
+                    type: "select",
+                    secondaryData: Object.keys(this.types).map(key => ({
+                        value: Number(key),
+                        label: this.types[key]
+                    }))
+                }
+            ];
         }
     },
     inject: ["updateNavScrollbar"],
@@ -118,7 +148,8 @@ export default {
             currentPage: 1,
             pageSize: 10,
             bindVisible: false,
-            bindingInfo: []
+            bindingInfo: [],
+            filterableList: []
         };
     },
     created() {
@@ -244,6 +275,9 @@ export default {
                 .finally(_ => {
                     loading.close();
                 });
+        },
+        dataChange(data) {
+            this.filterableList = data;
         }
     }
 };
