@@ -1,10 +1,10 @@
 <template>
     <div>
         <el-form label-width="140px" :model="form" :rules="rules" ref="srv-form">
-            <el-form-item :label="$lang('profname')" prop="profname">
+            <el-form-item :label="$lang('profname')" prop="profname" key="profname">
                 <el-input style="width: 200px;" v-model="form.profname"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('profid')" prop="profid">
+            <el-form-item :label="$lang('profid')" prop="profid" key="profid">
                 <el-input
                     style="width: 200px;"
                     v-model.number="form.profid"
@@ -16,7 +16,7 @@
                     :disabled="type === 'set'"
                 >{{ $lang('auto_assign') }}</el-checkbox>
             </el-form-item>
-            <el-form-item :label="$lang('ont_ethport')" prop="ont_ethport">
+            <el-form-item :label="$lang('ont_ethport')" prop="ont_ethport" key="ont_ethport">
                 <el-input
                     style="width: 200px;"
                     v-model.number="form.ont_ethport"
@@ -27,7 +27,7 @@
                     style="margin-left: 30px;"
                 >{{ $lang('auto_assign') }}</el-checkbox>
             </el-form-item>
-            <el-form-item :label="$lang('ont_potsport')" prop="ont_potsport">
+            <el-form-item :label="$lang('ont_potsport')" prop="ont_potsport" key="ont_potsport">
                 <el-input
                     style="width: 200px;"
                     v-model.number="form.ont_potsport"
@@ -38,67 +38,76 @@
                     style="margin-left: 30px;"
                 >{{ $lang('auto_assign') }}</el-checkbox>
             </el-form-item>
-            <el-form-item :label="$lang('ont_catvport')" prop="ont_catvport">
+            <el-form-item :label="$lang('ont_catvport')" prop="ont_catvport" key="ont_catvport">
                 <el-input style="width: 200px;" v-model.number="form.ont_catvport"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('native_vlan_flag')" prop="native_vlan_flag">
+            <el-form-item
+                :label="$lang('native_vlan_flag')"
+                prop="native_vlan_flag"
+                key="native_vlan_flag"
+            >
                 <el-select v-model.number="form.native_vlan_flag">
                     <el-option :value="0" :label="$lang('need')"></el-option>
                     <el-option :value="1" :label="$lang('not_need')"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('portvlan')" prop="portvlan">
-                <el-popover placement="right" width="660" trigger="click">
-                    <el-table :data="portvlan" border>
-                        <el-table-column :label="$lang('uniport')" prop="uniport">
-                            <template
-                                slot-scope="scope"
-                            >{{ scope.row.unitype === 0 ? scope.row.uniport : '-' }}</template>
-                        </el-table-column>
-                        <el-table-column :label="$lang('unitype')" prop="unitype">
-                            <template slot-scope="scope">{{ UNI_TYPES[scope.row.unitype] }}</template>
-                        </el-table-column>
-                        <el-table-column :label="$lang('mode')">
-                            <template slot-scope="scope">{{ VLAN_MODES[scope.row.mode] }}</template>
-                        </el-table-column>
-                        <el-table-column :label="$lang('svlanid')" prop="svlanid" width="70"></el-table-column>
-                        <el-table-column :label="$lang('svlanpri')" prop="svlanpri" width="70">
-                            <template
-                                slot-scope="scope"
-                            >{{ scope.row.svlanpri === 8 ? '-' : scope.row.svlanpri }}</template>
-                        </el-table-column>
-                        <el-table-column :label="$lang('cvlanid')" prop="cvlanid" width="70">
-                            <template
-                                slot-scope="scope"
-                            >{{ scope.row.cvlanid === 4096 ? 'untag' : scope.row.cvlanid }}</template>
-                        </el-table-column>
-                        <el-table-column :label="$lang('cvlanpri')" prop="cvlanpri" width="70">
-                            <template
-                                slot-scope="scope"
-                            >{{ scope.row.cvlanpri === 8 ? '-' : scope.row.cvlanpri }}</template>
-                        </el-table-column>
-                        <el-table-column :label="$lang('config')">
-                            <template slot-scope="scope">
-                                <el-popconfirm
-                                    :confirmButtonText="$lang('apply')"
-                                    :cancelButtonText="$lang('cancel')"
-                                    :title="$lang('if_sure', 'delete')"
-                                    @onConfirm="deleteItem(scope.row)"
-                                >
-                                    <el-button slot="reference" type="text">{{ $lang('delete') }}</el-button>
-                                </el-popconfirm>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                    <el-button slot="reference" size="small">{{ $lang('show', 'is_exists') }}</el-button>
-                </el-popover>
-                <el-button
-                    type="primary"
-                    size="small"
-                    style="margin-left: 30px;"
-                    @click="openDialog"
-                >{{ $lang('add') }}</el-button>
-            </el-form-item>
+            <template v-if="type === 'add'">
+                <el-form-item :label="$lang('portvlan')" prop="portvlan" key="portvlan">
+                    <el-popover placement="right" width="660" trigger="click">
+                        <el-table :data="portvlan" border>
+                            <el-table-column :label="$lang('uniport')" prop="uniport">
+                                <template
+                                    slot-scope="scope"
+                                >{{ scope.row.unitype === 0 ? scope.row.uniport : '-' }}</template>
+                            </el-table-column>
+                            <el-table-column :label="$lang('unitype')" prop="unitype">
+                                <template slot-scope="scope">{{ UNI_TYPES[scope.row.unitype] }}</template>
+                            </el-table-column>
+                            <el-table-column :label="$lang('mode')">
+                                <template slot-scope="scope">{{ VLAN_MODES[scope.row.mode] }}</template>
+                            </el-table-column>
+                            <el-table-column :label="$lang('svlanid')" prop="svlanid" width="70"></el-table-column>
+                            <el-table-column :label="$lang('svlanpri')" prop="svlanpri" width="70">
+                                <template
+                                    slot-scope="scope"
+                                >{{ scope.row.svlanpri === 8 ? '-' : scope.row.svlanpri }}</template>
+                            </el-table-column>
+                            <el-table-column :label="$lang('cvlanid')" prop="cvlanid" width="70">
+                                <template
+                                    slot-scope="scope"
+                                >{{ scope.row.cvlanid === 4096 ? 'untag' : scope.row.cvlanid }}</template>
+                            </el-table-column>
+                            <el-table-column :label="$lang('cvlanpri')" prop="cvlanpri" width="70">
+                                <template
+                                    slot-scope="scope"
+                                >{{ scope.row.cvlanpri === 8 ? '-' : scope.row.cvlanpri }}</template>
+                            </el-table-column>
+                            <el-table-column :label="$lang('config')">
+                                <template slot-scope="scope">
+                                    <el-popconfirm
+                                        :confirmButtonText="$lang('apply')"
+                                        :cancelButtonText="$lang('cancel')"
+                                        :title="$lang('if_sure', 'delete')"
+                                        @onConfirm="deleteItem(scope.row)"
+                                    >
+                                        <el-button
+                                            slot="reference"
+                                            type="text"
+                                        >{{ $lang('delete') }}</el-button>
+                                    </el-popconfirm>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <el-button slot="reference" size="small">{{ $lang('show', 'is_exists') }}</el-button>
+                    </el-popover>
+                    <el-button
+                        type="primary"
+                        size="small"
+                        style="margin-left: 30px;"
+                        @click="openDialog"
+                    >{{ $lang('add') }}</el-button>
+                </el-form-item>
+            </template>
         </el-form>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="500px">
             <portvlan-form :data="portvlan" ref="portvlan-form"></portvlan-form>
@@ -193,7 +202,7 @@ export default {
                     this.form.ont_ethport = "";
                     this.autoAssignEth = true;
                 }
-                if (this.form.autoAssignPots === 0xff) {
+                if (this.form.ont_potsport === 0xff) {
                     this.form.ont_potsport = "";
                     this.autoAssignPots = true;
                 }

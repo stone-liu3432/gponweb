@@ -1,19 +1,23 @@
 <template>
     <el-form label-width="120px" ref="portvlan-form" :model="form" :rules="rules">
-        <el-form-item :label="$lang('uniport')" prop="uniport">
-            <el-input v-model.number="form.uniport"></el-input>
-        </el-form-item>
         <el-form-item :label="$lang('unitype')" prop="unitype">
             <el-select v-model.number="form.unitype">
                 <template v-for="(item, index) in UNI_TYPES">
-                    <el-option :value="index >>> 0" :label="item" :disabled="disabledIphost(item)"></el-option>
+                    <el-option
+                        :value="Number(index)"
+                        :label="item"
+                        :disabled="disabledIphost(item)"
+                    ></el-option>
                 </template>
             </el-select>
+        </el-form-item>
+        <el-form-item :label="$lang('uniport')" prop="uniport">
+            <el-input v-model.number="form.uniport"></el-input>
         </el-form-item>
         <el-form-item :label="$lang('mode')" prop="mode">
             <el-select v-model.number="form.mode">
                 <template v-for="(item, index) in VLAN_MODES">
-                    <el-option :value="index >>> 0" :label="item" :disabled="(index >>> 0) === 2"></el-option>
+                    <el-option :value="Number(index)" :label="item"></el-option>
                 </template>
             </el-select>
         </el-form-item>
@@ -38,7 +42,10 @@
             >untag</el-checkbox>
         </el-form-item>
         <el-form-item :label="$lang('cvlanpri')" prop="cvlanpri">
-            <el-select v-model.number="form.cvlanpri" :disabled="form.mode === 1">
+            <el-select
+                v-model.number="form.cvlanpri"
+                :disabled="form.mode === 1 || form.mode === 2"
+            >
                 <el-option :value="0"></el-option>
                 <template v-for="i in 7">
                     <el-option :value="i"></el-option>
@@ -59,7 +66,11 @@ export default {
     computed: {
         ...mapGetters(["$lang", "validateMsg"]),
         disabledCvlan() {
-            return this.autoAssignCvlan || this.form.mode === 1;
+            return (
+                this.autoAssignCvlan ||
+                this.form.mode === 1 ||
+                this.form.mode === 2
+            );
         }
     },
     inject: ["validateVlan"],
@@ -122,38 +133,7 @@ export default {
             }
         },
         validate(fn) {
-            if (this.dialogType !== "set") {
-                if (
-                    this.data.some(
-                        item =>
-                            item.uniport === this.form.uniport &&
-                            item.unitype === this.form.unitype &&
-                            item.svlanid === this.form.svlanid &&
-                            item.svlanpri === this.form.svlanpri
-                    )
-                ) {
-                    return this.$message.error(
-                        `${this.$lang("duplicate_param")}: ${this.$lang(
-                            "svlanid"
-                        )}`
-                    );
-                }
-                if (
-                    this.data.some(
-                        item =>
-                            item.uniport === this.form.uniport &&
-                            item.unitype === this.form.unitype &&
-                            item.cvlanid === this.form.cvlanid &&
-                            item.cvlanpri === this.form.cvlanpri
-                    )
-                ) {
-                    return this.$message.error(
-                        `${this.$lang("duplicate_param")}: ${this.$lang(
-                            "cvlanid"
-                        )}`
-                    );
-                }
-            } else {
+            if (this.dialogType === "set") {
                 if (
                     Object.keys(this.dialogData).every(
                         key => this.dialogData[key] === this.form[key]
@@ -173,14 +153,22 @@ export default {
             });
         },
         validatePort(rule, val, cb) {
-            if (this.form.unitype === 1) {
+            const data = this.data.filter(
+                item =>
+                    item.uniport === Number(val) &&
+                    item.unitype === this.form.unitype
+            );
+            if (data.length >= 8) {
+                return cb(new Error(this.$lang("uniport_vlan_limit")));
+            }
+            if (this.form.unitype === 1 && this.form.mode !== 2) {
                 if (!regRange(val, 0, 2)) {
                     return cb(new Error(this.validateMsg("inputRange", 0, 2)));
                 }
                 return cb();
             }
-            if (!regRange(val, 0, 8)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 8)));
+            if (!regRange(val, 1, 8)) {
+                return cb(new Error(this.validateMsg("inputRange", 1, 8)));
             }
             cb();
         },
@@ -188,16 +176,51 @@ export default {
             if (this.form.mode === 1) {
                 return cb();
             }
+            if (
+                this.form.mode !== 2 &&
+                this.data.some(
+                    item =>
+                        item.uniport === this.form.uniport &&
+                        item.unitype === this.form.unitype &&
+                        item.svlanid === this.form.svlanid &&
+                        item.svlanpri === this.form.svlanpri
+                )
+            ) {
+                return cb(
+                    new Error(
+                        `${this.$lang("duplicate_param")}: ${this.$lang(
+                            "svlanid"
+                        )}`
+                    )
+                );
+            }
             return this.validateVlan(rule, val, cb);
         },
         validateCvlan(rule, val, cb) {
-            if (this.form.mode === 1) {
+            if (this.form.mode === 1 || this.form.mode === 2) {
                 return cb();
             }
             if (this.form.mode === 4) {
                 if (val === 4096) {
                     return cb();
                 }
+            }
+            if (
+                this.data.some(
+                    item =>
+                        item.uniport === this.form.uniport &&
+                        item.unitype === this.form.unitype &&
+                        item.cvlanid === this.form.cvlanid &&
+                        item.cvlanpri === this.form.cvlanpri
+                )
+            ) {
+                return cb(
+                    new Error(
+                        `${this.$lang("duplicate_param")}: ${this.$lang(
+                            "cvlanid"
+                        )}`
+                    )
+                );
             }
             return this.validateVlan(rule, val, cb);
         },
@@ -224,6 +247,10 @@ export default {
                     const el = this.$refs["portvlan-form"];
                     el && el.clearValidate("cvlanid");
                 }
+            } else if (this.form.mode === 2) {
+                this.form.cvlanid = "";
+                const el = this.$refs["portvlan-form"];
+                el && el.clearValidate(["cvlanid"]);
             } else {
                 this.autoAssignCvlan = false;
             }
