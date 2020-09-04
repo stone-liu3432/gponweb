@@ -73,6 +73,9 @@ export default {
             this.updateNavScrollbar();
         });
     },
+    created() {
+        this.getPon();
+    },
     mounted() {
         // 定时刷新数据
         const interval = setInterval(_ => {
