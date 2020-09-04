@@ -94,3 +94,37 @@ Mock.mock(/\/gponont_mgmt\?form=resource&port_id=\d+/, "get", ({ url }) => {
         },
     };
 });
+
+Mock.mock(
+    /\/gponont_mgmt\?form=ont_alarm&port_id=\d+&ont_id=\d+/,
+    "get",
+    () => ({
+        code: 1,
+        message: "success",
+        data: Array.from({ length: Random.range(0, 255) }).map(() =>
+            Random.word(1, 128)
+        ),
+    })
+);
+
+Mock.mock(
+    /\/gponont_mgmt\?form=ont_optical&port_id=\d+&ont_id=\d+/,
+    "get",
+    ({ url }) => {
+        const port_id = url.match(/(?<=port_id=)\d+/) >>> 0,
+            ont_id = url.match(/(?<=ont_id=)\d+/) >>> 0;
+        return {
+            code: 1,
+            message: "success",
+            data: {
+                port_id,
+                ont_id,
+                work_temprature: `${Random.range(1, 50)} C`,
+                work_voltage: `${Random.range(1, 50)} V`,
+                transmit_bias: `${Random.range(1, 50)} mA`,
+                transmit_power: `-${Random.range(1, 50)} dBm`,
+                receive_power: `-${Random.range(1, 50)} dBm`,
+            },
+        };
+    }
+);
