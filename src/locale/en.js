@@ -15,7 +15,7 @@ var en = {
     firmware: "Firmware",
     system: "System",
     time: "Time Setting",
-    pon_mgmt: "PON Port",
+    pon_mgmt: "PON Management",
     onu_allow: "ONT Table",
     onu_deny: "ONT Deny List",
     sla_cfg: "Bandwidth",
@@ -23,7 +23,7 @@ var en = {
     onu_mgmt: "ONT Device",
     onu_basic_info: "ONT Basic Info",
     onu_port_cfg: "ONT Port Config",
-    swport_mgmt: "Switch Port",
+    swport_mgmt: "Port Management",
     port_info: "Port Info",
     perf_info: "Performance",
     port_cfg: "Port Config",
@@ -1066,7 +1066,10 @@ var en = {
         "Batch addition is only applicable to SN certified ONT, please add separately for LOID registration.",
     trx_type: "Transceiver",
     least_tcont_tips: "At least one TCONT is required",
+    least_gem_tips: "At least one GEM Port is required",
     display_type: "Display Type",
+    upgrade_tips:
+        "The device is being upgraded, please be patient, do not refresh the web page or restart the device.",
 };
 
 export default en;

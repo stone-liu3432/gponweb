@@ -1040,7 +1040,9 @@ var zh = {
         "批量添加仅适用于SN认证的ONT，LOID注册的请单独添加。",
     trx_type: "PON模块",
     least_tcont_tips: "最少需要有一条TCONT",
+    least_gem_tips: "最少需要有一条GEM Port",
     display_type: "显示类型",
+    upgrade_tips: "设备正在升级中，请耐心等待，不要刷新网页或重启设备。",
 };
 
 export default zh;
