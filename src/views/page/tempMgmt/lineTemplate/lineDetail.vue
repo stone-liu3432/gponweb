@@ -36,44 +36,123 @@
                 >{{ $lang('config') }}</el-button>
             </el-col>
         </el-row>
+        <div style="margin: 20px 0;">
+            <el-button
+                type="primary"
+                size="small"
+                @click="openDialog('tcont')"
+            >{{ $lang('add', 'tcont') }}</el-button>
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px;"
+                @click="openDialog('gem')"
+            >{{ $lang('add', 'gem') }}</el-button>
+            <template v-if="modifyFlags">
+                <el-button
+                    type="primary"
+                    size="small"
+                    style="margin-left: 30px;"
+                    @click="submitModify"
+                >{{ $lang('save_all_changes') }}</el-button>
+            </template>
+        </div>
         <template v-if="showPagination">
             <el-tabs v-model="activeName" type="card">
                 <el-tab-pane :label="$lang('tcont')" name="tcont">
-                    <line-tcont-table :data="tcont"></line-tcont-table>
+                    <line-tcont-table :data="tcont" @change-data="changeData"></line-tcont-table>
                 </el-tab-pane>
                 <el-tab-pane :label="$lang('gem')" name="gem">
-                    <line-gem-table :data="gem"></line-gem-table>
+                    <line-gem-table :data="gem" @add-mapping="addMapping" @change-data="changeData"></line-gem-table>
                 </el-tab-pane>
             </el-tabs>
         </template>
         <template v-else>
             <h3>{{ $lang('tcont') }}</h3>
-            <line-tcont-table :data="tcont"></line-tcont-table>
+            <line-tcont-table :data="tcont" @change-data="changeData"></line-tcont-table>
             <h3>{{ $lang('gem') }}</h3>
-            <line-gem-table :data="gem"></line-gem-table>
+            <line-gem-table :data="gem" @add-mapping="addMapping" @change-data="changeData"></line-gem-table>
         </template>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
+            <div slot="title">{{ $lang(dialogType) }}</div>
+            <template v-if="dialogType === 'set'">
+                <line-form
+                    :lineData="data"
+                    :dbaData="dbaData"
+                    :lineTable="lineTable"
+                    :type="dialogType"
+                    ref="line-form"
+                ></line-form>
+            </template>
+            <template v-else>
+                <add-or-set-form
+                    :type="dialogType"
+                    :dbaData="dbaData"
+                    :tconts="tcont"
+                    :existsData="existsData"
+                    ref="add-or-set-form"
+                ></add-or-set-form>
+            </template>
+            <div slot="footer">
+                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm(dialogType === 'set' ? 'line-form' : 'add-or-set-form')"
+                >{{ $lang('apply') }}</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import { isFunction } from "@/utils/common";
+import addOrSetForm from "./addOrSetForm";
 import lineTcontTable from "./lineTcontTable";
 import lineGemTable from "./lineGemTable";
+import lineForm from "./lineForm";
 export default {
     name: "lineDetail",
-    components: { lineGemTable, lineTcontTable },
+    components: { lineGemTable, lineTcontTable, addOrSetForm, lineForm },
     computed: {
         ...mapGetters(["$lang"]),
         tcont() {
-            return this.data.tcont || [];
+            return this.data.tcont;
         },
         gem() {
-            return this.data.gem || [];
+            return this.data.gem;
+        },
+        // 防止重复的index 或 id
+        existsData() {
+            const TYPES = {
+                tcont() {
+                    return this.tcont;
+                },
+                gem() {
+                    return this.gem;
+                },
+                mapping() {
+                    return this.gem;
+                },
+                addMapping() {
+                    return this.gem;
+                }
+            };
+            if (isFunction(TYPES[this.dialogType])) {
+                return TYPES[this.dialogType].call(this);
+            }
+            return [];
         }
     },
     props: {
         data: {
             type: Object
+        },
+        dbaData: {
+            type: Array
+        },
+        lineTable: {
+            type: Array
         }
     },
     data() {
@@ -81,12 +160,122 @@ export default {
             showPagination: false,
             activeName: "tcont",
             types: { 1: "EPON", 2: "GPON" },
-            mappingModes: { 1: "VLAN", 2: "Priority", 3: "TCI" }
+            mappingModes: { 1: "VLAN", 2: "Priority", 3: "TCI" },
+            dialogVisible: false,
+            dialogType: "",
+            parentGem: {},
+            modifyFlags: false
         };
     },
     methods: {
         setProfile(data) {
-            this.$emit("set-profile", data);
+            // this.$emit("set-profile", data);
+            this.dialogType = "set";
+            this.dialogVisible = true;
+            this.$nextTick(_ => {
+                this.$refs["line-form"].init();
+            });
+        },
+        openDialog(type, data) {
+            this.dialogType = type;
+            // 添加tcont并且无dba模板
+            if (type === "tcont" && !this.dbaData.length) {
+                return this.$message.error(this.$lang("no_dba_prf"));
+            }
+            // 添加gem并且无tcont模板
+            if (type === "gem" && !this.tcont.length) {
+                return this.$message.error(this.$lang("no_tcont_info"));
+            }
+            if (type === "addMapping") {
+                this.parentGem = data;
+                const mappings = data.mapping || [];
+                if (mappings.length) {
+                    const map = mappings[0];
+                    if (map.vlan_id === 0xffff) {
+                        return this.$message.error(this.$lang("untag_tips"));
+                    }
+                }
+            }
+            this.dialogVisible = true;
+            this.$nextTick(_ => {
+                this.$refs["add-or-set-form"].init(data);
+            });
+        },
+        addMapping(type, data) {
+            this.openDialog(type, data);
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((type, form) => {
+                if (type || form) {
+                    const ACTIONS = {
+                        tcont(data) {
+                            this.data.tcont.push({
+                                tcid: data.tcid,
+                                dba_profid: data.dba_profid,
+                                dba_profname: data.dba_profname
+                            });
+                            this.modifyFlags = true;
+                        },
+                        gem(data) {
+                            this.data.gem.push({
+                                gemindex: data.gemindex,
+                                tcontid: data.tcontid,
+                                mapping: [
+                                    {
+                                        mid: data.mid,
+                                        mode: data.mode,
+                                        vlan_id: Number(data.vlan_id),
+                                        vlan_pri: data.vlan_pri
+                                    }
+                                ]
+                            });
+                            this.modifyFlags = true;
+                        },
+                        addMapping(data) {
+                            this.parentGem.mapping.push({
+                                mid: data.mid,
+                                mode: data.mode,
+                                vlan_id: Number(data.vlan_id),
+                                vlan_pri: data.vlan_pri
+                            });
+                            this.modifyFlags = true;
+                        },
+                        set(data) {
+                            const KEYS_MAP = [
+                                "profname",
+                                "type",
+                                "mappingmode"
+                            ];
+                            KEYS_MAP.forEach(key => {
+                                if (this.data[key] !== data[key]) {
+                                    this.data[key] = data[key];
+                                    this.modifyFlags = true;
+                                }
+                            });
+                        }
+                    };
+                    if (isFunction(ACTIONS[this.dialogType])) {
+                        ACTIONS[this.dialogType].call(
+                            this,
+                            type === "set" ? form : type
+                        );
+                        this.dialogVisible = false;
+                    }
+                }
+            });
+        },
+        changeData() {
+            this.modifyFlags = true;
+        },
+        submitModify() {
+            if (this.data.tcont && !this.data.tcont.length) {
+                return this.$message.error(this.$lang("least_tcont_tips"));
+            }
+            if (this.data.gem && !this.data.gem.length) {
+                return this.$message.error(this.$lang("least_gem_tips"));
+            }
+            this.$emit("submit-modify", this.data);
+            this.modifyFlags = false;
         }
     },
     watch: {

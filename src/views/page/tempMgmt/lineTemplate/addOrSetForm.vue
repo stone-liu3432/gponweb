@@ -3,10 +3,10 @@
         <el-form :model="form" label-width="140px" :rules="rules" ref="add-line-profile-form">
             <!-- add tcont -->
             <template v-if="type === 'tcont'">
-                <el-form-item :label="$lang('tcid')" prop="tcid">
+                <el-form-item :label="$lang('tcid')" prop="tcid" key="tcid">
                     <el-input v-model.number="form.tcid"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dba_profname')" prop="dba_profname">
+                <el-form-item :label="$lang('dba_profname')" prop="dba_profname" key="dbaprofname">
                     <el-select v-model.number="form.dba_profid">
                         <template v-for="item in dbaData">
                             <el-option :label="item.profname" :value="item.profid"></el-option>
@@ -16,10 +16,10 @@
             </template>
             <!-- add gem -->
             <template v-if="type === 'gem'">
-                <el-form-item :label="$lang('gemindex')" prop="gemindex">
+                <el-form-item :label="$lang('gemindex')" prop="gemindex" key="gemindex">
                     <el-input v-model.number="form.gemindex"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('tcontid')" prop="tcontid">
+                <el-form-item :label="$lang('tcontid')" prop="tcontid" key="tcontid">
                     <el-select v-model.number="form.tcontid">
                         <template v-for="item in tconts">
                             <el-option :value="item.tcid"></el-option>
@@ -35,24 +35,27 @@
                             <!-- gem 下的 mapping 为 untag 模式时，禁止选取此 gem -->
                             <el-option
                                 :value="item.gemindex"
-                                :disabled="diabledOption(item.mapping)"
+                                :disabled="diabledOption(item.mapping || [])"
                             ></el-option>
                         </template>
                     </el-select>
                 </el-form-item>
             </template>
             <template v-if="type === 'mapping' || type === 'gem' || type === 'addMapping' ">
-                <el-form-item :label="$lang('mode')" prop="mode">
+                <el-form-item :label="$lang('mode')" prop="mode" key="mode">
                     <el-select v-model.number="form.mode" :disabled="disabledMode">
                         <template v-for="(item, index) in MAPPING_MODES">
                             <el-option :value="index >>> 0" :label="item"></el-option>
                         </template>
                     </el-select>
                 </el-form-item>
-                <el-form-item :label="$lang('vlan_id')" prop="vlan_id">
+                <el-form-item :label="$lang('mid')" prop="mid" key="mid">
+                    <el-input v-model.number="form.mid" style="width: 216px;"></el-input>
+                </el-form-item>
+                <el-form-item :label="$lang('vlan_id')" prop="vlan_id" key="vlan-id">
                     <el-input
                         v-model.number="form.vlan_id"
-                        style="width: 200px;"
+                        style="width: 216px;"
                         :disabled="disabledItem('vlan_id')"
                     ></el-input>
                     <el-checkbox
@@ -61,7 +64,7 @@
                         :disabled="disabledItem('untag')"
                     >untag</el-checkbox>
                 </el-form-item>
-                <el-form-item :label="$lang('vlan_pri')" prop="vlan_pri">
+                <el-form-item :label="$lang('vlan_pri')" prop="vlan_pri" key="vlan-pri">
                     <el-select v-model.number="form.vlan_pri" :disabled="disabledItem('vlan_pri')">
                         <el-option :value="0"></el-option>
                         <template v-for="i in 7">
@@ -77,7 +80,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { MAPPING_MODES } from "@/utils/commonData";
-import { isFunction } from "@/utils/common";
+import { isFunction, isArray } from "@/utils/common";
 import { regRange } from "@/utils/validator";
 export default {
     name: "addForm",
@@ -111,6 +114,7 @@ export default {
                 dba_profname: "",
                 gemindex: "",
                 tcontid: "",
+                mid: "",
                 mode: 1,
                 vlan_id: "",
                 vlan_pri: 0
@@ -133,6 +137,9 @@ export default {
                         validator: this.validateVlanid,
                         trigger: ["change", "blur"]
                     }
+                ],
+                mid: [
+                    { validator: this.validateMid, trigger: ["change", "blur"] }
                 ]
             },
             disabledMode: false,
@@ -140,12 +147,13 @@ export default {
         };
     },
     methods: {
-        init() {
+        init(row) {
             this.$refs["add-line-profile-form"].resetFields();
             this.autoAssignVlan = false;
             if (this.type === "tcont") {
                 // dbaData无项时，无法打开此dialog
                 this.form.dba_profid = this.dbaData[0]["profid"];
+                this.form.dba_profname = this.dbaData["0"]["profname"];
             }
             if (this.type === "gem") {
                 // tconts为空时，无法打开此dialog
@@ -162,7 +170,7 @@ export default {
                     }
                     return true;
                 })[0];
-                this.form.gemindex = data.gemindex;
+                this.form.gemindex = row ? row.gemindex : data.gemindex;
                 this.lockMode(data.mapping);
             }
         },
@@ -201,7 +209,7 @@ export default {
             }
             cb();
         },
-        validateGemindex(ruel, val, cb) {
+        validateGemindex(rule, val, cb) {
             if (this.existsData.some(item => item.gemindex === val)) {
                 return cb(
                     new Error(
@@ -267,11 +275,32 @@ export default {
         },
         // untag模式下，不允许多次添加 mapping
         diabledOption(node) {
-            if (node.length) {
+            if (node && node.length) {
                 const data = node[0];
                 return data.vlan_id === 0xffff;
             }
             return false;
+        },
+        validateMid(rule, val, cb) {
+            if (!regRange(val, 0, 7)) {
+                return cb(new Error(this.validateMsg("inputRange", 0, 7)));
+            }
+            const data = this.existsData.filter(
+                item => item.gemindex === this.form.gemindex
+            )[0];
+            if (data && isArray(data.mapping)) {
+                const flag = data.mapping.some(item => val === item.mid);
+                if (flag) {
+                    return cb(
+                        new Error(
+                            `${this.$lang("duplicate_param")}: ${this.$lang(
+                                "mid"
+                            )}`
+                        )
+                    );
+                }
+            }
+            cb();
         }
     },
     watch: {

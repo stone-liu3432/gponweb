@@ -1,5 +1,11 @@
 <template>
     <div>
+        <nms-filter
+            style="margin-left: 10px;"
+            :data="lineProfs"
+            :primary="filterable"
+            @change="dataChange"
+        ></nms-filter>
         <el-table :data="lineTable" border stripe>
             <el-table-column prop="profname" :label="$lang('profname')"></el-table-column>
             <el-table-column prop="profid" :label="$lang('profid')"></el-table-column>
@@ -35,7 +41,7 @@
             :page-sizes="[10, 20, 30, 50]"
             :page-size.sync="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="lineProfs.length"
+            :total="filterableList.length"
             hide-on-single-page
         ></el-pagination>
         <el-dialog :visible.sync="bindingVisible" width="800px">
@@ -55,8 +61,15 @@
             </el-table>
         </el-dialog>
         <!-- 详情 -->
-        <el-dialog :visible.sync="detailVisible" width="850px">
-            <line-detail :data="rowData" @set-profile="setProfile"></line-detail>
+        <el-dialog :visible.sync="detailVisible" width="900px" :before-close="beforeClose">
+            <line-detail
+                ref="line-detail"
+                :data="rowData"
+                :lineTable="lineTable"
+                :dbaData="dbaProfiles"
+                @set-profile="setProfile"
+                @submit-modify="submitModify"
+            ></line-detail>
         </el-dialog>
         <!-- 添加和设置 -->
         <el-dialog
@@ -97,7 +110,21 @@ export default {
         ...mapState(["lineProfs"]),
         lineTable() {
             const start = (this.currentPage - 1) * this.pageSize;
-            return this.lineProfs.slice(start, start + this.pageSize);
+            return this.filterableList.slice(start, start + this.pageSize);
+        },
+        filterable() {
+            return [
+                {
+                    prop: "profid",
+                    value: 0,
+                    label: this.$lang("profid")
+                },
+                {
+                    prop: "profname",
+                    value: 1,
+                    label: this.$lang("profname")
+                }
+            ];
         }
     },
     mixins: [postData],
@@ -126,7 +153,8 @@ export default {
             dialogData: {},
             currentPage: 1,
             pageSize: 10,
-            bindingDevices: []
+            bindingDevices: [],
+            filterableList: []
         };
     },
     created() {
@@ -143,7 +171,14 @@ export default {
                 .then(res => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
-                            this.rowData = res.data.data;
+                            const rowData = res.data.data;
+                            if (!isArray(rowData.tcont)) {
+                                rowData.tcont = [];
+                            }
+                            if (!isArray(rowData.gem)) {
+                                rowData.gem = [];
+                            }
+                            this.rowData = rowData;
                             this.$nextTick(_ => {
                                 this.detailVisible = true;
                             });
@@ -174,13 +209,23 @@ export default {
             this.openDialog("set", data);
         },
         submitForm(formName) {
-            this.$refs[formName].validate(formData => {
+            this.$refs[formName].validate((type, formData) => {
                 if (formData) {
+                    if (formData.tcont && !formData.tcont.length) {
+                        return this.$message.error(
+                            this.$lang("least_tcont_tips")
+                        );
+                    }
+                    if (formData.gem && !formData.gem.length) {
+                        return this.$message.error(
+                            this.$lang("least_gem_tips")
+                        );
+                    }
                     const post_params = {
-                        method: "add",
+                        method: type,
                         param: {
                             profname: formData.profname,
-                            profid: formData.profid,
+                            profid: Number(formData.profid),
                             type: formData.type,
                             mappingmode: formData.mappingmode,
                             tcont: formData.tcont,
@@ -289,6 +334,36 @@ export default {
                     return item.toString();
                 })
                 .join(",");
+        },
+        submitModify(data) {
+            this.postData("/lineprofile", {
+                method: "set",
+                param: data
+            })
+                .then(_ => {
+                    this.getLineProfs();
+                })
+                .catch(_ => {})
+                .finally(_ => {
+                    this.detailVisible = false;
+                });
+        },
+        beforeClose(done) {
+            const comp = this.$refs["line-detail"];
+            if (comp.modifyFlags) {
+                this.$confirm(this.$lang("unsave_info"))
+                    .then(_ => {
+                        comp.submitModify();
+                    })
+                    .catch(_ => {
+                        done();
+                    });
+            } else {
+                done();
+            }
+        },
+        dataChange(data) {
+            this.filterableList = data;
         }
     }
 };
