@@ -1,5 +1,11 @@
 <template>
     <div>
+        <nms-filter
+            style="margin-left: 10px;"
+            :data="srvProfs"
+            :primary="filterable"
+            @change="dataChange"
+        ></nms-filter>
         <el-table :data="srvTable" border>
             <el-table-column prop="profname" :label="$lang('profname')"></el-table-column>
             <el-table-column prop="profid" :label="$lang('profid')"></el-table-column>
@@ -30,7 +36,7 @@
             :page-sizes="[10, 20, 30, 50]"
             :page-size.sync="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="srvProfs.length"
+            :total="filterableList.length"
             hide-on-single-page
         ></el-pagination>
         <el-dialog
@@ -38,8 +44,9 @@
             width="850px"
             :close-on-press-escape="false"
             :close-on-click-modal="false"
+            :before-close="beforeClose"
         >
-            <srv-detail :data="detail" @set-profile="setProfile"></srv-detail>
+            <srv-detail :data="detail" ref="srv-detail" @set-profile="setProfile"></srv-detail>
         </el-dialog>
         <el-dialog :visible.sync="setVisible" width="640px" append-to-body>
             <template slot="title">{{ $lang(dialogType) }}</template>
@@ -67,7 +74,21 @@ export default {
         ...mapGetters(["$lang"]),
         srvTable() {
             const start = (this.currentPage - 1) * this.pageSize;
-            return this.srvProfs.slice(start, start + this.pageSize);
+            return this.filterableList.slice(start, start + this.pageSize);
+        },
+        filterable() {
+            return [
+                {
+                    prop: "profid",
+                    value: 0,
+                    label: this.$lang("profid")
+                },
+                {
+                    prop: "profname",
+                    value: 1,
+                    label: this.$lang("profname")
+                }
+            ];
         }
     },
     inject: ["updateNavScrollbar"],
@@ -84,7 +105,8 @@ export default {
             dialogType: "",
             dialogData: {},
             currentPage: 1,
-            pageSize: 10
+            pageSize: 10,
+            filterableList: []
         };
     },
     created() {
@@ -106,7 +128,11 @@ export default {
                     loading = null;
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
-                            this.detail = res.data.data;
+                            const detail = res.data.data;
+                            if (!detail.portvlan) {
+                                detail.portvlan = [];
+                            }
+                            this.detail = detail;
                             this.$nextTick(_ => {
                                 this.detailVisible = true;
                             });
@@ -148,7 +174,12 @@ export default {
             });
         },
         setProfile(data) {
-            this.openDialog("set", data);
+            this.postProfile(data)
+                .then(_ => {
+                    this.getSrvProfs();
+                    this.detailVisible = false;
+                })
+                .catch(_ => {});
         },
         submitForm(formName) {
             this.$refs[formName].validate(formData => {
@@ -165,7 +196,7 @@ export default {
                             portvlan: formData.portvlan
                         }
                     };
-                    this.postData("/srvprofile", post_param)
+                    this.postProfile(post_param)
                         .then(_ => {
                             this.getSrvProfs();
                             this.setVisible = false;
@@ -173,6 +204,26 @@ export default {
                         .catch(_ => {});
                 }
             });
+        },
+        postProfile(params) {
+            return this.postData("/srvprofile", params);
+        },
+        beforeClose(done) {
+            const comp = this.$refs["srv-detail"];
+            if (!comp.modifyFlags) {
+                done();
+            } else {
+                this.$confirm(this.$lang("unsave_info"))
+                    .then(_ => {
+                        comp.saveAllChanges(false);
+                    })
+                    .catch(_ => {
+                        done();
+                    });
+            }
+        },
+        dataChange(data) {
+            this.filterableList = data;
         }
     }
 };
