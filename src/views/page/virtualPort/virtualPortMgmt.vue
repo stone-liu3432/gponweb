@@ -1,7 +1,75 @@
 <template>
     <div>
-        <div style="margin: 12px;">
-            <el-button type="primary" size="small" @click="openDialog('add')">{{ $lang('add') }}</el-button>
+        <el-form inline class="vp-title" size="small">
+            <el-form-item :label="$lang('display_type') + ':'">
+                <el-select v-model.number="filterable.type">
+                    <el-option :value="0" :label="$lang('all')"></el-option>
+                    <el-option :value="1" :label="$lang('svp_id')"></el-option>
+                    <el-option :value="2" :label="$lang('port_id')"></el-option>
+                    <el-option :value="3" :label="$lang('svp_type')"></el-option>
+                    <el-option :value="4" :label="$lang('vlan_id')"></el-option>
+                    <el-option :value="5" :label="$lang('gemport')"></el-option>
+                    <el-option :value="6" :label="$lang('state')"></el-option>
+                    <el-option :value="7" :label="$lang('admin_status')"></el-option>
+                </el-select>
+            </el-form-item>
+            <template v-if="filterable.type === 1">
+                <el-form-item>
+                    <el-input v-model="filterable.svp_id"></el-input>
+                </el-form-item>
+            </template>
+            <template v-if="filterable.type === 2">
+                <el-form-item :label="$lang('port_id')">
+                    <el-input style="width: 120px;" v-model="filterable.port_id"></el-input>
+                </el-form-item>
+                <el-form-item :label="$lang('ont_id')">
+                    <el-input style="width: 120px;" v-model="filterable.ont_id"></el-input>
+                </el-form-item>
+            </template>
+            <template v-if="filterable.type === 3">
+                <el-form-item>
+                    <el-select v-model.number="filterable.svp_type">
+                        <template v-for="(item, index) in SVP_TYPE_MAP">
+                            <el-option :value="Number(index)" :label="$lang(item)"></el-option>
+                        </template>
+                    </el-select>
+                </el-form-item>
+            </template>
+            <template v-if="filterable.type === 4">
+                <el-form-item :label="$lang('new_svlan')">
+                    <el-input style="width: 120px;" v-model="filterable.new_svlan"></el-input>
+                </el-form-item>
+                <el-form-item :label="$lang('user_vlan')">
+                    <el-input style="width: 120px;" v-model="filterable.user_vlan"></el-input>
+                </el-form-item>
+            </template>
+            <template v-if="filterable.type === 5">
+                <el-form-item>
+                    <el-input v-model="filterable.gemport"></el-input>
+                </el-form-item>
+            </template>
+            <template v-if="filterable.type === 6">
+                <el-form-item>
+                    <el-select v-model="filterable.state">
+                        <el-option :value="0" :label="$lang('link_down')"></el-option>
+                        <el-option :value="1" :label="$lang('link_up')"></el-option>
+                    </el-select>
+                </el-form-item>
+            </template>
+            <template v-if="filterable.type === 7">
+                <el-form-item>
+                    <el-select v-model="filterable.admin_status">
+                        <el-option :value="0" :label="$lang('disable')"></el-option>
+                        <el-option :value="1" :label="$lang('enable')"></el-option>
+                    </el-select>
+                </el-form-item>
+            </template>
+            <el-button
+                style="margin-left: 30px;"
+                type="primary"
+                size="small"
+                @click="openDialog('add')"
+            >{{ $lang('add') }}</el-button>
             <el-button
                 type="primary"
                 size="small"
@@ -14,7 +82,7 @@
                 style="margin-left: 30px;"
                 @click="refreshData"
             >{{ $lang('refresh') }}</el-button>
-        </div>
+        </el-form>
         <el-table :data="vpTable" border stripe>
             <el-table-column :label="$lang('svp_id')" prop="svp_id"></el-table-column>
             <el-table-column :label="$lang('new_svlan')" prop="new_svlan"></el-table-column>
@@ -86,7 +154,7 @@
             :page-sizes="[10, 20, 30, 50]"
             :page-size.sync="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="virtualPorts.length"
+            :total="filterList.length"
             hide-on-single-page
         ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" width="600px">
@@ -120,12 +188,62 @@ export default {
         ...mapState(["virtualPorts"]),
         ...mapGetters(["$lang", "getPortName"]),
         vpTable() {
+            const list = this.virtualPorts.filter(item => {
+                switch (this.filterable.type) {
+                    case 0:
+                        return true;
+                    case 1:
+                        return this.filterable.svp_id
+                            ? String(item.svp_id).indexOf(
+                                  this.filterable.svp_id
+                              ) > -1
+                            : true;
+                    case 2: {
+                        const pid = this.filterable.port_id,
+                            oid = this.filterable.ont_id;
+                        return pid
+                            ? oid
+                                ? String(item.port_id).indexOf(pid) > -1 &&
+                                  String(item.ont_id).indexOf(oid) > -1
+                                : String(item.port_id).indexOf(pid) > -1
+                            : true;
+                    }
+                    case 3:
+                        return item.svp_type === this.filterable.svp_type;
+                    case 4: {
+                        const sv = this.filterable.new_svlan,
+                            cv = this.filterable.user_vlan;
+                        return sv
+                            ? cv
+                                ? String(item.new_svlan).indexOf(sv) > -1 &&
+                                  String(item.user_vlan).indexOf(cv) > -1
+                                : String(item.new_svlan).indexOf(sv) > -1
+                            : cv
+                            ? String(item.user_vlan).indexOf(cv) > -1
+                            : true;
+                    }
+                    case 5:
+                        return (
+                            String(item.gemport).indexOf(
+                                this.filterable.gemport
+                            ) > -1
+                        );
+                    case 6:
+                        return item.state === this.filterable.state;
+                    case 7:
+                        return (
+                            item.admin_status === this.filterable.admin_status
+                        );
+                    default:
+                        return true;
+                }
+            });
+            this.filterList = list;
             const start = this.pageSize * (this.currentPage - 1);
-            return this.virtualPorts.slice(start, start + this.pageSize);
+            return list.slice(start, start + this.pageSize);
         }
     },
     mixins: [postData],
-    props: {},
     data() {
         return {
             TAG_ACTIONS,
@@ -135,7 +253,20 @@ export default {
             pageSize: 10,
             dialogVisible: false,
             dialogType: "",
-            dialogData: {}
+            dialogData: {},
+            filterList: [],
+            filterable: {
+                type: 0,
+                svp_id: "",
+                port_id: "",
+                ont_id: "",
+                svp_type: 1,
+                new_svlan: "",
+                user_vlan: "",
+                gemport: "",
+                state: 0,
+                admin_status: 0
+            }
         };
     },
     inject: ["updateNavScrollbar"],
@@ -307,12 +438,36 @@ export default {
         },
         refreshData() {
             debounce(this.getVirtualPort, 1000, this);
+        },
+        resetFilterable() {
+            this.filterable = {
+                type: 0,
+                svp_id: "",
+                port_id: "",
+                ont_id: "",
+                svp_type: 1,
+                new_svlan: "",
+                user_vlan: "",
+                gemport: "",
+                state: 0,
+                admin_status: 0
+            };
+        }
+    },
+    watch: {
+        virtualPorts() {
+            this.resetFilterable();
         }
     }
 };
 </script>
 
 <style lang="less" scoped>
+.vp-title {
+    margin: 12px 0 12px 10px;
+    height: 32px;
+    vertical-align: middle;
+}
 .el-dropdown-link {
     cursor: pointer;
     color: #409eff;
