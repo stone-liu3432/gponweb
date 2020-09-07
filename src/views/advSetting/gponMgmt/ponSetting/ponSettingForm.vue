@@ -10,7 +10,7 @@
         </template>
         <template v-if="type === 'all'">
             <el-form-item :label="$lang('autofind')" prop="autofind">
-                <el-select v-model.number="form.autofine">
+                <el-select v-model.number="form.autofind">
                     <el-option :value="0" :label="$lang('disable')"></el-option>
                     <el-option :value="1" :label="$lang('enable')"></el-option>
                 </el-select>
@@ -73,7 +73,7 @@ export default {
         return {
             TRX_TYPE_MAP,
             form: {
-                autofine: 0,
+                autofind: 0,
                 laser: 0,
                 auth_type: 0,
                 lineprof_id: 0,

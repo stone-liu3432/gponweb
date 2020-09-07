@@ -309,18 +309,37 @@ export default {
                                 }
                             }
                         };
+                    },
+                    all(form) {
+                        return {
+                            url: "/gponmgmt?form=gpon_setting",
+                            param: {
+                                method: "set",
+                                param: {
+                                    autofind: form.autofind,
+                                    laser: form.laser,
+                                    trx_type: form.trx_type,
+                                    auth_type: form.auth_type,
+                                    lineprof_id: form.lineprof_id,
+                                    srvprof_id: form.srvprof_id
+                                }
+                            }
+                        };
                     }
                 };
                 if (isFunction(ACTIONS[type])) {
-                    const { url, param } = ACTIONS[type].call(this, data);
-                    url &&
-                        param &&
-                        this.postData(url, param)
-                            .then(_ => {
-                                this.getData();
-                            })
-                            .catch(_ => {});
-                    this.dialogVisible = false;
+                    const res = ACTIONS[type].call(this, data);
+                    if (res) {
+                        const { url, param } = res;
+                        url &&
+                            param &&
+                            this.postData(url, param)
+                                .then(_ => {
+                                    this.getData();
+                                })
+                                .catch(_ => {});
+                        this.dialogVisible = false;
+                    }
                 }
             });
         },
