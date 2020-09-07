@@ -32,3 +32,5 @@ Mock.mock(/\/gponmgmt\?form=ont_auth&port_id=\d+/, "post", "@BASESUCCESS");
 Mock.mock(/\/gponmgmt\?form=af_param/, "post", "@BASESUCCESS");
 
 Mock.post(/\/gponmgmt\?form=trxtype&port_id=\d+/);
+
+Mock.post("/gponmgmt?form=gpon_setting");
