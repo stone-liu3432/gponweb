@@ -116,7 +116,7 @@ export default {
                         this.form[key] = data[key];
                     }
                 });
-                this.form.ont_id = data.identifier & 0xff;
+                this.form.ont_id = "";
                 this.form.ont_sn = this.form.ont_sn.slice(
                     0,
                     this.form.ont_sn.indexOf("(")
