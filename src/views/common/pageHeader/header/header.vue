@@ -109,7 +109,7 @@ export default {
     methods: {
         ...mapActions(["getOnuResource"]),
         onuName(onu_id) {
-            return `ONU${this.portData.port_id}/${onu_id}`;
+            return `ONT${this.portData.port_id}/${onu_id}`;
         }
     },
     watch: {
