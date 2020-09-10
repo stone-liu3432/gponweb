@@ -239,7 +239,7 @@ export default {
                 .catch(err => {});
         },
         changeState() {
-            const flag = /^active$/i.test(this.baseInfo.state);
+            const flag = this.baseInfo.state;
             this.$confirm(
                 flag
                     ? this.$lang("tips_deactive_state")
