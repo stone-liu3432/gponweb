@@ -193,7 +193,8 @@ export default {
                             ont_potsport: formData.ont_potsport,
                             ont_catvport: formData.ont_catvport,
                             native_vlan_flag: formData.native_vlan_flag,
-                            portvlan: formData.portvlan
+                            portvlan: formData.portvlan,
+                            ont_veipport: formData.ont_veipport
                         }
                     };
                     this.postProfile(post_param)

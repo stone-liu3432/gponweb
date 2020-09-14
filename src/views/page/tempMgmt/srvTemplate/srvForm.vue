@@ -41,6 +41,13 @@
             <el-form-item :label="$lang('ont_catvport')" prop="ont_catvport" key="ont_catvport">
                 <el-input style="width: 200px;" v-model.number="form.ont_catvport"></el-input>
             </el-form-item>
+            <el-form-item :label="$lang('veip_port')" prop="ont_veipport" key="ont_veipport">
+                <el-select v-model.number="form.ont_veipport">
+                    <el-option :value="0" :label="'normal'"></el-option>
+                    <el-option :value="1" :label="'only'"></el-option>
+                    <el-option :value="2" :label="'unbind'"></el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item
                 :label="$lang('native_vlan_flag')"
                 prop="native_vlan_flag"
@@ -150,7 +157,8 @@ export default {
                 ont_ethport: "", // 0-8, 0xff
                 ont_potsport: "", // 0-2, 0xff
                 ont_catvport: "", // 0-1
-                native_vlan_flag: 0
+                native_vlan_flag: 0,
+                ont_veipport: 0
             },
             rules: {
                 profname: [
@@ -264,7 +272,8 @@ export default {
                                 : this.form.ont_potsport >>> 0,
                             ont_catvport: this.form.ont_catvport >>> 0,
                             native_vlan_flag: this.form.native_vlan_flag,
-                            portvlan: this.portvlan
+                            portvlan: this.portvlan,
+                            ont_veipport: this.form.ont_veipport
                         });
                     } else {
                         fn.call(this, valid);
