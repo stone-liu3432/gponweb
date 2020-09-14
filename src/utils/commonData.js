@@ -37,6 +37,9 @@ export const VLAN_MODES = {
 // uni 端口类型
 export const UNI_TYPES = ["eth", "iphost"];
 
+// ont veip port
+export const ONT_VEIPPORT_MAP = ["normal", "only", "unbind"];
+
 // tag action
 export const TAG_ACTIONS = {
     1: "Default",
