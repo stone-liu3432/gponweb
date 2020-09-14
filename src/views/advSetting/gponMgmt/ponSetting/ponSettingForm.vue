@@ -74,13 +74,13 @@ export default {
             TRX_TYPE_MAP,
             form: {
                 autofind: 0,
-                laser: 0,
+                laser: 1,
                 auth_type: 0,
                 lineprof_id: 0,
                 srvprof_id: 0,
                 af_aging_time: "",
                 af_interval: "",
-                trx_type: 0
+                trx_type: 3
             },
             rules: {
                 af_aging_time: [
