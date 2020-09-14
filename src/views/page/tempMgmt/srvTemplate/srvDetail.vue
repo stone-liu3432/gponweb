@@ -28,6 +28,10 @@
                 class="srv-detail-value"
             >{{ data.native_vlan_flag ? $lang('not_need') : $lang('need') }}</el-col>
         </el-row>
+        <el-row class="srv-detail-item">
+            <el-col :span="4" class="srv-detail-title">{{$lang('veip_port')}}:</el-col>
+            <el-col :span="8" class="srv-detail-value">{{ ONT_VEIPPORT_MAP[data.ont_veipport] }}</el-col>
+        </el-row>
         <h3 class="srv-detail-portvlan">
             <span>{{ $lang('portvlan') }}:</span>
             <el-button
@@ -110,7 +114,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { VLAN_MODES, UNI_TYPES } from "@/utils/commonData";
+import { VLAN_MODES, UNI_TYPES, ONT_VEIPPORT_MAP } from "@/utils/commonData";
 import { removeItem, isDef } from "@/utils/common";
 import portvlanForm from "./portvlanForm";
 import srvForm from "./srvForm";
@@ -129,6 +133,7 @@ export default {
         return {
             VLAN_MODES,
             UNI_TYPES,
+            ONT_VEIPPORT_MAP,
             dialogVisible: false,
             dialogType: "",
             portvlan: [],
@@ -200,7 +205,8 @@ export default {
                 "ont_ethport",
                 "ont_potsport",
                 "ont_catvport",
-                "native_vlan_flag"
+                "native_vlan_flag",
+                "ont_veipport"
             ];
             PROTS_MAP.forEach(key => {
                 if (obj1[key] !== obj2[key]) {

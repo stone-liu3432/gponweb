@@ -43,9 +43,9 @@
             </el-form-item>
             <el-form-item :label="$lang('veip_port')" prop="ont_veipport" key="ont_veipport">
                 <el-select v-model.number="form.ont_veipport">
-                    <el-option :value="0" :label="'normal'"></el-option>
-                    <el-option :value="1" :label="'only'"></el-option>
-                    <el-option :value="2" :label="'unbind'"></el-option>
+                    <template v-for="(item, index) in ONT_VEIPPORT_MAP">
+                        <el-option :value="index" :label="item"></el-option>
+                    </template>
                 </el-select>
             </el-form-item>
             <el-form-item
@@ -128,7 +128,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { UNI_TYPES, VLAN_MODES } from "@/utils/commonData";
+import { UNI_TYPES, VLAN_MODES, ONT_VEIPPORT_MAP } from "@/utils/commonData";
 import portvlanForm from "./portvlanForm";
 import { isFunction, removeItem } from "@/utils/common";
 import { regRange, regLength } from "@/utils/validator";
@@ -150,6 +150,7 @@ export default {
         return {
             UNI_TYPES,
             VLAN_MODES,
+            ONT_VEIPPORT_MAP,
             portvlan: [], // 0-64
             form: {
                 profname: "", // 1-32 length
