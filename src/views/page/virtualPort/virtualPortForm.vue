@@ -1,6 +1,6 @@
 <template>
     <el-form :model="form" :rules="rules" label-width="120px" ref="virtual-port-form">
-        <el-form-item :label="$lang('svp_id')" prop="svp_id">
+        <el-form-item :label="$lang('svp_id')" prop="svp_id" key="svp-id">
             <el-input style="width: 200px;" :disabled="disabledSvpid" v-model.number="form.svp_id"></el-input>
             <el-checkbox
                 v-model="autoAssignSvpid"
@@ -9,32 +9,32 @@
             >{{ $lang('auto_assign') }}</el-checkbox>
         </el-form-item>
         <template v-if="type === 'add' || type === 'set'">
-            <el-form-item :label="$lang('new_svlan')" prop="new_svlan">
+            <el-form-item :label="$lang('new_svlan')" prop="new_svlan" key="new-svlan">
                 <el-input v-model.number="form.new_svlan"></el-input>
             </el-form-item>
         </template>
         <template v-if="type === 'add'">
-            <el-form-item :label="$lang('port_id')" prop="port_id">
+            <el-form-item :label="$lang('port_id')" prop="port_id" key="port-id">
                 <el-select v-model.number="form.port_id">
                     <template v-for="i in system.ponports">
                         <el-option :value="i" :label="getPortName(i)"></el-option>
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('ont_id')" prop="ont_id">
+            <el-form-item :label="$lang('ont_id')" prop="ont_id" key="ont-id">
                 <el-input v-model.number="form.ont_id"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('gemport')" prop="gemport">
+            <el-form-item :label="$lang('gemport')" prop="gemport" key="gemport">
                 <el-input v-model.number="form.gemport"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('svp_type')" prop="svp_type">
+            <el-form-item :label="$lang('svp_type')" prop="svp_type" key="svp-type">
                 <el-select v-model.number="form.svp_type">
                     <template v-for="(item, index) in SVP_TYPE_MAP">
                         <el-option :label="$lang(item)" :value="Number(index)"></el-option>
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('user_vlan')" prop="user_vlan">
+            <el-form-item :label="$lang('user_vlan')" prop="user_vlan" key="user-vlan">
                 <el-input v-model.number="form.user_vlan" :disabled="disabledUservlan"></el-input>
             </el-form-item>
             <!-- <el-form-item :label="$lang('install_mode')" prop="install_mode">
@@ -46,7 +46,7 @@
             </el-form-item>-->
         </template>
         <template v-if="type === 'add' || type === 'set'">
-            <el-form-item :label="$lang('tag_action')" prop="tag_action">
+            <el-form-item :label="$lang('tag_action')" prop="tag_action" key="tag-action">
                 <el-select v-model.number="form.tag_action">
                     <template v-for="(item, index) in TAG_ACTIONS">
                         <el-option
@@ -57,7 +57,7 @@
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('inner_vlan')" prop="inner_vlan">
+            <el-form-item :label="$lang('inner_vlan')" prop="inner_vlan" key="inner-vlan">
                 <el-input v-model.number="form.inner_vlan" :disabled="disabledInnervlan"></el-input>
             </el-form-item>
         </template>
@@ -187,7 +187,7 @@ export default {
                     this.form.inner_vlan = this.data.inner_vlan;
                     this.form.new_svlan = this.data.new_svlan;
                 } else {
-                    this.form.tag_action = 0;
+                    this.form.tag_action = 1;
                     this.form.inner_vlan = "";
                 }
             }
