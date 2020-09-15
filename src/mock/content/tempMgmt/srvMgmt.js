@@ -47,6 +47,7 @@ Mock.mock(
                 ont_ethport: Random.range(0, 8),
                 ont_potsport: Random.range(0, 2),
                 ont_catvport: Random.range(0, 1),
+                ont_veipport: Random.range(0, 2),
                 native_vlan_flag: Random.range(0, 1),
                 portvlan,
             },
