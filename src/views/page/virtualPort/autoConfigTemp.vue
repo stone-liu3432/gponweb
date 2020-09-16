@@ -40,7 +40,12 @@
         </el-table>
         <el-dialog :visible.sync="dialogVisible" width="640px">
             <span slot="title"></span>
-            <auto-temp-form :type="dialogType" :data="dialogData" ref="auto-temp-form"></auto-temp-form>
+            <auto-temp-form
+                :type="dialogType"
+                :tempList="tempTable"
+                :data="dialogData"
+                ref="auto-temp-form"
+            ></auto-temp-form>
             <div slot="footer">
                 <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
                 <el-button type="primary" @click="submitForm('auto-temp-form')">{{ $lang('apply') }}</el-button>

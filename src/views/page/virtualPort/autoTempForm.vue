@@ -4,7 +4,9 @@
             <el-select v-model.number="form.port_id" :disabled="selectAllPort || type === 'set'">
                 <el-option :value="0" :label="$lang('select_all')" :disabled="!selectAllPort"></el-option>
                 <template v-for="i in system.ponports">
-                    <el-option :value="i" :label="getPortName(i)"></el-option>
+                    <template v-if="isShowPort(i)">
+                        <el-option :value="i" :label="getPortName(i)"></el-option>
+                    </template>
                 </template>
             </el-select>
             <el-checkbox
@@ -53,6 +55,9 @@ export default {
         },
         data: {
             type: Object
+        },
+        tempList: {
+            type: Array
         }
     },
     inject: ["validateVlan"],
@@ -79,13 +84,25 @@ export default {
                     }
                 ]
             },
-            selectAllPort: false
+            selectAllPort: false,
+            cachePort: 0
         };
     },
     methods: {
         init() {
             this.$refs["auto-temp-form"].resetFields();
             this.selectAllPort = false;
+            if (this.type === "add") {
+                // 添加端口时，去除已经存在的端口
+                // 所有端口都已有配置时，只存在配置所有端口选项
+                const ports = Array.from({ length: this.system.ponports }).map(
+                    (item, index) => index + 1
+                );
+                const exists = this.tempList.map(item => item.port_id);
+                const list = ports.filter(item => !exists.includes(item));
+                this.form.port_id = list[0] || 0;
+                this.cachePort = list[0] || 0;
+            }
             if (this.type === "set") {
                 Object.keys(this.form).forEach(key => {
                     this.form[key] = this.data[key];
@@ -108,6 +125,12 @@ export default {
                     }
                 }
             });
+        },
+        isShowPort(port_id) {
+            if (this.type === "add") {
+                return !this.tempList.some(item => item.port_id === port_id);
+            }
+            return true;
         }
     },
     watch: {
@@ -115,7 +138,7 @@ export default {
             if (this.selectAllPort) {
                 this.form.port_id = 0;
             } else {
-                this.form.port_id = this.data.port_id || 1;
+                this.form.port_id = this.data.port_id || this.cachePort;
             }
         },
         "form.tag_action"() {
