@@ -14,8 +14,29 @@
                 style="margin-left: 30px;"
                 @click="refreshData"
             >{{ $lang('refresh') }}</el-button>
+            <el-button type="primary" style="margin-left: 30px;" size="small" @click="changeBatch">
+                <template v-if="!isBatch">{{ $lang('batch_config') }}</template>
+                <template v-else>{{ $lang('exit_batch_onu') }}</template>
+            </el-button>
+            <template v-if="isBatch">
+                <el-button
+                    type="primary"
+                    size="small"
+                    style="margin-left: 30px;"
+                    @click="submitBatch"
+                >{{ $lang('delete') }}</el-button>
+            </template>
         </div>
-        <el-table :data="showTable" border stripe ref="ont-info-table">
+        <el-table
+            :data="showTable"
+            border
+            stripe
+            ref="ont-info-table"
+            @selection-change="selectionChange"
+        >
+            <template v-if="isBatch">
+                <el-table-column type="selection"></el-table-column>
+            </template>
             <el-table-column :label="$lang('ont_id')">
                 <template
                     slot-scope="scope"
@@ -167,7 +188,9 @@ export default {
             ONT_CSTATES,
             ONT_MSTATES,
             ONT_RSTATES,
-            dialogVisible: false
+            dialogVisible: false,
+            isBatch: false,
+            selectionOntlist: []
         };
     },
     inject: ["updateNavScrollbar"],
@@ -228,12 +251,13 @@ export default {
             }
         },
         deleteOnt(row) {
-            this.$confirm(this.$lang("if_sure", "delete") + " ?")
+            return this.$confirm(this.$lang("if_sure", "delete") + " ?")
                 .then(_ => {
-                    this.postData("/gponont_mgmt?form=auth", {
+                    const identifier = isArray(row) ? row : [row.identifier];
+                    return this.postData("/gponont_mgmt?form=auth", {
                         method: "delete",
                         param: {
-                            identifier: [row.identifier]
+                            identifier
                         }
                     })
                         .then(_ => {
@@ -305,6 +329,28 @@ export default {
                         });
                 }
             });
+        },
+        changeBatch() {
+            this.isBatch = !this.isBatch;
+            if (!this.isBatch) {
+                this.$refs["ont-info-table"].clearSelection();
+            }
+        },
+        submitBatch() {
+            if (!this.selectionOntlist.length) {
+                return this.$message.info(this.$lang("modify_tips"));
+            }
+            const rows = this.selectionOntlist.map(item => item.identifier);
+            rows.sort((a, b) => a - b);
+            this.deleteOnt(rows)
+                .then(_ => {})
+                .catch(_ => {})
+                .finally(_ => {
+                    this.changeBatch();
+                });
+        },
+        selectionChange(rows) {
+            this.selectionOntlist = rows;
         }
     },
     watch: {
