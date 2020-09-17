@@ -8,6 +8,13 @@
                 style="margin-left: 30px;"
                 @click="openDialog"
             >{{ $lang('config') }}</el-button>
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px;"
+                v-if="showRestoreBtn"
+                @click="restoreDefPorts"
+            >{{ $lang('restore_defaults') }}</el-button>
         </h3>
         <div class="system-port-item">
             <span>http:</span>
@@ -41,7 +48,14 @@ export default {
     mixins: [postData],
     components: { sysPortForm },
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang"]),
+        showRestoreBtn() {
+            return !(
+                this.baseData.http === 80 &&
+                this.baseData.https === 443 &&
+                this.baseData.telnet === 23
+            );
+        }
     },
     props: {
         baseData: {
@@ -64,18 +78,18 @@ export default {
             this.$refs[formName].validate(form => {
                 if (form) {
                     if (
-                        form.http === this.baseData.http &&
-                        form.https === this.baseData.https &&
-                        form.telnet === this.baseData.telnet
+                        Number(form.http) === this.baseData.http &&
+                        Number(form.https) === this.baseData.https &&
+                        Number(form.telnet) === this.baseData.telnet
                     ) {
                         return this.$message.info(this.$lang("modify_tips"));
                     }
                     this.postData("/system_service?form=port", {
                         method: "set",
                         param: {
-                            http: form.http,
-                            https: form.https,
-                            telnet: form.telnet
+                            http: Number(form.http),
+                            https: Number(form.https),
+                            telnet: Number(form.telnet)
                         }
                     })
                         .then(_ => {
@@ -85,6 +99,24 @@ export default {
                     this.dialogVisible = false;
                 }
             });
+        },
+        restoreDefPorts() {
+            this.$confirm(this.$lang("if_sure", "restore_defaults") + " ?")
+                .then(_ => {
+                    this.postData("/system_service?form=port", {
+                        method: "set",
+                        param: {
+                            http: 80,
+                            https: 443,
+                            telnet: 23
+                        }
+                    })
+                        .then(_ => {
+                            this.$emit("refresh");
+                        })
+                        .catch(_ => {});
+                })
+                .catch(_ => {});
         }
     }
 };
