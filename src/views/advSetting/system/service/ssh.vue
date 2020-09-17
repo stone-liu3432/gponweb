@@ -3,6 +3,7 @@
         <h3>
             SSH-Key
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog"
@@ -14,7 +15,11 @@
                     <el-col :span="4">
                         <p>{{ $lang('title') + ': ' + item.keyname }}</p>
                         <div>
-                            <el-button type="primary" @click="deleteSsh(item)">{{ $lang('delete') }}</el-button>
+                            <el-button
+                                size="small"
+                                type="primary"
+                                @click="deleteSsh(item)"
+                            >{{ $lang('delete') }}</el-button>
                         </div>
                     </el-col>
                     <el-col :span="20" style="word-break: break-all;">{{ item.publickey }}</el-col>
