@@ -95,8 +95,8 @@ export default {
     methods: {
         ...mapActions(["getInterfaces"]),
         validateIp(rule, value, cb) {
-            if (!regIp(value)) {
-                return cb(new Error(this.validateMsg("ipaddr")));
+            if (!value || value.indexOf(".") < 0) {
+                return cb(new Error(this.$lang("invalid_ip")));
             }
             cb();
         },
