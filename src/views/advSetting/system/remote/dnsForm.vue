@@ -26,13 +26,13 @@ export default {
             rules: {
                 primary: [
                     {
-                        validator: this.validateIp,
+                        validator: this.validateDns,
                         trigger: ["change", "blur"]
                     }
                 ],
                 secondary: [
                     {
-                        validator: this.validateIp,
+                        validator: this.validateDns,
                         trigger: ["change", "blur"]
                     }
                 ]
@@ -45,6 +45,12 @@ export default {
             Object.keys(this.form).forEach(key => {
                 this.form[key] = row[key];
             });
+        },
+        validateDns(rule, val, cb) {
+            if (val === "" || val === "0.0.0.0") {
+                return cb();
+            }
+            return this.validateIp(rule, val, cb);
         },
         validate(fn) {
             this.$refs["dns-form"].validate(valid => {
