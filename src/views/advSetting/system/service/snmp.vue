@@ -3,6 +3,7 @@
         <h3>
             Trapserver
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('trap')"
@@ -25,6 +26,7 @@
         <h3>
             Community
             <el-button
+                size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('community')"
