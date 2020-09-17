@@ -66,8 +66,18 @@ export default {
             });
         },
         validatePort(rule, val, cb) {
-            if (!regRange(val, 1, 65535)) {
-                return cb(new Error(this.validateMsg("inputRange", 1, 65535)));
+            const field = rule.field,
+                min = field === "http" ? 80 : field === "https" ? 443 : 1000;
+            if (field === "telnet" && val === 23) {
+                return cb();
+            }
+            if (!regRange(val, min, 50000)) {
+                return cb(
+                    new Error(
+                        this.validateMsg("inputRange", min, 50000) +
+                            (field === "telnet" ? ", 23" : "")
+                    )
+                );
             }
             cb();
         }
