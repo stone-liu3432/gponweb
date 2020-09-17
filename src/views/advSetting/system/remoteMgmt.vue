@@ -38,7 +38,6 @@
             {{ $lang('inbound') }}
             <el-button
                 size="small"
-                plain
                 type="primary"
                 style="margin-left: 30px;"
                 @click="setBound(null, 'inbound', 'add')"
