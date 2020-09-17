@@ -4,6 +4,7 @@
             FRPC
             <el-button
                 type="primary"
+                size="small"
                 style="margin-left: 30px;"
                 v-if="Object.keys(baseData).length"
                 @click="openDialog"
@@ -16,7 +17,7 @@
                         :span="4"
                         style="text-transform: capitalize;"
                     >{{ key === 'local_ip' ? 'Local IP' : key.replace(/_/, ' ') }}</el-col>
-                    <el-col :span="20">{{ item }}</el-col>
+                    <el-col :span="20">{{ key === 'type' ? type_maps[item] : item }}</el-col>
                 </el-row>
             </template>
         </template>
@@ -56,7 +57,8 @@ export default {
     },
     data() {
         return {
-            dialogVisible: false
+            dialogVisible: false,
+            type_maps: ["http", "https"]
         };
     },
     methods: {
@@ -74,10 +76,12 @@ export default {
                         param: {
                             server_addr: data.server_addr,
                             server_port: data.server_port,
+                            token: data.token,
                             appname: data.appname,
                             type: data.type,
                             remote_port: data.remote_port,
-                            custom_domains: data.custom_domains
+                            custom_domains: data.custom_domains,
+                            subdomain: data.subdomain
                         }
                     };
                     this.postData("/system_service?form=frpc", post_params)

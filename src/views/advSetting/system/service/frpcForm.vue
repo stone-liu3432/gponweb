@@ -6,13 +6,16 @@
         <el-form-item label="Server Port" prop="server_port">
             <el-input v-model.number="formData.server_port"></el-input>
         </el-form-item>
+        <el-form-item label="token" prop="token">
+            <el-input v-model="formData.token" type="textarea"></el-input>
+        </el-form-item>
         <el-form-item label="Appname" prop="appname">
             <el-input v-model="formData.appname"></el-input>
         </el-form-item>
         <el-form-item label="Type">
             <el-select v-model.number="formData.type">
                 <el-option :value="0" label="http"></el-option>
-                <el-option :value="1" label="https"></el-option>
+                <!-- <el-option :value="1" label="https"></el-option> -->
             </el-select>
         </el-form-item>
         <el-form-item label="Remote Port" prop="remote_port">
@@ -20,6 +23,9 @@
         </el-form-item>
         <el-form-item label="Custom Domains" prop="custom_domains">
             <el-input v-model="formData.custom_domains"></el-input>
+        </el-form-item>
+        <el-form-item label="Sub Domains" prop="subdomain">
+            <el-input v-model="formData.subdomain"></el-input>
         </el-form-item>
     </el-form>
 </template>
@@ -44,10 +50,12 @@ export default {
             formData: {
                 server_addr: "",
                 server_port: "",
+                token: "",
                 appname: "",
                 type: 0,
                 remote_port: "",
-                custom_domains: ""
+                custom_domains: "",
+                subdomain: ""
             },
             rules: {
                 server_addr: [
@@ -56,6 +64,12 @@ export default {
                 server_port: [
                     {
                         validator: this.validatePort,
+                        trigger: ["change", "blur"]
+                    }
+                ],
+                token: [
+                    {
+                        validator: this.validateToken,
                         trigger: ["change", "blur"]
                     }
                 ],
@@ -72,6 +86,12 @@ export default {
                     }
                 ],
                 custom_domains: [
+                    {
+                        validator: this.validateDomain,
+                        trigger: ["change", "blur"]
+                    }
+                ],
+                subdomain: [
                     {
                         validator: this.validateDomain,
                         trigger: ["change", "blur"]
@@ -109,8 +129,14 @@ export default {
             cb();
         },
         validateDomain(rule, val, cb) {
-            if (!regLength(val, 4, 64)) {
-                return cb(new Error(this.validateMsg("inputLength", 4, 64)));
+            if (!regLength(val, 0, 64)) {
+                return cb(new Error(this.validateMsg("inputLength", 0, 64)));
+            }
+            cb();
+        },
+        validateToken(rule, val, cb) {
+            if (!regLength(val, 0, 128)) {
+                return cb(new Error(this.validateMsg("inputLength", 0, 128)));
             }
             cb();
         },
