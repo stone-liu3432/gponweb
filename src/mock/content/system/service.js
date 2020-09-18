@@ -8,12 +8,14 @@ Mock.mock("/system_service?form=frpc", "get", {
     data: {
         server_addr: "@IP",
         server_port: "@RANGE(1,65535)",
+        token: Random.word(16),
         appname: Random.first(),
         type: "@STATUS",
         local_ip: "127.0.0.1",
         local_port: 80,
         remote_port: "@RANGE(1,65535)",
         custom_domains: "www.test.com",
+        subdomain: "test",
     },
 });
 

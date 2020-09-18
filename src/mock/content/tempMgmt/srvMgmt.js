@@ -56,3 +56,16 @@ Mock.mock(
 );
 
 Mock.mock("/srvprofile", "post", "@BASESUCCESS");
+
+Mock.mock(/\/srvprofile\?form=boundinfo&profid=\d+&profname=\w+/, "get", () => {
+    return {
+        code: 1,
+        message: "success",
+        data: Array.from({ length: Random.range(1, 16) }).map(
+            (item, index) => ({
+                port_id: index + 1,
+                resource: "0,1",
+            })
+        ),
+    };
+});
