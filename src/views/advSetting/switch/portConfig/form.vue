@@ -1,7 +1,7 @@
 <template>
     <el-form label-width="200px" :model="formData" :rules="rules" ref="port-config-form">
         <template v-if="type === 'sw_port_cfg'">
-            <el-form-item :label="$lang('admin_status')" prop="admin_status">
+            <el-form-item :label="$lang('admin_status')" prop="admin_status" key="admin-status">
                 <el-select
                     v-model.number="formData.admin_status"
                     :disabled="disabled('admin_status',data.port_id)"
@@ -10,13 +10,13 @@
                     <el-option :label="$lang('enable')" :value="1"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('link_status')" prop="link_status">
+            <el-form-item :label="$lang('link_status')" prop="link_status" key="link-status">
                 <el-select v-model.number="formData.link_status" disabled>
                     <el-option :label="$lang('link_down')" :value="0"></el-option>
                     <el-option :label="$lang('link_up')" :value="1"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('auto_neg')" prop="auto_neg">
+            <el-form-item :label="$lang('auto_neg')" prop="auto_neg" key="auto-neg">
                 <el-select
                     v-model.number="formData.auto_neg"
                     :disabled="disabled('auto_neg', data.port_id)"
@@ -25,7 +25,7 @@
                     <el-option :label="$lang('enable')" :value="1"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('speed')" prop="speed">
+            <el-form-item :label="$lang('speed')" prop="speed" key="speed">
                 <el-select v-model="formData.speed" :disabled="disabled('speed',data.port_id)">
                     <el-option value="10M"></el-option>
                     <el-option value="100M"></el-option>
@@ -34,7 +34,7 @@
                     <el-option value="auto" label="Auto"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('duplex')" prop="duplex">
+            <el-form-item :label="$lang('duplex')" prop="duplex" key="duplex">
                 <el-select
                     v-model.number="formData.duplex"
                     :disabled="disabled('duplex',data.port_id)"
@@ -43,27 +43,27 @@
                     <el-option :label="$lang('full')" :value="1"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('flow_ctrl')" prop="flow_ctrl">
+            <el-form-item :label="$lang('flow_ctrl')" prop="flow_ctrl" key="flow-ctrl">
                 <el-select v-model.number="formData.flow_ctrl">
                     <el-option :label="$lang('disable')" :value="0"></el-option>
                     <el-option :label="$lang('enable')" :value="1"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('mtu')" prop="mtu">
+            <el-form-item :label="$lang('mtu')" prop="mtu" key="mtu">
                 <el-input v-model="formData.mtu" style="width: 200px;"></el-input>
             </el-form-item>
             <template v-if="data.port_id > system.ponports">
-                <el-form-item :label="$lang('erate')" prop="erate">
+                <el-form-item :label="$lang('erate')" prop="erate" key="erate">
                     <el-input v-model="formData.erate" style="width: 200px;"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('irate')" prop="irate">
+                <el-form-item :label="$lang('irate')" prop="irate" key="irate">
                     <el-input v-model="formData.irate" style="width: 200px;"></el-input>
                 </el-form-item>
             </template>
-            <el-form-item :label="$lang('pvid')" prop="pvid">
+            <el-form-item :label="$lang('pvid')" prop="pvid" key="pvid">
                 <el-input v-model="formData.pvid" style="width: 200px;"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('port_desc')" prop="port_desc">
+            <el-form-item :label="$lang('port_desc')" prop="port_desc" key="port-desc">
                 <el-input type="textarea" v-model.trim="formData.port_desc"></el-input>
             </el-form-item>
         </template>
@@ -79,19 +79,21 @@
             </el-form-item>
         </template>
         <template v-if="type === 'mirror'">
-            <el-form-item :label="$lang('dst_port')" prop="dst_port">
+            <el-form-item :label="$lang('dst_port')" prop="dst_port" key="dst-port">
                 <el-select v-model="formData.dst_port">
                     <el-option label=" - " :value="0"></el-option>
                     <template v-for="item in port">
-                        <el-option
-                            :label="getPortName(item.port_id)"
-                            :value="item.port_id"
-                            :disabled="item.port_id === data.src_port"
-                        ></el-option>
+                        <template v-if="item.port_id > system.ponports && port_id !== item.port_id">
+                            <el-option
+                                :label="getPortName(item.port_id)"
+                                :value="item.port_id"
+                                :disabled="item.port_id === data.src_port"
+                            ></el-option>
+                        </template>
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('type')" prop="type">
+            <el-form-item :label="$lang('type')" prop="type" key="type">
                 <el-select v-model="formData.type">
                     <template v-for="(item, index) in types">
                         <el-option :label="item" :value="index"></el-option>
@@ -118,6 +120,9 @@ export default {
         },
         data: {
             type: Object
+        },
+        port_id: {
+            type: Number
         }
     },
     data() {

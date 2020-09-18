@@ -10,7 +10,7 @@
             <el-col :span="8">
                 <el-card shadow="never">
                     <template slot="header">
-                        <span>{{ $lang('sw_port_cfg') }}</span>
+                        <span>{{ $lang('port_cfg') }}</span>
                         <el-button
                             type="text"
                             style="float: right; padding: 3px 0;"
@@ -90,7 +90,12 @@
         </el-row>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="600px">
             <template slot="title">{{ $lang(dialogType) }}</template>
-            <port-config-form :type="dialogType" :data="dialogData" ref="port-config-form"></port-config-form>
+            <port-config-form
+                :type="dialogType"
+                :port_id="port_id"
+                :data="dialogData"
+                ref="port-config-form"
+            ></port-config-form>
             <span slot="footer">
                 <el-button @click="closeDialog">{{ $lang('cancel') }}</el-button>
                 <el-button
