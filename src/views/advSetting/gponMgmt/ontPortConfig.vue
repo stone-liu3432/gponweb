@@ -51,7 +51,7 @@
                 </el-table-column>
                 <el-table-column :label="$lang('config')">
                     <template slot-scope="scope">
-                        <el-dropdown @command="command">
+                        <!-- <el-dropdown @command="command">
                             <span class="el-dropdown-link">
                                 <span>{{ $lang('config') }}</span>
                                 <i class="el-icon-arrow-down el-icon--right"></i>
@@ -64,17 +64,16 @@
                                     :command="{ action: 'vlan', data: scope.row }"
                                 >{{$lang('config', 'na_vlan_id')}}</el-dropdown-item>
                             </el-dropdown-menu>
-                        </el-dropdown>
-                        <!-- <el-button type="text" @click="openDialog(scope.row)">{{ $lang('config') }}</el-button>
+                        </el-dropdown>-->
                         <el-button
                             type="text"
-                            @click="openDialog(scope.row)"
-                        >{{ $lang('na_vlan_id') }}</el-button>-->
+                            @click="openDialog('port', scope.row)"
+                        >{{ $lang('config') }}</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </template>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ $lang('config') }}</div>
             <ont-port-config-form ref="ont-port-config-form"></ont-port-config-form>
             <div slot="footer">
