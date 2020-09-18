@@ -35,7 +35,7 @@
             </el-form-item>
         </el-form>
         <el-table :data="vlanTable" border>
-            <el-table-column :label="$lang('vlan_id')" prop="vlan_id" width="80px"></el-table-column>
+            <el-table-column :label="$lang('vlan_id')" prop="vlan_id" width="100px"></el-table-column>
             <el-table-column :label="$lang('tagged_portlist')">
                 <template slot-scope="scope">{{ getPort(scope.row.tagged_portlist) || '-' }}</template>
             </el-table-column>
@@ -140,7 +140,8 @@ export default {
             pageSize: 10,
             paginationTotal: 0,
             dialogVisible: false,
-            dialogType: ""
+            dialogType: "",
+            dialogData: {}
         };
     },
     created() {
@@ -176,6 +177,7 @@ export default {
         openDialog(type, row) {
             this.dialogVisible = true;
             this.dialogType = type;
+            this.dialogData = row;
             this.$nextTick(_ => {
                 this.$refs["vlan-form"].init(type, row);
             });
@@ -292,19 +294,7 @@ export default {
                         };
                     },
                     port_default_vlan(form) {
-                        const default_vlan_portlist = form.default_vlan_portlist.join(
-                            ","
-                        );
-                        return {
-                            url: "/switch_vlan_pvid",
-                            data: {
-                                method: "set",
-                                param: {
-                                    vlan_id: form.vlanid_s,
-                                    default_vlan_portlist
-                                }
-                            }
-                        };
+                        this.defVlanHandler(form);
                     }
                 };
                 if (isFunction(ACTIONS[type])) {
@@ -326,6 +316,73 @@ export default {
                     }
                 }
             });
+        },
+        defVlanHandler(form) {
+            const base = parseStringAsList(
+                    this.dialogData.default_vlan_portlist
+                ),
+                list = form.default_vlan_portlist,
+                added = list.reduce((pre, item) => {
+                    if (!base.includes(item)) {
+                        pre.push(item);
+                    }
+                    return pre;
+                }, []),
+                deleted = base.reduce((pre, item) => {
+                    if (!list.includes(item)) {
+                        pre.push(item);
+                    }
+                    return pre;
+                }, []);
+            if (!added.length && !deleted.length) {
+                return this.$message.error(this.$lang("modify_tips"));
+            }
+            const cb = () => {
+                this.$message.success(this.$lang("setting_ok"));
+                this.getVlan();
+            };
+            const deleteDefVlan = (url, deleted) => {
+                this.postData(
+                    url,
+                    {
+                        method: "set",
+                        param: {
+                            vlan_id: 1,
+                            default_vlan_portlist: deleted.join(",")
+                        }
+                    },
+                    false
+                )
+                    .then(_ => {
+                        cb();
+                    })
+                    .catch(_ => {});
+            };
+            const url = "/switch_vlan_pvid";
+            if (added.length) {
+                this.postData(
+                    url,
+                    {
+                        method: "set",
+                        param: {
+                            vlan_id: form.vlanid_s,
+                            default_vlan_portlist: added.join(",")
+                        }
+                    },
+                    false
+                )
+                    .then(_ => {
+                        if (deleted.length) {
+                            deleteDefVlan(url, deleted);
+                        } else {
+                            cb();
+                        }
+                    })
+                    .catch(_ => {});
+            } else {
+                deleteDefVlan(url, deleted);
+            }
+            this.dialogVisible = false;
         },
         commandHandler({ action, row }) {
             switch (action) {
