@@ -17,14 +17,14 @@
             <div class="pon-setting-info">
                 <span>{{ $lang('af_interval') }}:</span>
                 <span>{{ ponInfo.af_interval }}</span>
-                <el-button
+                <!-- <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('interval', ponInfo)"
-                >{{ $lang('config') }}</el-button>
+                >{{ $lang('config') }}</el-button>-->
             </div>
-            <div style="margin: 10px 0 10px 10px;">
+            <div style="margin: 20px 0 20px 0px;">
                 <el-button
                     type="primary"
                     size="small"
