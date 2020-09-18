@@ -70,7 +70,7 @@ export default {
     data() {
         return {
             timezone,
-            setType: 0,
+            setType: 0, // 0 -> ntp  1 -> manual
             formData: {
                 ntp_ipaddr1: "",
                 ntp_ipaddr2: "",
@@ -131,7 +131,7 @@ export default {
                     now[4] < 10 ? "0" + now[4] : now[4]
                 }:${now[5] < 10 ? "0" + now[5] : now[5]}`;
             }
-            return "";
+            return "-";
         }
     },
     methods: {
@@ -190,6 +190,8 @@ export default {
                                     this.formData.ntp_ipaddr2 = ntp_srv_ip[1];
                                 }
                                 this.formData.update_frequency = poll_interval_time;
+                            } else {
+                                this.getTime();
                             }
                         }
                     }
@@ -239,12 +241,35 @@ export default {
                         isFunction(ACTIONS[this.setType]) &&
                         URLS[this.setType]
                     ) {
+                        // 自动改为手动时，需先把ntp设置为disable状态
+                        if (this.setType === 1) {
+                            this.postData(URLS[0], {
+                                method: "set",
+                                param: {
+                                    status: 1,
+                                    ntp_srv_ip: ["0.0.0.0", ""],
+                                    poll_interval_time: 1
+                                }
+                            })
+                                .then(_ => {
+                                    this.postData(
+                                        URLS[this.setType],
+                                        ACTIONS[this.setType].call(this)
+                                    )
+                                        .then(_ => {
+                                            this.getTime();
+                                        })
+                                        .catch(_ => {});
+                                })
+                                .catch(_ => {});
+                            return;
+                        }
                         this.postData(
                             URLS[this.setType],
                             ACTIONS[this.setType].call(this)
                         )
                             .then(_ => {
-                                this.setType ? this.getTime() : this.getData();
+                                this.getData();
                             })
                             .catch(_ => {});
                     }
