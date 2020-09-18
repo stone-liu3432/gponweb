@@ -34,7 +34,7 @@
                 </el-table-column>
             </el-table>
         </template>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title"></div>
             <op-vlan-form ref="op-vlan-form" :data="vlanList.portvlan || []"></op-vlan-form>
             <div slot="footer">
