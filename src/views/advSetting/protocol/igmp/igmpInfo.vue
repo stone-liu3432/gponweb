@@ -155,7 +155,13 @@ export default {
                 };
             this.postData(url, post_params, false)
                 .then(_ => {
-                    data.mode !== 0 && this.submitChange(data);
+                    if (data.mode !== 0) {
+                        this.submitChange(data);
+                    } else {
+                        this.$message.success(this.$lang("setting_ok"));
+                        this.dialogVisible = false;
+                        this.getData();
+                    }
                 })
                 .catch(_ => {});
         },
