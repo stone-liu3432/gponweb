@@ -121,6 +121,9 @@ export default {
             Object.keys(this.form).forEach(key => {
                 if (isDef(data[key])) {
                     this.form[key] = data[key];
+                    if (key === "epspeed" && data[key] === 0) {
+                        this.form[key] = 0xffff;
+                    }
                 }
             });
             if (this.form.na_vlan_id === 0x1000) {
