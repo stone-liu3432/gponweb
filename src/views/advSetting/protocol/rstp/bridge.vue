@@ -17,7 +17,12 @@
                 </el-row>
             </template>
         </template>
-        <el-dialog :title="$lang('config')" :visible.sync="dialogVisible" append-to-body>
+        <el-dialog
+            :title="$lang('config')"
+            :visible.sync="dialogVisible"
+            append-to-body
+            width="650px"
+        >
             <bridge-form :form-data="bridgeInfo" ref="rstp-bridge-form"></bridge-form>
             <span slot="footer">
                 <el-button @click="dialogVisible = false">{{ $lang('cancel') }}</el-button>

@@ -28,7 +28,7 @@
                 <span>{{ OPTION82_REMOTE[data.option82_remote] }}</span>
             </div>
         </template>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title"></div>
             <dhcp-option82-form ref="dhcp-option82-form"></dhcp-option82-form>
             <div slot="footer">

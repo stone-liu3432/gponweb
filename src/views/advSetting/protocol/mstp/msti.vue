@@ -56,7 +56,7 @@
         <el-dialog :visible.sync="detailVisible" append-to-body width="800px">
             <msti-detail :row="row" @trigger-event="triggerEvent"></msti-detail>
         </el-dialog>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title"></div>
             <msti-form ref="msti-form"></msti-form>
             <div slot="footer">

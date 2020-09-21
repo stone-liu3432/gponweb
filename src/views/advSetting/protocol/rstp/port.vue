@@ -39,7 +39,12 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog :title="$lang('config')" :visible.sync="dialogVisible" append-to-body>
+        <el-dialog
+            :title="$lang('config')"
+            :visible.sync="dialogVisible"
+            append-to-body
+            width="650px"
+        >
             <port-form :form-data="formData" ref="rstp-port-form"></port-form>
             <span slot="footer">
                 <el-button @click="dialogVisible = false">{{ $lang('cancel') }}</el-button>

@@ -54,7 +54,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="multiData.length"
         ></el-pagination>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ $lang('add', 'static_table') }}</div>
             <multicast-form ref="multicast-form"></multicast-form>
             <div slot="footer">

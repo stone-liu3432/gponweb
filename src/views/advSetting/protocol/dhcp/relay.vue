@@ -51,7 +51,7 @@
                 :total="serverList.length"
             ></el-pagination>
         </template>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ $lang(dialogType) }}</div>
             <dhcp-relay-form ref="dhcp-relay-form"></dhcp-relay-form>
             <div slot="footer">

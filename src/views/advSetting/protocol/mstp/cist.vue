@@ -81,7 +81,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ $lang('config') }}</div>
             <cist-form ref="cist-form"></cist-form>
             <div slot="footer">

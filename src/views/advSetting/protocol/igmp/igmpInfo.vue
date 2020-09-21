@@ -16,7 +16,7 @@
                 >{{ $lang('config') }}</el-button>
             </div>
         </nms-panel>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ $lang('config') }}</div>
             <igmp-info-form ref="igmp-info-form"></igmp-info-form>
             <div slot="footer">

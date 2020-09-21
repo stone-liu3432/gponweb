@@ -53,7 +53,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ $lang('config') }}</div>
             <mstp-port-form ref="mstp-port-form"></mstp-port-form>
             <div slot="footer">

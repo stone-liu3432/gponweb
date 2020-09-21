@@ -82,7 +82,7 @@
                 ></el-pagination>
             </div>
         </template>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ $lang(dialogTitle) }}</div>
             <dhcp-snooping-form ref="dhcp-snooping-form"></dhcp-snooping-form>
             <div slot="footer">

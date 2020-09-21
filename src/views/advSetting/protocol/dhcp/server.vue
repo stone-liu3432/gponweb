@@ -55,7 +55,7 @@
                 <span>{{ data.lease_time }}</span>
             </div>
         </template>
-        <el-dialog :visible.sync="dialogVisible" append-to-body>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ $lang('config') }}</div>
             <dhcp-server-form ref="dhcp-server-form"></dhcp-server-form>
             <div slot="footer">
