@@ -123,7 +123,7 @@ export default {
                 .catch(() => {});
         },
         setRevisionLevel() {
-            this.$prompt(this.$lang("regional_name"), this.$lang("config"), {
+            this.$prompt(this.$lang("revision_level"), this.$lang("config"), {
                 inputValue: this.regionInfo.revision_level,
                 confirmButtonText: this.$lang("apply"),
                 cancelButtonText: this.$lang("cancel"),
