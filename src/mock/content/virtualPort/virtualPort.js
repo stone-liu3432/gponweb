@@ -21,7 +21,7 @@ Mock.mock("/serviceport", "get", () => {
         state: Random.range(0, 1),
         admin_status: Random.range(0, 1),
         desc: Random.word(0, 64),
-        install_mode: Random.range(1, 2),
+        install_mode: Random.range(1, 3),
     }));
     return {
         code: 1,
