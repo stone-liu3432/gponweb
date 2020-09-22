@@ -53,7 +53,7 @@ export const TAG_ACTIONS = {
 // virtual port
 export const SVP_TYPE_MAP = { 1: "untag", 2: "user_vlan" };
 
-export const INSTALL_MODE_MAP = { 1: "auto", 2: "manual" };
+export const INSTALL_MODE_MAP = { 1: "auto", 2: "manual", 3: "manual" };
 
 // ONT
 export const ONT_AUTH_MODES = ["SN AUTH", "LOID AUTH", "LOID+PASS AUTH"];
