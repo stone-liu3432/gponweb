@@ -10,7 +10,7 @@
             <el-table-column prop="profname" :label="$lang('profname')"></el-table-column>
             <el-table-column prop="profid" :label="$lang('profid')"></el-table-column>
             <el-table-column prop="bindtimes" :label="$lang('bindtimes')"></el-table-column>
-            <el-table-column width="200px">
+            <el-table-column width="280px">
                 <template slot="header">
                     <span>{{ $lang('config') }}</span>
                     <el-button
@@ -22,6 +22,11 @@
                 </template>
                 <template slot-scope="scope">
                     <el-button type="text" @click="showDetail(scope.row)">{{ $lang('show_detail') }}</el-button>
+                    <el-button
+                        type="text"
+                        style="margin-left: 20px;"
+                        @click="showBinding(scope.row)"
+                    >{{ $lang('show_binding') }}</el-button>
                     <el-button
                         type="text"
                         style="margin-left: 20px;"
@@ -56,12 +61,28 @@
                 <el-button type="primary" @click="submitForm('srv-form')">{{ $lang('apply') }}</el-button>
             </div>
         </el-dialog>
+        <el-dialog :visible.sync="bindingVisible" width="800px">
+            <div slot="title">
+                <span>{{ $lang('profid') }}:</span>
+                <span style="margin: 0 50px 0 12px;">{{ rowData.profid }}</span>
+                <span>{{ $lang('profname') }}:</span>
+                <span style="margin: 0 0 0 12px;">{{ rowData.profname }}</span>
+            </div>
+            <el-table :data="bindingDevices" border>
+                <el-table-column :label="$lang('port_id')" width="100px">
+                    <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                </el-table-column>
+                <el-table-column :label="$lang('ont_id')">
+                    <template slot-scope="scope">{{ getOntRange(scope.row) }}</template>
+                </el-table-column>
+            </el-table>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
-import { isArray, isDef } from "@/utils/common";
+import { isArray, isDef, parseStringAsList } from "@/utils/common";
 import postData from "@/mixin/postData";
 import srvDetail from "./srvTemplate/srvDetail";
 import srvForm from "./srvTemplate/srvForm";
@@ -71,7 +92,7 @@ export default {
     components: { srvDetail, srvForm },
     computed: {
         ...mapState(["srvProfs"]),
-        ...mapGetters(["$lang"]),
+        ...mapGetters(["$lang", "getPortName"]),
         srvTable() {
             const start = (this.currentPage - 1) * this.pageSize;
             return this.filterableList.slice(start, start + this.pageSize);
@@ -106,7 +127,10 @@ export default {
             dialogData: {},
             currentPage: 1,
             pageSize: 10,
-            filterableList: []
+            filterableList: [],
+            bindingVisible: false,
+            rowData: {},
+            bindingDevices: []
         };
     },
     created() {
@@ -225,6 +249,62 @@ export default {
         },
         dataChange(data) {
             this.filterableList = data;
+        },
+        showBinding(row) {
+            const loading = this.$loading();
+            this.getBindingDevices(row)
+                .then(_ => {
+                    this.bindingVisible = true;
+                    this.rowData = row;
+                })
+                .catch(_ => {})
+                .finally(_ => {
+                    loading.close();
+                });
+        },
+        getBindingDevices(row) {
+            this.bindingDevices = [];
+            return this.$http
+                .get(
+                    `/srvprofile?form=boundinfo&profid=${row.profid}&profname=${row.profname}`
+                )
+                .then(res => {
+                    if (res.data.code === 1) {
+                        if (isArray(res.data.data)) {
+                            this.bindingDevices = res.data.data;
+                        }
+                    }
+                })
+                .catch(err => {});
+        },
+        getOntRange(row) {
+            const range = parseStringAsList(row.resource);
+            if (!range.length) {
+                return "-";
+            }
+            range.sort((a, b) => a - b);
+            const res = range.reduce((pre, item, index) => {
+                if (index === 0) {
+                    pre.push([item]);
+                    return pre;
+                }
+                const prev = pre[pre.length - 1];
+                const last = prev[prev.length - 1];
+                if (last + 1 === item) {
+                    prev.push(item);
+                } else {
+                    pre.push([item]);
+                }
+                return pre;
+            }, []);
+            return res
+                .map(item => {
+                    if (item.length > 1) {
+                        return `${item[0]}-${item[item.length - 1]}`;
+                    }
+                    return item.toString();
+                })
+                .join(",");
         }
     }
 };
