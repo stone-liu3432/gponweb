@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-form inline class="vp-title" size="small">
-            <el-form-item :label="$lang('display_type') + ':'">
+            <el-form-item :label="$lang('display_type') + ':'" key="filterable-type">
                 <el-select v-model.number="filterable.type">
                     <el-option :value="0" :label="$lang('all')"></el-option>
                     <el-option :value="1" :label="$lang('svp_id')"></el-option>
@@ -11,23 +11,24 @@
                     <el-option :value="5" :label="$lang('gemport')"></el-option>
                     <el-option :value="6" :label="$lang('state')"></el-option>
                     <el-option :value="7" :label="$lang('admin_status')"></el-option>
+                    <el-option :value="8" :label="$lang('install_mode')"></el-option>
                 </el-select>
             </el-form-item>
             <template v-if="filterable.type === 1">
-                <el-form-item>
-                    <el-input v-model="filterable.svp_id"></el-input>
+                <el-form-item key="svp-id">
+                    <el-input v-model.number="filterable.svp_id"></el-input>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 2">
-                <el-form-item :label="$lang('port_id')">
-                    <el-input style="width: 120px;" v-model="filterable.port_id"></el-input>
+                <el-form-item :label="$lang('port_id')" key="port-id">
+                    <el-input style="width: 120px;" v-model.number="filterable.port_id"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('ont_id')">
-                    <el-input style="width: 120px;" v-model="filterable.ont_id"></el-input>
+                <el-form-item :label="$lang('ont_id')" key="ont-id">
+                    <el-input style="width: 120px;" v-model.number="filterable.ont_id"></el-input>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 3">
-                <el-form-item>
+                <el-form-item key="svp-type">
                     <el-select v-model.number="filterable.svp_type">
                         <template v-for="(item, index) in SVP_TYPE_MAP">
                             <el-option :value="Number(index)" :label="$lang(item)"></el-option>
@@ -36,31 +37,39 @@
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 4">
-                <el-form-item :label="$lang('new_svlan')">
-                    <el-input style="width: 120px;" v-model="filterable.new_svlan"></el-input>
+                <el-form-item :label="$lang('new_svlan')" key="new-svlan">
+                    <el-input style="width: 120px;" v-model.number="filterable.new_svlan"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('user_vlan')">
-                    <el-input style="width: 120px;" v-model="filterable.user_vlan"></el-input>
+                <el-form-item :label="$lang('user_vlan')" key="user-vlan">
+                    <el-input style="width: 120px;" v-model.number="filterable.user_vlan"></el-input>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 5">
-                <el-form-item>
-                    <el-input v-model="filterable.gemport"></el-input>
+                <el-form-item key="gemport">
+                    <el-input v-model.number="filterable.gemport"></el-input>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 6">
-                <el-form-item>
-                    <el-select v-model="filterable.state">
+                <el-form-item key="state">
+                    <el-select v-model.number="filterable.state">
                         <el-option :value="0" :label="$lang('link_down')"></el-option>
                         <el-option :value="1" :label="$lang('link_up')"></el-option>
                     </el-select>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 7">
-                <el-form-item>
-                    <el-select v-model="filterable.admin_status">
+                <el-form-item key="admin-status">
+                    <el-select v-model.number="filterable.admin_status">
                         <el-option :value="0" :label="$lang('disable')"></el-option>
                         <el-option :value="1" :label="$lang('enable')"></el-option>
+                    </el-select>
+                </el-form-item>
+            </template>
+            <template v-if="filterable.type === 8">
+                <el-form-item key="install-mode">
+                    <el-select v-model.number="filterable.install_mode">
+                        <el-option :value="1" :label="$lang('auto')"></el-option>
+                        <el-option :value="2" :label="$lang('manual')"></el-option>
                     </el-select>
                 </el-form-item>
             </template>
@@ -108,7 +117,7 @@
             <el-table-column :label="$lang('state')" prop="state">
                 <template
                     slot-scope="scope"
-                >{{ scope.row.state ? $lang('link_up') : $lang('link_down') }}</template>
+                >{{ scope.row.admin_status ? (scope.row.state ? $lang('link_up') : $lang('link_down')) : $lang('link_down') }}</template>
             </el-table-column>
             <el-table-column :label="$lang('admin_status')" prop="admin_status">
                 <template slot-scope="scope">
@@ -229,11 +238,17 @@ export default {
                             ) > -1
                         );
                     case 6:
-                        return item.state === this.filterable.state;
+                        return this.filterable.state
+                            ? item.admin_status && item.state
+                            : !item.admin_status || !item.state;
                     case 7:
                         return (
                             item.admin_status === this.filterable.admin_status
                         );
+                    case 8:
+                        return this.filterable.install_mode === 1
+                            ? this.filterable.install_mode === item.install_mode
+                            : item.install_mode >= this.filterable.install_mode;
                     default:
                         return true;
                 }
@@ -265,7 +280,8 @@ export default {
                 user_vlan: "",
                 gemport: "",
                 state: 0,
-                admin_status: 0
+                admin_status: 0,
+                install_mode: 1
             }
         };
     },
@@ -450,7 +466,8 @@ export default {
                 user_vlan: "",
                 gemport: "",
                 state: 0,
-                admin_status: 0
+                admin_status: 0,
+                install_mode: 1
             };
         }
     },
