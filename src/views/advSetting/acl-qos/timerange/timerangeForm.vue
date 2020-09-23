@@ -57,7 +57,7 @@ export default {
                 name: "",
                 type: 0,
                 day: "Daily",
-                timerange: ""
+                timerange: [+new Date(), +new Date() + 60 * 60 * 1000]
             },
             rules: {
                 name: [
@@ -105,7 +105,14 @@ export default {
         }
     },
     watch: {
-        "form.type"() {}
+        "form.type"() {
+            if (this.form.type === 0) {
+                this.form.timerange = [
+                    +new Date(),
+                    new Date() + 60 * 60 * 1000
+                ];
+            }
+        }
     }
 };
 </script>

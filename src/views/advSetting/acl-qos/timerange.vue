@@ -88,7 +88,7 @@
                 :total="timerangeList.length"
             ></el-pagination>
         </div>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="600px">
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="600px" destroy-on-close>
             <div slot="title">{{ $lang('add') }}</div>
             <timerange-form ref="timerange-form"></timerange-form>
             <div slot="footer">
@@ -200,7 +200,9 @@ export default {
             this.$refs[formName].validate(form => {
                 if (form) {
                     let url, param;
-                    const [stime, etime] = form.timerange;
+                    const [stime, etime] = form.timerange.map(
+                        item => new Date(item)
+                    );
                     if (form.type === 0) {
                         url = "/switch_acl?form=time_range&type=relative";
                         param = {
