@@ -14,7 +14,7 @@
             prop="vlan_id"
             v-show="!(formData && formData.interface === 'outbound')"
         >
-            <el-input v-model.number="bound.vlan_id"></el-input>
+            <el-input :disabled="type === 'config'" v-model.number="bound.vlan_id"></el-input>
         </el-form-item>
     </el-form>
 </template>
