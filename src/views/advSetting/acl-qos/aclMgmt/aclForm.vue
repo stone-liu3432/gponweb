@@ -143,7 +143,7 @@ export default {
             form: {
                 acl_type: 0,
                 acl_id: "", // 2000 - 5999
-                rule_id: 0,
+                rule_id: 1,
                 action: 1,
                 timerange: "",
                 protocol: "", // icmp / udp / tcp / ip / ipinip / 0-255
