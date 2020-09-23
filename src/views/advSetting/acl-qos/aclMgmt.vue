@@ -102,7 +102,7 @@
                 :total="aclList.length"
             ></el-pagination>
         </div>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="600px">
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="600px" destroy-on-close>
             <div slot="title">{{ $lang(dialogType) || $lang('config') }}</div>
             <acl-form ref="acl-form"></acl-form>
             <div slot="footer">
@@ -238,7 +238,7 @@ export default {
             if (expands.length) {
                 this.expands.push(row.acl_id);
                 this.prio_acl = row.acl_id;
-                this.prioCache = JSON.parse(JSON.stringify(row.rule));
+                this.prioCache = JSON.parse(JSON.stringify(row.rule || []));
             } else {
                 if (this.prioCache.length) {
                     const pre = row.rule.map(item => item.rule_id).toString(),
