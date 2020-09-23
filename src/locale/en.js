@@ -889,7 +889,7 @@ var en = {
     traffic_prof: "Traffic Profile",
     traffic_profile_id: "Traffic Profile ID",
     vendorid: "VendorID",
-    ont_version: "Ont Version",
+    ont_version: "ONT Version",
     equipmentid: "EquipmentID",
     omcc_version: "OMCC Version",
     product_code: "Product Code",
@@ -911,7 +911,7 @@ var en = {
     unitype: "Port Type",
     na_vlan_id: "Native-VLAN",
     na_vlan_pri: "Native-VLAN Priority",
-    ont_description: "Ont description",
+    ont_description: "ONT description",
     last_dg_time: "Last dying timestamp",
     lineprof_id: "LineProfile ID",
     lineprof_name: "LineProfile Name",
@@ -920,7 +920,7 @@ var en = {
     uptime: "Uptime",
     version: "Version",
     switch: "Switch",
-    ont: "Ont",
+    ont: "ONT",
     onu_port_info: "ONT Port Info",
     adminstate: "Port AdminStatus",
     epautoneg: "Eth Port Autoneg",
@@ -1072,6 +1072,9 @@ var en = {
     display_type: "Display Type",
     upgrade_tips:
         "The device is being upgraded, please be patient, do not refresh the web page or restart the device.",
+    restore_defaults: "Restore Defaults",
+    invalid_ip: "Illegal IP address or domain name",
+    qos_weight_tips: "The sum of the weights must be 100 or zero.",
 };
 
 export default en;

@@ -864,7 +864,7 @@ var zh = {
     traffic_prof: "流量模板",
     traffic_profile_id: "流量模板ID",
     vendorid: "厂商",
-    ont_version: "Ont版本",
+    ont_version: "ONT版本",
     equipmentid: "设备ID",
     omcc_version: "OMCC版本",
     product_code: "产品代码",
@@ -886,7 +886,7 @@ var zh = {
     unitype: "端口类型", // 2
     na_vlan_id: "端口VLAN",
     na_vlan_pri: "端口VLAN优先级",
-    ont_description: "Ont描述信息",
+    ont_description: "ONT描述信息",
     last_dg_time: "上次掉电时间",
     lineprof_id: "线路模板ID",
     lineprof_name: "线路模板Name",
@@ -895,7 +895,7 @@ var zh = {
     uptime: "在线时间",
     version: "版本",
     switch: "切换",
-    ont: "Ont",
+    ont: "ONT",
     onu_port_info: "ONT端口信息",
     adminstate: "端口管理状态",
     epautoneg: "端口自适应",
@@ -1045,6 +1045,9 @@ var zh = {
     least_gem_tips: "最少需要有一条GEM Port",
     display_type: "显示类型",
     upgrade_tips: "设备正在升级中，请耐心等待，不要刷新网页或重启设备。",
+    restore_defaults: "恢复默认值",
+    invalid_ip: "非法IP地址或域名",
+    qos_weight_tips: "权重相加的值必须为100或零。",
 };
 
 export default zh;
