@@ -2,7 +2,7 @@
     <el-form label-width="150px" :model="form" :rules="rules" ref="acl-form">
         <template v-if="type === 'add' || type === 'delete'">
             <template v-if="type === 'add'">
-                <el-form-item :label="'ACL ' + $lang('type')" key="acl-type">
+                <el-form-item :label="'ACL ' + $lang('type')" prop="acl_type" key="acl-type">
                     <el-select v-model="form.acl_type">
                         <template v-for="(item, index) in ACL_TYPE_MAP">
                             <el-option :value="index" :label="item + ' ACL'"></el-option>
@@ -117,7 +117,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { isFunction, isDef, isUndef } from "@/utils/common";
+import { isFunction, isDef, isUndef, isArray } from "@/utils/common";
 import { regRange, regLength } from "@/utils/validator";
 import { ACL_ACTION_MAP, PROTOCOL_MAP, ACL_TYPE_MAP } from "@/utils/commonData";
 export default {
@@ -284,6 +284,9 @@ export default {
                 this.form.acl_type = 0;
                 this.form.rule_id = 1;
             }
+            if (type === "add" || type === "delete") {
+                this.form.acl_id = "";
+            }
             if (isDef(row)) {
                 this.form.acl_id = row.acl_id;
                 if (type === "config") {
@@ -294,16 +297,20 @@ export default {
         },
         validateAcl(rule, val, cb) {
             const min =
-                    this.form.acl_type === 0
-                        ? 2000
-                        : this.form.acl_type === 1
-                        ? 3000
-                        : 5000,
+                    this.type === "add"
+                        ? this.form.acl_type === 0
+                            ? 2000
+                            : this.form.acl_type === 1
+                            ? 3000
+                            : 5000
+                        : 2000,
                 max =
-                    this.form.acl_type === 0
-                        ? 2999
-                        : this.form.acl_type === 1
-                        ? 4999
+                    this.type === "add"
+                        ? this.form.acl_type === 0
+                            ? 2999
+                            : this.form.acl_type === 1
+                            ? 4999
+                            : 5999
                         : 5999;
             if (!regRange(val, min, max)) {
                 return cb(new Error(this.validateMsg("inputRange", min, max)));
@@ -340,6 +347,11 @@ export default {
         validateIpaddr(rule, val, cb) {
             if (val === "" && this.acl_type !== "basic") {
                 return cb();
+            }
+            if (rule.field === "src_ipmask") {
+                if (val === "0.0.0.0") {
+                    return cb();
+                }
             }
             return this.validateIp(rule, val, cb);
         },
@@ -403,18 +415,12 @@ export default {
                             flags |= BASE_FLAGS[key];
                         }
                     });
-                } else if (this.type === "config") {
-                    const row = this.cacheData.rule.filter(
-                        item => item.rule_id === acl
-                    )[0];
-                    Object.keys[BASE_FLAGS].forEach(key => {
-                        if (
-                            (isUndef(row[key]) && data[key] !== "") ||
-                            row[key] !== data[key]
-                        ) {
-                            flags |= BASE_FLAGS[key];
-                        }
-                    });
+                } else if (this.type === "config" || this.type === "rule") {
+                    flags |= this.compareVal(
+                        BASE_FLAGS,
+                        this.form,
+                        this.cacheData.rule || []
+                    );
                 }
                 return flags;
             }
@@ -435,15 +441,12 @@ export default {
                             flags |= ADV_FLAGS[key];
                         }
                     });
-                } else if (this.type === "config") {
-                    const row = this.cacheData.rule.filter(
-                        item => item.rule_id === acl
-                    )[0];
-                    Object.keys[ADV_FLAGS].forEach(key => {
-                        if (isUndef(row[key]) || row[key] !== data[key]) {
-                            flags |= ADV_FLAGS[key];
-                        }
-                    });
+                } else if (this.type === "config" || this.type === "rule") {
+                    flags |= this.compareVal(
+                        ADV_FLAGS,
+                        this.form,
+                        this.cacheData.rule || []
+                    );
                 }
                 return flags;
             }
@@ -463,16 +466,34 @@ export default {
                         flags |= LINK_FLAGS[key];
                     }
                 });
-            } else if (this.type === "config") {
-                const row = this.cacheData.rule.filter(
-                    item => item.rule_id === acl
-                )[0];
-                Object.keys[LINK_FLAGS].forEach(key => {
-                    if (isUndef(row[key]) || row[key] !== data[key]) {
-                        flags |= LINK_FLAGS[key];
-                    }
-                });
+            } else if (this.type === "config" || this.type === "rule") {
+                flags |= this.compareVal(
+                    LINK_FLAGS,
+                    this.form,
+                    this.cacheData.rule || []
+                );
             }
+            return flags;
+        },
+        /**
+         * flagMap {Object} flag集合
+         * form {Object} 表单数据
+         * data {Array} 当前acl_id下的rule列表
+         */
+        compareVal(flagMap, form, data) {
+            let flags = 0;
+            const row = data.filter(item => item.rule_id === form.rule_id)[0];
+            Object.keys(flagMap).forEach(key => {
+                if (!row) {
+                    if (form[key] !== "") {
+                        flags |= flagMap[key];
+                    }
+                } else {
+                    if (isUndef(row[key]) || row[key] !== form[key]) {
+                        flags |= flagMap[key];
+                    }
+                }
+            });
             return flags;
         }
     },
