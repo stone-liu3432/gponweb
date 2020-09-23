@@ -13,7 +13,7 @@
                 <el-col :span="4">
                     <div class="qos-form-item">
                         <template v-if="type === 'cosq'">{{ $lang('queue') }}:</template>
-                        <template v-if="type === 'queue'">{{ $lang('cos') }}</template>
+                        <template v-if="type === 'queue'">{{ $lang('cos') }}:</template>
                     </div>
                     <div class="qos-form-item">
                         <template v-if="type === 'cosq'">{{ $lang('priority') }}:</template>
@@ -24,10 +24,14 @@
                     <div class="qos-form-item">0</div>
                     <div class="qos-form-item">
                         <template v-if="type === 'cosq'">
-                            <el-input v-validator="form.prio0" v-model.number="form.prio0"></el-input>
+                            <el-input
+                                v-validator="form.prio0"
+                                size="small"
+                                v-model.number="form.prio0"
+                            ></el-input>
                         </template>
                         <template v-if="type === 'queue'">
-                            <el-input v-model.number="form.wrr0"></el-input>
+                            <el-input v-model.number="form.wrr0" size="small"></el-input>
                         </template>
                     </div>
                 </el-col>
@@ -39,6 +43,7 @@
                                 <el-input
                                     v-validator="form['prio' + i]"
                                     v-model.number="form['prio' + i]"
+                                    size="small"
                                 ></el-input>
                             </div>
                         </el-col>
@@ -49,7 +54,7 @@
                         <el-col :span="2" style="width: 58px;">
                             <div class="qos-form-item">{{ i }}</div>
                             <div class="qos-form-item">
-                                <el-input v-model.number="form['wrr' + i]"></el-input>
+                                <el-input v-model.number="form['wrr' + i]" size="small"></el-input>
                             </div>
                         </el-col>
                     </template>
@@ -121,6 +126,15 @@ export default {
                         return this.$message.error(this.$lang("param_error"));
                     }
                 }
+                const wrr = Array.from({ length: 8 }).reduce(
+                    (pre, item, index) => {
+                        return pre + Number(this.form["wrr" + index]);
+                    },
+                    0
+                );
+                if (wrr !== 0 && wrr !== 100) {
+                    return this.$message.error(this.$lang("qos_weight_tips"));
+                }
             }
             if (isFunction(fn)) {
                 fn.call(this, this.type, this.form);
@@ -150,6 +164,7 @@ export default {
     }
     .el-input /deep/ .el-input__inner {
         text-align: center;
+        padding: 0 10px;
     }
 }
 .input-validate-error /deep/ .el-input__inner {
