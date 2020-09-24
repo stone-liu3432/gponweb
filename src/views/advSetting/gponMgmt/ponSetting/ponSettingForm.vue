@@ -30,19 +30,23 @@
                 </el-select>
             </el-form-item>
             <template v-if="form.auth_type === 1">
-                <el-form-item :label="$lang('lineprof_id')" prop="lineprof_id" key="lineprof_id">
+                <el-form-item :label="$lang('lineprof_name')" prop="lineprof_id" key="lineprof_id">
                     <el-select v-model.number="form.lineprof_id">
                         <template v-for="item in lineProfs">
                             <el-option :value="item.profid" :label="item.profname"></el-option>
                         </template>
                     </el-select>
+                    <span style="margin-left: 20px;">{{ $lang('lineprof_id') }}:</span>
+                    <span style="margin-left: 12px;">{{ form.lineprof_id }}</span>
                 </el-form-item>
-                <el-form-item :label="$lang('srvprof_id')" prop="srvprof_id" key="srvprof_id">
+                <el-form-item :label="$lang('srvprof_name')" prop="srvprof_id" key="srvprof_id">
                     <el-select v-model.number="form.srvprof_id">
                         <template v-for="item in srvProfs">
                             <el-option :value="item.profid" :label="item.profname"></el-option>
                         </template>
                     </el-select>
+                    <span style="margin-left: 20px;">{{ $lang('srvprof_id') }}:</span>
+                    <span style="margin-left: 12px;">{{ form.srvprof_id }}</span>
                 </el-form-item>
             </template>
         </template>
