@@ -36,7 +36,7 @@ Mock.mock("/switch_mac?form=table", "post", ({ body }) => {
     }).map((item, index) => ({
         macaddr: Random.mac(),
         vlan_id: flags === 4 ? vlan_id + index : Random.range(1, 4094),
-        port_id: flags === 2 ? port_id : Random.range(1, 24),
+        port_id: flags === 2 ? port_id : Random.range(0, 24),
         mac_type: mac_type !== 3 ? mac_type : Random.range(0, 2),
         link_aggregation: Random.range(0, 8),
         svp_id: Random.range(0, 8190) || 0xffff,
