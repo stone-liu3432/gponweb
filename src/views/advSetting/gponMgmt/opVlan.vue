@@ -4,7 +4,7 @@
             <template slot="title">{{ $lang('op_vlan') }}</template>
         </page-header>
         <div style="margin: 12px 0;" v-if="ont_id !== 0xffff">
-            <el-button type="primary" size="small" @click="openDialog()">{{ $lang('add') }}</el-button>
+            <el-button type="primary" size="small" @click="openDialog('add')">{{ $lang('add') }}</el-button>
         </div>
         <template v-if="ont_id !== 0xffff && vlanList.portvlan && vlanList.portvlan.length">
             <el-table :data="vlanList.portvlan || []" border>
@@ -29,13 +29,16 @@
                 </el-table-column>
                 <el-table-column :label="$lang('config')">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="openDialog(scope.row)">{{ $lang('config') }}</el-button>
+                        <el-button
+                            type="text"
+                            @click="openDialog('config', scope.row)"
+                        >{{ $lang('config') }}</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </template>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
-            <div slot="title"></div>
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px" destroy-on-close>
+            <div slot="title">{{ $lang(dialogType) }}</div>
             <op-vlan-form ref="op-vlan-form" :data="vlanList.portvlan || []"></op-vlan-form>
             <div slot="footer">
                 <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
@@ -49,7 +52,7 @@
 import { mapGetters } from "vuex";
 import { isDef } from "@/utils/common";
 import { VLAN_MODES, UNI_TYPES } from "@/utils/commonData";
-import opVlanForm from "@/views/page/tempMgmt/srvTemplate/portvlanForm";
+import opVlanForm from "./opVlan/form";
 import postData from "@/mixin/postData";
 export default {
     name: "opVlan",
@@ -104,16 +107,12 @@ export default {
             }
             this.getData(port_id, ont_id);
         },
-        openDialog(data) {
+        openDialog(type, data) {
+            this.dialogType = type;
             this.dialogVisible = true;
-            if (isDef(data)) {
-                this.dialogType = "";
-                this.$nextTick(() => {
-                    this.$refs["op-vlan-form"].init(data);
-                });
-            } else {
-                this.dialogType = "add";
-            }
+            this.$nextTick(() => {
+                this.$refs["op-vlan-form"].init(type, data);
+            });
         },
         submitForm(formName) {
             this.$refs[formName].validate(formData => {
