@@ -32,7 +32,7 @@
             <el-table-column :label="$lang('macaddr')" prop="macaddr"></el-table-column>
             <el-table-column :label="$lang('vlan_id')" prop="vlan_id"></el-table-column>
             <el-table-column :label="$lang('port_id')">
-                <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                <template slot-scope="scope">{{ getPortName(scope.row.port_id) || 'CPU' }}</template>
             </el-table-column>
             <el-table-column :label="$lang('mac_type')" prop="mac_type">
                 <template slot-scope="scope">{{ $lang(MAC_TYPE_MAP[scope.row.mac_type]) || '-' }}</template>
