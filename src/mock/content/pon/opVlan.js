@@ -14,7 +14,7 @@ Mock.mock(
                 return {
                     uniport: index + 1,
                     unitype: Random.range(0, 1),
-                    mode: Random.range(1, 4),
+                    mode: Random.pick([1, 3, 4]),
                     svlanid: Random.range(1, 4094),
                     svlanpri: Random.range(0, 8),
                     cvlanid: Random.range(1, 4094),
