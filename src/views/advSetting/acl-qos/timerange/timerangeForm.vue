@@ -21,8 +21,8 @@
             </el-form-item>
             <el-form-item :label="$lang('day')" prop="day">
                 <el-select v-model="form.day">
-                    <template v-for="item in DAY_MAP">
-                        <el-option :value="item"></el-option>
+                    <template v-for="(item, index) in DAY_MAP">
+                        <el-option :value="index" :label="item"></el-option>
                     </template>
                 </el-select>
             </el-form-item>
