@@ -96,18 +96,18 @@ export const PORT_ROLE_MAP = [
 export const ADMIN_P2P_MAP = ["auto", "true", "false"];
 
 // acl-qos
-export const DAY_MAP = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-    "Daily",
-    "Weekend",
-    "Working-day",
-];
+export const DAY_MAP = {
+    mon: "Monday",
+    tue: "Tuesday",
+    wed: "Wednesday",
+    thu: "Thursday",
+    fri: "Friday",
+    sat: "Saturday",
+    sun: "Sunday",
+    daily: "Daily",
+    weekend: "Weekend",
+    "working-day": "Working-day",
+};
 
 export const ACL_TYPE_MAP = ["basic", "advanced", "link"];
 
