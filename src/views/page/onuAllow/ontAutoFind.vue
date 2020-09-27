@@ -1,10 +1,15 @@
 <template>
     <div>
         <div style="margin: 10px 0 20px 0;">
-            <nms-filter inline :data="autofindList" :primary="filterable" @change="dataChange"></nms-filter>
+            <nms-filter
+                inline
+                :data="autofindList"
+                :primary="filterable"
+                @change="dataChange"
+            ></nms-filter>
             <el-button type="primary" size="small" @click="changeBatch">
-                <template v-if="!isBatch">{{ $lang('batch_config') }}</template>
-                <template v-else>{{ $lang('exit_batch_onu') }}</template>
+                <template v-if="!isBatch">{{ $lang("batch_config") }}</template>
+                <template v-else>{{ $lang("exit_batch_onu") }}</template>
             </el-button>
             <template v-if="isBatch">
                 <el-button
@@ -12,13 +17,15 @@
                     size="small"
                     style="margin-left: 30px;"
                     @click="submitBatch"
-                >{{ $lang('delete') }}</el-button>
+                    >{{ $lang("delete") }}</el-button
+                >
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="batchAddToAuthlist"
-                >{{ $lang('add_to_auth_list') }}</el-button>
+                    >{{ $lang("add_to_auth_list") }}</el-button
+                >
             </template>
         </div>
         <el-table
@@ -32,25 +39,52 @@
                 <el-table-column type="selection"></el-table-column>
             </template>
             <el-table-column :label="$lang('ont_id')">
-                <template
-                    slot-scope="scope"
-                >{{ `${getPortName((scope.row.identifier >> 8) & 0xff)}/${scope.row.ont_id}` }}</template>
+                <template slot-scope="scope">{{
+                    `${getPortName((scope.row.identifier >> 8) & 0xff)}/${
+                        scope.row.ont_id
+                    }`
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('ont_sn')" prop="ont_sn"></el-table-column>
-            <el-table-column :label="$lang('ont_password')" prop="ont_password"></el-table-column>
-            <el-table-column :label="$lang('loid')" prop="loid"></el-table-column>
-            <el-table-column :label="$lang('loid_password')" prop="loid_password"></el-table-column>
-            <el-table-column :label="$lang('vendorid')" prop="vendorid"></el-table-column>
-            <el-table-column :label="$lang('ont_version')" prop="ont_version"></el-table-column>
-            <el-table-column :label="$lang('equipmentid')" prop="equipmentid"></el-table-column>
-            <el-table-column :label="$lang('autofind_time')" prop="autofind_time"></el-table-column>
+            <el-table-column
+                :label="$lang('ont_sn')"
+                prop="ont_sn"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('ont_password')"
+                prop="ont_password"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('loid')"
+                prop="loid"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('loid_password')"
+                prop="loid_password"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('vendorid')"
+                prop="vendorid"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('ont_version')"
+                prop="ont_version"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('equipmentid')"
+                prop="equipmentid"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('autofind_time')"
+                prop="autofind_time"
+            ></el-table-column>
             <el-table-column :label="$lang('config')" width="180px">
                 <template slot-scope="scope">
-                    <el-button
-                        type="text"
-                        @click="addOntToAuth(scope.row)"
-                    >{{ $lang('add_to_auth_list') }}</el-button>
-                    <el-button type="text" @click="deleteAutofind(scope.row)">{{ $lang('delete') }}</el-button>
+                    <el-button type="text" @click="addOntToAuth(scope.row)">{{
+                        $lang("add_to_auth_list")
+                    }}</el-button>
+                    <el-button type="text" @click="deleteAutofind(scope.row)">{{
+                        $lang("delete")
+                    }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -64,14 +98,17 @@
             hide-on-single-page
         ></el-pagination>
         <el-dialog :visible="dialogVisible" append-to-body width="650px">
-            <div slot="title">{{ $lang('config') }}</div>
+            <div slot="title">{{ $lang("config") }}</div>
             <auto-find-form ref="auto-find-form"></auto-find-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitBatchAdd('auto-find-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -172,7 +209,7 @@ export default {
         deleteAutofind(row) {
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
                 .then(_ => {
-                    this.submitDelete([row.identifier]);
+                    this.submitDelete([(this.port_id << 8) | row.ont_id]);
                 })
                 .catch(_ => {});
         },
@@ -205,7 +242,9 @@ export default {
             }
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
                 .then(_ => {
-                    const rows = this.ontlist.map(item => item.identifier);
+                    const rows = this.ontlist.map(
+                        item => (this.port_id << 8) | item.ont_id
+                    );
                     rows.sort((a, b) => a - b);
                     this.submitDelete(rows);
                     this.changeBatch();
