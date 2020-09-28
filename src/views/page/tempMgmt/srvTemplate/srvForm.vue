@@ -116,7 +116,7 @@
                 </el-form-item>
             </template>
         </el-form>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="500px">
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="500px" destroy-on-close>
             <portvlan-form :data="portvlan" ref="portvlan-form"></portvlan-form>
             <div slot="footer">
                 <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
@@ -251,7 +251,15 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate(formData => {
                 if (formData) {
-                    this.portvlan.push(formData);
+                    this.portvlan.push({
+                        uniport: formData.uniport,
+                        unitype: formData.unitype,
+                        mode: formData.mode,
+                        svlanid: formData.svlanid,
+                        svlanpri: formData.svlanpri,
+                        cvlanid: formData.cvlanid,
+                        cvlanpri: formData.cvlanpri
+                    });
                     this.dialogVisible = false;
                 }
             });
@@ -283,8 +291,8 @@ export default {
             });
         },
         validateProfname(rule, val, cb) {
-            if (!regLength(val, 1, 32)) {
-                return cb(new Error(this.validateMsg("inputLength", 1, 32)));
+            if (!regLength(val, 0, 32)) {
+                return cb(new Error(this.validateMsg("inputLength", 0, 32)));
             }
             cb();
         },
