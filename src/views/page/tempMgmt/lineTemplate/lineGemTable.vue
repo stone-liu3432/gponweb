@@ -1,20 +1,22 @@
 <template>
-    <el-table :data="data" border stripe :span-method="spanMethod">
+    <el-table :data="data" border stripe :span-method="spanMethod" :row-key="getRowKey">
         <el-table-column :label="$lang('gemindex')" prop="gemindex" width="120px"></el-table-column>
         <el-table-column :label="$lang('tcontid')" prop="tcontid" width="120px"></el-table-column>
         <el-table-column :label="$lang('mapping')">
             <template slot-scope="scope">
-                <el-table :data="scope.row.mapping" size="mini">
+                <el-table :data="scope.row.mapping" size="mini" :key="scope.row.gemindex">
                     <el-table-column :label="$lang('mid')" prop="mid"></el-table-column>
                     <el-table-column :label="$lang('mode')">
-                        <template slot-scope="sub">{{ mappingModes[sub.row.mode] }}</template>
+                        <template slot-scope="sub">{{ MAPPING_MODES[sub.row.mode] }}</template>
                     </el-table-column>
                     <el-table-column :label="$lang('vlan_id')" prop="vlan_id">
                         <template
                             slot-scope="sub"
-                        >{{ sub.row.vlan_id === 0xffff ? 'untag' : sub.row.vlan_id }}</template>
+                        >{{ sub.row.mode !== 2 ? (sub.row.vlan_id === 0xffff ? 'untag' : sub.row.vlan_id) : '-' }}</template>
                     </el-table-column>
-                    <el-table-column :label="$lang('vlan_pri')" prop="vlan_pri"></el-table-column>
+                    <el-table-column :label="$lang('vlan_pri')" prop="vlan_pri">
+                        <template slot-scope="sub">{{ sub.row.mode !== 1 ? sub.row.vlan_pri : '-' }}</template>
+                    </el-table-column>
                     <el-table-column :label="$lang('config')" width="80px">
                         <template slot="header">
                             <el-button
@@ -38,8 +40,13 @@
                 </el-table>
             </template>
         </el-table-column>
-        <el-table-column :label="$lang('config')" width="80px">
+        <el-table-column :label="$lang('config')" width="100px">
             <template slot-scope="scope">
+                <!-- <el-button
+                    type="text"
+                    size="small"
+                    @click.native="openDialog('addMapping', scope.row)"
+                >{{ $lang('add', 'mapping') }}</el-button>-->
                 <el-popconfirm
                     :title="$lang('if_sure', 'delete', 'gem') + ' ?'"
                     hideIcon
@@ -57,6 +64,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { removeItem } from "@/utils/common";
+import { MAPPING_MODES } from "@/utils/commonData";
 export default {
     name: "lineGemTable",
     props: {
@@ -66,7 +74,7 @@ export default {
     },
     data() {
         return {
-            mappingModes: { 1: "VLAN", 2: "Priority", 3: "TCI" }
+            MAPPING_MODES
         };
     },
     computed: { ...mapGetters(["$lang"]) },
@@ -82,6 +90,9 @@ export default {
         deleteGemItem(row) {
             removeItem(this.data, row);
             this.$emit("change-data");
+        },
+        getRowKey(row) {
+            return row.gemport;
         }
     }
 };
