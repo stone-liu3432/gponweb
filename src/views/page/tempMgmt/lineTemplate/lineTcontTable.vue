@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="data" border stripe>
+    <el-table :data="tcont" border stripe>
         <el-table-column :label="$lang('tcid')" prop="tcid" width="120px"></el-table-column>
         <el-table-column :label="$lang('dba_profid')" prop="dba_profid" width="120px"></el-table-column>
         <el-table-column :label="$lang('dba_profname')" prop="dba_profname"></el-table-column>
@@ -25,7 +25,10 @@ import { removeItem } from "@/utils/common";
 export default {
     name: "lineTcontTable",
     props: {
-        data: {
+        tcont: {
+            type: Array
+        },
+        gem: {
             type: Array
         }
     },
@@ -34,7 +37,10 @@ export default {
     },
     methods: {
         deleteTcontItem(row) {
-            removeItem(this.data, row);
+            if (this.gem.some(item => row.tcid === item.tcontid)) {
+                return this.$message.error(this.$lang("tcont_delete"));
+            }
+            removeItem(this.tcont, row);
             this.$emit("change-data");
         }
     }
