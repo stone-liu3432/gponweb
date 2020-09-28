@@ -50,10 +50,11 @@
             :close-on-press-escape="false"
             :close-on-click-modal="false"
             :before-close="beforeClose"
+            destroy-on-close
         >
             <srv-detail :data="detail" ref="srv-detail" @set-profile="setProfile"></srv-detail>
         </el-dialog>
-        <el-dialog :visible.sync="setVisible" width="640px" append-to-body>
+        <el-dialog :visible.sync="setVisible" width="640px" append-to-body destroy-on-close>
             <template slot="title">{{ $lang(dialogType) }}</template>
             <srv-form :type="dialogType" :data="dialogData" ref="srv-form"></srv-form>
             <div slot="footer">
@@ -61,7 +62,7 @@
                 <el-button type="primary" @click="submitForm('srv-form')">{{ $lang('apply') }}</el-button>
             </div>
         </el-dialog>
-        <el-dialog :visible.sync="bindingVisible" width="800px">
+        <el-dialog :visible.sync="bindingVisible" width="800px" destroy-on-close>
             <div slot="title">
                 <span>{{ $lang('profid') }}:</span>
                 <span style="margin: 0 50px 0 12px;">{{ rowData.profid }}</span>
