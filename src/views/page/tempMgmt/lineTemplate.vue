@@ -80,11 +80,12 @@
             :close-on-press-escape="false"
             :close-on-click-modal="false"
             :before-close="closeDialog"
+            destroy-on-close
         >
             <line-form
                 :lineData="dialogData"
                 :dbaData="dbaProfiles"
-                :lineTable="lineTable"
+                :lineTable="lineProfs"
                 :type="dialogType"
                 ref="line-form"
             ></line-form>
@@ -191,7 +192,7 @@ export default {
                 })
                 .catch(err => {})
                 .finally(_ => {
-                    isFunction(loading.close) && loading.close();
+                    loading.close();
                 });
         },
         showDetail(row) {
@@ -200,7 +201,9 @@ export default {
         openDialog(type, data) {
             this.dialogType = type;
             this.setVisible = true;
-            isDef(data) && (this.dialogData = data);
+            if (isDef(data)) {
+                this.dialogData = data;
+            }
             this.$nextTick(_ => {
                 this.$refs["line-form"].init();
             });
@@ -220,6 +223,9 @@ export default {
                         return this.$message.error(
                             this.$lang("least_gem_tips")
                         );
+                    }
+                    if (this.validateGem(formData.gem)) {
+                        return;
                     }
                     const post_params = {
                         method: type,
@@ -295,17 +301,6 @@ export default {
                     isFunction(loading.close) && loading.close();
                 });
         },
-        getOntList(row) {
-            return parseStringAsList(row.resource).map(item => ({
-                port_id: row.port_id,
-                ont_id: item
-            }));
-        },
-        getOntName(item) {
-            return `${this.getPortName(item.port_id)}/${
-                item.ont_id < 10 ? "0" + item.ont_id : item.ont_id
-            }`;
-        },
         getOntRange(row) {
             const range = parseStringAsList(row.resource);
             if (!range.length) {
@@ -336,6 +331,13 @@ export default {
                 .join(",");
         },
         submitModify(data) {
+            const flags = this.validateGem(data.gem);
+            if (flags) {
+                this.$nextTick(_ => {
+                    this.$refs["line-detail"].dataChange();
+                });
+                return;
+            }
             this.postData("/lineprofile", {
                 method: "set",
                 param: data
@@ -356,6 +358,7 @@ export default {
                         comp.submitModify();
                     })
                     .catch(_ => {
+                        comp.resetFlags();
                         done();
                     });
             } else {
@@ -364,6 +367,64 @@ export default {
         },
         dataChange(data) {
             this.filterableList = data;
+        },
+        validateGem(gem) {
+            const heap = {};
+            return gem.some(item => {
+                if (item.mapping) {
+                    return item.mapping.some(_item => {
+                        const vid = _item.vlan_id || 0xffff;
+                        if (!heap[vid]) {
+                            heap[vid] = {
+                                vlan_id: _item.vlan_id,
+                                gemindex: item.gemindex,
+                                mid: _item.mid,
+                                mode: _item.mode,
+                                vlan_pri: _item.vlan_pri
+                            };
+                        } else {
+                            // 在设置时，untagged也是一个vlan id
+                            // 同一个gemport下，只能有一种mapping模式
+                            // 同一个gemport下，正常vlanid范围和untagged，互斥
+                            // 不同的gemport下，mapping mode+vlanid+pri不能有重复
+                            // 不同的gemport下，priority和其他mapping mode，互斥
+                            // 不同的gemport下，模式为vlan或者vlan+pri时，vlan id一致不被允许，提示流已经存在
+                            // 互斥时，提示配置冲突
+                            const {
+                                mode,
+                                vlan_id,
+                                vlan_pri,
+                                mid,
+                                gemindex
+                            } = heap[vid];
+                            // 1-VLAN,2-Priority,3-TCI
+                            if (mode === _item.mode) {
+                                switch (mode) {
+                                    case 1:
+                                        this.$message.warning(
+                                            `In gemindex ${gemindex} and ${item.gemindex}, has reduplicative VLAN ID: ${vlan_id}`
+                                        );
+                                        return true;
+                                    case 2:
+                                        if (vlan_pri === _item.vlan_pri) {
+                                            this.$message.warning(
+                                                `In gemindex ${gemindex} and ${item.gemindex}, has reduplicative VLAN ID: ${vlan_id} and VLAN priority: ${vlan_pri}`
+                                            );
+                                            return true;
+                                        }
+                                        break;
+                                    case 3:
+                                        // 除 mode 为 pri 时，其他出现vlan_id一致时，非法
+                                        this.$message.warning(
+                                            `In gemindex ${gemindex} and ${item.gemindex}, has reduplicative VLAN ID: ${vlan_id}`
+                                        );
+                                        return true;
+                                }
+                            }
+                        }
+                    });
+                }
+            });
         }
     }
 };
