@@ -1,6 +1,13 @@
 <template>
-    <el-form :model="form" label-width="180px" ref="ont-port-config-form" :rules="rules">
-        <el-form-item :label="$lang('uniport')" prop="uniport">{{ form.uniport }}</el-form-item>
+    <el-form
+        :model="form"
+        label-width="180px"
+        ref="ont-port-config-form"
+        :rules="rules"
+    >
+        <el-form-item :label="$lang('uniport')" prop="uniport">{{
+            form.uniport
+        }}</el-form-item>
         <template v-if="type === 'port'">
             <el-form-item :label="$lang('epspeed')" prop="epspeed">
                 <el-select v-model.number="form.epspeed">
@@ -42,26 +49,40 @@
             </el-form-item>
         </template>
         <template v-if="type === 'vlan'">
-            <el-form-item :label="$lang('unitype')" prop="unitype" key="unitype">
+            <el-form-item
+                :label="$lang('unitype')"
+                prop="unitype"
+                key="unitype"
+            >
                 <el-select v-model.number="form.unitype">
-                    <template v-for="(item,index) in UNI_TYPES">
+                    <template v-for="(item, index) in UNI_TYPES">
                         <el-option :label="item" :value="index"></el-option>
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('na_vlan_id')" prop="na_vlan_id" key="na_vlan_id">
+            <el-form-item
+                :label="$lang('na_vlan_id')"
+                prop="na_vlan_id"
+                key="na_vlan_id"
+            >
                 <el-input
                     v-model.number="form.na_vlan_id"
                     :disabled="flush_vlan"
                     style="width: 215px;"
                 ></el-input>
-                <el-checkbox
-                    v-model="flush_vlan"
-                    style="margin-left: 30px;"
-                >{{ $lang('clear') }} VLAN</el-checkbox>
+                <el-checkbox v-model="flush_vlan" style="margin-left: 30px;"
+                    >{{ $lang("untag") }} VLAN</el-checkbox
+                >
             </el-form-item>
-            <el-form-item :label="$lang('na_vlan_pri')" prop="na_vlan_pri" key="na_vlan_pri">
-                <el-select v-model.number="form.na_vlan_pri" :disabled="flush_vlan">
+            <el-form-item
+                :label="$lang('na_vlan_pri')"
+                prop="na_vlan_pri"
+                key="na_vlan_pri"
+            >
+                <el-select
+                    v-model.number="form.na_vlan_pri"
+                    :disabled="flush_vlan"
+                >
                     <el-option label="-" :value="15"></el-option>
                     <el-option :value="0"></el-option>
                     <template v-for="i in 7">
