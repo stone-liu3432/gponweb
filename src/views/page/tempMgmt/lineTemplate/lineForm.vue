@@ -1,10 +1,19 @@
 <template>
     <div>
-        <el-form :model="form" label-width="120px" :rules="rules" ref="add-line-form">
-            <el-form-item :label="$lang('profname')" prop="profname">
+        <el-form
+            :model="form"
+            label-width="120px"
+            :rules="rules"
+            ref="add-line-form"
+        >
+            <el-form-item
+                :label="$lang('profname')"
+                prop="profname"
+                key="profname"
+            >
                 <el-input v-model="form.profname"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('profid')" prop="profid">
+            <el-form-item :label="$lang('profid')" prop="profid" key="profid">
                 <el-input
                     v-model.number="form.profid"
                     style="width: 200px;"
@@ -14,31 +23,48 @@
                     v-model="autoAssignProfid"
                     :disabled="type === 'set'"
                     style="margin-left: 30px;"
-                >{{ $lang('auto_assign') }}</el-checkbox>
+                    >{{ $lang("auto_assign") }}</el-checkbox
+                >
             </el-form-item>
-            <el-form-item :label="$lang('type')" prop="type">
+            <el-form-item :label="$lang('type')" prop="type" key="type">
                 <el-select v-model.number="form.type">
                     <el-option label="EPON" :value="1"></el-option>
                     <el-option label="GPON" :value="2"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('mappingmode')" prop="mappingmode">
+            <el-form-item
+                :label="$lang('mappingmode')"
+                prop="mappingmode"
+                key="mapping-mode"
+            >
                 <el-select v-model.number="form.mappingmode">
                     <template v-for="(item, index) in MAPPING_MODES">
-                        <el-option :label="item" :value="index >>> 0"></el-option>
+                        <el-option
+                            :label="item"
+                            :value="index >>> 0"
+                        ></el-option>
                     </template>
                 </el-select>
             </el-form-item>
             <template v-if="type !== 'set'">
-                <el-form-item :label="$lang('tcont')" prop="tcont">
+                <el-form-item :label="$lang('tcont')" prop="tcont" key="tcont">
                     <el-popover
                         placement="right"
                         width="500"
                         trigger="manual"
                         v-model="tcontPopVisible"
                     >
-                        <el-table :data="tconts" border size="small" max-height="500px">
-                            <el-table-column width="89" prop="tcid" :label="$lang('tcid')"></el-table-column>
+                        <el-table
+                            :data="tconts"
+                            border
+                            size="small"
+                            max-height="500px"
+                        >
+                            <el-table-column
+                                width="89"
+                                prop="tcid"
+                                :label="$lang('tcid')"
+                            ></el-table-column>
                             <el-table-column
                                 width="110"
                                 prop="dba_profid"
@@ -49,7 +75,10 @@
                                 prop="dba_profname"
                                 :label="$lang('dba_profname')"
                             ></el-table-column>
-                            <el-table-column :label="$lang('action')" width="100">
+                            <el-table-column
+                                :label="$lang('action')"
+                                width="100"
+                            >
                                 <template slot-scope="scope">
                                     <el-popconfirm
                                         :confirmButtonText="$lang('apply')"
@@ -57,12 +86,15 @@
                                         icon="el-icon-info"
                                         iconColor="red"
                                         :title="$lang('if_sure', 'delete')"
-                                        @onConfirm="deleteItem('tconts', scope.row)"
+                                        @onConfirm="
+                                            deleteItem('tconts', scope.row)
+                                        "
                                     >
                                         <el-button
                                             slot="reference"
                                             type="text"
-                                        >{{ $lang('delete') }}</el-button>
+                                            >{{ $lang("delete") }}</el-button
+                                        >
                                     </el-popconfirm>
                                 </template>
                             </el-table-column>
@@ -70,25 +102,48 @@
                         <el-button
                             slot="reference"
                             @click="changePopVisible('tcont')"
-                        >{{ tcontPopVisible ? $lang('hidden', 'is_exists') : $lang('show', 'is_exists') }}</el-button>
+                            >{{
+                                tcontPopVisible
+                                    ? $lang("hidden", "is_exists")
+                                    : $lang("show", "is_exists")
+                            }}</el-button
+                        >
                     </el-popover>
                     <el-button
                         style="margin-left: 20px;"
                         type="primary"
                         @click="openAddDialog('tcont')"
-                    >{{ $lang('add') }}</el-button>
+                        >{{ $lang("add") }}</el-button
+                    >
                 </el-form-item>
-                <el-form-item :label="$lang('gem')" prop="gem">
+                <el-form-item :label="$lang('gem')" prop="gem" key="gem">
                     <el-popover
                         placement="right"
                         width="680"
                         trigger="manual"
                         v-model="gemPopVisible"
                     >
-                        <el-table :data="gems" border size="small" max-height="500px">
-                            <el-table-column width="79" prop="gemindex" :label="$lang('gemindex')"></el-table-column>
-                            <el-table-column width="80" prop="tcontid" :label="$lang('tcontid')"></el-table-column>
-                            <el-table-column width="420" prop="mapping" :label="$lang('mapping')">
+                        <el-table
+                            :data="gems"
+                            border
+                            size="small"
+                            max-height="500px"
+                        >
+                            <el-table-column
+                                width="79"
+                                prop="gemindex"
+                                :label="$lang('gemindex')"
+                            ></el-table-column>
+                            <el-table-column
+                                width="80"
+                                prop="tcontid"
+                                :label="$lang('tcontid')"
+                            ></el-table-column>
+                            <el-table-column
+                                width="420"
+                                prop="mapping"
+                                :label="$lang('mapping')"
+                            >
                                 <template slot-scope="scope">
                                     <!-- 无key时，vue无法实时更新数据变化 -->
                                     <el-table
@@ -102,49 +157,94 @@
                                             width="70"
                                             prop="mid"
                                         ></el-table-column>
-                                        <el-table-column width="79" :label="$lang('mode')">
-                                            <template
-                                                slot-scope="scope"
-                                            >{{ MAPPING_MODES[scope.row.mode] }}</template>
+                                        <el-table-column
+                                            width="79"
+                                            :label="$lang('mode')"
+                                        >
+                                            <template slot-scope="sub">{{
+                                                MAPPING_MODES[sub.row.mode]
+                                            }}</template>
                                         </el-table-column>
-                                        <el-table-column width="80" :label="$lang('vlan_id')">
-                                            <template
-                                                slot-scope="scope"
-                                            >{{ scope.row.vlan_id === 0xffff ? 'untag' : scope.row.vlan_id }}</template>
+                                        <el-table-column
+                                            width="80"
+                                            :label="$lang('vlan_id')"
+                                        >
+                                            <template slot-scope="sub">{{
+                                                sub.row.mode !== 2
+                                                    ? sub.row.vlan_id === 0xffff
+                                                        ? "untag"
+                                                        : sub.row.vlan_id
+                                                    : "-"
+                                            }}</template>
                                         </el-table-column>
                                         <el-table-column
                                             width="80"
                                             prop="vlan_pri"
                                             :label="$lang('vlan_pri')"
-                                        ></el-table-column>
+                                        >
+                                            <template slot-scope="sub">{{
+                                                sub.row.mode !== 1
+                                                    ? sub.row.vlan_pri
+                                                    : "-"
+                                            }}</template>
+                                        </el-table-column>
                                         <el-table-column width="90">
                                             <template slot="header">
                                                 <el-button
                                                     type="primary"
                                                     size="small"
-                                                    @click="openAddDialog('mapping', scope.row)"
-                                                >{{ $lang('add') }}</el-button>
+                                                    @click="
+                                                        openAddDialog(
+                                                            'mapping',
+                                                            scope.row
+                                                        )
+                                                    "
+                                                    >{{
+                                                        $lang("add")
+                                                    }}</el-button
+                                                >
                                             </template>
-                                            <template slot-scope="columnScope">
+                                            <template slot-scope="sub">
                                                 <el-popconfirm
-                                                    :confirmButtonText="$lang('apply')"
-                                                    :cancelButtonText="$lang('cancel')"
+                                                    :confirmButtonText="
+                                                        $lang('apply')
+                                                    "
+                                                    :cancelButtonText="
+                                                        $lang('cancel')
+                                                    "
                                                     icon="el-icon-info"
                                                     iconColor="red"
-                                                    :title="$lang('if_sure', 'delete')"
-                                                    @onConfirm="deleteItem('mappings', scope.row, columnScope.row)"
+                                                    :title="
+                                                        $lang(
+                                                            'if_sure',
+                                                            'delete'
+                                                        )
+                                                    "
+                                                    @onConfirm="
+                                                        deleteItem(
+                                                            'mappings',
+                                                            scope.row,
+                                                            sub.row
+                                                        )
+                                                    "
                                                 >
                                                     <el-button
                                                         slot="reference"
                                                         type="text"
-                                                    >{{ $lang('delete') }}</el-button>
+                                                        >{{
+                                                            $lang("delete")
+                                                        }}</el-button
+                                                    >
                                                 </el-popconfirm>
                                             </template>
                                         </el-table-column>
                                     </el-table>
                                 </template>
                             </el-table-column>
-                            <el-table-column :label="$lang('action')" width="100">
+                            <el-table-column
+                                :label="$lang('action')"
+                                width="100"
+                            >
                                 <template slot-scope="scope">
                                     <el-popconfirm
                                         :confirmButtonText="$lang('apply')"
@@ -152,12 +252,15 @@
                                         icon="el-icon-info"
                                         iconColor="red"
                                         :title="$lang('if_sure', 'delete')"
-                                        @onConfirm="deleteItem('gems', scope.row)"
+                                        @onConfirm="
+                                            deleteItem('gems', scope.row)
+                                        "
                                     >
                                         <el-button
                                             slot="reference"
                                             type="text"
-                                        >{{ $lang('delete') }}</el-button>
+                                            >{{ $lang("delete") }}</el-button
+                                        >
                                     </el-popconfirm>
                                 </template>
                             </el-table-column>
@@ -165,23 +268,34 @@
                         <el-button
                             slot="reference"
                             @click="changePopVisible('gem')"
-                        >{{ gemPopVisible ? $lang('hidden', 'is_exists') : $lang('show', 'is_exists') }}</el-button>
+                            >{{
+                                gemPopVisible
+                                    ? $lang("hidden", "is_exists")
+                                    : $lang("show", "is_exists")
+                            }}</el-button
+                        >
                     </el-popover>
                     <el-button
                         style="margin-left: 20px;"
                         type="primary"
                         @click="openAddDialog('gem')"
-                    >{{ $lang('add') }}</el-button>
-                    <el-button
+                        >{{ $lang("add") }}</el-button
+                    >
+                    <!-- <el-button
                         style="margin-left: 30px;"
                         type="primary"
                         @click="openAddDialog('addMapping')"
                         :disabled="diaabledAddMapping"
-                    >{{ $lang('add', 'mapping') }}</el-button>
+                    >{{ $lang('add', 'mapping') }}</el-button>-->
                 </el-form-item>
             </template>
         </el-form>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
+        <el-dialog
+            :visible.sync="dialogVisible"
+            append-to-body
+            width="650px"
+            destroy-on-close
+        >
             <template slot="title">{{ $lang(dialogType) }}</template>
             <add-or-set-form
                 :type="dialogType"
@@ -191,11 +305,14 @@
                 ref="add-or-set-form"
             ></add-or-set-form>
             <span slot="footer">
-                <el-button @click="dialogVisible = false">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('add-or-set-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </span>
         </el-dialog>
     </div>
@@ -222,9 +339,6 @@ export default {
                     return this.gems;
                 },
                 mapping() {
-                    return this.mappings;
-                },
-                addMapping() {
                     return this.gems;
                 }
             };
@@ -332,7 +446,7 @@ export default {
             }
             this.dialogVisible = true;
             this.$nextTick(_ => {
-                this.$refs["add-or-set-form"].init();
+                this.$refs["add-or-set-form"].init(data);
             });
         },
         submitForm(formName) {
@@ -367,17 +481,6 @@ export default {
                                 vlan_id: data.vlan_id,
                                 vlan_pri: data.vlan_pri
                             });
-                        },
-                        addMapping(data) {
-                            const gem = this.gems.filter(
-                                item => item.gemindex === data.gemindex
-                            )[0];
-                            gem.mapping.push({
-                                mid: data.mid,
-                                mode: data.mode,
-                                vlan_id: data.vlan_id,
-                                vlan_pri: data.vlan_pri
-                            });
                         }
                     };
                     if (isFunction(ACTIONS[this.dialogType])) {
@@ -391,6 +494,17 @@ export default {
             this.$refs["add-line-form"].validate(valid => {
                 if (valid) {
                     if (isFunction(fn)) {
+                        if (
+                            this.lineTable.some(
+                                item => item.profid === this.form.profid
+                            )
+                        ) {
+                            return this.$message.error(
+                                `${this.$lang("duplicate_param")}: ${this.$lang(
+                                    "profid"
+                                )}`
+                            );
+                        }
                         if (!this.tconts.length) {
                             this.$message.error(this.$lang("no_tcont_info"));
                             fn.call(this, this.type, false);
@@ -440,6 +554,12 @@ export default {
             if (val === "" && !this.autoAssignProfid) {
                 this.form.profid = 0;
             }
+            if (val === 0xfffe) {
+                return cb();
+            }
+            if (!regRange(val, 0, 2048)) {
+                return cb(new Error(this.validateMsg("inputRange", 0, 2048)));
+            }
             if (this.lineTable.some(item => item.profid === val)) {
                 return cb(
                     new Error(
@@ -448,14 +568,9 @@ export default {
                         )}`
                     )
                 );
+            } else {
+                cb();
             }
-            if (val === 0xfffe) {
-                return cb();
-            }
-            if (!regRange(val, 0, 2048)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 2048)));
-            }
-            cb();
         },
         changePopVisible(type) {
             if (type === "tcont") {
