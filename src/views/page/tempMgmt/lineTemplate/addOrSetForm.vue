@@ -28,24 +28,25 @@
                 </el-form-item>
             </template>
             <!-- add mapping -->
-            <template v-if="type === 'addMapping'">
-                <el-form-item :label="$lang('gem')" key="add-mapping">
-                    <el-select v-model="form.gemindex">
-                        <template v-for="item in existsData">
-                            <!-- gem 下的 mapping 为 untag 模式时，禁止选取此 gem -->
-                            <el-option
-                                :value="item.gemindex"
-                                :disabled="diabledOption(item.mapping || [])"
-                            ></el-option>
-                        </template>
-                    </el-select>
-                </el-form-item>
-            </template>
-            <template v-if="type === 'mapping' || type === 'gem' || type === 'addMapping' ">
+            <template v-if="type === 'mapping' || type === 'gem'">
+                <template v-if="type === 'mapping'">
+                    <el-form-item
+                        :label="$lang('gem')"
+                        prop="gemindex"
+                        key="add-mapping"
+                    >{{ form.gemindex }}</el-form-item>
+                </template>
                 <el-form-item :label="$lang('mode')" prop="mode" key="mode">
                     <el-select v-model.number="form.mode" :disabled="disabledMode">
                         <template v-for="(item, index) in MAPPING_MODES">
-                            <el-option :value="index >>> 0" :label="item"></el-option>
+                            <!-- gem 下的 mapping_mode 有且只有 vlan, priority, tci三种模式-->
+                            <template v-if="index != 4">
+                                <el-option
+                                    :value="Number(index)"
+                                    :label="item"
+                                    :disabled="disabledModeItem(Number(index))"
+                                ></el-option>
+                            </template>
                         </template>
                     </el-select>
                 </el-form-item>
@@ -102,7 +103,8 @@ export default {
             type: Array
         },
         existsData: {
-            type: Array
+            type: Array,
+            default: _ => []
         }
     },
     data() {
@@ -140,10 +142,14 @@ export default {
                 ],
                 mid: [
                     { validator: this.validateMid, trigger: ["change", "blur"] }
+                ],
+                vlan_pri: [
+                    { validator: this.validatePri, trigger: ["change", "blur"] }
                 ]
             },
             disabledMode: false,
-            autoAssignVlan: false
+            autoAssignVlan: false,
+            gemCache: {}
         };
     },
     methods: {
@@ -154,24 +160,43 @@ export default {
                 // dbaData无项时，无法打开此dialog
                 this.form.dba_profid = this.dbaData[0]["profid"];
                 this.form.dba_profname = this.dbaData["0"]["profname"];
+                this.form.tcid = "";
             }
             if (this.type === "gem") {
                 // tconts为空时，无法打开此dialog
                 this.form.tcontid = this.tconts[0].tcid;
                 this.disabledMode = false;
+                this.form.gemindex = "";
+                if (this.existsData.length) {
+                    this.existsData.forEach(item => {
+                        if (item.mapping && item.mapping.length) {
+                            const mapping = item.mapping[0];
+                            this.form.mode = mapping.mode;
+                        }
+                    });
+                }
             }
             if (this.type === "mapping") {
-                this.lockMode(this.existsData);
+                this.gemCache = row;
+                this.form.gemindex = row.gemindex;
+                this.lockMode(row.mapping);
             }
-            if (this.type === "addMapping") {
-                const data = this.existsData.filter(item => {
-                    if (item.mapping.length) {
-                        return item.mapping[0].vlan_id !== 0xffff;
+        },
+        // 1-VLAN,2-Priority,3-TCI
+        disabledModeItem(val) {
+            if (this.existsData && this.existsData.length) {
+                return this.existsData.some(item => {
+                    if (item.mapping && item.mapping.length) {
+                        const mode = item.mapping[0].mode;
+                        if (mode === 2) {
+                            return val !== mode;
+                        } else {
+                            return val === 2;
+                        }
                     }
-                    return true;
-                })[0];
-                this.form.gemindex = row ? row.gemindex : data.gemindex;
-                this.lockMode(data.mapping);
+                });
+            } else {
+                return false;
             }
         },
         lockMode(data) {
@@ -204,13 +229,16 @@ export default {
                     )
                 );
             }
-            if (!regRange(val, 1, 32)) {
-                return cb(new Error(this.validateMsg("inputRange", 1, 32)));
+            if (!regRange(val, 1, 4)) {
+                return cb(new Error(this.validateMsg("inputRange", 1, 4)));
             }
             cb();
         },
         validateGemindex(rule, val, cb) {
-            if (this.existsData.some(item => item.gemindex === val)) {
+            if (
+                this.type !== "mapping" &&
+                this.existsData.some(item => item.gemindex === val)
+            ) {
                 return cb(
                     new Error(
                         `${this.$lang("duplicate_param")}: ${this.$lang(
@@ -223,28 +251,6 @@ export default {
                 return cb(new Error(this.validateMsg("inputRange", 1, 32)));
             }
             cb();
-        },
-        validateVlanid(rule, val, cb) {
-            if (this.form.mode === 2) {
-                return cb();
-            }
-            if (
-                val !== "" &&
-                this.existsData.some(item => item.vlan_id === val)
-            ) {
-                return cb(
-                    new Error(
-                        `${this.$lang("duplicate_param")}: ${this.$lang(
-                            "vlan_id"
-                        )}`
-                    )
-                );
-            }
-            // untag
-            if (val === 0xffff) {
-                return cb();
-            }
-            return this.validateVlan(rule, val, cb);
         },
         disabledItem(prop) {
             if (this.form.mode === 1) {
@@ -281,26 +287,91 @@ export default {
             }
             return false;
         },
+        /**
+         *  在设置时，untagged也是一个vlan id
+         *  同一个gemport下，只能有一种mapping模式
+         *  同一个gemport下，正常vlanid范围和untagged，互斥
+         *  不同的gemport下，mapping mode+vlanid+pri不能有重复
+         *  不同的gemport下，priority和其他mapping mode，互斥
+         *  不同的gemport下，模式为vlan或者vlan+pri时，vlan id一致不被允许，提示流已经存在
+         */
         validateMid(rule, val, cb) {
             if (!regRange(val, 0, 7)) {
                 return cb(new Error(this.validateMsg("inputRange", 0, 7)));
             }
-            const data = this.existsData.filter(
-                item => item.gemindex === this.form.gemindex
-            )[0];
-            if (data && isArray(data.mapping)) {
-                const flag = data.mapping.some(item => val === item.mid);
-                if (flag) {
+            const mapping = this.gemCache.mapping || [];
+            if (mapping.some(item => val === item.mid)) {
+                return cb(
+                    new Error(
+                        `${this.$lang("duplicate_param")}: ${this.$lang("mid")}`
+                    )
+                );
+            }
+            cb();
+        },
+        validatePri(rule, val, cb) {
+            if (this.form.mode === 1) {
+                return cb();
+            }
+            if (
+                (this.type === "mapping" || this.type === "gem") &&
+                this.form.mode === 2
+            ) {
+                const sameGemFlag = (this.gemCache.mapping || []).some(
+                        item => item.vlan_pri === val
+                    ),
+                    disparityGemFlag = this.existsData.some(item => {
+                        if (item.mapping && item.mapping.length) {
+                            return item.mapping.some(
+                                _item => _item.vlan_pri === val
+                            );
+                        }
+                    });
+                if (sameGemFlag || disparityGemFlag) {
                     return cb(
                         new Error(
                             `${this.$lang("duplicate_param")}: ${this.$lang(
-                                "mid"
+                                "vlan_pri"
                             )}`
                         )
                     );
                 }
             }
             cb();
+        },
+        validateVlanid(rule, val, cb) {
+            if (this.form.mode === 2) {
+                return cb();
+            }
+            // untag
+            if (val === 0xffff) {
+                return cb();
+            }
+            if (
+                (this.type === "mapping" || this.type === "gem") &&
+                this.form.mode !== 2
+            ) {
+                const sameGemFlag = (this.gemCache.mapping || []).some(
+                        item => item.vlan_id === val
+                    ),
+                    disparityGemFlag = this.existsData.some(item => {
+                        if (item.mapping && item.mapping.length) {
+                            return item.mapping.some(
+                                _item => _item.vlan_id === val
+                            );
+                        }
+                    });
+                if (sameGemFlag || disparityGemFlag) {
+                    return cb(
+                        new Error(
+                            `${this.$lang("duplicate_param")}: ${this.$lang(
+                                "vlan_id"
+                            )}`
+                        )
+                    );
+                }
+            }
+            return this.validateVlan(rule, val, cb);
         }
     },
     watch: {
@@ -323,7 +394,10 @@ export default {
         },
         "form.mode"() {
             if (this.form.mode === 2) {
-                this.$refs["add-line-profile-form"].clearValidate("vlan_id");
+                this.$refs["add-line-profile-form"].clearValidate([
+                    "vlan_id",
+                    "vlan_pri"
+                ]);
             }
         },
         "form.gemindex"() {
