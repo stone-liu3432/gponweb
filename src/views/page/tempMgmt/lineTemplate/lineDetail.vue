@@ -17,7 +17,7 @@
             </el-col>
             <el-col :span="12">
                 <span class="line-detail-title">{{ $lang('mappingmode') }}:</span>
-                <span>{{ mappingModes[data.mappingmode] }}</span>
+                <span>{{ MAPPING_MODES[data.mappingmode] }}</span>
             </el-col>
         </el-row>
         <el-row style="margin: 0 10px 20px 10px;">
@@ -60,20 +60,20 @@
         <template v-if="showPagination">
             <el-tabs v-model="activeName" type="card">
                 <el-tab-pane :label="$lang('tcont')" name="tcont">
-                    <line-tcont-table :data="tcont" @change-data="changeData"></line-tcont-table>
+                    <line-tcont-table :tcont="tcont" :gem="gem" @change-data="dataChange"></line-tcont-table>
                 </el-tab-pane>
                 <el-tab-pane :label="$lang('gem')" name="gem">
-                    <line-gem-table :data="gem" @add-mapping="addMapping" @change-data="changeData"></line-gem-table>
+                    <line-gem-table :data="gem" @add-mapping="addMapping" @change-data="dataChange"></line-gem-table>
                 </el-tab-pane>
             </el-tabs>
         </template>
         <template v-else>
             <h3>{{ $lang('tcont') }}</h3>
-            <line-tcont-table :data="tcont" @change-data="changeData"></line-tcont-table>
+            <line-tcont-table :tcont="tcont" :gem="gem" @change-data="dataChange"></line-tcont-table>
             <h3>{{ $lang('gem') }}</h3>
-            <line-gem-table :data="gem" @add-mapping="addMapping" @change-data="changeData"></line-gem-table>
+            <line-gem-table :data="gem" @add-mapping="addMapping" @change-data="dataChange"></line-gem-table>
         </template>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
+        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px" destroy-on-close>
             <div slot="title">{{ $lang(dialogType) }}</div>
             <template v-if="dialogType === 'set'">
                 <line-form
@@ -107,6 +107,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { isFunction } from "@/utils/common";
+import { MAPPING_MODES } from "@/utils/commonData";
 import addOrSetForm from "./addOrSetForm";
 import lineTcontTable from "./lineTcontTable";
 import lineGemTable from "./lineGemTable";
@@ -157,10 +158,10 @@ export default {
     },
     data() {
         return {
+            MAPPING_MODES,
             showPagination: false,
             activeName: "tcont",
             types: { 1: "EPON", 2: "GPON" },
-            mappingModes: { 1: "VLAN", 2: "Priority", 3: "TCI" },
             dialogVisible: false,
             dialogType: "",
             parentGem: {},
@@ -186,7 +187,7 @@ export default {
             if (type === "gem" && !this.tcont.length) {
                 return this.$message.error(this.$lang("no_tcont_info"));
             }
-            if (type === "addMapping") {
+            if (type === "mapping") {
                 this.parentGem = data;
                 const mappings = data.mapping || [];
                 if (mappings.length) {
@@ -202,7 +203,7 @@ export default {
             });
         },
         addMapping(type, data) {
-            this.openDialog(type, data);
+            this.openDialog("mapping", data);
         },
         submitForm(formName) {
             this.$refs[formName].validate((type, form) => {
@@ -231,7 +232,7 @@ export default {
                             });
                             this.modifyFlags = true;
                         },
-                        addMapping(data) {
+                        mapping(data) {
                             this.parentGem.mapping.push({
                                 mid: data.mid,
                                 mode: data.mode,
@@ -264,8 +265,11 @@ export default {
                 }
             });
         },
-        changeData() {
+        dataChange() {
             this.modifyFlags = true;
+        },
+        resetFlags() {
+            this.modifyFlags = false;
         },
         submitModify() {
             if (this.data.tcont && !this.data.tcont.length) {
