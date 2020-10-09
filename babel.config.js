@@ -6,7 +6,7 @@ module.exports = {
             "component",
             {
                 libraryName: "element-ui",
-                styleLibraryName: "theme-chalk",
+                styleLibraryName: "~theme",
             },
         ],
     ],
