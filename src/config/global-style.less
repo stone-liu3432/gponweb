@@ -5,10 +5,14 @@
 @tipsColor: #AAAAAA;
 
 @titleColor: #67AEF6;
-@borderColor: #DCDFE6;
+@borderColor: #CCCCCC;
 @baseFontColor: #606266;
 @baseFontSize: 14px;
 @border-style: 1px solid @borderColor;
+
+body {
+    background-color: @bodyBg;
+}
 
 .base-font-style {
     color: @baseFontColor;
@@ -17,4 +21,17 @@
 
 .el-table .el-table__body td {
     padding: 6px 0;
+}
+
+.el-menu {
+    border-right-color: @borderColor  !important;
+}
+
+.el-menu.el-menu--horizontal {
+    border-bottom-color: @borderColor  !important;
+}
+
+.el-menu--horizontal>.el-menu-item:not(.is-disabled):hover,
+.el-menu--horizontal>.el-menu-item:not(.is-disabled):focus {
+    background-color: @bodyBg;
 }
