@@ -1,40 +1,68 @@
 <template>
     <div id="login" @keyup.enter="submitForm('loginForm')">
         <canvas ref="login-canvas"></canvas>
-        <div class="login-form">
-            <h3>{{ $lang('login_user') }}</h3>
-            <div>{{ $lang('login_page_login_hit') }}</div>
-            <el-form label-width="150px" :model="form" :rules="rules" ref="loginForm">
-                <el-form-item :label="$lang('user_name')" prop="uname" style="margin-bottom: 30px;">
-                    <el-input v-model="form.uname" style="width: 300px;"></el-input>
-                </el-form-item>
-                <el-form-item
-                    :label="$lang('password')"
-                    prop="password"
-                    style="margin-bottom: 30px;"
+        <el-row class="login-form">
+            <el-col class="login-logo" style="width: 300px;">
+                <template v-if="hasLogo">
+                    <img src="/login_logo.png" />
+                    <template v-if="false">
+                        <div class="copyright-design-info">
+                            Copyright 2017-2020. Design by HSGQ.
+                        </div>
+                    </template>
+                </template>
+                <p v-else>GPON-OLT</p>
+            </el-col>
+            <el-col class="login-content" style="width: 400px;">
+                <h3>{{ $lang("login_user") }}</h3>
+                <div>{{ $lang("login_page_login_hit") }}</div>
+                <el-form
+                    label-width="100px"
+                    :model="form"
+                    :rules="rules"
+                    ref="loginForm"
                 >
-                    <el-input
-                        type="password"
-                        v-model="form.password"
-                        autocomplete="off"
-                        style="width: 300px;"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item :label="$lang('lang')">
-                    <el-radio-group v-model="language">
-                        <el-radio label="zh">简体中文</el-radio>
-                        <el-radio label="en">English</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item>
-                    <el-button
-                        style="width: 220px;"
-                        type="primary"
-                        @click="submitForm('loginForm')"
-                    >{{ $lang('login_user') }}</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
+                    <el-form-item
+                        :label="$lang('user_name')"
+                        prop="uname"
+                        style="margin-bottom: 30px;"
+                    >
+                        <el-input v-model="form.uname"></el-input>
+                    </el-form-item>
+                    <el-form-item
+                        :label="$lang('password')"
+                        prop="password"
+                        style="margin-bottom: 30px;"
+                    >
+                        <el-input
+                            :type="inputType"
+                            v-model="form.password"
+                            autocomplete="off"
+                        >
+                            <i
+                                slot="suffix"
+                                class="el-input__icon el-icon-view"
+                                @click="changeInputType"
+                            ></i>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item :label="$lang('lang')">
+                        <el-radio-group v-model="language">
+                            <el-radio label="zh">简体中文</el-radio>
+                            <el-radio label="en">English</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button
+                            style="width: 220px;"
+                            type="primary"
+                            @click="submitForm('loginForm')"
+                            >{{ $lang("login_user") }}</el-button
+                        >
+                    </el-form-item>
+                </el-form>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -52,6 +80,8 @@ export default {
                 password: ""
             },
             language: "",
+            inputType: "password",
+            hasLogo: false,
             rules: {
                 uname: [
                     {
@@ -74,6 +104,14 @@ export default {
     },
     created() {
         this.language = this.lang;
+        this.$http
+            .get("/login_logo.png")
+            .then(res => {
+                this.hasLogo = true;
+            })
+            .catch(err => {
+                this.hasLogo = false;
+            });
     },
     mounted() {
         document.body.style.overflow = "hidden";
@@ -143,6 +181,13 @@ export default {
                 return cb(new Error(this.$lang("password_length_fail")));
             }
             cb();
+        },
+        changeInputType() {
+            if (this.inputType === "password") {
+                this.inputType = "text";
+            } else {
+                this.inputType = "password";
+            }
         }
     },
     watch: {
@@ -169,7 +214,7 @@ export default {
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#000d4d, endColorstr=#000105);
 }
 .login-form {
-    border: 1px solid #ddd;
+    border: 1px solid @borderColor;
     h3 {
         text-align: center;
         & + div {
@@ -179,13 +224,55 @@ export default {
             font-size: 14px;
         }
     }
-    width: 500px;
-    padding: 30px;
-    background: @dialogBg;
+    width: 703px;
+    height: 400px;
+    background: @bodyBg;
     border-radius: 5px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -70%);
+}
+.login-logo {
+    position: relative;
+    height: 100%;
+    width: 300px;
+    text-align: center;
+    line-height: 360px;
+    > p {
+        font-size: 42px;
+        font-weight: 600;
+        text-align: center;
+        color: @titleColor;
+        line-height: 360px;
+        margin: 0;
+    }
+    img {
+        max-width: 300px;
+        vertical-align: middle;
+    }
+}
+.login-content {
+    width: 400px;
+    height: 100%;
+    padding: 0 20px 0 0;
+    box-sizing: border-box;
+    border-left: @border-style;
+}
+.el-input__icon {
+    &:hover {
+        cursor: pointer;
+    }
+}
+.copyright-design-info {
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    font-size: 14px;
+    color: @titleColor;
 }
 </style>
