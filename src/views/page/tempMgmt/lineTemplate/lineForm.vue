@@ -41,7 +41,7 @@
                     <template v-for="(item, index) in MAPPING_MODES">
                         <el-option
                             :label="item"
-                            :value="index >>> 0"
+                            :value="Number(index)"
                         ></el-option>
                     </template>
                 </el-select>
@@ -495,6 +495,7 @@ export default {
                 if (valid) {
                     if (isFunction(fn)) {
                         if (
+                            this.type !== "set" &&
                             this.lineTable.some(
                                 item => item.profid === this.form.profid
                             )
