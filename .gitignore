@@ -22,5 +22,7 @@ yarn-error.log*
 .vs/
 # global style file
 global-style.css
+#element-variables.scss
+/theme
 
 # mock data file
