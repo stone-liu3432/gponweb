@@ -1,33 +1,52 @@
 <template>
-    <el-form label-width="150px" :model="formData" :rules="rules" ref="port-vlan-config-form">
-        <el-form-item :label="$lang('port_id')">{{ getPortName(data.port_id) }}</el-form-item>
+    <el-form
+        label-width="150px"
+        :model="formData"
+        :rules="rules"
+        ref="port-vlan-config-form"
+    >
+        <el-form-item :label="$lang('port_id')">{{
+            getPortName(data.port_id)
+        }}</el-form-item>
         <template v-if="type === 'port_type'">
             <el-form-item :label="$lang('port_type')">
                 <el-select v-model.number="formData.port_type">
                     <template v-for="(item, index) in PORT_TYPE_MAP">
-                        <el-option :label="item" :value="index >>> 0"></el-option>
+                        <el-option
+                            :label="item"
+                            :value="Number(index)"
+                        ></el-option>
                     </template>
                 </el-select>
             </el-form-item>
         </template>
         <template v-else>
-            <el-form-item
-                :label="$lang('port_type')"
-                v-if="type !== 'pvid'"
-            >{{ PORT_TYPE_MAP[data.port_type] }}</el-form-item>
+            <el-form-item :label="$lang('port_type')" v-if="type !== 'pvid'">{{
+                PORT_TYPE_MAP[data.port_type]
+            }}</el-form-item>
             <el-form-item :label="$lang('pvid')" prop="pvid">
                 <template v-if="type === 'pvid'">
                     <el-input v-model.number="formData.pvid"></el-input>
                 </template>
                 <template v-else>{{ data.pvid }}</template>
             </el-form-item>
-            <el-form-item :label="$lang('vlan_list')" prop="vlanlist" v-if="type !== 'pvid'">
+            <el-form-item
+                :label="$lang('vlan_list')"
+                prop="vlanlist"
+                v-if="type !== 'pvid'"
+            >
                 <el-input v-model="formData.vlanlist"></el-input>
             </el-form-item>
             <el-form-item :label="$lang('vlan_mode')" v-if="type !== 'pvid'">
-                <el-select v-model.number="formData.vlan_mode" :disabled="data.port_type === 2">
+                <el-select
+                    v-model.number="formData.vlan_mode"
+                    :disabled="data.port_type === 2"
+                >
                     <el-option :label="$lang('tagged')" :value="1"></el-option>
-                    <el-option :label="$lang('untagged')" :value="2"></el-option>
+                    <el-option
+                        :label="$lang('untagged')"
+                        :value="2"
+                    ></el-option>
                 </el-select>
             </el-form-item>
         </template>

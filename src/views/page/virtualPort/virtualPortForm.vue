@@ -1,52 +1,88 @@
 <template>
-    <el-form :model="form" :rules="rules" label-width="120px" ref="virtual-port-form">
+    <el-form
+        :model="form"
+        :rules="rules"
+        label-width="120px"
+        ref="virtual-port-form"
+    >
         <el-form-item :label="$lang('svp_id')" prop="svp_id" key="svp-id">
-            <el-input style="width: 200px;" :disabled="disabledSvpid" v-model.number="form.svp_id"></el-input>
+            <el-input
+                style="width: 200px;"
+                :disabled="disabledSvpid"
+                v-model.number="form.svp_id"
+            ></el-input>
             <el-checkbox
                 v-model="autoAssignSvpid"
                 v-if="type === 'add'"
                 style="margin-left: 30px;"
-            >{{ $lang('auto_assign') }}</el-checkbox>
+                >{{ $lang("auto_assign") }}</el-checkbox
+            >
         </el-form-item>
         <template v-if="type === 'add' || type === 'set'">
-            <el-form-item :label="$lang('new_svlan')" prop="new_svlan" key="new-svlan">
+            <el-form-item
+                :label="$lang('new_svlan')"
+                prop="new_svlan"
+                key="new-svlan"
+            >
                 <el-input v-model.number="form.new_svlan"></el-input>
             </el-form-item>
         </template>
         <template v-if="type === 'add'">
-            <el-form-item :label="$lang('port_id')" prop="port_id" key="port-id">
+            <el-form-item
+                :label="$lang('port_id')"
+                prop="port_id"
+                key="port-id"
+            >
                 <el-select v-model.number="form.port_id">
                     <template v-for="i in system.ponports">
-                        <el-option :value="i" :label="getPortName(i)"></el-option>
+                        <el-option
+                            :value="i"
+                            :label="getPortName(i)"
+                        ></el-option>
                     </template>
                 </el-select>
             </el-form-item>
             <el-form-item :label="$lang('ont_id')" prop="ont_id" key="ont-id">
                 <el-input v-model.number="form.ont_id"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('gemport')" prop="gemport" key="gemport">
+            <el-form-item
+                :label="$lang('gemport')"
+                prop="gemport"
+                key="gemport"
+            >
                 <el-input v-model.number="form.gemport"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('svp_type')" prop="svp_type" key="svp-type">
+            <el-form-item
+                :label="$lang('svp_type')"
+                prop="svp_type"
+                key="svp-type"
+            >
                 <el-select v-model.number="form.svp_type">
                     <template v-for="(item, index) in SVP_TYPE_MAP">
-                        <el-option :label="$lang(item)" :value="Number(index)"></el-option>
+                        <el-option
+                            :label="$lang(item)"
+                            :value="Number(index)"
+                        ></el-option>
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('user_vlan')" prop="user_vlan" key="user-vlan">
-                <el-input v-model.number="form.user_vlan" :disabled="disabledUservlan"></el-input>
+            <el-form-item
+                :label="$lang('user_vlan')"
+                prop="user_vlan"
+                key="user-vlan"
+            >
+                <el-input
+                    v-model.number="form.user_vlan"
+                    :disabled="disabledUservlan"
+                ></el-input>
             </el-form-item>
-            <!-- <el-form-item :label="$lang('install_mode')" prop="install_mode">
-                <el-select v-model.number="form.install_mode">
-                    <template v-for="(item, index) in INSTALL_MODE_MAP">
-                        <el-option :label="$lang(item)" :value="index >>> 0"></el-option>
-                    </template>
-                </el-select>
-            </el-form-item>-->
         </template>
         <template v-if="type === 'add' || type === 'set'">
-            <el-form-item :label="$lang('tag_action')" prop="tag_action" key="tag-action">
+            <el-form-item
+                :label="$lang('tag_action')"
+                prop="tag_action"
+                key="tag-action"
+            >
                 <el-select v-model.number="form.tag_action">
                     <template v-for="(item, index) in TAG_ACTIONS">
                         <el-option
@@ -57,8 +93,15 @@
                     </template>
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$lang('inner_vlan')" prop="inner_vlan" key="inner-vlan">
-                <el-input v-model.number="form.inner_vlan" :disabled="disabledInnervlan"></el-input>
+            <el-form-item
+                :label="$lang('inner_vlan')"
+                prop="inner_vlan"
+                key="inner-vlan"
+            >
+                <el-input
+                    v-model.number="form.inner_vlan"
+                    :disabled="disabledInnervlan"
+                ></el-input>
             </el-form-item>
         </template>
         <template v-if="type === 'desc'">
@@ -262,14 +305,14 @@ export default {
                         return fn.call(this, {
                             svp_id: this.autoAssignSvpid
                                 ? 0xffff
-                                : this.form.svp_id >>> 0,
+                                : Number(this.form.svp_id),
                             new_svlan: this.form.new_svlan,
                             port_id: this.form.port_id,
                             ont_id: this.form.ont_id,
                             gemport: this.form.gemport,
-                            user_vlan: this.form.user_vlan >>> 0,
+                            user_vlan: Number(this.form.user_vlan),
                             tag_action: this.form.tag_action,
-                            inner_vlan: this.form.inner_vlan >>> 0,
+                            inner_vlan: Number(this.form.inner_vlan),
                             desc: this.form.desc,
                             svp_type: this.form.svp_type
                         });

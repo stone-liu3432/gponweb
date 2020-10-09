@@ -2,29 +2,38 @@
     <div>
         <page-header type="none" :title="$lang('log')"></page-header>
         <div style="margin: 10px 0 20px 10px;">
-            <el-button
-                type="primary"
-                size="small"
-                @click="downloadLog"
-            >{{ $lang('download', 'log') }}</el-button>
+            <el-button type="primary" size="small" @click="downloadLog">{{
+                $lang("download", "log")
+            }}</el-button>
         </div>
-        <el-table :data="logInfo" border stripe>
-            <el-table-column :label="$lang('module_name')" prop="module_name"></el-table-column>
+        <el-table :data="logInfo" border>
+            <el-table-column
+                :label="$lang('module_name')"
+                prop="module_name"
+            ></el-table-column>
             <el-table-column :label="$lang('level')">
-                <template slot-scope="scope">{{ LOG_LEVEL[scope.row.level] || '-' }}</template>
+                <template slot-scope="scope">{{
+                    LOG_LEVEL[scope.row.level] || "-"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('config')" width="150px">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="openDialog(scope.row)">{{ $lang('config') }}</el-button>
+                    <el-button type="text" @click="openDialog(scope.row)">{{
+                        $lang("config")
+                    }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="550px">
-            <div slot="title">{{ $lang('config') }}</div>
+            <div slot="title">{{ $lang("config") }}</div>
             <log-form ref="log-form"></log-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('log-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button type="primary" @click="submitForm('log-form')">{{
+                    $lang("apply")
+                }}</el-button>
             </div>
         </el-dialog>
     </div>

@@ -1,101 +1,123 @@
 <template>
     <div>
         <el-row class="loop-detect-status">
-            <el-col :span="6">{{ $lang('ld_status') }}</el-col>
-            <el-col :span="4">{{ status ? $lang('enable') : $lang('disable') }}</el-col>
+            <el-col :span="6">{{ $lang("ld_status") }}</el-col>
+            <el-col :span="4">{{
+                status ? $lang("enable") : $lang("disable")
+            }}</el-col>
             <el-col :span="4">
-                <el-button size="small" type="primary" @click="setLdStatus">{{ $lang('config') }}</el-button>
+                <el-button size="small" type="primary" @click="setLdStatus">{{
+                    $lang("config")
+                }}</el-button>
             </el-col>
         </el-row>
         <template v-if="status">
             <el-row class="loop-detect-status">
-                <el-col :span="6">{{ $lang('detect_interval') }}</el-col>
+                <el-col :span="6">{{ $lang("detect_interval") }}</el-col>
                 <el-col :span="4">{{ ldStatus.detect_interval }}</el-col>
                 <el-col :span="4">
                     <el-button
                         size="small"
                         type="primary"
                         @click="setDetectInterval"
-                    >{{ $lang('config') }}</el-button>
+                        >{{ $lang("config") }}</el-button
+                    >
                 </el-col>
             </el-row>
             <el-row class="loop-detect-status">
-                <el-col :span="6">{{ $lang('recover_mode') }}</el-col>
-                <el-col :span="4">{{ ldStatus.recover_mode ? 'Manual' : 'Auto' }}</el-col>
+                <el-col :span="6">{{ $lang("recover_mode") }}</el-col>
+                <el-col :span="4">{{
+                    ldStatus.recover_mode ? "Manual" : "Auto"
+                }}</el-col>
                 <el-col :span="8">
                     <el-button
                         size="small"
                         type="primary"
                         @click="setLdRecoverMode"
-                    >{{ $lang('config') }}</el-button>
+                        >{{ $lang("config") }}</el-button
+                    >
                     <el-button
                         size="small"
                         type="primary"
                         v-if="isManual"
                         @click="recoverManualDebounce"
-                    >{{ $lang('recover_manual') }}</el-button>
+                        >{{ $lang("recover_manual") }}</el-button
+                    >
                 </el-col>
             </el-row>
             <el-row class="loop-detect-status">
-                <el-col :span="6">{{ $lang('recover_time') }}</el-col>
+                <el-col :span="6">{{ $lang("recover_time") }}</el-col>
                 <el-col :span="4">{{ ldStatus.recover_time }}</el-col>
                 <el-col :span="4">
                     <el-button
                         size="small"
                         type="primary"
                         @click="setRecoverTime"
-                    >{{ $lang('config') }}</el-button>
+                        >{{ $lang("config") }}</el-button
+                    >
                 </el-col>
             </el-row>
             <h3>
-                {{ $lang('ld_info') }}
+                {{ $lang("ld_info") }}
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="refreshData"
-                >{{ $lang('refresh') }}</el-button>
+                    >{{ $lang("refresh") }}</el-button
+                >
             </h3>
             <el-table
                 border
-                stripe
                 :data="ldInfo"
                 :cell-style="{ 'text-align': 'center' }"
                 :header-cell-style="{ 'text-align': 'center' }"
             >
                 <template v-if="type === 'pon'">
                     <el-table-column :label="`PON ID / ${$lang('onu_id')}`">
-                        <template
-                            slot-scope="scope"
-                        >{{ `${scope.row.port_id} / ${scope.row.onu_id}` }}</template>
+                        <template slot-scope="scope">{{
+                            `${scope.row.port_id} / ${scope.row.onu_id}`
+                        }}</template>
                     </el-table-column>
                 </template>
                 <template v-else>
                     <el-table-column :label="$lang('port_id')">
-                        <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                        <template slot-scope="scope">{{
+                            getPortName(scope.row.port_id)
+                        }}</template>
                     </el-table-column>
                 </template>
                 <el-table-column :label="$lang('status')">
-                    <template slot-scope="scope">{{ scope.row.status ? 'Loop-Detect' : ' - ' }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.status ? "Loop-Detect" : " - "
+                    }}</template>
                 </el-table-column>
                 <template v-if="type === 'pon'">
                     <el-table-column :label="$lang('onu_status')">
-                        <template
-                            slot-scope="scope"
-                        >{{ scope.row.onu_status ? 'Add Black List' : ' - ' }}</template>
+                        <template slot-scope="scope">{{
+                            scope.row.onu_status ? "Add Black List" : " - "
+                        }}</template>
                     </el-table-column>
-                    <el-table-column :label="`${$lang('loopback')} PON ID / ${$lang('onu_id')}`">
-                        <template
-                            slot-scope="scope"
-                        >{{ `${scope.row.ld_port_id} / ${scope.row.ld_onu_id}` }}</template>
+                    <el-table-column
+                        :label="
+                            `${$lang('loopback')} PON ID / ${$lang('onu_id')}`
+                        "
+                    >
+                        <template slot-scope="scope">{{
+                            `${scope.row.ld_port_id} / ${scope.row.ld_onu_id}`
+                        }}</template>
                     </el-table-column>
                 </template>
                 <template v-else>
                     <el-table-column :label="$lang('port_status')">
-                        <template slot-scope="scope">{{ scope.row.port_status ? 'Blocked' : ' - ' }}</template>
+                        <template slot-scope="scope">{{
+                            scope.row.port_status ? "Blocked" : " - "
+                        }}</template>
                     </el-table-column>
                     <el-table-column :label="$lang('ld_port_id')">
-                        <template slot-scope="scope">{{ getPortName(scope.row.ld_port_id) }}</template>
+                        <template slot-scope="scope">{{
+                            getPortName(scope.row.ld_port_id)
+                        }}</template>
                     </el-table-column>
                 </template>
             </el-table>
@@ -195,12 +217,12 @@ export default {
                 inputValue: this.ldStatus.detect_interval,
                 inputErrorMessage: this.validateMsg("inputRange", 3, 3600),
                 inputValidator: val => {
-                    const v = val >>> 0;
+                    const v = Number(val);
                     return v >= 3 && v <= 3600 && !isNaN(v);
                 }
             })
                 .then(({ value }) => {
-                    const val = value >>> 0;
+                    const val = Number(value);
                     if (val === this.ldStatus.detect_interval) {
                         return;
                     }
@@ -216,12 +238,12 @@ export default {
                 inputValue: this.ldStatus.recover_time,
                 inputErrorMessage: this.validateMsg("inputRange", 3, 3600),
                 inputValidator: val => {
-                    const v = val >>> 0;
+                    const v = Number(val);
                     return v >= 3 && v <= 3600 && !isNaN(v);
                 }
             })
                 .then(({ value }) => {
-                    const val = value >>> 0;
+                    const val = Number(value);
                     if (val === this.ldStatus.recover_time) {
                         return;
                     }

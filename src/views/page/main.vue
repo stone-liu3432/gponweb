@@ -1,12 +1,12 @@
 <template>
     <el-container>
-        <el-header style="border-bottom: 1px solid #E6E6E6;" height="71px">
+        <el-header style="border-bottom: 1px solid #CCCCCC;" height="71px">
             <nav-header :nav-data="nav"></nav-header>
         </el-header>
         <el-scrollbar
             :native="false"
             :noresize="true"
-            :viewStyle="{height: `${height}px`}"
+            :viewStyle="{ height: `${height}px` }"
             ref="nav-scrollbar"
         >
             <el-main style="padding: 0;">

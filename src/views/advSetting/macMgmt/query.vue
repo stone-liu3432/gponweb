@@ -4,7 +4,10 @@
         <el-form-item prop="flags">
             <el-select size="small" v-model.number="form.flags">
                 <template v-for="(item, index) in MAC_FLAGS_MAP">
-                    <el-option :label="$lang(item)" :value="index >>> 0"></el-option>
+                    <el-option
+                        :label="$lang(item)"
+                        :value="Number(index)"
+                    ></el-option>
                 </template>
             </el-select>
         </el-form-item>
@@ -12,7 +15,10 @@
             <el-form-item prop="mac_type">
                 <el-select size="small" v-model.number="form.mac_type">
                     <template v-for="(item, index) in MAC_TYPE_MAP">
-                        <el-option :label="$lang(item)" :value="index"></el-option>
+                        <el-option
+                            :label="$lang(item)"
+                            :value="index"
+                        ></el-option>
                     </template>
                 </el-select>
             </el-form-item>
@@ -21,17 +27,36 @@
             <el-form-item prop="port_id">
                 <el-select size="small" v-model.number="form.port_id">
                     <template v-for="item in portName">
-                        <el-option :label="item.name" :value="item.port_id"></el-option>
+                        <el-option
+                            :label="item.name"
+                            :value="item.port_id"
+                        ></el-option>
                     </template>
                 </el-select>
             </el-form-item>
         </template>
         <template v-if="form.flags === 4">
-            <el-form-item :label="$lang('start_vlan_id')" prop="vlan_id" key="vlan_id">
-                <el-input size="small" v-model.number="form.vlan_id" style="width: 120px;"></el-input>
+            <el-form-item
+                :label="$lang('start_vlan_id')"
+                prop="vlan_id"
+                key="vlan_id"
+            >
+                <el-input
+                    size="small"
+                    v-model.number="form.vlan_id"
+                    style="width: 120px;"
+                ></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('end_vlan_id')" prop="vlan_id_e" key="vlan_id_e">
-                <el-input size="small" v-model.number="form.vlan_id_e" style="width: 120px;"></el-input>
+            <el-form-item
+                :label="$lang('end_vlan_id')"
+                prop="vlan_id_e"
+                key="vlan_id_e"
+            >
+                <el-input
+                    size="small"
+                    v-model.number="form.vlan_id_e"
+                    style="width: 120px;"
+                ></el-input>
             </el-form-item>
         </template>
         <template v-if="form.flags === 8">
@@ -57,7 +82,8 @@
                 type="primary"
                 size="small"
                 @click="refreshData('query-method')"
-            >{{ $lang('apply') }}</el-button>
+                >{{ $lang("apply") }}</el-button
+            >
         </el-form-item>
     </el-form>
 </template>

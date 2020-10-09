@@ -1,8 +1,19 @@
 <template>
-    <el-table :data="tcont" border stripe>
-        <el-table-column :label="$lang('tcid')" prop="tcid" width="120px"></el-table-column>
-        <el-table-column :label="$lang('dba_profid')" prop="dba_profid" width="120px"></el-table-column>
-        <el-table-column :label="$lang('dba_profname')" prop="dba_profname"></el-table-column>
+    <el-table :data="tcont" border>
+        <el-table-column
+            :label="$lang('tcid')"
+            prop="tcid"
+            width="120px"
+        ></el-table-column>
+        <el-table-column
+            :label="$lang('dba_profid')"
+            prop="dba_profid"
+            width="120px"
+        ></el-table-column>
+        <el-table-column
+            :label="$lang('dba_profname')"
+            prop="dba_profname"
+        ></el-table-column>
         <el-table-column :label="$lang('config')" width="80px">
             <template slot-scope="scope">
                 <el-popconfirm
@@ -12,7 +23,9 @@
                     :cancelButtonText="$lang('cancel')"
                     @onConfirm="deleteTcontItem(scope.row)"
                 >
-                    <el-button slot="reference" type="text">{{ $lang('delete') }}</el-button>
+                    <el-button slot="reference" type="text">{{
+                        $lang("delete")
+                    }}</el-button>
                 </el-popconfirm>
             </template>
         </el-table-column>

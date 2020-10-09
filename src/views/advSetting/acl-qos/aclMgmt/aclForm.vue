@@ -2,10 +2,17 @@
     <el-form label-width="150px" :model="form" :rules="rules" ref="acl-form">
         <template v-if="type === 'add' || type === 'delete'">
             <template v-if="type === 'add'">
-                <el-form-item :label="'ACL ' + $lang('type')" prop="acl_type" key="acl-type">
+                <el-form-item
+                    :label="'ACL ' + $lang('type')"
+                    prop="acl_type"
+                    key="acl-type"
+                >
                     <el-select v-model="form.acl_type">
                         <template v-for="(item, index) in ACL_TYPE_MAP">
-                            <el-option :value="index" :label="item + ' ACL'"></el-option>
+                            <el-option
+                                :value="index"
+                                :label="item + ' ACL'"
+                            ></el-option>
                         </template>
                     </el-select>
                 </el-form-item>
@@ -15,7 +22,9 @@
             </el-form-item>
         </template>
         <template v-if="type === 'config' || type === 'rule'">
-            <el-form-item label="ACL ID" prop="acl_id" key="acl-id-config">{{ form.acl_id }}</el-form-item>
+            <el-form-item label="ACL ID" prop="acl_id" key="acl-id-config">{{
+                form.acl_id
+            }}</el-form-item>
             <el-form-item label="Rule ID" prop="rule_id">
                 <el-select v-model.number="form.rule_id">
                     <template v-for="i in 16">
@@ -26,44 +35,93 @@
             <el-form-item :label="$lang('action')" prop="action" key="action">
                 <el-select v-model.number="form.action">
                     <template v-for="(item, index) in ACL_ACTION_MAP">
-                        <el-option :label="item" :value="index >>> 0"></el-option>
+                        <el-option
+                            :label="item"
+                            :value="Number(index)"
+                        ></el-option>
                     </template>
                 </el-select>
             </el-form-item>
             <template v-if="acl_type === 'basic'">
-                <el-form-item :label="$lang('src_ipaddr')" prop="src_ipaddr" key="src-ipaddr">
+                <el-form-item
+                    :label="$lang('src_ipaddr')"
+                    prop="src_ipaddr"
+                    key="src-ipaddr"
+                >
                     <el-input v-model="form.src_ipaddr"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_ipmask')" prop="src_ipmask" key="src-ipmask">
+                <el-form-item
+                    :label="$lang('src_ipmask')"
+                    prop="src_ipmask"
+                    key="src-ipmask"
+                >
                     <el-input
                         v-model="form.src_ipmask"
-                        :disabled="acl_type!== 'basic' && !form.src_ipaddr"
+                        :disabled="acl_type !== 'basic' && !form.src_ipaddr"
                     ></el-input>
                 </el-form-item>
             </template>
             <template v-if="acl_type === 'advanced'">
-                <el-form-item :label="$lang('protocol')" prop="protocol" key="protocol">
+                <el-form-item
+                    :label="$lang('protocol')"
+                    prop="protocol"
+                    key="protocol"
+                >
                     <el-input v-model="form.protocol"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_ipaddr')" prop="src_ipaddr" key="src-ipaddr-adv">
+                <el-form-item
+                    :label="$lang('src_ipaddr')"
+                    prop="src_ipaddr"
+                    key="src-ipaddr-adv"
+                >
                     <el-input v-model="form.src_ipaddr"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_ipmask')" prop="src_ipmask" key="src-ipmask-adv">
-                    <el-input v-model="form.src_ipmask" :disabled="!form.src_ipaddr"></el-input>
+                <el-form-item
+                    :label="$lang('src_ipmask')"
+                    prop="src_ipmask"
+                    key="src-ipmask-adv"
+                >
+                    <el-input
+                        v-model="form.src_ipmask"
+                        :disabled="!form.src_ipaddr"
+                    ></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_ipaddr')" prop="dst_ipaddr" key="dst-ipaddr">
+                <el-form-item
+                    :label="$lang('dst_ipaddr')"
+                    prop="dst_ipaddr"
+                    key="dst-ipaddr"
+                >
                     <el-input v-model="form.dst_ipaddr"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_ipmask')" prop="dst_ipmask" key="dst-ipmask">
-                    <el-input v-model="form.dst_ipmask" :disabled="!form.dst_ipaddr"></el-input>
+                <el-form-item
+                    :label="$lang('dst_ipmask')"
+                    prop="dst_ipmask"
+                    key="dst-ipmask"
+                >
+                    <el-input
+                        v-model="form.dst_ipmask"
+                        :disabled="!form.dst_ipaddr"
+                    ></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_port')" prop="src_port" key="src-port">
+                <el-form-item
+                    :label="$lang('src_port')"
+                    prop="src_port"
+                    key="src-port"
+                >
                     <el-input v-model="form.src_port"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_port')" prop="dst_port" key="dst-port">
+                <el-form-item
+                    :label="$lang('dst_port')"
+                    prop="dst_port"
+                    key="dst-port"
+                >
                     <el-input v-model="form.dst_port"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('precedence')" prop="precedence" key="precedence">
+                <el-form-item
+                    :label="$lang('precedence')"
+                    prop="precedence"
+                    key="precedence"
+                >
                     <el-input v-model="form.precedence"></el-input>
                 </el-form-item>
                 <el-form-item :label="$lang('dscp')" prop="dscp" key="dscp">
@@ -71,16 +129,28 @@
                 </el-form-item>
             </template>
             <template v-if="acl_type === 'link'">
-                <el-form-item :label="$lang('eth_type')" prop="eth_type" key="eth-type">
+                <el-form-item
+                    :label="$lang('eth_type')"
+                    prop="eth_type"
+                    key="eth-type"
+                >
                     <el-input v-model="form.eth_type"></el-input>
                 </el-form-item>
                 <el-form-item :label="$lang('cos')" prop="cos" key="cos">
                     <el-input v-model="form.cos"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('inner_cos')" prop="inner_cos" key="inner-cos">
+                <el-form-item
+                    :label="$lang('inner_cos')"
+                    prop="inner_cos"
+                    key="inner-cos"
+                >
                     <el-input v-model="form.inner_cos"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('vlan_id')" prop="vlan_id" key="vlan-id">
+                <el-form-item
+                    :label="$lang('vlan_id')"
+                    prop="vlan_id"
+                    key="vlan-id"
+                >
                     <el-input v-model="form.vlan_id"></el-input>
                 </el-form-item>
                 <el-form-item
@@ -90,20 +160,46 @@
                 >
                     <el-input v-model="form.inner_vlan_id"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_mac')" prop="src_mac" key="src-mac">
+                <el-form-item
+                    :label="$lang('src_mac')"
+                    prop="src_mac"
+                    key="src-mac"
+                >
                     <el-input v-model="form.src_mac"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('src_mask')" prop="src_mask" key="src-mask">
-                    <el-input v-model="form.src_mask" :disabled="!form.src_mask"></el-input>
+                <el-form-item
+                    :label="$lang('src_mask')"
+                    prop="src_mask"
+                    key="src-mask"
+                >
+                    <el-input
+                        v-model="form.src_mask"
+                        :disabled="!form.src_mask"
+                    ></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_mac')" prop="dst_mac" key="dst-mac">
+                <el-form-item
+                    :label="$lang('dst_mac')"
+                    prop="dst_mac"
+                    key="dst-mac"
+                >
                     <el-input v-model="form.dst_mac"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dst_mask')" prop="dst_mask" key="dst-mask">
-                    <el-input v-model="form.dst_mask" :disabled="!form.dst_mask"></el-input>
+                <el-form-item
+                    :label="$lang('dst_mask')"
+                    prop="dst_mask"
+                    key="dst-mask"
+                >
+                    <el-input
+                        v-model="form.dst_mask"
+                        :disabled="!form.dst_mask"
+                    ></el-input>
                 </el-form-item>
             </template>
-            <el-form-item :label="$lang('timerange')" prop="timerange" key="timerange">
+            <el-form-item
+                :label="$lang('timerange')"
+                prop="timerange"
+                key="timerange"
+            >
                 <el-select v-model="form.timerange">
                     <el-option :value="''" label="-"></el-option>
                     <template v-for="item in timerangeList">

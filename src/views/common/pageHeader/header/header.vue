@@ -1,27 +1,43 @@
 <template>
-    <div class="page-header" :style="{ margin: type === 'none' ? '20px 0' : '' }">
+    <div
+        class="page-header"
+        :style="{ margin: type === 'none' ? '20px 0' : '' }"
+    >
         <h2>
             <slot name="title">{{ title }}</slot>
         </h2>
         <el-form inline :model="portData">
             <template v-if="type !== 'none'">
                 <el-form-item :label="$lang('port_id')">
-                    <el-select v-model.number="portData.port_id" size="small" style="width: 150px;">
+                    <el-select
+                        v-model.number="portData.port_id"
+                        size="small"
+                        style="width: 150px;"
+                    >
                         <template v-if="type === 'pon' || type === 'port'">
                             <template v-for="item in ponData">
-                                <el-option :value="item.port_id" :label="getPortName(item.port_id)"></el-option>
+                                <el-option
+                                    :value="item.port_id"
+                                    :label="getPortName(item.port_id)"
+                                ></el-option>
                             </template>
                         </template>
                         <template v-if="type === 'uplink' || type === 'port'">
                             <template v-for="item in uplinkData">
-                                <el-option :value="item.port_id" :label="getPortName(item.port_id)"></el-option>
+                                <el-option
+                                    :value="item.port_id"
+                                    :label="getPortName(item.port_id)"
+                                ></el-option>
                             </template>
                         </template>
                     </el-select>
                 </el-form-item>
                 <template v-if="hasOnu">
                     <template v-if="!!onuResource.length">
-                        <el-form-item :label="$lang('onu_id')" style="margin-left: 30px;">
+                        <el-form-item
+                            :label="$lang('onu_id')"
+                            style="margin-left: 30px;"
+                        >
                             <el-select
                                 v-model.number="portData.onu_id"
                                 filterable
@@ -29,13 +45,19 @@
                                 style="width: 150px;"
                             >
                                 <template v-for="item in onuResource">
-                                    <el-option :label="onuName(item)" :value="item"></el-option>
+                                    <el-option
+                                        :label="onuName(item)"
+                                        :value="item"
+                                    ></el-option>
                                 </template>
                             </el-select>
                         </el-form-item>
                     </template>
                     <template v-else>
-                        <el-form-item :label="$lang('no_onu_info')" style="margin-left: 30px;"></el-form-item>
+                        <el-form-item
+                            :label="$lang('no_onu_info')"
+                            style="margin-left: 30px;"
+                        ></el-form-item>
                     </template>
                 </template>
             </template>
@@ -56,7 +78,7 @@ export default {
         ...mapState(["system", "port", "onuResource"]),
         ...mapGetters(["getPortName", "$lang"]),
         ponports() {
-            return this.system.ponports >>> 0;
+            return this.system.ponports;
         },
         ponData() {
             return this.port.slice(0, this.ponports);

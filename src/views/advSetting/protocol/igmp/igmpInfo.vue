@@ -7,21 +7,28 @@
             :contentRender="contentRender"
         >
             <div slot="title">
-                <span>{{ $lang('igmp', 'info') }}</span>
+                <span>{{ $lang("igmp", "info") }}</span>
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="openDialog"
-                >{{ $lang('config') }}</el-button>
+                    >{{ $lang("config") }}</el-button
+                >
             </div>
         </nms-panel>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
-            <div slot="title">{{ $lang('config') }}</div>
+            <div slot="title">{{ $lang("config") }}</div>
             <igmp-info-form ref="igmp-info-form"></igmp-info-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('igmp-info-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('igmp-info-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -65,7 +72,7 @@ export default {
                 ],
                 ["group_aging_time"]
             ];
-            return EXCLUDES[this.info.mode >>> 0];
+            return EXCLUDES[Number(this.info.mode)];
         }
     },
     mixins: [postData],

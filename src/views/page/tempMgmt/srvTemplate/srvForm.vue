@@ -1,8 +1,20 @@
 <template>
     <div>
-        <el-form label-width="140px" :model="form" :rules="rules" ref="srv-form">
-            <el-form-item :label="$lang('profname')" prop="profname" key="profname">
-                <el-input style="width: 200px;" v-model="form.profname"></el-input>
+        <el-form
+            label-width="140px"
+            :model="form"
+            :rules="rules"
+            ref="srv-form"
+        >
+            <el-form-item
+                :label="$lang('profname')"
+                prop="profname"
+                key="profname"
+            >
+                <el-input
+                    style="width: 200px;"
+                    v-model="form.profname"
+                ></el-input>
             </el-form-item>
             <el-form-item :label="$lang('profid')" prop="profid" key="profid">
                 <el-input
@@ -14,9 +26,14 @@
                     v-model="autoAssignID"
                     style="margin-left: 30px;"
                     :disabled="type === 'set'"
-                >{{ $lang('auto_assign') }}</el-checkbox>
+                    >{{ $lang("auto_assign") }}</el-checkbox
+                >
             </el-form-item>
-            <el-form-item :label="$lang('ont_ethport')" prop="ont_ethport" key="ont_ethport">
+            <el-form-item
+                :label="$lang('ont_ethport')"
+                prop="ont_ethport"
+                key="ont_ethport"
+            >
                 <el-input
                     style="width: 200px;"
                     v-model.number="form.ont_ethport"
@@ -25,9 +42,14 @@
                 <el-checkbox
                     v-model="autoAssignEth"
                     style="margin-left: 30px;"
-                >{{ $lang('auto_assign') }}</el-checkbox>
+                    >{{ $lang("auto_assign") }}</el-checkbox
+                >
             </el-form-item>
-            <el-form-item :label="$lang('ont_potsport')" prop="ont_potsport" key="ont_potsport">
+            <el-form-item
+                :label="$lang('ont_potsport')"
+                prop="ont_potsport"
+                key="ont_potsport"
+            >
                 <el-input
                     style="width: 200px;"
                     v-model.number="form.ont_potsport"
@@ -36,12 +58,24 @@
                 <el-checkbox
                     v-model="autoAssignPots"
                     style="margin-left: 30px;"
-                >{{ $lang('auto_assign') }}</el-checkbox>
+                    >{{ $lang("auto_assign") }}</el-checkbox
+                >
             </el-form-item>
-            <el-form-item :label="$lang('ont_catvport')" prop="ont_catvport" key="ont_catvport">
-                <el-input style="width: 200px;" v-model.number="form.ont_catvport"></el-input>
+            <el-form-item
+                :label="$lang('ont_catvport')"
+                prop="ont_catvport"
+                key="ont_catvport"
+            >
+                <el-input
+                    style="width: 200px;"
+                    v-model.number="form.ont_catvport"
+                ></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('veip_port')" prop="ont_veipport" key="ont_veipport">
+            <el-form-item
+                :label="$lang('veip_port')"
+                prop="ont_veipport"
+                key="ont_veipport"
+            >
                 <el-select v-model.number="form.ont_veipport">
                     <template v-for="(item, index) in ONT_VEIPPORT_MAP">
                         <el-option :value="index" :label="item"></el-option>
@@ -55,39 +89,80 @@
             >
                 <el-select v-model.number="form.native_vlan_flag">
                     <el-option :value="0" :label="$lang('need')"></el-option>
-                    <el-option :value="1" :label="$lang('not_need')"></el-option>
+                    <el-option
+                        :value="1"
+                        :label="$lang('not_need')"
+                    ></el-option>
                 </el-select>
             </el-form-item>
             <template v-if="type === 'add'">
-                <el-form-item :label="$lang('portvlan')" prop="portvlan" key="portvlan">
+                <el-form-item
+                    :label="$lang('portvlan')"
+                    prop="portvlan"
+                    key="portvlan"
+                >
                     <el-popover placement="right" width="660" trigger="click">
                         <el-table :data="portvlan" border>
-                            <el-table-column :label="$lang('uniport')" prop="uniport">
-                                <template
-                                    slot-scope="scope"
-                                >{{ scope.row.unitype === 0 ? scope.row.uniport : '-' }}</template>
+                            <el-table-column
+                                :label="$lang('uniport')"
+                                prop="uniport"
+                            >
+                                <template slot-scope="scope">{{
+                                    scope.row.unitype === 0
+                                        ? scope.row.uniport
+                                        : "-"
+                                }}</template>
                             </el-table-column>
-                            <el-table-column :label="$lang('unitype')" prop="unitype">
-                                <template slot-scope="scope">{{ UNI_TYPES[scope.row.unitype] }}</template>
+                            <el-table-column
+                                :label="$lang('unitype')"
+                                prop="unitype"
+                            >
+                                <template slot-scope="scope">{{
+                                    UNI_TYPES[scope.row.unitype]
+                                }}</template>
                             </el-table-column>
                             <el-table-column :label="$lang('mode')">
-                                <template slot-scope="scope">{{ VLAN_MODES[scope.row.mode] }}</template>
+                                <template slot-scope="scope">{{
+                                    VLAN_MODES[scope.row.mode]
+                                }}</template>
                             </el-table-column>
-                            <el-table-column :label="$lang('svlanid')" prop="svlanid" width="70"></el-table-column>
-                            <el-table-column :label="$lang('svlanpri')" prop="svlanpri" width="70">
-                                <template
-                                    slot-scope="scope"
-                                >{{ scope.row.svlanpri === 8 ? '-' : scope.row.svlanpri }}</template>
+                            <el-table-column
+                                :label="$lang('svlanid')"
+                                prop="svlanid"
+                                width="70"
+                            ></el-table-column>
+                            <el-table-column
+                                :label="$lang('svlanpri')"
+                                prop="svlanpri"
+                                width="70"
+                            >
+                                <template slot-scope="scope">{{
+                                    scope.row.svlanpri === 8
+                                        ? "-"
+                                        : scope.row.svlanpri
+                                }}</template>
                             </el-table-column>
-                            <el-table-column :label="$lang('cvlanid')" prop="cvlanid" width="70">
-                                <template
-                                    slot-scope="scope"
-                                >{{ scope.row.cvlanid === 4096 ? 'untag' : scope.row.cvlanid }}</template>
+                            <el-table-column
+                                :label="$lang('cvlanid')"
+                                prop="cvlanid"
+                                width="70"
+                            >
+                                <template slot-scope="scope">{{
+                                    scope.row.cvlanid === 4096
+                                        ? "untag"
+                                        : scope.row.cvlanid
+                                }}</template>
                             </el-table-column>
-                            <el-table-column :label="$lang('cvlanpri')" prop="cvlanpri" width="70">
-                                <template
-                                    slot-scope="scope"
-                                >{{ scope.row.cvlanpri === 8 ? '-' : scope.row.cvlanpri }}</template>
+                            <el-table-column
+                                :label="$lang('cvlanpri')"
+                                prop="cvlanpri"
+                                width="70"
+                            >
+                                <template slot-scope="scope">{{
+                                    scope.row.cvlanpri === 8
+                                        ? "-"
+                                        : scope.row.cvlanpri
+                                }}</template>
                             </el-table-column>
                             <el-table-column :label="$lang('config')">
                                 <template slot-scope="scope">
@@ -100,27 +175,42 @@
                                         <el-button
                                             slot="reference"
                                             type="text"
-                                        >{{ $lang('delete') }}</el-button>
+                                            >{{ $lang("delete") }}</el-button
+                                        >
                                     </el-popconfirm>
                                 </template>
                             </el-table-column>
                         </el-table>
-                        <el-button slot="reference" size="small">{{ $lang('show', 'is_exists') }}</el-button>
+                        <el-button slot="reference" size="small">{{
+                            $lang("show", "is_exists")
+                        }}</el-button>
                     </el-popover>
                     <el-button
                         type="primary"
                         size="small"
                         style="margin-left: 30px;"
                         @click="openDialog"
-                    >{{ $lang('add') }}</el-button>
+                        >{{ $lang("add") }}</el-button
+                    >
                 </el-form-item>
             </template>
         </el-form>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="500px" destroy-on-close>
+        <el-dialog
+            :visible.sync="dialogVisible"
+            append-to-body
+            width="500px"
+            destroy-on-close
+        >
             <portvlan-form :data="portvlan" ref="portvlan-form"></portvlan-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('portvlan-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('portvlan-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -272,14 +362,14 @@ export default {
                             profname: this.form.profname,
                             profid: this.autoAssignID
                                 ? 0xfffe
-                                : this.form.profid >>> 0,
+                                : Number(this.form.profid),
                             ont_ethport: this.autoAssignEth
                                 ? 0xff
-                                : this.form.ont_ethport >>> 0,
+                                : Number(this.form.ont_ethport),
                             ont_potsport: this.autoAssignPots
                                 ? 0xff
-                                : this.form.ont_potsport >>> 0,
-                            ont_catvport: this.form.ont_catvport >>> 0,
+                                : Number(this.form.ont_potsport),
+                            ont_catvport: Number(this.form.ont_catvport),
                             native_vlan_flag: this.form.native_vlan_flag,
                             portvlan: this.portvlan,
                             ont_veipport: this.form.ont_veipport

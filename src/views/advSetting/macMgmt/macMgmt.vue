@@ -2,59 +2,76 @@
     <div>
         <page-header :title="$lang('mac_mgmt')" type="none"></page-header>
         <div class="mag-mgmt-agetime">
-            <span>{{ $lang('age') }}:</span>
+            <span>{{ $lang("age") }}:</span>
             <span>{{ age }}</span>
-            <el-button type="primary" size="small" @click="setAge">{{ $lang('config') }}</el-button>
+            <el-button type="primary" size="small" @click="setAge">{{
+                $lang("config")
+            }}</el-button>
         </div>
         <h4>
-            <span>{{ $lang('mac_mgmt') }}</span>
+            <span>{{ $lang("mac_mgmt") }}</span>
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('add')"
-            >{{ $lang('add_mac') }}</el-button>
+                >{{ $lang("add_mac") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('flush')"
-            >{{ $lang('flush_mac') }}</el-button>
+                >{{ $lang("flush_mac") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="refreshMaclist"
-            >{{ $lang('refresh') }}</el-button>
+                >{{ $lang("refresh") }}</el-button
+            >
         </h4>
         <query-form ref="query-form" @refresh-data="refreshData"></query-form>
         <el-table :data="macTable" border>
-            <el-table-column :label="$lang('macaddr')" prop="macaddr"></el-table-column>
-            <el-table-column :label="$lang('vlan_id')" prop="vlan_id"></el-table-column>
+            <el-table-column
+                :label="$lang('macaddr')"
+                prop="macaddr"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('vlan_id')"
+                prop="vlan_id"
+            ></el-table-column>
             <el-table-column :label="$lang('port_id')">
-                <template slot-scope="scope">{{ getPortName(scope.row.port_id) || 'CPU' }}</template>
+                <template slot-scope="scope">{{
+                    getPortName(scope.row.port_id) || "CPU"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('mac_type')" prop="mac_type">
-                <template slot-scope="scope">{{ $lang(MAC_TYPE_MAP[scope.row.mac_type]) || '-' }}</template>
+                <template slot-scope="scope">{{
+                    $lang(MAC_TYPE_MAP[scope.row.mac_type]) || "-"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('svp_id')" prop="svp_id">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.svp_id === 0xffff ? '-' : scope.row.svp_id }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.svp_id === 0xffff ? "-" : scope.row.svp_id
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('ont_id')" prop="ont_id">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.svp_id === 0xffff ? '-' : scope.row.ont_id }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.svp_id === 0xffff ? "-" : scope.row.ont_id
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('gemport')" prop="gemport">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.svp_id === 0xffff ? '-' : scope.row.gemport }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.svp_id === 0xffff ? "-" : scope.row.gemport
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="deleteMac(scope.row)">{{ $lang('delete') }}</el-button>
+                    <el-button type="text" @click="deleteMac(scope.row)">{{
+                        $lang("delete")
+                    }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -64,7 +81,8 @@
                 size="small"
                 v-if="isLoadMore"
                 @click="loadMoreData"
-            >{{ $lang('loadmore') }}</el-button>
+                >{{ $lang("loadmore") }}</el-button
+            >
         </div>
         <div style="position: relative;">
             <el-pagination
@@ -81,8 +99,12 @@
             <div slot="title">{{ $lang(TITLE_MAP[dialogType]) }}</div>
             <mac-form ref="mac-form"></mac-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('mac-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button type="primary" @click="submitForm('mac-form')">{{
+                    $lang("apply")
+                }}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -151,7 +173,7 @@ export default {
                 .then(res => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
-                            this.age = res.data.data.age >>> 0;
+                            this.age = Number(res.data.data.age);
                         }
                     }
                 })

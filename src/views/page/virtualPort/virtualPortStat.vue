@@ -5,28 +5,35 @@
                 type="primary"
                 size="small"
                 @click="chagneAllState(false)"
-            >{{ $lang('disable_all') }}</el-button>
+                >{{ $lang("disable_all") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 @click="chagneAllState(true)"
                 style="margin-left: 30px;"
-            >{{ $lang('enable_all') }}</el-button>
+                >{{ $lang("enable_all") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 @click="clearStat()"
                 style="margin-left: 30px;"
-            >{{ $lang('flush_all') }}</el-button>
+                >{{ $lang("flush_all") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 @click="refreshData"
                 style="margin-left: 30px;"
-            >{{ $lang('refresh') }}</el-button>
+                >{{ $lang("refresh") }}</el-button
+            >
         </div>
-        <el-table :data="showList" border stripe>
-            <el-table-column :label="$lang('svp_id')" prop="svp_id"></el-table-column>
+        <el-table :data="showList" border>
+            <el-table-column
+                :label="$lang('svp_id')"
+                prop="svp_id"
+            ></el-table-column>
             <el-table-column :label="$lang('stat_admin')" prop="stat_admin">
                 <template slot-scope="scope">
                     <el-switch
@@ -39,13 +46,27 @@
                     ></el-switch>
                 </template>
             </el-table-column>
-            <el-table-column :label="$lang('ig_packets')" prop="ig_packets"></el-table-column>
-            <el-table-column :label="$lang('ig_bytes')" prop="ig_bytes"></el-table-column>
-            <el-table-column :label="$lang('eg_packets')" prop="eg_packets"></el-table-column>
-            <el-table-column :label="$lang('eg_bytes')" prop="eg_bytes"></el-table-column>
+            <el-table-column
+                :label="$lang('ig_packets')"
+                prop="ig_packets"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('ig_bytes')"
+                prop="ig_bytes"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('eg_packets')"
+                prop="eg_packets"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('eg_bytes')"
+                prop="eg_bytes"
+            ></el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="clearStat(scope.row)">{{ $lang('clear') }}</el-button>
+                    <el-button type="text" @click="clearStat(scope.row)">{{
+                        $lang("clear")
+                    }}</el-button>
                 </template>
             </el-table-column>
         </el-table>

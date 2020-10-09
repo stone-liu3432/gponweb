@@ -1,37 +1,46 @@
 <template>
     <div>
         <div class="inter-working-title">
-            <span>{{ $lang('port_maps') }}</span>
+            <span>{{ $lang("port_maps") }}</span>
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('set')"
-            >{{ $lang('config') }}</el-button>
+                >{{ $lang("config") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="resetPortMaps"
-            >{{ $lang('reset') }}</el-button>
+                >{{ $lang("reset") }}</el-button
+            >
         </div>
-        <el-table :data="data" border stripe>
+        <el-table :data="data" border>
             <el-table-column :label="$lang('ingress')" width="120px">
-                <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                <template slot-scope="scope">{{
+                    getPortName(scope.row.port_id)
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('egress')">
-                <template slot-scope="scope">{{ parsePortlist(scope.row.inter_working_portlist) }}</template>
+                <template slot-scope="scope">{{
+                    parsePortlist(scope.row.inter_working_portlist)
+                }}</template>
             </el-table-column>
         </el-table>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
-            <div slot="title">{{ $lang('config') }}</div>
+            <div slot="title">{{ $lang("config") }}</div>
             <inter-working-form ref="inter-working-form"></inter-working-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('inter-working-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>

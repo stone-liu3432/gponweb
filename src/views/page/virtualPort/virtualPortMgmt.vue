@@ -1,17 +1,29 @@
 <template>
     <div>
         <el-form inline class="vp-title" size="small">
-            <el-form-item :label="$lang('display_type') + ':'" key="filterable-type">
+            <el-form-item
+                :label="$lang('display_type') + ':'"
+                key="filterable-type"
+            >
                 <el-select v-model.number="filterable.type">
                     <el-option :value="0" :label="$lang('all')"></el-option>
                     <el-option :value="1" :label="$lang('svp_id')"></el-option>
                     <el-option :value="2" :label="$lang('port_id')"></el-option>
-                    <el-option :value="3" :label="$lang('svp_type')"></el-option>
+                    <el-option
+                        :value="3"
+                        :label="$lang('svp_type')"
+                    ></el-option>
                     <el-option :value="4" :label="$lang('vlan_id')"></el-option>
                     <el-option :value="5" :label="$lang('gemport')"></el-option>
                     <el-option :value="6" :label="$lang('state')"></el-option>
-                    <el-option :value="7" :label="$lang('admin_status')"></el-option>
-                    <el-option :value="8" :label="$lang('install_mode')"></el-option>
+                    <el-option
+                        :value="7"
+                        :label="$lang('admin_status')"
+                    ></el-option>
+                    <el-option
+                        :value="8"
+                        :label="$lang('install_mode')"
+                    ></el-option>
                 </el-select>
             </el-form-item>
             <template v-if="filterable.type === 1">
@@ -21,27 +33,42 @@
             </template>
             <template v-if="filterable.type === 2">
                 <el-form-item :label="$lang('port_id')" key="port-id">
-                    <el-input style="width: 120px;" v-model.number="filterable.port_id"></el-input>
+                    <el-input
+                        style="width: 120px;"
+                        v-model.number="filterable.port_id"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item :label="$lang('ont_id')" key="ont-id">
-                    <el-input style="width: 120px;" v-model.number="filterable.ont_id"></el-input>
+                    <el-input
+                        style="width: 120px;"
+                        v-model.number="filterable.ont_id"
+                    ></el-input>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 3">
                 <el-form-item key="svp-type">
                     <el-select v-model.number="filterable.svp_type">
                         <template v-for="(item, index) in SVP_TYPE_MAP">
-                            <el-option :value="Number(index)" :label="$lang(item)"></el-option>
+                            <el-option
+                                :value="Number(index)"
+                                :label="$lang(item)"
+                            ></el-option>
                         </template>
                     </el-select>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 4">
                 <el-form-item :label="$lang('new_svlan')" key="new-svlan">
-                    <el-input style="width: 120px;" v-model.number="filterable.new_svlan"></el-input>
+                    <el-input
+                        style="width: 120px;"
+                        v-model.number="filterable.new_svlan"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item :label="$lang('user_vlan')" key="user-vlan">
-                    <el-input style="width: 120px;" v-model.number="filterable.user_vlan"></el-input>
+                    <el-input
+                        style="width: 120px;"
+                        v-model.number="filterable.user_vlan"
+                    ></el-input>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 5">
@@ -52,24 +79,42 @@
             <template v-if="filterable.type === 6">
                 <el-form-item key="state">
                     <el-select v-model.number="filterable.state">
-                        <el-option :value="0" :label="$lang('link_down')"></el-option>
-                        <el-option :value="1" :label="$lang('link_up')"></el-option>
+                        <el-option
+                            :value="0"
+                            :label="$lang('link_down')"
+                        ></el-option>
+                        <el-option
+                            :value="1"
+                            :label="$lang('link_up')"
+                        ></el-option>
                     </el-select>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 7">
                 <el-form-item key="admin-status">
                     <el-select v-model.number="filterable.admin_status">
-                        <el-option :value="0" :label="$lang('disable')"></el-option>
-                        <el-option :value="1" :label="$lang('enable')"></el-option>
+                        <el-option
+                            :value="0"
+                            :label="$lang('disable')"
+                        ></el-option>
+                        <el-option
+                            :value="1"
+                            :label="$lang('enable')"
+                        ></el-option>
                     </el-select>
                 </el-form-item>
             </template>
             <template v-if="filterable.type === 8">
                 <el-form-item key="install-mode">
                     <el-select v-model.number="filterable.install_mode">
-                        <el-option :value="1" :label="$lang('auto')"></el-option>
-                        <el-option :value="2" :label="$lang('manual')"></el-option>
+                        <el-option
+                            :value="1"
+                            :label="$lang('auto')"
+                        ></el-option>
+                        <el-option
+                            :value="2"
+                            :label="$lang('manual')"
+                        ></el-option>
                     </el-select>
                 </el-form-item>
             </template>
@@ -78,46 +123,79 @@
                 type="primary"
                 size="small"
                 @click="openDialog('add')"
-            >{{ $lang('add') }}</el-button>
+                >{{ $lang("add") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="deleteVp()"
-            >{{ $lang('delete_all') }}</el-button>
+                >{{ $lang("delete_all") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="refreshData"
-            >{{ $lang('refresh') }}</el-button>
+                >{{ $lang("refresh") }}</el-button
+            >
         </el-form>
-        <el-table :data="vpTable" border stripe>
-            <el-table-column :label="$lang('svp_id')" prop="svp_id"></el-table-column>
-            <el-table-column :label="$lang('new_svlan')" prop="new_svlan"></el-table-column>
+        <el-table :data="vpTable" border>
+            <el-table-column
+                :label="$lang('svp_id')"
+                prop="svp_id"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('new_svlan')"
+                prop="new_svlan"
+            ></el-table-column>
             <el-table-column :label="$lang('port_id')" prop="port_id">
-                <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                <template slot-scope="scope">{{
+                    getPortName(scope.row.port_id)
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('ont_id')" prop="ont_id"></el-table-column>
-            <el-table-column :label="$lang('gemport')" prop="gemport"></el-table-column>
+            <el-table-column
+                :label="$lang('ont_id')"
+                prop="ont_id"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('gemport')"
+                prop="gemport"
+            ></el-table-column>
             <el-table-column :label="$lang('svp_type')" prop="svp_type">
-                <template slot-scope="scope">{{ $lang(SVP_TYPE_MAP[scope.row.svp_type]) }}</template>
+                <template slot-scope="scope">{{
+                    $lang(SVP_TYPE_MAP[scope.row.svp_type])
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('user_vlan')" prop="user_vlan">
-                <template slot-scope="scope">{{ scope.row.user_vlan ? scope.row.user_vlan : '-' }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.user_vlan ? scope.row.user_vlan : "-"
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('tag_action')" prop="tag_action" width="130px">
-                <template slot-scope="scope">{{ TAG_ACTIONS[scope.row.tag_action] }}</template>
+            <el-table-column
+                :label="$lang('tag_action')"
+                prop="tag_action"
+                width="130px"
+            >
+                <template slot-scope="scope">{{
+                    TAG_ACTIONS[scope.row.tag_action]
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('inner_vlan')" prop="inner_vlan">
-                <template
-                    slot-scope="scope"
-                >{{ (scope.row.tag_action === 4 || scope.row.tag_action === 5) ? scope.row.inner_vlan : '-' }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.tag_action === 4 || scope.row.tag_action === 5
+                        ? scope.row.inner_vlan
+                        : "-"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('state')" prop="state">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.admin_status ? (scope.row.state ? $lang('link_up') : $lang('link_down')) : $lang('link_down') }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.admin_status
+                        ? scope.row.state
+                            ? $lang("link_up")
+                            : $lang("link_down")
+                        : $lang("link_down")
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('admin_status')" prop="admin_status">
                 <template slot-scope="scope">
@@ -132,26 +210,34 @@
                 </template>
             </el-table-column>
             <el-table-column :label="$lang('install_mode')" prop="install_mode">
-                <template slot-scope="scope">{{ $lang(INSTALL_MODE_MAP[scope.row.install_mode]) }}</template>
+                <template slot-scope="scope">{{
+                    $lang(INSTALL_MODE_MAP[scope.row.install_mode])
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('desc')" prop="desc"></el-table-column>
+            <el-table-column
+                :label="$lang('desc')"
+                prop="desc"
+            ></el-table-column>
             <el-table-column :label="$lang('config')" width="100px">
                 <template slot-scope="scope">
                     <el-dropdown @command="dropdownClick">
                         <span class="el-dropdown-link">
-                            {{ $lang('config') }}
+                            {{ $lang("config") }}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
                                 :command="{ action: 'set', data: scope.row }"
-                            >{{ $lang('modify') }}</el-dropdown-item>
+                                >{{ $lang("modify") }}</el-dropdown-item
+                            >
                             <el-dropdown-item
                                 :command="{ action: 'desc', data: scope.row }"
-                            >{{ $lang('set', 'desc') }}</el-dropdown-item>
+                                >{{ $lang("set", "desc") }}</el-dropdown-item
+                            >
                             <el-dropdown-item
                                 :command="{ action: 'delete', data: scope.row }"
-                            >{{ $lang('delete') }}</el-dropdown-item>
+                                >{{ $lang("delete") }}</el-dropdown-item
+                            >
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -167,14 +253,23 @@
             hide-on-single-page
         ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" width="600px">
-            <template slot="title">{{ $lang(dialogType === 'set' ? 'modify' : dialogType) }}</template>
-            <virtual-port-form ref="virtual-port-form" :type="dialogType" :data="dialogData"></virtual-port-form>
+            <template slot="title">{{
+                $lang(dialogType === "set" ? "modify" : dialogType)
+            }}</template>
+            <virtual-port-form
+                ref="virtual-port-form"
+                :type="dialogType"
+                :data="dialogData"
+            ></virtual-port-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('virtual-port-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>

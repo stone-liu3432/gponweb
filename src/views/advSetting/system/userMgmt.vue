@@ -2,52 +2,93 @@
     <div>
         <page-header :title="$lang('user_mgmt')" type="none"></page-header>
         <div class="user-mgmt-table">
-            <span>{{ $lang('current_user_list') }}</span>
+            <span>{{ $lang("current_user_list") }}</span>
             <el-button
                 size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('add')"
-            >{{ $lang('add', 'user') }}</el-button>
+                >{{ $lang("add", "user") }}</el-button
+            >
             <el-button
                 size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('delete')"
-            >{{ $lang('delete', 'user') }}</el-button>
+                >{{ $lang("delete", "user") }}</el-button
+            >
             <el-button
                 size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="openDialog('modify')"
-            >{{ $lang('modify_user_pwd') }}</el-button>
+                >{{ $lang("modify_user_pwd") }}</el-button
+            >
         </div>
         <el-table
             border
-            stripe
             :header-cell-style="{ 'text-align': 'center' }"
-            :cell-style="{'text-align': 'center'}"
+            :cell-style="{ 'text-align': 'center' }"
             :data="userList"
         >
-            <el-table-column :label="$lang('user')" prop="name" width="250px"></el-table-column>
-            <el-table-column :label="$lang('status')" prop="status" width="80px">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.status ? $lang('online') : $lang('offline') }}</template>
+            <el-table-column
+                :label="$lang('user')"
+                prop="name"
+                width="250px"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('status')"
+                prop="status"
+                width="80px"
+            >
+                <template slot-scope="scope">{{
+                    scope.row.status ? $lang("online") : $lang("offline")
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('user_level')" prop="level" width="120px">
-                <template slot-scope="scope">{{ USER_LEVEL[scope.row.level] }}</template>
+            <el-table-column
+                :label="$lang('user_level')"
+                prop="level"
+                width="120px"
+            >
+                <template slot-scope="scope">{{
+                    USER_LEVEL[scope.row.level]
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('user_reenter')" prop="reenter" width="150px"></el-table-column>
-            <el-table-column :label="$lang('logins')" prop="logins" width="150px"></el-table-column>
-            <el-table-column :label="$lang('desc')" prop="info"></el-table-column>
+            <el-table-column
+                :label="$lang('user_reenter')"
+                prop="reenter"
+                width="150px"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('logins')"
+                prop="logins"
+                width="150px"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('desc')"
+                prop="info"
+            ></el-table-column>
         </el-table>
-        <el-dialog :visible.sync="dialogVisible" append-to-body :before-close="closeDialog">
+        <el-dialog
+            :visible.sync="dialogVisible"
+            append-to-body
+            :before-close="closeDialog"
+        >
             <template slot="title">{{ $lang(dialogType) }}</template>
-            <user-mgmt-form :type="dialogType" :data="userList" ref="user-mgmt-form"></user-mgmt-form>
+            <user-mgmt-form
+                :type="dialogType"
+                :data="userList"
+                ref="user-mgmt-form"
+            ></user-mgmt-form>
             <span slot="footer">
-                <el-button @click="closeDialog">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('user-mgmt-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="closeDialog">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('user-mgmt-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
             </span>
         </el-dialog>
     </div>

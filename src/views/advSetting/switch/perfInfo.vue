@@ -2,50 +2,82 @@
     <div>
         <page-header :title="$lang('perf_info')" type="none">
             <template slot="content">
-                <el-button type="primary" size="small" @click="refreshData">{{ $lang('refresh') }}</el-button>
+                <el-button type="primary" size="small" @click="refreshData">{{
+                    $lang("refresh")
+                }}</el-button>
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="clearPerf(0)"
-                >{{ $lang('clear_perf_all') }}</el-button>
+                    >{{ $lang("clear_perf_all") }}</el-button
+                >
             </template>
         </page-header>
         <el-table
             border
-            stripe
             :data="perf"
             :header-cell-style="{ 'text-align': 'center' }"
             :cell-style="{ 'text-align': 'center' }"
         >
             <el-table-column :label="$lang('port_id')">
-                <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                <template slot-scope="scope">{{
+                    getPortName(scope.row.port_id)
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('rx_octets')" prop="rx_octets"></el-table-column>
-            <el-table-column :label="$lang('rx_frame')" prop="rx_frame"></el-table-column>
-            <el-table-column :label="$lang('rx_discard_frame')" prop="rx_discard_frame"></el-table-column>
-            <el-table-column :label="$lang('rx_error_frame')" prop="rx_error_frame"></el-table-column>
-            <el-table-column :label="$lang('tx_octets')" prop="tx_octets"></el-table-column>
-            <el-table-column :label="$lang('tx_frame')" prop="tx_frame"></el-table-column>
-            <el-table-column :label="$lang('tx_discard_frame')" prop="tx_discard_frame"></el-table-column>
-            <el-table-column :label="$lang('tx_error_frame')" prop="tx_error_frame"></el-table-column>
+            <el-table-column
+                :label="$lang('rx_octets')"
+                prop="rx_octets"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('rx_frame')"
+                prop="rx_frame"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('rx_discard_frame')"
+                prop="rx_discard_frame"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('rx_error_frame')"
+                prop="rx_error_frame"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('tx_octets')"
+                prop="tx_octets"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('tx_frame')"
+                prop="tx_frame"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('tx_discard_frame')"
+                prop="tx_discard_frame"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('tx_error_frame')"
+                prop="tx_error_frame"
+            ></el-table-column>
             <el-table-column :label="$lang('config')" width="120px">
                 <template slot-scope="scope">
                     <el-button
                         type="text"
                         @click="showDetail(scope.row.port_id)"
                         style="padding: 3px 0;"
-                    >{{ $lang('detail') }}</el-button>
+                        >{{ $lang("detail") }}</el-button
+                    >
                     <el-button
                         type="text"
                         @click="clearPerf(scope.row.port_id)"
                         style="padding: 3px 0;"
-                    >{{ $lang('clear') }}</el-button>
+                        >{{ $lang("clear") }}</el-button
+                    >
                 </template>
             </el-table-column>
         </el-table>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="640px">
-            <template slot="title">{{ $lang('port_id') }}: {{ detail.port_id || '' }}</template>
+            <template slot="title"
+                >{{ $lang("port_id") }}: {{ detail.port_id || "" }}</template
+            >
             <perf-detail :data="detail"></perf-detail>
         </el-dialog>
     </div>

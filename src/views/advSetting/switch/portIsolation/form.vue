@@ -1,7 +1,11 @@
 <template>
     <el-form label-width="200px">
         <el-form-item :label="label">
-            <nms-port-checkbox :type="type" v-model="portlist" :disabled="disabled"></nms-port-checkbox>
+            <nms-port-checkbox
+                :type="type"
+                v-model="portlist"
+                :disabled="disabled"
+            ></nms-port-checkbox>
         </el-form-item>
     </el-form>
 </template>
@@ -20,7 +24,7 @@ export default {
                 : this.$lang("uplink_isolate_portlist");
         },
         ports() {
-            const ponports = this.system.ponports >>> 0;
+            const ponports = this.system.ponports;
             return this.type === "pon"
                 ? this.port.slice(0, ponports)
                 : this.port.slice(ponports);

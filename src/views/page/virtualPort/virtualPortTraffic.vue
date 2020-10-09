@@ -1,17 +1,24 @@
 <template>
     <div>
         <div style="margin: 12px;">
-            <el-button type="primary" size="small" @click="refreshData">{{ $lang('refresh') }}</el-button>
+            <el-button type="primary" size="small" @click="refreshData">{{
+                $lang("refresh")
+            }}</el-button>
         </div>
-        <el-table :data="showList" border stripe>
-            <el-table-column :label="$lang('traffic_profile_id')" prop="traffic_profile_id"></el-table-column>
+        <el-table :data="showList" border>
+            <el-table-column
+                :label="$lang('traffic_profile_id')"
+                prop="traffic_profile_id"
+            ></el-table-column>
             <el-table-column label="cir" prop="cir"></el-table-column>
             <el-table-column label="cbs" prop="cbs"></el-table-column>
             <el-table-column label="pir" prop="pir"></el-table-column>
             <el-table-column label="pbs" prop="pbs"></el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="deleteTraffic(scope.row)">{{ $lang('delete') }}</el-button>
+                    <el-button type="text" @click="deleteTraffic(scope.row)">{{
+                        $lang("delete")
+                    }}</el-button>
                 </template>
             </el-table-column>
         </el-table>

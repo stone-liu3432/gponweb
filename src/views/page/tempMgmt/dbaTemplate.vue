@@ -6,46 +6,62 @@
             :primary="filterable"
             @change="dataChange"
         ></nms-filter>
-        <el-table :data="dbaTable" border stripe>
-            <el-table-column prop="profname" :label="$lang('profname')"></el-table-column>
-            <el-table-column prop="profid" :label="$lang('profid')"></el-table-column>
+        <el-table :data="dbaTable" border>
+            <el-table-column
+                prop="profname"
+                :label="$lang('profname')"
+            ></el-table-column>
+            <el-table-column
+                prop="profid"
+                :label="$lang('profid')"
+            ></el-table-column>
             <el-table-column prop="type" :label="$lang('type')">
-                <template slot-scope="scope">{{ types[scope.row.type] }}</template>
+                <template slot-scope="scope">{{
+                    types[scope.row.type]
+                }}</template>
             </el-table-column>
             <el-table-column prop="fix" :label="$lang('fix')">
-                <template slot-scope="scope">{{ showValue(scope.row, 'fix') }}</template>
+                <template slot-scope="scope">{{
+                    showValue(scope.row, "fix")
+                }}</template>
             </el-table-column>
             <el-table-column prop="assure" :label="$lang('assure')">
-                <template slot-scope="scope">{{ showValue(scope.row, 'assure') }}</template>
+                <template slot-scope="scope">{{
+                    showValue(scope.row, "assure")
+                }}</template>
             </el-table-column>
             <el-table-column prop="max" :label="$lang('max')">
-                <template slot-scope="scope">{{ showValue(scope.row, 'max') }}</template>
+                <template slot-scope="scope">{{
+                    showValue(scope.row, "max")
+                }}</template>
             </el-table-column>
             <el-table-column width="240px">
                 <template slot="header">
-                    <span>{{ $lang('config') }}</span>
+                    <span>{{ $lang("config") }}</span>
                     <el-button
                         type="primary"
                         size="small"
                         style="margin-left: 20px;"
                         @click="openDialog('add')"
-                    >{{ $lang('add') }}</el-button>
+                        >{{ $lang("add") }}</el-button
+                    >
                 </template>
                 <template slot-scope="scope">
-                    <el-button
-                        type="text"
-                        @click="showBinding(scope.row)"
-                    >{{ $lang('show_binding') }}</el-button>
+                    <el-button type="text" @click="showBinding(scope.row)">{{
+                        $lang("show_binding")
+                    }}</el-button>
                     <el-button
                         type="text"
                         @click="openDialog('set', scope.row)"
-                    >{{ $lang('config') }}</el-button>
+                        >{{ $lang("config") }}</el-button
+                    >
                     <el-button
                         type="text"
                         v-if="scope.row.profid > 9"
                         style="margin-left: 20px;"
                         @click="delTemplate(scope.row)"
-                    >{{ $lang('delete') }}</el-button>
+                        >{{ $lang("delete") }}</el-button
+                    >
                 </template>
             </el-table-column>
         </el-table>
@@ -60,22 +76,34 @@
         ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" width="500px">
             <div slot="title">{{ $lang(dialogType) }}</div>
-            <dba-form :data="dbaData" :type="dialogType" ref="dba-form"></dba-form>
+            <dba-form
+                :data="dbaData"
+                :type="dialogType"
+                ref="dba-form"
+            ></dba-form>
             <span slot="footer">
-                <el-button @click="dialogVisible = false">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('dba-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button type="primary" @click="submitForm('dba-form')">{{
+                    $lang("apply")
+                }}</el-button>
             </span>
         </el-dialog>
         <el-dialog :visible.sync="bindVisible" width="800px">
             <div slot="title">
-                <span>{{ $lang('profid') }}:</span>
+                <span>{{ $lang("profid") }}:</span>
                 <span style="margin: 0 50px 0 12px;">{{ dbaData.profid }}</span>
-                <span>{{ $lang('profname') }}:</span>
-                <span style="margin: 0 50px 0 12px;">{{ dbaData.profname }}</span>
+                <span>{{ $lang("profname") }}:</span>
+                <span style="margin: 0 50px 0 12px;">{{
+                    dbaData.profname
+                }}</span>
             </div>
             <div class="binding-line-temp">
-                <span style="margin: 0 20px 0 0;">{{ $lang('binding_temp') }}:</span>
-                <span>{{ bindingInfo.join(', ') || '-' }}</span>
+                <span style="margin: 0 20px 0 0;"
+                    >{{ $lang("binding_temp") }}:</span
+                >
+                <span>{{ bindingInfo.join(", ") || "-" }}</span>
             </div>
         </el-dialog>
     </div>

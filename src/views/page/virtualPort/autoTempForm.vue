@@ -1,11 +1,26 @@
 <template>
-    <el-form :model="form" ref="auto-temp-form" :rules="rules" label-width="140px">
+    <el-form
+        :model="form"
+        ref="auto-temp-form"
+        :rules="rules"
+        label-width="140px"
+    >
         <el-form-item :label="$lang('port_id')" prop="port_id">
-            <el-select v-model.number="form.port_id" :disabled="selectAllPort || type === 'set'">
-                <el-option :value="0" :label="$lang('select_all')" :disabled="!selectAllPort"></el-option>
+            <el-select
+                v-model.number="form.port_id"
+                :disabled="selectAllPort || type === 'set'"
+            >
+                <el-option
+                    :value="0"
+                    :label="$lang('select_all')"
+                    :disabled="!selectAllPort"
+                ></el-option>
                 <template v-for="i in system.ponports">
                     <template v-if="isShowPort(i)">
-                        <el-option :value="i" :label="getPortName(i)"></el-option>
+                        <el-option
+                            :value="i"
+                            :label="getPortName(i)"
+                        ></el-option>
                     </template>
                 </template>
             </el-select>
@@ -13,7 +28,8 @@
                 v-model="selectAllPort"
                 v-if="type === 'add'"
                 style="margin-left: 30px;"
-            >{{ $lang('select_all') }}</el-checkbox>
+                >{{ $lang("select_all") }}</el-checkbox
+            >
         </el-form-item>
         <el-form-item :label="$lang('new_svlan')" prop="new_svlan">
             <el-input v-model.number="form.new_svlan"></el-input>
@@ -22,12 +38,15 @@
             <el-select v-model.number="form.tag_action">
                 <el-option :value="0" label="-"></el-option>
                 <template v-for="(item, index) in TAG_ACTIONS">
-                    <el-option :value="index >>> 0" :label="item"></el-option>
+                    <el-option :value="Number(index)" :label="item"></el-option>
                 </template>
             </el-select>
         </el-form-item>
         <el-form-item :label="$lang('inner_vlan')" prop="inner_vlan">
-            <el-input v-model.number="form.inner_vlan" :disabled="disabledInnervlan"></el-input>
+            <el-input
+                v-model.number="form.inner_vlan"
+                :disabled="disabledInnervlan"
+            ></el-input>
         </el-form-item>
     </el-form>
 </template>

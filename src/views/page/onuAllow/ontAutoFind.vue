@@ -31,7 +31,6 @@
         <el-table
             :data="showTable"
             border
-            stripe
             @selection-change="selectionChange"
             ref="ont-auto-find-table"
         >

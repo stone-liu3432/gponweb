@@ -1,40 +1,56 @@
 <template>
     <div>
         <div style="margin: 12px;">
-            <el-button type="primary" size="small" @click="openDialog('add')">{{ $lang('add') }}</el-button>
+            <el-button type="primary" size="small" @click="openDialog('add')">{{
+                $lang("add")
+            }}</el-button>
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="deleteAllTemp"
-            >{{ $lang('delete_all') }}</el-button>
+                >{{ $lang("delete_all") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="refreshData"
-            >{{ $lang('refresh') }}</el-button>
+                >{{ $lang("refresh") }}</el-button
+            >
         </div>
         <el-table :data="tempTable" border>
             <el-table-column :label="$lang('port_id')">
-                <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                <template slot-scope="scope">{{
+                    getPortName(scope.row.port_id)
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('new_svlan')" prop="new_svlan"></el-table-column>
+            <el-table-column
+                :label="$lang('new_svlan')"
+                prop="new_svlan"
+            ></el-table-column>
             <el-table-column :label="$lang('tag_action')">
-                <template slot-scope="scope">{{ TAG_ACTIONS[scope.row.tag_action] || '-' }}</template>
+                <template slot-scope="scope">{{
+                    TAG_ACTIONS[scope.row.tag_action] || "-"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('inner_vlan')" prop="inner_vlan">
-                <template
-                    slot-scope="scope"
-                >{{ (scope.row.tag_action === 4 || scope.row.tag_action === 5) ? scope.row.inner_vlan : '-' }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.tag_action === 4 || scope.row.tag_action === 5
+                        ? scope.row.inner_vlan
+                        : "-"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
                     <el-button
                         type="text"
-                        @click="openDialog('set',scope.row)"
-                    >{{ $lang('config') }}</el-button>
-                    <el-button type="text" @click="deleteTemp(scope.row)">{{ $lang('delete') }}</el-button>
+                        @click="openDialog('set', scope.row)"
+                        >{{ $lang("config") }}</el-button
+                    >
+                    <el-button type="text" @click="deleteTemp(scope.row)">{{
+                        $lang("delete")
+                    }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -47,8 +63,14 @@
                 ref="auto-temp-form"
             ></auto-temp-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('auto-temp-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('auto-temp-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -139,7 +161,7 @@ export default {
                             port_id: formData.port_id,
                             new_svlan: formData.new_svlan,
                             tag_action: formData.tag_action,
-                            inner_vlan: formData.inner_vlan >>> 0
+                            inner_vlan: Number(formData.inner_vlan)
                         }
                     };
                     const ACTIONS = {

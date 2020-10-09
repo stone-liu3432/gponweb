@@ -1,16 +1,27 @@
 <template>
-    <el-form :model="form" label-width="140px" ref="add-ont-form" :rules="rules">
+    <el-form
+        :model="form"
+        label-width="140px"
+        ref="add-ont-form"
+        :rules="rules"
+    >
         <el-form-item :label="$lang('port_id')" prop="port_id">
             <span>{{ getPortName(port_id) }}</span>
         </el-form-item>
         <el-form-item :label="$lang('ont_id')" prop="ont_id">
-            <el-input v-model.number="form.ont_id" :disabled="checked" style="width: 200px;"></el-input>
-            <el-checkbox v-model="checked" style="margin-left: 20px;">{{ $lang('auto_assign') }}</el-checkbox>
+            <el-input
+                v-model.number="form.ont_id"
+                :disabled="checked"
+                style="width: 200px;"
+            ></el-input>
+            <el-checkbox v-model="checked" style="margin-left: 20px;">{{
+                $lang("auto_assign")
+            }}</el-checkbox>
         </el-form-item>
         <el-form-item :label="$lang('auth_mode')" prop="auth_mode">
             <el-select v-model.number="form.auth_mode">
                 <template v-for="(item, index) in ONT_AUTH_MODES">
-                    <el-option :label="item" :value="index >>> 0"></el-option>
+                    <el-option :label="item" :value="Number(index)"></el-option>
                 </template>
             </el-select>
         </el-form-item>
@@ -33,17 +44,31 @@
                 </el-form-item>
             </template>
         </template>
-        <el-form-item :label="$lang('ont_lineprofid')" prop="ont_lineprofid" key="ont-lineprofid">
+        <el-form-item
+            :label="$lang('ont_lineprofid')"
+            prop="ont_lineprofid"
+            key="ont-lineprofid"
+        >
             <el-select v-model.number="form.ont_lineprofid">
                 <template v-for="item in lineProfs">
-                    <el-option :value="item.profid" :label="item.profname"></el-option>
+                    <el-option
+                        :value="item.profid"
+                        :label="item.profname"
+                    ></el-option>
                 </template>
             </el-select>
         </el-form-item>
-        <el-form-item :label="$lang('ont_srvprofid')" prop="ont_srvprofid" key="ont-srvprofid">
+        <el-form-item
+            :label="$lang('ont_srvprofid')"
+            prop="ont_srvprofid"
+            key="ont-srvprofid"
+        >
             <el-select v-model.number="form.ont_srvprofid">
                 <template v-for="item in srvProfs">
-                    <el-option :value="item.profid" :label="item.profname"></el-option>
+                    <el-option
+                        :value="item.profid"
+                        :label="item.profname"
+                    ></el-option>
                 </template>
             </el-select>
         </el-form-item>

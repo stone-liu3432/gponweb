@@ -1,7 +1,14 @@
 <template>
-    <el-form label-width="150px" :model="form" :rules="rules" ref="rstp-port-form">
+    <el-form
+        label-width="150px"
+        :model="form"
+        :rules="rules"
+        ref="rstp-port-form"
+    >
         <el-form-item :label="$lang('port_id')">
-            <span style="margin-left: 12px;">{{ getPortName(formData.port_id) }}</span>
+            <span style="margin-left: 12px;">{{
+                getPortName(formData.port_id)
+            }}</span>
         </el-form-item>
         <el-form-item :label="$lang('port_priority')">
             <el-select v-model.number="form.port_priority">
@@ -88,7 +95,7 @@ export default {
             });
         },
         validatePortPathCost(rule, val, cb) {
-            const v = val >>> 0;
+            const v = Number(val);
             if (v < 0 || v > 200000000 || isNaN(val)) {
                 return cb(
                     new Error(this.validateMsg("inputRange", 0, 200000000))

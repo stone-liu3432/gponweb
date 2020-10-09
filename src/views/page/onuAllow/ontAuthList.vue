@@ -1,22 +1,35 @@
 <template>
     <div>
         <div class="ont-auth-list-title">
-            <nms-filter inline :data="ontList" :primary="filterable" @change="dataChange"></nms-filter>
-            <span>{{ $lang('registered_onu') }}:</span>
+            <nms-filter
+                inline
+                :data="ontList"
+                :primary="filterable"
+                @change="dataChange"
+            ></nms-filter>
+            <span>{{ $lang("registered_onu") }}:</span>
             <span>{{ online + offline }}</span>
-            <span style="margin-left: 30px;">{{ $lang('online') }}:</span>
+            <span style="margin-left: 30px;">{{ $lang("online") }}:</span>
             <span>{{ online }}</span>
-            <span style="margin-left: 30px;color: #F56C6C;">{{ $lang('offline') }}:</span>
+            <span style="margin-left: 30px;color: #F56C6C;"
+                >{{ $lang("offline") }}:</span
+            >
             <span style="color: #F56C6C;">{{ offline }}</span>
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="refreshData"
-            >{{ $lang('refresh') }}</el-button>
-            <el-button type="primary" style="margin-left: 30px;" size="small" @click="changeBatch">
-                <template v-if="!isBatch">{{ $lang('batch_config') }}</template>
-                <template v-else>{{ $lang('exit_batch_onu') }}</template>
+                >{{ $lang("refresh") }}</el-button
+            >
+            <el-button
+                type="primary"
+                style="margin-left: 30px;"
+                size="small"
+                @click="changeBatch"
+            >
+                <template v-if="!isBatch">{{ $lang("batch_config") }}</template>
+                <template v-else>{{ $lang("exit_batch_onu") }}</template>
             </el-button>
             <template v-if="isBatch">
                 <el-button
@@ -24,13 +37,13 @@
                     size="small"
                     style="margin-left: 30px;"
                     @click="submitBatch"
-                >{{ $lang('delete') }}</el-button>
+                    >{{ $lang("delete") }}</el-button
+                >
             </template>
         </div>
         <el-table
             :data="showTable"
             border
-            stripe
             ref="ont-info-table"
             @selection-change="selectionChange"
         >
@@ -38,54 +51,90 @@
                 <el-table-column type="selection"></el-table-column>
             </template>
             <el-table-column :label="$lang('ont_id')">
-                <template
-                    slot-scope="scope"
-                >{{ `${getPortName((scope.row.identifier >> 8) & 0xff)}/${(scope.row.identifier) & 0xff}` }}</template>
+                <template slot-scope="scope">{{
+                    `${getPortName((scope.row.identifier >> 8) & 0xff)}/${scope
+                        .row.identifier & 0xff}`
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('ont_name')" prop="ont_name"></el-table-column>
-            <el-table-column :label="$lang('ont_sn')" prop="ont_sn"></el-table-column>
+            <el-table-column
+                :label="$lang('ont_name')"
+                prop="ont_name"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('ont_sn')"
+                prop="ont_sn"
+            ></el-table-column>
             <el-table-column :label="$lang('state')" prop="state">
-                <template slot-scope="scope">{{ ONT_STATES[scope.row.state] }}</template>
+                <template slot-scope="scope">{{
+                    ONT_STATES[scope.row.state]
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('rstate')" prop="rstate">
                 <template slot-scope="scope">
                     <el-tag
                         :type="scope.row.rstate === 1 ? 'success' : 'danger'"
-                    >{{ ONT_RSTATES[scope.row.rstate] }}</el-tag>
+                        >{{ ONT_RSTATES[scope.row.rstate] }}</el-tag
+                    >
                 </template>
             </el-table-column>
             <el-table-column :label="$lang('cstate')" prop="cstate">
-                <template slot-scope="scope">{{ ONT_CSTATES[scope.row.cstate] }}</template>
+                <template slot-scope="scope">{{
+                    ONT_CSTATES[scope.row.cstate]
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('mstate')" prop="mstate">
-                <template slot-scope="scope">{{ ONT_MSTATES[scope.row.mstate] }}</template>
+                <template slot-scope="scope">{{
+                    ONT_MSTATES[scope.row.mstate]
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('last_u_time')" prop="last_u_time"></el-table-column>
-            <el-table-column :label="$lang('last_d_time')" prop="last_d_time"></el-table-column>
-            <el-table-column :label="$lang('last_d_cause')" prop="last_d_cause"></el-table-column>
+            <el-table-column
+                :label="$lang('last_u_time')"
+                prop="last_u_time"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('last_d_time')"
+                prop="last_d_time"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('last_d_cause')"
+                prop="last_d_cause"
+            ></el-table-column>
             <el-table-column :label="$lang('config')" width="100" prop="config">
                 <template slot-scope="scope">
                     <el-dropdown @command="dropdownClick">
                         <span class="dropdown-link">
-                            {{ $lang('config') }}
+                            {{ $lang("config") }}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
                                 :command="{ action: 'detail', row: scope.row }"
-                            >{{ $lang('show_detail') }}</el-dropdown-item>
+                                >{{ $lang("show_detail") }}</el-dropdown-item
+                            >
                             <el-dropdown-item
-                                :command="{ action: 'changeState', row: scope.row }"
-                            >{{ $lang('switch', 'ont','state') }}</el-dropdown-item>
+                                :command="{
+                                    action: 'changeState',
+                                    row: scope.row
+                                }"
+                                >{{
+                                    $lang("switch", "ont", "state")
+                                }}</el-dropdown-item
+                            >
                             <el-dropdown-item
-                                :command="{ action: 'configDesc', row: scope.row }"
-                            >{{ $lang('config', 'desc') }}</el-dropdown-item>
+                                :command="{
+                                    action: 'configDesc',
+                                    row: scope.row
+                                }"
+                                >{{ $lang("config", "desc") }}</el-dropdown-item
+                            >
                             <el-dropdown-item
                                 :command="{ action: 'reboot', row: scope.row }"
-                            >{{ $lang('reboot', 'ont') }}</el-dropdown-item>
+                                >{{ $lang("reboot", "ont") }}</el-dropdown-item
+                            >
                             <el-dropdown-item
                                 :command="{ action: 'delete', row: scope.row }"
-                            >{{ $lang('delete', 'ont') }}</el-dropdown-item>
+                                >{{ $lang("delete", "ont") }}</el-dropdown-item
+                            >
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -101,11 +150,17 @@
             hide-on-single-page
         ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
-            <div slot="title">{{ $lang('config') }}</div>
+            <div slot="title">{{ $lang("config") }}</div>
             <ont-basic-form ref="ont-basic-form"></ont-basic-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('ont-basic-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('ont-basic-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>

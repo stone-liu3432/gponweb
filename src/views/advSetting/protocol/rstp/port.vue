@@ -1,41 +1,64 @@
 <template>
     <div>
         <h3>
-            {{ $lang('rstp_p_info') }}
+            {{ $lang("rstp_p_info") }}
             <el-button
                 size="small"
                 type="primary"
                 style="margin-left: 30px;"
                 @click="refreshData"
-            >{{ $lang('refresh') }}</el-button>
+                >{{ $lang("refresh") }}</el-button
+            >
         </h3>
         <el-table
             border
-            stripe
             :data="portData"
             :cell-style="{ 'text-align': 'center' }"
             :header-cell-style="{ 'text-align': 'center' }"
             style="margin-left: 12px;"
         >
             <el-table-column :label="$lang('port_id')">
-                <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                <template slot-scope="scope">{{
+                    getPortName(scope.row.port_id)
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('port_priority')" prop="port_priority"></el-table-column>
-            <el-table-column :label="$lang('port_path_cost')" prop="port_path_cost"></el-table-column>
+            <el-table-column
+                :label="$lang('port_priority')"
+                prop="port_priority"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('port_path_cost')"
+                prop="port_path_cost"
+            ></el-table-column>
             <el-table-column :label="$lang('edge_status')">
-                <template slot-scope="scope">{{ scope.row.edge_status ? 'Edge' : 'NEdge' }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.edge_status ? "Edge" : "NEdge"
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('admin_link_type')" prop="admin_link_type"></el-table-column>
-            <el-table-column :label="$lang('oper_link_type')" prop="oper_link_type"></el-table-column>
-            <el-table-column :label="$lang('port_role')" prop="port_role"></el-table-column>
-            <el-table-column :label="$lang('port_state')" prop="port_state"></el-table-column>
+            <el-table-column
+                :label="$lang('admin_link_type')"
+                prop="admin_link_type"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('oper_link_type')"
+                prop="oper_link_type"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('port_role')"
+                prop="port_role"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('port_state')"
+                prop="port_state"
+            ></el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
                     <el-button
                         type="text"
                         style="padding: 3px 0;"
                         @click="openDialog(scope.row)"
-                    >{{ $lang('config') }}</el-button>
+                        >{{ $lang("config") }}</el-button
+                    >
                 </template>
             </el-table-column>
         </el-table>
@@ -47,8 +70,14 @@
         >
             <port-form :form-data="formData" ref="rstp-port-form"></port-form>
             <span slot="footer">
-                <el-button @click="dialogVisible = false">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('rstp-port-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('rstp-port-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
             </span>
         </el-dialog>
     </div>

@@ -6,32 +6,46 @@
             :primary="filterable"
             @change="dataChange"
         ></nms-filter>
-        <el-table :data="lineTable" border stripe>
-            <el-table-column prop="profname" :label="$lang('profname')"></el-table-column>
-            <el-table-column prop="profid" :label="$lang('profid')"></el-table-column>
-            <el-table-column prop="bindtimes" :label="$lang('bindtimes')"></el-table-column>
+        <el-table :data="lineTable" border>
+            <el-table-column
+                prop="profname"
+                :label="$lang('profname')"
+            ></el-table-column>
+            <el-table-column
+                prop="profid"
+                :label="$lang('profid')"
+            ></el-table-column>
+            <el-table-column
+                prop="bindtimes"
+                :label="$lang('bindtimes')"
+            ></el-table-column>
             <el-table-column width="280px">
                 <template slot="header">
-                    <span>{{ $lang('config') }}</span>
+                    <span>{{ $lang("config") }}</span>
                     <el-button
                         type="primary"
                         size="small"
                         style="margin-left: 30px;"
                         @click="openDialog('add')"
-                    >{{ $lang('add') }}</el-button>
+                        >{{ $lang("add") }}</el-button
+                    >
                 </template>
                 <template slot-scope="scope">
-                    <el-button type="text" @click="showDetail(scope.row)">{{ $lang('show_detail') }}</el-button>
+                    <el-button type="text" @click="showDetail(scope.row)">{{
+                        $lang("show_detail")
+                    }}</el-button>
                     <el-button
                         type="text"
                         style="margin-left: 20px;"
                         @click="showBinding(scope.row)"
-                    >{{ $lang('show_binding') }}</el-button>
+                        >{{ $lang("show_binding") }}</el-button
+                    >
                     <el-button
                         type="text"
                         style="margin-left: 20px;"
                         @click="deleteProf(scope.row)"
-                    >{{ $lang('delete') }}</el-button>
+                        >{{ $lang("delete") }}</el-button
+                    >
                 </template>
             </el-table-column>
         </el-table>
@@ -46,22 +60,30 @@
         ></el-pagination>
         <el-dialog :visible.sync="bindingVisible" width="800px">
             <div slot="title">
-                <span>{{ $lang('profid') }}:</span>
+                <span>{{ $lang("profid") }}:</span>
                 <span style="margin: 0 50px 0 12px;">{{ rowData.profid }}</span>
-                <span>{{ $lang('profname') }}:</span>
+                <span>{{ $lang("profname") }}:</span>
                 <span style="margin: 0 0 0 12px;">{{ rowData.profname }}</span>
             </div>
             <el-table :data="bindingDevices" border>
                 <el-table-column :label="$lang('port_id')" width="100px">
-                    <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                    <template slot-scope="scope">{{
+                        getPortName(scope.row.port_id)
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('ont_id')">
-                    <template slot-scope="scope">{{ getOntRange(scope.row) }}</template>
+                    <template slot-scope="scope">{{
+                        getOntRange(scope.row)
+                    }}</template>
                 </el-table-column>
             </el-table>
         </el-dialog>
         <!-- 详情 -->
-        <el-dialog :visible.sync="detailVisible" width="900px" :before-close="beforeClose">
+        <el-dialog
+            :visible.sync="detailVisible"
+            width="900px"
+            :before-close="beforeClose"
+        >
             <line-detail
                 ref="line-detail"
                 :data="rowData"
@@ -90,8 +112,12 @@
                 ref="line-form"
             ></line-form>
             <template slot="footer">
-                <el-button @click="closeDialog">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('line-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="closeDialog">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button type="primary" @click="submitForm('line-form')">{{
+                    $lang("apply")
+                }}</el-button>
             </template>
         </el-dialog>
     </div>

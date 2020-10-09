@@ -1,5 +1,10 @@
 <template>
-    <el-form label-width="150px" :model="form" :rules="rules" ref="add-vp-from-autofind">
+    <el-form
+        label-width="150px"
+        :model="form"
+        :rules="rules"
+        ref="add-vp-from-autofind"
+    >
         <el-form-item :label="$lang('svp_af_id')" prop="svp_af_id">
             <!-- <el-input v-model.number="form.svp_af_id"></el-input> -->
             {{ form.svp_af_id }}
@@ -11,12 +16,15 @@
             <el-select v-model.number="form.tag_action">
                 <el-option label="-" :value="0"></el-option>
                 <template v-for="(item, index) in TAG_ACTIONS">
-                    <el-option :label="item" :value="index >>> 0"></el-option>
+                    <el-option :label="item" :value="Number(index)"></el-option>
                 </template>
             </el-select>
         </el-form-item>
         <el-form-item :label="$lang('inner_vlan')" prop="inner_vlan">
-            <el-input v-model.number="form.inner_vlan" :disabled="disabledInnervlan"></el-input>
+            <el-input
+                v-model.number="form.inner_vlan"
+                :disabled="disabledInnervlan"
+            ></el-input>
         </el-form-item>
     </el-form>
 </template>

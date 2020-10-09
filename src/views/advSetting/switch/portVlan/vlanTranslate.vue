@@ -2,7 +2,6 @@
     <div>
         <el-table
             border
-            stripe
             :data="baseData"
             :header-cell-style="{ 'text-align': 'center' }"
             :cell-style="{ 'text-align': 'center' }"
@@ -11,32 +10,40 @@
             <el-table-column label="Old VLAN" prop="old_vlan"></el-table-column>
             <el-table-column label="New VLAN" prop="new_vlan"></el-table-column>
             <el-table-column :label="$lang('new_vlan_pri')">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.new_vlan_pri === 255 ? '-' : scope.row.new_vlan_pri }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.new_vlan_pri === 255
+                        ? "-"
+                        : scope.row.new_vlan_pri
+                }}</template>
             </el-table-column>
             <el-table-column>
                 <template slot="header">
-                    <el-button @click="addPv">{{ $lang('add') }}</el-button>
+                    <el-button @click="addPv">{{ $lang("add") }}</el-button>
                 </template>
                 <template slot-scope="scope">
                     <el-button
                         type="text"
                         style="padding: 3px 0;"
                         @click="deletePv(scope.row)"
-                    >{{ $lang('delete') }}</el-button>
+                        >{{ $lang("delete") }}</el-button
+                    >
                 </template>
             </el-table-column>
         </el-table>
         <el-dialog :visible.sync="dialogVisible" append-to-body>
-            <template slot="title">{{ $lang('add') }}</template>
-            <vlan-translate-form ref="port-vlan-translate-form"></vlan-translate-form>
+            <template slot="title">{{ $lang("add") }}</template>
+            <vlan-translate-form
+                ref="port-vlan-translate-form"
+            ></vlan-translate-form>
             <span slot="footer">
-                <el-button @click="dialogVisible = false">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('port-vlan-translate-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </span>
         </el-dialog>
     </div>

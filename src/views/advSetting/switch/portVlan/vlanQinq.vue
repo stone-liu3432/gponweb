@@ -2,48 +2,61 @@
     <div>
         <el-table
             border
-            stripe
             :cell-style="{ 'text-align': 'center' }"
             :header-cell-style="{ 'text-align': 'center' }"
             style="width: 700px;"
             :data="baseData"
         >
             <el-table-column label="CVLAN">
-                <template slot-scope="scope">{{ scope.row.cvlan || '-' }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.cvlan || "-"
+                }}</template>
             </el-table-column>
             <el-table-column label="CVLAN Start">
-                <template slot-scope="scope">{{ scope.row.cvlan_s || '-' }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.cvlan_s || "-"
+                }}</template>
             </el-table-column>
             <el-table-column label="CVLAN End">
-                <template slot-scope="scope">{{ scope.row.cvlan_e || '-' }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.cvlan_e || "-"
+                }}</template>
             </el-table-column>
             <el-table-column label="SVLAN" prop="svlan"></el-table-column>
             <el-table-column :label="$lang('svlan_pri')">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.svlan_pri === 255 ? '-' : scope.row.svlan_pri }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.svlan_pri === 255 ? "-" : scope.row.svlan_pri
+                }}</template>
             </el-table-column>
             <el-table-column>
                 <template slot="header">
-                    <el-button @click="addQinq">{{ $lang('add') }}</el-button>
+                    <el-button @click="addQinq">{{ $lang("add") }}</el-button>
                 </template>
                 <template slot-scope="scope">
                     <el-button
                         type="text"
                         style="padding: 3px 0;"
                         @click="deleteQinq(scope.row)"
-                    >{{ $lang('delete') }}</el-button>
+                        >{{ $lang("delete") }}</el-button
+                    >
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog :title="$lang('add')" :visible.sync="dialogVisible" append-to-body>
+        <el-dialog
+            :title="$lang('add')"
+            :visible.sync="dialogVisible"
+            append-to-body
+        >
             <vlan-qinq-form ref="port-vlan-qinq-form"></vlan-qinq-form>
             <span slot="footer">
-                <el-button @click="dialogVisible = false">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('port-vlan-qinq-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </span>
         </el-dialog>
     </div>
