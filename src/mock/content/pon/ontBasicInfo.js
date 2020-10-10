@@ -20,6 +20,8 @@ Mock.mock(
                 cstate: Random.range(0, 2),
                 mstate: Random.range(0, 2),
                 auth_mode: Random.range(0, 2),
+                us_ber: Random.word(),
+                ds_ber: Random.word(),
                 loid: Random.word(1, 32),
                 loid_password: Random.word(1, 32),
                 ont_description: Random.word(1, 128),
