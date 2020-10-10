@@ -38,6 +38,7 @@ export function regRange(val, min, max) {
 
 // 字符长度
 export function regLength(val, min, max) {
-    const reg = new RegExp(`^.{${min},${max}}$`);
-    return reg.test(val);
+    // const reg = new RegExp(`^.{${min},${max}}$`);
+    // return reg.test(val);
+    return val.length >= min && val.length <= max;
 }
