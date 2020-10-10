@@ -107,6 +107,14 @@
                         :label="$lang('receive_power')"
                         prop="receive_power"
                     ></el-table-column>
+                    <el-table-column
+                        :label="$lang('us_ber')"
+                        prop="us_ber"
+                    ></el-table-column>
+                    <el-table-column
+                        :label="$lang('ds_ber')"
+                        prop="ds_ber"
+                    ></el-table-column>
                 </el-table>
             </el-tab-pane>
         </el-tabs>
