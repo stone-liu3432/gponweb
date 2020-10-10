@@ -1,79 +1,110 @@
 <template>
     <div>
         <el-row class="srv-detail-item">
-            <el-col :span="4" class="srv-detail-title">{{ $lang('profname') }}:</el-col>
+            <el-col :span="4" class="srv-detail-title"
+                >{{ $lang("profname") }}:</el-col
+            >
             <el-col :span="8">{{ data.profname }}</el-col>
-            <el-col :span="4" class="srv-detail-title">{{ $lang('profid') }}:</el-col>
+            <el-col :span="4" class="srv-detail-title"
+                >{{ $lang("profid") }}:</el-col
+            >
             <el-col :span="4">{{ data.profid }}</el-col>
             <el-col :span="4">
                 <el-button
                     type="primary"
                     size="small"
                     @click="openDialog('set')"
-                >{{ $lang('config') }}</el-button>
+                    >{{ $lang("config") }}</el-button
+                >
             </el-col>
         </el-row>
         <el-row class="srv-detail-item">
-            <el-col :span="4" class="srv-detail-title">{{ $lang('ont_ethport') }}:</el-col>
-            <el-col :span="8">{{ data.ont_ethport === 0xff ? 'adaptive' : data.ont_ethport }}</el-col>
-            <el-col :span="4" class="srv-detail-title">{{ $lang('ont_potsport') }}:</el-col>
-            <el-col :span="8">{{ data.ont_potsport === 0xff ? 'adaptive' : data.ont_potsport }}</el-col>
+            <el-col :span="4" class="srv-detail-title"
+                >{{ $lang("ont_ethport") }}:</el-col
+            >
+            <el-col :span="8">{{
+                data.ont_ethport === 0xff ? "adaptive" : data.ont_ethport
+            }}</el-col>
+            <el-col :span="4" class="srv-detail-title"
+                >{{ $lang("ont_potsport") }}:</el-col
+            >
+            <el-col :span="8">{{
+                data.ont_potsport === 0xff ? "adaptive" : data.ont_potsport
+            }}</el-col>
         </el-row>
         <el-row class="srv-detail-item">
-            <el-col :span="4" class="srv-detail-title">{{ $lang('ont_catvport') }}:</el-col>
+            <el-col :span="4" class="srv-detail-title"
+                >{{ $lang("ont_catvport") }}:</el-col
+            >
             <el-col :span="8">{{ data.ont_catvport }}</el-col>
-            <el-col :span="4" class="srv-detail-title">{{ $lang('native_vlan_flag') }}:</el-col>
-            <el-col
-                :span="8"
-                class="srv-detail-value"
-            >{{ data.native_vlan_flag ? $lang('not_need') : $lang('need') }}</el-col>
+            <el-col :span="4" class="srv-detail-title"
+                >{{ $lang("native_vlan_flag") }}:</el-col
+            >
+            <el-col :span="8" class="srv-detail-value">{{
+                data.native_vlan_flag ? $lang("not_need") : $lang("need")
+            }}</el-col>
         </el-row>
         <el-row class="srv-detail-item">
-            <el-col :span="4" class="srv-detail-title">{{$lang('veip_port')}}:</el-col>
-            <el-col :span="8" class="srv-detail-value">{{ ONT_VEIPPORT_MAP[data.ont_veipport] }}</el-col>
+            <el-col :span="4" class="srv-detail-title"
+                >{{ $lang("veip_port") }}:</el-col
+            >
+            <el-col :span="8" class="srv-detail-value">{{
+                ONT_VEIPPORT_MAP[data.ont_veipport]
+            }}</el-col>
         </el-row>
         <h3 class="srv-detail-portvlan">
-            <span>{{ $lang('portvlan') }}:</span>
+            <span>{{ $lang("portvlan") }}:</span>
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('add')"
-            >{{ $lang('add') }}</el-button>
+                >{{ $lang("add") }}</el-button
+            >
             <template v-if="modifyFlags">
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="saveAllChanges"
-                >{{ $lang('save_all_changes') }}</el-button>
+                    >{{ $lang("save_all_changes") }}</el-button
+                >
             </template>
         </h3>
         <el-table :data="data.portvlan" border>
             <el-table-column :label="$lang('uniport')" prop="uniport">
-                <template slot-scope="scope">{{ scope.row.unitype === 0 ? scope.row.uniport : '-' }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.unitype === 0 ? scope.row.uniport : "-"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('unitype')" prop="unitype">
-                <template slot-scope="scope">{{ UNI_TYPES[scope.row.unitype] }}</template>
+                <template slot-scope="scope">{{
+                    UNI_TYPES[scope.row.unitype]
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('mode')">
-                <template slot-scope="scope">{{ VLAN_MODES[scope.row.mode] }}</template>
+                <template slot-scope="scope">{{
+                    VLAN_MODES[scope.row.mode]
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('svlanid')" prop="svlanid"></el-table-column>
+            <el-table-column
+                :label="$lang('svlanid')"
+                prop="svlanid"
+            ></el-table-column>
             <el-table-column :label="$lang('svlanpri')" prop="svlanpri">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.svlanpri === 8 ? '-' : scope.row.svlanpri }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.svlanpri === 8 ? "-" : scope.row.svlanpri
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('cvlanid')" prop="cvlanid">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.cvlanid === 4096 ? 'untag' : scope.row.cvlanid }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.cvlanid === 4096 ? "untag" : scope.row.cvlanid
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('cvlanpri')" prop="cvlanpri">
-                <template
-                    slot-scope="scope"
-                >{{ scope.row.cvlanpri === 8 ? '-' : scope.row.cvlanpri }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.cvlanpri === 8 ? "-" : scope.row.cvlanpri
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('config')" width="80px">
                 <template slot-scope="scope">
@@ -84,7 +115,9 @@
                         :cancelButtonText="$lang('cancel')"
                         @onConfirm="deleteItem(scope.row)"
                     >
-                        <el-button slot="reference" type="text">{{ $lang('delete') }}</el-button>
+                        <el-button slot="reference" type="text">{{
+                            $lang("delete")
+                        }}</el-button>
                     </el-popconfirm>
                 </template>
             </el-table-column>
@@ -93,20 +126,35 @@
             :visible.sync="dialogVisible"
             append-to-body
             :width="dialogType === 'set' ? '640px' : '500px'"
+            destroy-on-close
         >
-            <div slot="title">{{ $lang('add') }}</div>
+            <div slot="title">{{ $lang("add") }}</div>
             <template v-if="dialogType === 'add'">
-                <portvlan-form :data="portvlan" ref="portvlan-form"></portvlan-form>
+                <portvlan-form
+                    :data="portvlan"
+                    ref="portvlan-form"
+                ></portvlan-form>
             </template>
             <template v-if="dialogType === 'set'">
-                <srv-form :type="dialogType" :data="dialogData" ref="srv-form"></srv-form>
+                <srv-form
+                    :type="dialogType"
+                    :data="dialogData"
+                    ref="srv-form"
+                ></srv-form>
             </template>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
-                    @click="submitForm(dialogType === 'add' ? 'portvlan-form' : 'srv-form')"
-                >{{ $lang('apply') }}</el-button>
+                    @click="
+                        submitForm(
+                            dialogType === 'add' ? 'portvlan-form' : 'srv-form'
+                        )
+                    "
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
