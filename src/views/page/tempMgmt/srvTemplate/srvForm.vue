@@ -101,7 +101,13 @@
                     prop="portvlan"
                     key="portvlan"
                 >
-                    <el-popover placement="right" width="660" trigger="click">
+                    <el-popover
+                        placement="right"
+                        width="660"
+                        trigger="click"
+                        @after-enter="showFlag = true"
+                        @after-leave="showFlag = false"
+                    >
                         <el-table :data="portvlan" border>
                             <el-table-column
                                 :label="$lang('uniport')"
@@ -182,7 +188,7 @@
                             </el-table-column>
                         </el-table>
                         <el-button slot="reference" size="small">{{
-                            $lang("show", "is_exists")
+                            btnText
                         }}</el-button>
                     </el-popover>
                     <el-button
@@ -226,7 +232,10 @@ export default {
     name: "srvForm",
     components: { portvlanForm },
     computed: {
-        ...mapGetters(["$lang", "validateMsg"])
+        ...mapGetters(["$lang", "validateMsg"]),
+        btnText() {
+            return this.$lang(this.showFlag ? "hidden" : "show", "is_exists");
+        }
     },
     props: {
         type: {
@@ -283,7 +292,8 @@ export default {
             dialogVisible: false,
             autoAssignID: false,
             autoAssignEth: false,
-            autoAssignPots: false
+            autoAssignPots: false,
+            showFlag: ""
         };
     },
     methods: {
