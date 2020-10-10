@@ -2,14 +2,17 @@
     <div>
         <page-header type="none" :title="$lang('timerange')">
             <div slot="content">
-                <el-button type="primary" size="small" @click="openDialog">{{ $lang('add') }}</el-button>
+                <el-button type="primary" size="small" @click="openDialog">{{
+                    $lang("add")
+                }}</el-button>
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     v-if="timerangeList.length"
                     @click="deleteAllTimerange"
-                >{{ $lang('delete_all') }}</el-button>
+                    >{{ $lang("delete_all") }}</el-button
+                >
             </div>
         </page-header>
         <el-table :data="timerangeTable" border @expand-change="expandChange">
@@ -17,25 +20,35 @@
                 <template slot-scope="scope">
                     <div
                         class="timerange-expand-content"
-                        v-if="isArray(scope.row.absolute) && scope.row.absolute.length"
+                        v-if="
+                            isArray(scope.row.absolute) &&
+                                scope.row.absolute.length
+                        "
                     >
-                        <div>{{ $lang('absolute') }}:</div>
+                        <div>{{ $lang("absolute") }}:</div>
                         <div>
                             <template v-for="item in scope.row.absolute">
                                 <el-row style="margin: 12px 0;">
                                     <el-col :span="8">
-                                        <span>{{ $lang('stime') }}:</span>
-                                        <span>{{ `${item.sday} ${item.stime}` }}</span>
+                                        <span>{{ $lang("stime") }}:</span>
+                                        <span>{{
+                                            `${item.sday} ${item.stime}`
+                                        }}</span>
                                     </el-col>
                                     <el-col :span="8">
-                                        <span>{{ $lang('etime') }}:</span>
-                                        <span>{{ `${item.eday} ${item.etime}` }}</span>
+                                        <span>{{ $lang("etime") }}:</span>
+                                        <span>{{
+                                            `${item.eday} ${item.etime}`
+                                        }}</span>
                                     </el-col>
                                     <el-col :span="8">
                                         <el-button
                                             type="text"
-                                            @click="deleteTimerange(scope.row, item)"
-                                        >{{ $lang('delete') }}</el-button>
+                                            @click="
+                                                deleteTimerange(scope.row, item)
+                                            "
+                                            >{{ $lang("delete") }}</el-button
+                                        >
                                     </el-col>
                                 </el-row>
                             </template>
@@ -43,29 +56,35 @@
                     </div>
                     <div
                         class="timerange-expand-content"
-                        v-if="isArray(scope.row.relative) && scope.row.relative.length"
+                        v-if="
+                            isArray(scope.row.relative) &&
+                                scope.row.relative.length
+                        "
                     >
-                        <div>{{ $lang('relative') }}:</div>
+                        <div>{{ $lang("relative") }}:</div>
                         <div>
                             <template v-for="item in scope.row.relative">
                                 <el-row style="margin: 12px 0;">
                                     <el-col :span="6">
-                                        <span>{{ $lang('stime') }}:</span>
+                                        <span>{{ $lang("stime") }}:</span>
                                         <span>{{ item.stime }}</span>
                                     </el-col>
                                     <el-col :span="6">
-                                        <span>{{ $lang('etime') }}:</span>
+                                        <span>{{ $lang("etime") }}:</span>
                                         <span>{{ item.etime }}</span>
                                     </el-col>
                                     <el-col :span="6">
-                                        <span>{{ $lang('day') }}:</span>
+                                        <span>{{ $lang("day") }}:</span>
                                         <span>{{ item.day }}</span>
                                     </el-col>
                                     <el-col :span="6">
                                         <el-button
                                             type="text"
-                                            @click="deleteTimerange(scope.row, item)"
-                                        >{{ $lang('delete') }}</el-button>
+                                            @click="
+                                                deleteTimerange(scope.row, item)
+                                            "
+                                            >{{ $lang("delete") }}</el-button
+                                        >
                                     </el-col>
                                 </el-row>
                             </template>
@@ -73,8 +92,14 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column :label="$lang('name')" prop="name"></el-table-column>
-            <el-table-column :label="$lang('state')" prop="state"></el-table-column>
+            <el-table-column
+                :label="$lang('name')"
+                prop="name"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('state')"
+                prop="state"
+            ></el-table-column>
         </el-table>
         <div class="timerange-pagination-container">
             <!-- 使用 float: right ，会影响 wrap 的 clientHeight 值，导致滚动条异常 -->
@@ -88,12 +113,23 @@
                 :total="timerangeList.length"
             ></el-pagination>
         </div>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="600px" destroy-on-close>
-            <div slot="title">{{ $lang('add') }}</div>
+        <el-dialog
+            :visible.sync="dialogVisible"
+            append-to-body
+            width="600px"
+            destroy-on-close
+        >
+            <div slot="title">{{ $lang("add") }}</div>
             <timerange-form ref="timerange-form"></timerange-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('timerange-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('timerange-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>

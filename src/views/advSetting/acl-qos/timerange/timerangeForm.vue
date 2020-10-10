@@ -1,5 +1,10 @@
 <template>
-    <el-form :model="form" ref="timerange-form" label-width="150px" :rules="rules">
+    <el-form
+        :model="form"
+        ref="timerange-form"
+        label-width="150px"
+        :rules="rules"
+    >
         <el-form-item :label="$lang('name')" prop="name">
             <el-input v-model.trim="form.name"></el-input>
         </el-form-item>
@@ -56,7 +61,7 @@ export default {
             form: {
                 name: "",
                 type: 0,
-                day: "Daily",
+                day: "daily",
                 timerange: [+new Date(), +new Date() + 60 * 60 * 1000]
             },
             rules: {
