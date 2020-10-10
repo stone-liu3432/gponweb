@@ -108,24 +108,30 @@
                     prop="src_port"
                     key="src-port"
                 >
-                    <el-input v-model="form.src_port"></el-input>
+                    <el-input
+                        v-model="form.src_port"
+                        :disabled="disabledPort"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('dst_port')"
                     prop="dst_port"
                     key="dst-port"
                 >
-                    <el-input v-model="form.dst_port"></el-input>
+                    <el-input
+                        v-model="form.dst_port"
+                        :disabled="disabledPort"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('precedence')"
                     prop="precedence"
                     key="precedence"
                 >
-                    <el-input v-model="form.precedence"></el-input>
+                    <el-input v-model.number="form.precedence"></el-input>
                 </el-form-item>
                 <el-form-item :label="$lang('dscp')" prop="dscp" key="dscp">
-                    <el-input v-model="form.dscp"></el-input>
+                    <el-input v-model.number="form.dscp"></el-input>
                 </el-form-item>
             </template>
             <template v-if="acl_type === 'link'">
@@ -134,31 +140,31 @@
                     prop="eth_type"
                     key="eth-type"
                 >
-                    <el-input v-model="form.eth_type"></el-input>
+                    <el-input v-model.number="form.eth_type"></el-input>
                 </el-form-item>
                 <el-form-item :label="$lang('cos')" prop="cos" key="cos">
-                    <el-input v-model="form.cos"></el-input>
+                    <el-input v-model.number="form.cos"></el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('inner_cos')"
                     prop="inner_cos"
                     key="inner-cos"
                 >
-                    <el-input v-model="form.inner_cos"></el-input>
+                    <el-input v-model.number="form.inner_cos"></el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('vlan_id')"
                     prop="vlan_id"
                     key="vlan-id"
                 >
-                    <el-input v-model="form.vlan_id"></el-input>
+                    <el-input v-model.number="form.vlan_id"></el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('inner_vlan_id')"
                     prop="inner_vlan_id"
                     key="inner-vlan-id"
                 >
-                    <el-input v-model="form.inner_vlan_id"></el-input>
+                    <el-input v-model.number="form.inner_vlan_id"></el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('src_mac')"
@@ -229,6 +235,9 @@ export default {
                 return "advanced";
             }
             return "link";
+        },
+        disabledPort() {
+            return this.form.protocol === "icmp";
         }
     },
     inject: ["validateMac", "validateVlan", "validateIp"],
@@ -239,7 +248,7 @@ export default {
             form: {
                 acl_type: 0,
                 acl_id: "", // 2000 - 5999
-                rule_id: 1,
+                rule_id: 0,
                 action: 1,
                 timerange: "",
                 protocol: "", // icmp / udp / tcp / ip / ipinip / 0-255
@@ -424,7 +433,9 @@ export default {
         },
         validatePortOrType(rule, val, cb) {
             if (!regRange(val, 0, 65535)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 65535)));
+                const min = rule.field === "eth_type" ? "0x0000" : 0,
+                    max = rule.field === "eth_type" ? "0xffff" : 0xffff;
+                return cb(new Error(this.validateMsg("inputRange", min, max)));
             }
             cb();
         },
@@ -610,6 +621,13 @@ export default {
                             this.form[key] = row[key];
                         }
                     });
+            }
+        },
+        "form.protocol"() {
+            if (this.form.protocol === "icmp") {
+                this.$refs["acl-form"].clearValidate(["src_port", "dst_port"]);
+                this.form.src_port = "";
+                this.form.dst_port = "";
             }
         }
     }
