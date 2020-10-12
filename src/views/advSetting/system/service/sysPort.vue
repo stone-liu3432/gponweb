@@ -1,39 +1,52 @@
 <template>
     <div>
         <h3>
-            {{ $lang('sys_port') }}
+            {{ $lang("sys_port") }}
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="openDialog"
-            >{{ $lang('config') }}</el-button>
+                >{{ $lang("config") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 v-if="showRestoreBtn"
                 @click="restoreDefPorts"
-            >{{ $lang('restore_defaults') }}</el-button>
+                >{{ $lang("restore_defaults") }}</el-button
+            >
         </h3>
         <div class="system-port-item">
             <span>http:</span>
-            <span>{{ baseData.http || '-' }}</span>
+            <span>{{ baseData.http || "-" }}</span>
         </div>
         <div class="system-port-item">
             <span>https:</span>
-            <span>{{ baseData.https || '-' }}</span>
+            <span>{{ baseData.https || "-" }}</span>
         </div>
         <div class="system-port-item">
             <span>telnet:</span>
-            <span>{{ baseData.telnet || '-' }}</span>
+            <span>{{ baseData.telnet || "-" }}</span>
         </div>
-        <el-dialog :visible="dialogVisible" append-to-body width="650px">
-            <div slot="title">{{ $lang('config') }}</div>
+        <el-dialog
+            :visible.sync="dialogVisible"
+            append-to-body
+            destroy-on-close
+            width="650px"
+        >
+            <div slot="title">{{ $lang("config") }}</div>
             <sys-port-form ref="sys-port-form"></sys-port-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('sys-port-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('sys-port-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
