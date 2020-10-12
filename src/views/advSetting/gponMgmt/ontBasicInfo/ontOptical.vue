@@ -3,7 +3,7 @@
         <template v-for="key in KEY_MAP">
             <div class="ont-optical-item">
                 <span>{{ $lang(key) }}:</span>
-                <span>{{ (data[key] || '-') }}</span>
+                <span>{{ data[key] || "-" }}</span>
             </div>
         </template>
     </div>
@@ -21,7 +21,8 @@ export default {
                 "work_voltage",
                 "transmit_bias",
                 "transmit_power",
-                "receive_power"
+                "receive_power",
+                "olt_rxpower"
             ];
         }
     },
