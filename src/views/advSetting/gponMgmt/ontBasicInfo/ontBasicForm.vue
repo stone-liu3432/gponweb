@@ -1,7 +1,16 @@
 <template>
-    <el-form :model="form" :rules="rules" label-width="140px" ref="ont-basic-form">
-        <el-form-item :label="$lang('port_id')" prop="port_id">{{ portName }}</el-form-item>
-        <el-form-item :label="$lang('ont_id')" prop="ont_id">{{ ontName }}</el-form-item>
+    <el-form
+        :model="form"
+        :rules="rules"
+        label-width="140px"
+        ref="ont-basic-form"
+    >
+        <el-form-item :label="$lang('port_id')" prop="port_id">{{
+            portName
+        }}</el-form-item>
+        <el-form-item :label="$lang('ont_id')" prop="ont_id">{{
+            ontName
+        }}</el-form-item>
         <el-form-item :label="$lang('ont_name')" prop="ont_name">
             <el-input v-model="form.ont_name"></el-input>
         </el-form-item>
@@ -64,7 +73,7 @@ export default {
                         const data = {
                             identifier: this.form.identifier,
                             flags: 0x8,
-                            ont_name: this.form.ont_name,
+                            ont_name: this.form.ont_name.replace(/\s*/g, ""),
                             ont_description: this.form.ont_description
                         };
                         fn.call(this, data);
