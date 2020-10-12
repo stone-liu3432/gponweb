@@ -182,7 +182,8 @@ $--index-popper: 2000 !default;
 
 /* Disable base
 -------------------------- */
-$--disabled-fill-base: $--background-color-base !default;
+// $--disabled-fill-base: $--background-color-base !default;
+$--disabled-fill-base: #e5e8ec !default;
 $--disabled-color-base: $--color-text-placeholder !default;
 $--disabled-border-base: $--border-color-light !default;
 
@@ -850,14 +851,15 @@ $--datepicker-icon-color: $--color-text-primary !default;
 $--datepicker-border-color: $--disabled-border-base !default;
 $--datepicker-inner-border-color: #e4e4e4 !default;
 /// color||Color|0
-$--datepicker-inrange-background-color: $--border-color-extra-light !default;
+// $--datepicker-inrange-background-color: $--border-color-extra-light !default;
+$--datepicker-inrange-background-color: $--background-color-base !default;
 /// color||Color|0
-$--datepicker-inrange-hover-background-color: $--border-color-extra-light !default;
+$--datepicker-inrange-hover-background-color: $--background-color-base !default;
 /// color||Color|0
 $--datepicker-active-color: $--color-primary !default;
 /// color||Color|0
 $--datepicker-hover-font-color: $--color-primary !default;
-$--datepicker-cell-hover-color: #fff !default;
+$--datepicker-cell-hover-color: $--background-color-base !default;
 
 /* Loading
 --------------------------*/
