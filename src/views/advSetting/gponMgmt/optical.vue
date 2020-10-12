@@ -108,6 +108,10 @@
                         prop="receive_power"
                     ></el-table-column>
                     <el-table-column
+                        :label="$lang('olt_rxpower')"
+                        prop="olt_rxpower"
+                    ></el-table-column>
+                    <el-table-column
                         :label="$lang('us_ber')"
                         prop="us_ber"
                     ></el-table-column>
