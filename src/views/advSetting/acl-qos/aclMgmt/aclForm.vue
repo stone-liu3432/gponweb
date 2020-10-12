@@ -16,10 +16,29 @@
                         </template>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="ACL ID" prop="acl_id" key="acl-id-add">
+                    <el-input v-model.number="form.acl_id"></el-input>
+                </el-form-item>
             </template>
-            <el-form-item label="ACL ID" prop="acl_id" key="acl-id-delete">
-                <el-input v-model.number="form.acl_id"></el-input>
-            </el-form-item>
+            <template v-if="type === 'delete'">
+                <el-form-item
+                    label="ACL ID"
+                    prop="acl_id_e"
+                    key="acl-id-delete"
+                >
+                    <el-input
+                        v-model.number="form.acl_id"
+                        style="width: 180px;"
+                        v-validator="form.acl_id"
+                    ></el-input>
+                    -
+                    <el-input
+                        v-model.number="form.acl_id_e"
+                        style="width: 180px;"
+                        v-validator:option="form.acl_id_e"
+                    ></el-input>
+                </el-form-item>
+            </template>
         </template>
         <template v-if="type === 'config' || type === 'rule'">
             <el-form-item label="ACL ID" prop="acl_id" key="acl-id-config">{{
@@ -248,6 +267,7 @@ export default {
             form: {
                 acl_type: 0,
                 acl_id: "", // 2000 - 5999
+                acl_id_e: "",
                 rule_id: 0,
                 action: 1,
                 timerange: "",
@@ -604,6 +624,20 @@ export default {
             return flags;
         }
     },
+    directives: {
+        validator: {
+            update(el, { value, arg }) {
+                if (arg === "option" && !value) {
+                    return;
+                }
+                if (!regRange(value, 2000, 5999)) {
+                    el.className += " input-validate-error";
+                } else {
+                    el.className = "el-input";
+                }
+            }
+        }
+    },
     watch: {
         "form.acl_type"() {
             if (this.form.acl_id) {
@@ -635,4 +669,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.input-validate-error /deep/ .el-input__inner {
+    border-color: red;
+}
 </style>

@@ -6,13 +6,15 @@
                     type="primary"
                     size="small"
                     @click="openDialog('add')"
-                >{{ $lang('add') }} ACL</el-button>
+                    >{{ $lang("add") }} ACL</el-button
+                >
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('delete')"
-                >{{ $lang('delete') }} ACL</el-button>
+                    >{{ $lang("delete") }} ACL</el-button
+                >
             </div>
         </page-header>
         <el-table
@@ -31,12 +33,36 @@
                                     <div class="arrow-container">
                                         <span v-if="isShowPrio">
                                             <i
-                                                :class="['el-icon-arrow-up', { 'not-allowed': index === 0 }]"
-                                                @click="moveToPrev(scope.row.rule, item)"
+                                                :class="[
+                                                    'el-icon-arrow-up',
+                                                    {
+                                                        'not-allowed':
+                                                            index === 0
+                                                    }
+                                                ]"
+                                                @click="
+                                                    moveToPrev(
+                                                        scope.row.rule,
+                                                        item
+                                                    )
+                                                "
                                             ></i>
                                             <i
-                                                :class="['el-icon-arrow-down', { 'not-allowed': index + 1 === scope.row.rule.length }]"
-                                                @click="moveToNext(scope.row.rule, item)"
+                                                :class="[
+                                                    'el-icon-arrow-down',
+                                                    {
+                                                        'not-allowed':
+                                                            index + 1 ===
+                                                            scope.row.rule
+                                                                .length
+                                                    }
+                                                ]"
+                                                @click="
+                                                    moveToNext(
+                                                        scope.row.rule,
+                                                        item
+                                                    )
+                                                "
                                             ></i>
                                         </span>
                                         <span>RULE ID: {{ item.rule_id }}</span>
@@ -44,10 +70,20 @@
                                 </el-col>
                                 <el-col :span="18">
                                     <el-row>
-                                        <template v-for="key in itemList(scope.row)">
-                                            <el-col :span="8" style="line-height: 32px;">
-                                                <span style="margin: 0 10px 0 0;">{{ $lang(key) }}:</span>
-                                                <span>{{ renderItem(key, item) }}</span>
+                                        <template
+                                            v-for="key in itemList(scope.row)"
+                                        >
+                                            <el-col
+                                                :span="8"
+                                                style="line-height: 32px;"
+                                            >
+                                                <span
+                                                    style="margin: 0 10px 0 0;"
+                                                    >{{ $lang(key) }}:</span
+                                                >
+                                                <span>{{
+                                                    renderItem(key, item)
+                                                }}</span>
                                             </el-col>
                                         </template>
                                         <el-col :span="8"></el-col>
@@ -57,7 +93,8 @@
                                     <el-button
                                         type="text"
                                         @click="deleteRule(scope.row, item)"
-                                    >{{ $lang('delete') }}</el-button>
+                                        >{{ $lang("delete") }}</el-button
+                                    >
                                 </el-col>
                             </el-row>
                             <el-divider></el-divider>
@@ -67,7 +104,9 @@
             </el-table-column>
             <el-table-column label="ACL ID" prop="acl_id"></el-table-column>
             <el-table-column :label="$lang('rule_count')">
-                <template slot-scope="scope">{{ scope.row.rule ? scope.row.rule.length : '-' }}</template>
+                <template slot-scope="scope">{{
+                    scope.row.rule ? scope.row.rule.length : "-"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
@@ -75,18 +114,26 @@
                         type="text"
                         @click="openDialog('config', scope.row)"
                         v-if="scope.row.rule && scope.row.rule.length"
-                    >{{ $lang('config') }}</el-button>
+                        >{{ $lang("config") }}</el-button
+                    >
                     <el-button
                         type="text"
                         @click="openDialog('rule', scope.row)"
-                    >{{ $lang('add', 'rule') }}</el-button>
+                        >{{ $lang("add", "rule") }}</el-button
+                    >
                     <el-button
                         type="text"
-                        v-if="expands.includes(scope.row.acl_id) && scope.row.rule && scope.row.rule.length "
+                        v-if="
+                            expands.includes(scope.row.acl_id) &&
+                                scope.row.rule &&
+                                scope.row.rule.length
+                        "
                         @click="changePriority(scope.row)"
                     >
-                        <span v-if="!isShowPrio">{{ $lang('rule_priority') }}</span>
-                        <span v-else>{{ $lang('save') }}</span>
+                        <span v-if="!isShowPrio">{{
+                            $lang("rule_priority")
+                        }}</span>
+                        <span v-else>{{ $lang("save") }}</span>
                     </el-button>
                 </template>
             </el-table-column>
@@ -102,12 +149,21 @@
                 :total="aclList.length"
             ></el-pagination>
         </div>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="600px" destroy-on-close>
-            <div slot="title">{{ $lang(dialogType) || $lang('config') }}</div>
+        <el-dialog
+            :visible.sync="dialogVisible"
+            append-to-body
+            width="600px"
+            destroy-on-close
+        >
+            <div slot="title">{{ $lang(dialogType) || $lang("config") }}</div>
             <acl-form ref="acl-form"></acl-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('acl-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button type="primary" @click="submitForm('acl-form')">{{
+                    $lang("apply")
+                }}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -117,6 +173,7 @@
 import { mapGetters, mapActions } from "vuex";
 import { isArray, isDef, isFunction } from "@/utils/common";
 import { ACL_ACTION_MAP } from "@/utils/commonData";
+import { regRange } from "@/utils/validator";
 import aclForm from "./aclMgmt/aclForm";
 import postData from "@/mixin/postData";
 const MIN_ACL_ID = 2000,
@@ -325,13 +382,30 @@ export default {
                             };
                         },
                         delete(form) {
+                            if (
+                                !regRange(form.acl_id, 2000, 5999) ||
+                                (form.acl_id_e &&
+                                    !regRange(form.acl_id_e, 2000, 5999))
+                            ) {
+                                this.$message.error(
+                                    `${this.$lang("param_error")}: ACL ID`
+                                );
+                                return;
+                            }
+                            const flag = form.acl_id_e > form.acl_id,
+                                acl_id = flag
+                                    ? form.acl_id
+                                    : form.acl_id_e || form.acl_id,
+                                acl_id_e = flag
+                                    ? form.acl_id_e || form.acl_id
+                                    : form.acl_id;
                             return {
                                 url: "/switch_acl?form=acl",
                                 data: {
                                     method: "delete",
                                     param: {
-                                        acl_id: form.acl_id,
-                                        acl_id_e: form.acl_id
+                                        acl_id,
+                                        acl_id_e
                                     }
                                 }
                             };
