@@ -90,6 +90,7 @@ Mock.mock(/\/gponmgmt\?form=optical_onu&port_id=\d+/, "get", ({ url }) => {
             transmit_bias: `${Random.range(1, 100)} mA`,
             transmit_power: `${(Math.random() * 5).toFixed(4)} dBm`,
             receive_power: `-${(Math.random() * 5).toFixed(4)} dBm`,
+            olt_rxpower: `-${(Math.random() * 10).toFixed(2)} dBm`,
             us_ber: Random.word(),
             ds_ber: Random.word(),
         })

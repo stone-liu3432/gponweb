@@ -126,6 +126,7 @@ Mock.mock(
                 transmit_bias: `${Random.range(1, 50)} mA`,
                 transmit_power: `-${Random.range(1, 50)} dBm`,
                 receive_power: `-${Random.range(1, 50)} dBm`,
+                olt_rxpower: `-${(Math.random() * 10).toFixed(4)} dBm`,
             },
         };
     }
