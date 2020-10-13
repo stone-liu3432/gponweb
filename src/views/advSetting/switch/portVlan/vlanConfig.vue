@@ -1,33 +1,35 @@
 <template>
     <div class="port-vlan-config">
         <el-row :gutter="30" class="port-vlan-config-item">
-            <el-col :span="4">{{ $lang('port_type') }}</el-col>
+            <el-col :span="4">{{ $lang("port_type") }}</el-col>
             <el-col :span="4">{{ PORT_TYPE_MAP[baseData.port_type] }}</el-col>
             <el-col :span="4">
                 <el-button
                     type="text"
                     style="padding: 2px 0;"
                     @click="openDialog('port_type')"
-                >{{ $lang('config') }}</el-button>
+                    >{{ $lang("config") }}</el-button
+                >
             </el-col>
         </el-row>
         <el-row :gutter="30" class="port-vlan-config-item">
-            <el-col :span="4">{{ $lang('pvid') }}</el-col>
+            <el-col :span="4">{{ $lang("pvid") }}</el-col>
             <el-col :span="4">{{ baseData.pvid }}</el-col>
             <el-col :span="4">
                 <el-button
                     type="text"
                     style="padding: 2px 0;"
                     @click="openDialog('pvid')"
-                >{{ $lang('config') }}</el-button>
+                    >{{ $lang("config") }}</el-button
+                >
             </el-col>
         </el-row>
         <el-row :gutter="30" class="port-vlan-config-item">
-            <el-col :span="4">{{ $lang('tagged') }}</el-col>
+            <el-col :span="4">{{ $lang("tagged") }}</el-col>
             <el-col :span="20">{{ baseData.tagged_vlan }}</el-col>
         </el-row>
         <el-row :gutter="30" class="port-vlan-config-item">
-            <el-col :span="4">{{ $lang('untagged') }}</el-col>
+            <el-col :span="4">{{ $lang("untagged") }}</el-col>
             <el-col :span="20">{{ baseData.untagged_vlan }}</el-col>
         </el-row>
         <el-row :gutter="30" style="padding: 10px 0;">
@@ -37,24 +39,33 @@
                     type="primary"
                     style="margin-left: 10px;"
                     @click="openDialog('add')"
-                >{{ $lang('add_vlan_list') }}</el-button>
+                    >{{ $lang("add_vlan_list") }}</el-button
+                >
                 <el-button
                     size="small"
                     type="primary"
                     style="margin-left: 30px;"
                     @click="openDialog('delete')"
-                >{{ $lang('del_vlan_list') }}</el-button>
+                    >{{ $lang("del_vlan_list") }}</el-button
+                >
             </template>
         </el-row>
         <el-dialog :visible.sync="dialogVisible" append-to-body>
             <template slot="title">{{ title }}</template>
-            <vlan-config-form :type="dialogType" :data="baseData" ref="port-vlan-config-form"></vlan-config-form>
+            <vlan-config-form
+                :type="dialogType"
+                :data="baseData"
+                ref="port-vlan-config-form"
+            ></vlan-config-form>
             <span slot="footer">
-                <el-button @click="closeDialog">{{ $lang('cancel') }}</el-button>
+                <el-button @click="closeDialog">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('port-vlan-config-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </span>
         </el-dialog>
     </div>
@@ -120,6 +131,10 @@ export default {
         submitAction(data, type) {
             const ACTIONS = {
                 port_type(data) {
+                    if (data.port_type === this.baseData.port_type) {
+                        this.$message.info(this.$lang("modify_tips"));
+                        return;
+                    }
                     return {
                         url: "/switch_port?form=vlan_type",
                         data: {
@@ -132,6 +147,10 @@ export default {
                     };
                 },
                 pvid(data) {
+                    if (data.pvid === this.baseData.pvid) {
+                        this.$message.info(this.$lang("modify_tips"));
+                        return;
+                    }
                     return {
                         url: "/switch_port?form=defaultvlan",
                         data: {
