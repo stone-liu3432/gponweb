@@ -1,5 +1,10 @@
 <template>
-    <el-form label-width="150px" :model="form" :rules="rules" ref="acl-form">
+    <el-form
+        :label-width="labelWidth"
+        :model="form"
+        :rules="rules"
+        ref="acl-form"
+    >
         <template v-if="type === 'add' || type === 'delete'">
             <template v-if="type === 'add'">
                 <el-form-item
@@ -70,7 +75,7 @@
                     <el-input v-model="form.src_ipaddr"></el-input>
                 </el-form-item>
                 <el-form-item
-                    :label="$lang('src_ipmask')"
+                    :label="`${$lang('src_ipmask')}(${$lang('anti_mask')})`"
                     prop="src_ipmask"
                     key="src-ipmask"
                 >
@@ -257,6 +262,9 @@ export default {
         },
         disabledPort() {
             return this.form.protocol === "icmp";
+        },
+        labelWidth() {
+            return this.acl_type === "basic" ? "200px" : "150px";
         }
     },
     inject: ["validateMac", "validateVlan", "validateIp"],
