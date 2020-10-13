@@ -1075,6 +1075,10 @@ var en = {
     restore_defaults: "Restore Defaults",
     invalid_ip: "Illegal IP address or domain name",
     qos_weight_tips: "The sum of the weights must be 100 or zero.",
+    us_ber: "Us SD Ber",
+    ds_ber: "Ds SD Ber",
+    olt_rxpower: "OLT Rx ONT Power",
+    anti_mask: "Anti-mask",
 };
 
 export default en;

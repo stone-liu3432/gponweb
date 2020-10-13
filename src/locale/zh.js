@@ -884,8 +884,8 @@ var zh = {
     ring: "环路状态",
     uniport: "端口号", // 2
     unitype: "端口类型", // 2
-    na_vlan_id: "端口VLAN",
-    na_vlan_pri: "端口VLAN优先级",
+    na_vlan_id: "缺省VLAN",
+    na_vlan_pri: "缺省VLAN优先级",
     ont_description: "ONT描述信息",
     last_dg_time: "上次掉电时间",
     lineprof_id: "线路模板ID",
@@ -1048,6 +1048,10 @@ var zh = {
     restore_defaults: "恢复默认值",
     invalid_ip: "非法IP地址或域名",
     qos_weight_tips: "权重相加的值必须为100或零。",
+    us_ber: "上行SD Ber",
+    ds_ber: "下行SD Ber",
+    olt_rxpower: "OLT接收ONT功率",
+    anti_mask: "反掩码",
 };
 
 export default zh;
