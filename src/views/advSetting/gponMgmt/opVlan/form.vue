@@ -14,16 +14,29 @@
             <el-select v-model.number="form.mode">
                 <template v-for="(item, index) in VLAN_MODES">
                     <template v-if="Number(index) !== 2">
-                        <el-option :value="Number(index)" :label="item"></el-option>
+                        <el-option
+                            :value="Number(index)"
+                            :label="item"
+                        ></el-option>
                     </template>
                 </template>
             </el-select>
         </el-form-item>
         <el-form-item :label="$lang('svlanid')" prop="svlanid" key="svlan-id">
-            <el-input v-model.number="form.svlanid" :disabled="form.mode === 1"></el-input>
+            <el-input
+                v-model.number="form.svlanid"
+                :disabled="form.mode === 1"
+            ></el-input>
         </el-form-item>
-        <el-form-item :label="$lang('svlanpri')" prop="svlanpri" key="svlan-pri">
-            <el-select v-model.number="form.svlanpri" :disabled="form.mode === 1">
+        <el-form-item
+            :label="$lang('svlanpri')"
+            prop="svlanpri"
+            key="svlan-pri"
+        >
+            <el-select
+                v-model.number="form.svlanpri"
+                :disabled="form.mode === 1"
+            >
                 <el-option :value="0"></el-option>
                 <template v-for="i in 7">
                     <el-option :value="i"></el-option>
@@ -32,7 +45,10 @@
             </el-select>
         </el-form-item>
         <el-form-item :label="$lang('cvlanid')" prop="cvlanid" key="cvlan-id">
-            <el-input v-model.number="form.cvlanid" :disabled="form.mode === 1 || form.mode === 2"></el-input>
+            <el-input
+                v-model.number="form.cvlanid"
+                :disabled="form.mode === 1 || form.mode === 2"
+            ></el-input>
         </el-form-item>
         <el-form-item :label="$lang('cvlanpri')" prop="cvlanpri" key="cvlanpri">
             <el-select
@@ -119,7 +135,7 @@ export default {
         validate(fn) {
             if (this.dialogType === "config") {
                 if (
-                    Object.keys(this.dialogData).some(
+                    Object.keys(this.dialogData).every(
                         key => this.dialogData[key] === this.form[key]
                     )
                 ) {
