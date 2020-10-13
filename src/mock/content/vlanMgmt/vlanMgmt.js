@@ -11,6 +11,8 @@ Mock.mock("/vlantable", "get", () => {
             tagged_portlist: Random.portlist("uplink"),
             untagged_portlist: Random.portlist("uplink"),
             default_vlan_portlist: Random.portlist("uplink"),
+            vlan_name: Random.word(1, 16),
+            vlan_desc: Random.word(1, 64),
         })
     );
     return {
@@ -25,3 +27,7 @@ Mock.post("/switch_vlan");
 Mock.post("/switch_vlanlist");
 
 Mock.post("/switch_vlan_pvid");
+
+Mock.post("/switch_vlan?form=vlan_desc");
+
+Mock.post("/switch_vlan?form=vlan_name");
