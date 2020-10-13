@@ -232,6 +232,7 @@ export default {
                 } else {
                     this.form.tag_action = 1;
                     this.form.inner_vlan = "";
+                    this.form.desc = this.data.desc;
                 }
             }
             if (isFunction(fn)) {
@@ -294,10 +295,14 @@ export default {
             if (this.type === "set") {
                 if (
                     this.form.tag_action === this.data.tag_action &&
-                    this.form.inner_vlan === this.data.inner_vlan
+                    this.form.inner_vlan === this.data.inner_vlan &&
+                    this.form.new_svlan === this.data.new_svlan
                 ) {
                     return this.$message.error(this.$lang("modify_tips"));
                 }
+            }
+            if (this.type === "desc" && this.form.desc === this.data.desc) {
+                return this.$message.error(this.$lang("modify_tips"));
             }
             this.$refs["virtual-port-form"].validate(valid => {
                 if (isFunction(fn)) {

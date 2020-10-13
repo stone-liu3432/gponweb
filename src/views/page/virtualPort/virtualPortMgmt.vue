@@ -252,7 +252,7 @@
             :total="filterList.length"
             hide-on-single-page
         ></el-pagination>
-        <el-dialog :visible.sync="dialogVisible" width="600px">
+        <el-dialog :visible.sync="dialogVisible" width="600px" destroy-on-close>
             <template slot="title">{{
                 $lang(dialogType === "set" ? "modify" : dialogType)
             }}</template>
