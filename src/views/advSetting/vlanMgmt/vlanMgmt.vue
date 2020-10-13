@@ -7,19 +7,22 @@
                     size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('create')"
-                >{{ $lang('create') }}</el-button>
+                    >{{ $lang("create") }}</el-button
+                >
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('delete')"
-                >{{ $lang('delete') }}</el-button>
+                    >{{ $lang("delete") }}</el-button
+                >
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="openDialog('batch')"
-                >{{ $lang('batch_cfg_vlan') }}</el-button>
+                    >{{ $lang("batch_cfg_vlan") }}</el-button
+                >
             </div>
         </page-header>
         <el-form label-width="160px" label-position="left">
@@ -35,35 +38,72 @@
             </el-form-item>
         </el-form>
         <el-table :data="vlanTable" border>
-            <el-table-column :label="$lang('vlan_id')" prop="vlan_id" width="100px"></el-table-column>
+            <el-table-column
+                :label="$lang('vlan_id')"
+                prop="vlan_id"
+                width="100px"
+            ></el-table-column>
+            <el-table-column
+                prop="vlan_name"
+                :label="$lang('name')"
+            ></el-table-column>
             <el-table-column :label="$lang('tagged_portlist')">
-                <template slot-scope="scope">{{ getPort(scope.row.tagged_portlist) || '-' }}</template>
+                <template slot-scope="scope">{{
+                    getPort(scope.row.tagged_portlist) || "-"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('untagged_portlist')">
-                <template slot-scope="scope">{{ getPort(scope.row.untagged_portlist) || '-' }}</template>
+                <template slot-scope="scope">{{
+                    getPort(scope.row.untagged_portlist) || "-"
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('default_vlan_portlist')">
-                <template slot-scope="scope">{{ getPort(scope.row.default_vlan_portlist) || '-' }}</template>
+                <template slot-scope="scope">{{
+                    getPort(scope.row.default_vlan_portlist) || "-"
+                }}</template>
             </el-table-column>
+            <el-table-column
+                prop="vlan_desc"
+                :label="$lang('desc')"
+            ></el-table-column>
             <el-table-column :label="$lang('config')" width="120px">
                 <template slot-scope="scope">
                     <el-dropdown @command="commandHandler">
                         <span class="el-dropdown-link">
-                            {{ $lang('config') }}
+                            {{ $lang("config") }}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item
                                 :command="{ action: 'config', row: scope.row }"
-                            >{{ $lang('config') }}</el-dropdown-item>
+                                >{{ $lang("config") }}</el-dropdown-item
+                            >
                             <template v-if="scope.row.vlan_id !== 1">
                                 <el-dropdown-item
-                                    :command="{ action: 'delete', row: scope.row }"
-                                >{{ $lang('delete') }}</el-dropdown-item>
+                                    :command="{
+                                        action: 'delete',
+                                        row: scope.row
+                                    }"
+                                    >{{ $lang("delete") }}</el-dropdown-item
+                                >
                             </template>
                             <el-dropdown-item
-                                :command="{ action: 'port_default_vlan', row: scope.row }"
-                            >{{ $lang('port_default_vlan') }}</el-dropdown-item>
+                                :command="{
+                                    action: 'port_default_vlan',
+                                    row: scope.row
+                                }"
+                                >{{
+                                    $lang("port_default_vlan")
+                                }}</el-dropdown-item
+                            >
+                            <el-dropdown-item
+                                :command="{ action: 'name', row: scope.row }"
+                                >{{ $lang("config", "name") }}</el-dropdown-item
+                            >
+                            <el-dropdown-item
+                                :command="{ action: 'desc', row: scope.row }"
+                                >{{ $lang("config", "desc") }}</el-dropdown-item
+                            >
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -84,8 +124,12 @@
             <div slot="title">{{ dialogTitle }}</div>
             <vlan-form ref="vlan-form"></vlan-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('vlan-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button type="primary" @click="submitForm('vlan-form')">{{
+                    $lang("apply")
+                }}</el-button>
             </div>
         </el-dialog>
     </div>
@@ -295,6 +339,41 @@ export default {
                     },
                     port_default_vlan(form) {
                         this.defVlanHandler(form);
+                    },
+                    name(form) {
+                        if (form.vlan_name === this.dialogData.vlan_name) {
+                            this.$message.error(this.$lang("modify_tips"));
+                            return;
+                        }
+                        return {
+                            url: "/switch_vlan?form=vlan_name",
+                            data: {
+                                method: "set",
+                                param: {
+                                    vlan_id: form.vlanid_s,
+                                    vlan_name:
+                                        form.vlan_name.replace(/\s*/g, "") ||
+                                        `VLAN${form.vlanid_s}`
+                                }
+                            }
+                        };
+                    },
+                    desc(form) {
+                        if (form.vlan_desc === this.dialogData.vlan_desc) {
+                            this.$message.error(this.$lang("modify_tips"));
+                            return;
+                        }
+                        return {
+                            url: "/switch_vlan?form=vlan_desc",
+                            data: {
+                                method: "set",
+                                param: {
+                                    vlan_id: form.vlanid_s,
+                                    vlan_desc:
+                                        form.vlan_desc || `VLAN${form.vlanid_s}`
+                                }
+                            }
+                        };
                     }
                 };
                 if (isFunction(ACTIONS[type])) {
@@ -317,6 +396,8 @@ export default {
                 }
             });
         },
+        setVlanName(form) {},
+        setVlanDesc(form) {},
         defVlanHandler(form) {
             const base = parseStringAsList(
                     this.dialogData.default_vlan_portlist
@@ -395,6 +476,12 @@ export default {
                 }
                 case "port_default_vlan":
                     this.openDialog("port_default_vlan", row);
+                    break;
+                case "name":
+                    this.openDialog("name", row);
+                    break;
+                case "desc":
+                    this.openDialog("desc", row);
                     break;
             }
         }
