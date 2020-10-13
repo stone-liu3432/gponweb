@@ -1,25 +1,45 @@
 <template>
     <div>
-        <el-form :model="form" label-width="140px" :rules="rules" ref="add-line-profile-form">
+        <el-form
+            :model="form"
+            label-width="140px"
+            :rules="rules"
+            ref="add-line-profile-form"
+        >
             <!-- add tcont -->
             <template v-if="type === 'tcont'">
                 <el-form-item :label="$lang('tcid')" prop="tcid" key="tcid">
                     <el-input v-model.number="form.tcid"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('dba_profname')" prop="dba_profname" key="dbaprofname">
+                <el-form-item
+                    :label="$lang('dba_profname')"
+                    prop="dba_profname"
+                    key="dbaprofname"
+                >
                     <el-select v-model.number="form.dba_profid">
                         <template v-for="item in dbaData">
-                            <el-option :label="item.profname" :value="item.profid"></el-option>
+                            <el-option
+                                :label="item.profname"
+                                :value="item.profid"
+                            ></el-option>
                         </template>
                     </el-select>
                 </el-form-item>
             </template>
             <!-- add gem -->
             <template v-if="type === 'gem'">
-                <el-form-item :label="$lang('gemindex')" prop="gemindex" key="gemindex">
+                <el-form-item
+                    :label="$lang('gemindex')"
+                    prop="gemindex"
+                    key="gemindex"
+                >
                     <el-input v-model.number="form.gemindex"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('tcontid')" prop="tcontid" key="tcontid">
+                <el-form-item
+                    :label="$lang('tcontid')"
+                    prop="tcontid"
+                    key="tcontid"
+                >
                     <el-select v-model.number="form.tcontid">
                         <template v-for="item in tconts">
                             <el-option :value="item.tcid"></el-option>
@@ -34,10 +54,14 @@
                         :label="$lang('gem')"
                         prop="gemindex"
                         key="add-mapping"
-                    >{{ form.gemindex }}</el-form-item>
+                        >{{ form.gemindex }}</el-form-item
+                    >
                 </template>
                 <el-form-item :label="$lang('mode')" prop="mode" key="mode">
-                    <el-select v-model.number="form.mode" :disabled="disabledMode">
+                    <el-select
+                        v-model.number="form.mode"
+                        :disabled="disabledMode"
+                    >
                         <template v-for="(item, index) in MAPPING_MODES">
                             <!-- gem 下的 mapping_mode 有且只有 vlan, priority, tci三种模式-->
                             <template v-if="index != 4">
@@ -51,9 +75,16 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$lang('mid')" prop="mid" key="mid">
-                    <el-input v-model.number="form.mid" style="width: 216px;"></el-input>
+                    <el-input
+                        v-model.number="form.mid"
+                        style="width: 216px;"
+                    ></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('vlan_id')" prop="vlan_id" key="vlan-id">
+                <el-form-item
+                    :label="$lang('vlan_id')"
+                    prop="vlan_id"
+                    key="vlan-id"
+                >
                     <el-input
                         v-model.number="form.vlan_id"
                         style="width: 216px;"
@@ -63,10 +94,18 @@
                         v-model="autoAssignVlan"
                         style="margin-left: 30px;"
                         :disabled="disabledItem('untag')"
-                    >untag</el-checkbox>
+                        >untag</el-checkbox
+                    >
                 </el-form-item>
-                <el-form-item :label="$lang('vlan_pri')" prop="vlan_pri" key="vlan-pri">
-                    <el-select v-model.number="form.vlan_pri" :disabled="disabledItem('vlan_pri')">
+                <el-form-item
+                    :label="$lang('vlan_pri')"
+                    prop="vlan_pri"
+                    key="vlan-pri"
+                >
+                    <el-select
+                        v-model.number="form.vlan_pri"
+                        :disabled="disabledItem('vlan_pri')"
+                    >
                         <el-option :value="0"></el-option>
                         <template v-for="i in 7">
                             <el-option :value="i"></el-option>
@@ -253,6 +292,16 @@ export default {
             cb();
         },
         disabledItem(prop) {
+            // gem下无mapping时，模式为vlan或tci时，允许配置untag
+            if (
+                this.type === "mapping" &&
+                prop === "untag" &&
+                this.gemCache.mapping &&
+                !this.gemCache.mapping.length &&
+                this.form.mode !== 2
+            ) {
+                return false;
+            }
             if (this.form.mode === 1) {
                 if (prop === "vlan_pri") {
                     return true;

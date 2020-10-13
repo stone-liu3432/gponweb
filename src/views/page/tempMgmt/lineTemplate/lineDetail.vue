@@ -2,38 +2,44 @@
     <div>
         <el-row style="margin: 0 10px 20px 10px;">
             <el-col :span="12">
-                <span class="line-detail-title">{{ $lang('profname') }}:</span>
+                <span class="line-detail-title">{{ $lang("profname") }}:</span>
                 <span>{{ data.profname }}</span>
             </el-col>
             <el-col :span="12">
-                <span class="line-detail-title">{{ $lang('profid') }}:</span>
+                <span class="line-detail-title">{{ $lang("profid") }}:</span>
                 <span>{{ data.profid }}</span>
             </el-col>
         </el-row>
         <el-row style="margin: 0 10px 20px 10px;">
             <el-col :span="12">
-                <span class="line-detail-title">{{ $lang('type') }}:</span>
+                <span class="line-detail-title">{{ $lang("type") }}:</span>
                 <span>{{ types[data.type] }}</span>
             </el-col>
             <el-col :span="12">
-                <span class="line-detail-title">{{ $lang('mappingmode') }}:</span>
+                <span class="line-detail-title"
+                    >{{ $lang("mappingmode") }}:</span
+                >
                 <span>{{ MAPPING_MODES[data.mappingmode] }}</span>
             </el-col>
         </el-row>
         <el-row style="margin: 0 10px 20px 10px;">
             <el-col :span="12">
-                <span
-                    class="line-detail-title"
-                    style="margin-right: 20px;"
-                >{{ $lang('pagination_display') }}</span>
-                <el-switch v-model="showPagination" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                <span class="line-detail-title" style="margin-right: 20px;">{{
+                    $lang("pagination_display")
+                }}</span>
+                <el-switch
+                    v-model="showPagination"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                ></el-switch>
             </el-col>
             <el-col :span="12">
                 <el-button
                     type="primary"
                     size="small"
                     @click="setProfile(data)"
-                >{{ $lang('config') }}</el-button>
+                    >{{ $lang("config") }}</el-button
+                >
             </el-col>
         </el-row>
         <div style="margin: 20px 0;">
@@ -41,39 +47,63 @@
                 type="primary"
                 size="small"
                 @click="openDialog('tcont')"
-            >{{ $lang('add', 'tcont') }}</el-button>
+                >{{ $lang("add", "tcont") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
                 style="margin-left: 30px;"
                 @click="openDialog('gem')"
-            >{{ $lang('add', 'gem') }}</el-button>
+                >{{ $lang("add", "gem") }}</el-button
+            >
             <template v-if="modifyFlags">
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px;"
                     @click="submitModify"
-                >{{ $lang('save_all_changes') }}</el-button>
+                    >{{ $lang("save_all_changes") }}</el-button
+                >
             </template>
         </div>
         <template v-if="showPagination">
             <el-tabs v-model="activeName" type="card">
                 <el-tab-pane :label="$lang('tcont')" name="tcont">
-                    <line-tcont-table :tcont="tcont" :gem="gem" @change-data="dataChange"></line-tcont-table>
+                    <line-tcont-table
+                        :tcont="tcont"
+                        :gem="gem"
+                        @change-data="dataChange"
+                    ></line-tcont-table>
                 </el-tab-pane>
                 <el-tab-pane :label="$lang('gem')" name="gem">
-                    <line-gem-table :data="gem" @add-mapping="addMapping" @change-data="dataChange"></line-gem-table>
+                    <line-gem-table
+                        :data="gem"
+                        @add-mapping="addMapping"
+                        @change-data="dataChange"
+                    ></line-gem-table>
                 </el-tab-pane>
             </el-tabs>
         </template>
         <template v-else>
-            <h3>{{ $lang('tcont') }}</h3>
-            <line-tcont-table :tcont="tcont" :gem="gem" @change-data="dataChange"></line-tcont-table>
-            <h3>{{ $lang('gem') }}</h3>
-            <line-gem-table :data="gem" @add-mapping="addMapping" @change-data="dataChange"></line-gem-table>
+            <h3>{{ $lang("tcont") }}</h3>
+            <line-tcont-table
+                :tcont="tcont"
+                :gem="gem"
+                @change-data="dataChange"
+            ></line-tcont-table>
+            <h3>{{ $lang("gem") }}</h3>
+            <line-gem-table
+                :data="gem"
+                @add-mapping="addMapping"
+                @change-data="dataChange"
+            ></line-gem-table>
         </template>
-        <el-dialog :visible.sync="dialogVisible" append-to-body width="650px" destroy-on-close>
+        <el-dialog
+            :visible.sync="dialogVisible"
+            append-to-body
+            width="650px"
+            destroy-on-close
+        >
             <div slot="title">{{ $lang(dialogType) }}</div>
             <template v-if="dialogType === 'set'">
                 <line-form
@@ -94,11 +124,20 @@
                 ></add-or-set-form>
             </template>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
-                    @click="submitForm(dialogType === 'set' ? 'line-form' : 'add-or-set-form')"
-                >{{ $lang('apply') }}</el-button>
+                    @click="
+                        submitForm(
+                            dialogType === 'set'
+                                ? 'line-form'
+                                : 'add-or-set-form'
+                        )
+                    "
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -233,6 +272,9 @@ export default {
                             this.modifyFlags = true;
                         },
                         mapping(data) {
+                            if (!this.parentGem.mapping) {
+                                this.parentGem.mapping = [];
+                            }
                             this.parentGem.mapping.push({
                                 mid: data.mid,
                                 mode: data.mode,
