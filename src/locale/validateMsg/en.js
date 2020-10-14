@@ -1,6 +1,6 @@
 export default {
     macaddr() {
-        return "Illegal MAC Address";
+        return "Illegal MAC Address, ex. 00:00:00:00:00:00";
     },
     ipaddr() {
         return "Dotted decimal notation: x.x.x.x";
@@ -10,5 +10,5 @@ export default {
     },
     inputLength(min, max) {
         return `${min} - ${max} characters`;
-    }
+    },
 };

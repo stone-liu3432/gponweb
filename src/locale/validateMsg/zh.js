@@ -1,6 +1,6 @@
 export default {
     macaddr() {
-        return "非法MAC地址";
+        return "非法MAC地址,格式00:00:00:00:00:00";
     },
     ipaddr() {
         return "点分十进制: x.x.x.x";
@@ -10,5 +10,5 @@ export default {
     },
     inputLength(min, max) {
         return `${min} - ${max}位字符`;
-    }
+    },
 };
