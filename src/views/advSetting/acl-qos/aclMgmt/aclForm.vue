@@ -16,7 +16,7 @@
                         <template v-for="(item, index) in ACL_TYPE_MAP">
                             <el-option
                                 :value="index"
-                                :label="item + ' ACL'"
+                                :label="$lang(item) + ' ACL'"
                             ></el-option>
                         </template>
                     </el-select>
@@ -264,7 +264,11 @@ export default {
             return this.form.protocol === "icmp";
         },
         labelWidth() {
-            return this.acl_type === "basic" ? "200px" : "150px";
+            return this.type === "add"
+                ? "150px"
+                : this.acl_type === "basic"
+                ? "200px"
+                : "150px";
         }
     },
     inject: ["validateMac", "validateVlan", "validateIp"],
