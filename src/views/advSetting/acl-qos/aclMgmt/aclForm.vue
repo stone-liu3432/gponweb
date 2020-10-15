@@ -424,6 +424,9 @@ export default {
             if (type === "add" || type === "delete") {
                 this.form.acl_id = "";
             }
+            if (type === "rule") {
+                this.form.rule_id = 1;
+            }
             if (isDef(row)) {
                 this.form.acl_id = row.acl_id;
                 if (type === "config") {
@@ -615,9 +618,10 @@ export default {
             return flags;
         },
         /**
-         * flagMap {Object} flag集合
-         * form {Object} 表单数据
-         * data {Array} 当前acl_id下的rule列表
+         * @param {Object} flagMap flag集合
+         * @param {Object} form 表单数据
+         * @param {Array} data 当前acl_id下的rule列表
+         * @returns {Number} 返回计算后的flag
          */
         compareVal(flagMap, form, data) {
             let flags = 0;
