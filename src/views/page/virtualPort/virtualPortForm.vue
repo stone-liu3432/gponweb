@@ -334,6 +334,9 @@ export default {
             }
         },
         "form.svp_type"() {
+            if (this.type === "set") {
+                return;
+            }
             this.$refs["virtual-port-form"].clearValidate("user_vlan");
             this.form.tag_action = 1;
         },
