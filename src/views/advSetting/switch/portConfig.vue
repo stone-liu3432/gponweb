@@ -6,43 +6,64 @@
             :portid="port_id"
             @port-change="portChange"
         ></page-header>
-        <el-row :gutter="30">
+        <el-row :gutter="30" style="overflow: hidden;">
             <el-col :span="8">
                 <el-card shadow="never">
                     <template slot="header">
-                        <span>{{ $lang('port_cfg') }}</span>
+                        <span>{{ $lang("port_cfg") }}</span>
                         <el-button
                             type="text"
                             style="float: right; padding: 3px 0;"
                             @click="openDialog('sw_port_cfg')"
-                        >{{ $lang('config') }}</el-button>
+                            >{{ $lang("config") }}</el-button
+                        >
                     </template>
                     <el-form label-width="140px" label-position="left">
-                        <el-form-item
-                            :label="$lang('admin_status')"
-                        >{{ basic.admin_status ? $lang('enable') : $lang('disable') }}</el-form-item>
-                        <el-form-item
-                            :label="$lang('link_status')"
-                        >{{ basic.link_status ? $lang('link_up') : $lang('link_down') }}</el-form-item>
-                        <el-form-item
-                            :label="$lang('auto_neg')"
-                        >{{ basic.auto_neg ? $lang('enable') : $lang('disable') }}</el-form-item>
-                        <el-form-item :label="$lang('speed')">{{ basic.speed}}</el-form-item>
-                        <el-form-item :label="$lang('duplex')">{{ basic.duplex ? 'full' : 'half' }}</el-form-item>
-                        <el-form-item
-                            :label="$lang('flow_ctrl')"
-                        >{{ basic.flow_ctrl ? $lang('enable') : $lang('disable') }}</el-form-item>
-                        <el-form-item :label="$lang('mtu')">{{ basic.mtu }}</el-form-item>
-                        <el-form-item :label="$lang('media')">{{ $lang(basic.media) }}</el-form-item>
+                        <el-form-item :label="$lang('admin_status')">{{
+                            basic.admin_status
+                                ? $lang("enable")
+                                : $lang("disable")
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('link_status')">{{
+                            basic.link_status
+                                ? $lang("link_up")
+                                : $lang("link_down")
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('auto_neg')">{{
+                            basic.auto_neg ? $lang("enable") : $lang("disable")
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('speed')">{{
+                            basic.speed
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('duplex')">{{
+                            basic.duplex ? "full" : "half"
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('flow_ctrl')">{{
+                            basic.flow_ctrl ? $lang("enable") : $lang("disable")
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('mtu')">{{
+                            basic.mtu
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('media')">{{
+                            $lang(basic.media)
+                        }}</el-form-item>
                         <template v-if="port_id > system.ponports">
-                            <el-form-item :label="$lang('erate')">{{ basic.erate }}</el-form-item>
-                            <el-form-item :label="$lang('irate')">{{ basic.irate }}</el-form-item>
+                            <el-form-item :label="$lang('erate')">{{
+                                basic.erate
+                            }}</el-form-item>
+                            <el-form-item :label="$lang('irate')">{{
+                                basic.irate
+                            }}</el-form-item>
                         </template>
-                        <el-form-item :label="$lang('pvid')">{{ basic.pvid }}</el-form-item>
+                        <el-form-item :label="$lang('pvid')">{{
+                            basic.pvid
+                        }}</el-form-item>
                         <el-form-item :label="$lang('port_desc')">
                             <div
                                 style="word-wrap: break-word; word-break: break-all;"
-                            >{{ basic.port_desc }}</div>
+                            >
+                                {{ basic.port_desc }}
+                            </div>
                         </el-form-item>
                     </el-form>
                 </el-card>
@@ -50,40 +71,51 @@
             <el-col :span="8">
                 <el-card shadow="never">
                     <template slot="header">
-                        <span>{{ $lang('stormctrl') }}</span>
+                        <span>{{ $lang("stormctrl") }}</span>
                         <el-button
                             type="text"
                             style="float: right; padding: 3px 0;"
                             @click="openDialog('stormctrl')"
-                        >{{ $lang('config') }}</el-button>
+                            >{{ $lang("config") }}</el-button
+                        >
                     </template>
                     <el-form label-width="140px" label-position="left">
-                        <el-form-item :label="$lang('broadcast')">{{ storm.broadcast }}</el-form-item>
-                        <el-form-item :label="$lang('multicast')">{{ storm.multicast }}</el-form-item>
-                        <el-form-item :label="$lang('unicast')">{{ storm.unicast }}</el-form-item>
+                        <el-form-item :label="$lang('broadcast')">{{
+                            storm.broadcast
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('multicast')">{{
+                            storm.multicast
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('unicast')">{{
+                            storm.unicast
+                        }}</el-form-item>
                     </el-form>
                 </el-card>
             </el-col>
             <el-col :span="8">
                 <el-card shadow="never">
                     <template slot="header">
-                        <span>{{ $lang('mirror') }}</span>
+                        <span>{{ $lang("mirror") }}</span>
                         <el-button
                             type="text"
                             style="float: right; padding: 3px 0;"
                             @click="flushMirror"
-                        >{{ $lang('flush') }}</el-button>
+                            >{{ $lang("flush") }}</el-button
+                        >
                         <el-button
                             type="text"
                             style="float: right; padding: 3px 0; margin-right: 20px;"
                             @click="openDialog('mirror')"
-                        >{{ $lang('config') }}</el-button>
+                            >{{ $lang("config") }}</el-button
+                        >
                     </template>
                     <el-form label-width="140px" label-position="left">
-                        <el-form-item
-                            :label="$lang('dst_port')"
-                        >{{ getPortName(mirror.dst_port) || ' - ' }}</el-form-item>
-                        <el-form-item :label="$lang('type')">{{ types[mirror.type] }}</el-form-item>
+                        <el-form-item :label="$lang('dst_port')">{{
+                            getPortName(mirror.dst_port) || " - "
+                        }}</el-form-item>
+                        <el-form-item :label="$lang('type')">{{
+                            types[mirror.type]
+                        }}</el-form-item>
                     </el-form>
                 </el-card>
             </el-col>
@@ -97,11 +129,14 @@
                 ref="port-config-form"
             ></port-config-form>
             <span slot="footer">
-                <el-button @click="closeDialog">{{ $lang('cancel') }}</el-button>
+                <el-button @click="closeDialog">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('port-config-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </span>
         </el-dialog>
     </div>
@@ -133,7 +168,7 @@ export default {
         };
     },
     inject: ["updateAdvMainScrollbar"],
-    mounted() {
+    updated() {
         this.$nextTick(_ => {
             this.updateAdvMainScrollbar();
         });
