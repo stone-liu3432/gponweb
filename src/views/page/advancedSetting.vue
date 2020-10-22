@@ -1,10 +1,10 @@
 <template>
-    <el-container :style="{overflow: 'hidden', height: `${height}px`}">
+    <el-container :style="{ overflow: 'hidden', height: `${height}px` }">
         <el-aside width="220px" style="margin-left: 20px;">
             <el-scrollbar
                 :native="false"
                 :noresize="true"
-                :viewStyle="{height: `${height}px`}"
+                :viewStyle="{ height: `${height}px` }"
                 ref="adv-aside-scrollbar"
             >
                 <adv-aside></adv-aside>
@@ -15,7 +15,7 @@
                 :native="false"
                 :noresize="true"
                 wrapClass="backtop-target"
-                :viewStyle="{height: `${height}px`}"
+                :viewStyle="{ height: `${height}px` }"
                 ref="adv-main-scrollbar"
                 style="z-index: 10;"
             >
