@@ -98,6 +98,9 @@ export default {
     props: {
         portData: {
             type: Array
+        },
+        bridgeData: {
+            type: Object
         }
     },
     data() {
@@ -108,6 +111,9 @@ export default {
     },
     methods: {
         openDialog(data) {
+            if (!this.bridgeData.status) {
+                return this.$message.error(this.$lang("rstp_tips_disable"));
+            }
             this.formData = data;
             this.dialogVisible = true;
             this.$nextTick(_ => {

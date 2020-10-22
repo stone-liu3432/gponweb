@@ -3,10 +3,17 @@
         <page-header title="RSTP" type="none"></page-header>
         <el-tabs v-model="activeName" type="card" @tab-click="tabClick">
             <el-tab-pane :label="$lang('rstp_b_info')" name="bridge">
-                <rstp-bridge :bridge-data="rstp_bridge_info" @refresh="getData"></rstp-bridge>
+                <rstp-bridge
+                    :bridge-data="rstp_bridge_info"
+                    @refresh="getData"
+                ></rstp-bridge>
             </el-tab-pane>
             <el-tab-pane :label="$lang('rstp_p_info')" name="port">
-                <rstp-port :port-data="rstp_port_info" @refresh="getData"></rstp-port>
+                <rstp-port
+                    :port-data="rstp_port_info"
+                    :bridge-data="rstp_bridge_info"
+                    @refresh="getData"
+                ></rstp-port>
             </el-tab-pane>
         </el-tabs>
     </div>
