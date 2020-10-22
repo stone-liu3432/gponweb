@@ -19,7 +19,13 @@
 <script>
 import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
 import pageComponents from "@/router/dynamicRouter";
-import { isDef, isArray, isUndef, clearSessionStorage } from "@/utils/common";
+import {
+    isDef,
+    isArray,
+    isUndef,
+    clearSessionStorage,
+    throttle
+} from "@/utils/common";
 import { ADVANCED_MENU } from "@/utils/commonData";
 import provider from "@/utils/provider";
 const navHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
@@ -73,6 +79,21 @@ export default {
     mounted() {
         const height = document.documentElement.clientHeight;
         this.height = height - 71;
+        const resizeCb = throttle(
+            e => {
+                const height = document.documentElement.clientHeight;
+                this.height = height - 71;
+                this.$nextTick(() => {
+                    this.updateNavScrollbar();
+                });
+            },
+            300,
+            this
+        );
+        window.addEventListener("resize", resizeCb, false);
+        this.$once("hook:beforeDestroy", () => {
+            window.removeEventListener("resize", resizeCb);
+        });
     },
     methods: {
         ...mapActions(["getSystemInfo", "getPon", "getPort"]),

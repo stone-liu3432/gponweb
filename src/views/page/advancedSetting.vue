@@ -28,6 +28,7 @@
 <script>
 import advContent from "@/views/advSetting/content";
 import advAside from "@/views/advSetting/aside";
+import { throttle } from "@/utils/common";
 export default {
     name: "advancedSetting",
     components: { advContent, advAside },
@@ -50,9 +51,21 @@ export default {
         // menu高度，屏高 - header高度 - main的内padding
         // content区域，屏高 - header高度 - main的内padding - content的内padding
         this.height = height - 71;
-
-        this.$nextTick(_ => {
-            this.updateNavScrollbar();
+        const resizeCb = throttle(
+            e => {
+                const height = document.documentElement.clientHeight;
+                this.height = height - 71;
+                this.$nextTick(() => {
+                    this.updateAdvAsideScrollbar();
+                    this.updateAdvMainScrollbar();
+                });
+            },
+            300,
+            this
+        );
+        window.addEventListener("resize", resizeCb, false);
+        this.$once("hook:beforeDestroy", () => {
+            window.removeEventListener("resize", resizeCb);
         });
     },
     methods: {
