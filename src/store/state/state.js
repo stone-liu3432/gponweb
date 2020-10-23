@@ -14,6 +14,7 @@ const state = {
     srvProfs: [],
     timerangeList: [],
     virtualPorts: [],
+    custom: {},
 };
 
 export default state;

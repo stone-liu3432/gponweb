@@ -45,6 +45,9 @@ const mutations = {
     updateVirtualPort(state, data) {
         state.virtualPorts = data;
     },
+    updateCustom(state, data) {
+        state.custom = data;
+    },
 };
 
 export default mutations;
