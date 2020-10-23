@@ -5,17 +5,19 @@
             <el-col class="login-logo" style="width: 300px;">
                 <template v-if="hasLogo">
                     <img src="/login_logo.png" />
-                    <template v-if="false">
-                        <div class="copyright-design-info">
-                            Copyright 2017-2020. Design by HSGQ.
-                        </div>
-                    </template>
                 </template>
                 <p v-else>GPON-OLT</p>
+                <template v-if="custom.hsgq">
+                    <div class="copyright-design-info">
+                        Copyright 2017-2020. Design by HSGQ.
+                    </div>
+                </template>
             </el-col>
             <el-col class="login-content" style="width: 400px;">
-                <h3>{{ $lang("login_user") }}</h3>
-                <div>{{ $lang("login_page_login_hit") }}</div>
+                <!-- <h3>{{ $lang("login_user") }}</h3> -->
+                <div class="login-title">
+                    {{ $lang("login_page_login_hit") }}
+                </div>
                 <el-form
                     label-width="100px"
                     :model="form"
@@ -46,12 +48,35 @@
                             ></i>
                         </el-input>
                     </el-form-item>
-                    <el-form-item :label="$lang('lang')">
-                        <el-radio-group v-model="language">
-                            <el-radio label="zh">简体中文</el-radio>
-                            <el-radio label="en">English</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
+                    <template v-if="custom.captcha">
+                        <el-form-item
+                            :label="$lang('verification_code')"
+                            prop="captcha"
+                        >
+                            <img
+                                @click="getCaptcha"
+                                class="captcha-img"
+                                ref="captcha-img"
+                            />
+                            <el-input
+                                style="width: 120px; margin-left: 12px;"
+                                v-model="form.captcha"
+                            ></el-input>
+                        </el-form-item>
+                    </template>
+                    <template
+                        v-if="
+                            custom.fix_lang !== undefined &&
+                                custom.fix_lang !== 1
+                        "
+                    >
+                        <el-form-item :label="$lang('lang')">
+                            <el-radio-group v-model="language">
+                                <el-radio label="zh">简体中文</el-radio>
+                                <el-radio label="en">English</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </template>
                     <el-form-item>
                         <el-button
                             style="width: 220px;"
@@ -69,6 +94,7 @@
 <script>
 import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
 import { regName, regPwd } from "@/utils/validator";
+import { isDef } from "@/utils/common";
 import md5 from "md5";
 import starMap from "@/views/common/stellar/star";
 export default {
@@ -77,10 +103,12 @@ export default {
         return {
             form: {
                 uname: "",
-                password: ""
+                password: "",
+                captcha: ""
             },
             language: "",
             inputType: "password",
+            captchaSrc: "",
             hasLogo: false,
             rules: {
                 uname: [
@@ -94,13 +122,19 @@ export default {
                         validator: this.validPassword,
                         trigger: ["change", "blur"]
                     }
+                ],
+                captcha: [
+                    {
+                        validator: this.validateCaptcha,
+                        trigger: ["change", "blur"]
+                    }
                 ]
             }
         };
     },
     computed: {
-        ...mapGetters(["$lang"]),
-        ...mapState(["lang"])
+        ...mapGetters(["$lang", "validateMsg"]),
+        ...mapState(["lang", "custom"])
     },
     created() {
         this.language = this.lang;
@@ -112,6 +146,9 @@ export default {
             .catch(err => {
                 this.hasLogo = false;
             });
+        if (this.custom.captcha) {
+            this.getCaptcha();
+        }
     },
     mounted() {
         document.body.style.overflow = "hidden";
@@ -130,7 +167,11 @@ export default {
                         method: "set",
                         param: {
                             name: this.form.uname,
-                            key: md5(`${this.form.uname}:${this.form.password}`)
+                            key: md5(
+                                `${this.form.uname}:${this.form.password}`
+                            ),
+                            captcha_v: this.form.captcha,
+                            captcha_f: this.captchaSrc
                         }
                     };
                     this.$http
@@ -188,6 +229,28 @@ export default {
             } else {
                 this.inputType = "password";
             }
+        },
+        validateCaptcha(rule, val, cb) {
+            const reg = /^\w{4,8}$/;
+            if (!reg.test(val)) {
+                return cb(new Error(this.validateMsg("inputLength", 4, 8)));
+            }
+            cb();
+        },
+        getCaptcha() {
+            this.captchaSrc = "";
+            this.$http
+                .get("/system_captcha")
+                .then(res => {
+                    if (res.data.code === 1) {
+                        if (isDef(res.data.data)) {
+                            const fname = res.data.data.filename;
+                            this.$refs["captcha-img"].src = fname;
+                            this.captchaSrc = fname;
+                        }
+                    }
+                })
+                .catch(err => {});
         }
     },
     watch: {
@@ -198,6 +261,11 @@ export default {
         language() {
             this.updateLang(this.language);
             this.$i18n.locale = this.language;
+        },
+        custom() {
+            if (this.custom.captcha) {
+                this.getCaptcha();
+            }
         }
     }
 };
@@ -217,12 +285,12 @@ export default {
     border: 1px solid @borderColor;
     h3 {
         text-align: center;
-        & + div {
-            text-align: center;
-            color: @tipsColor;
-            margin: 30px 0;
-            font-size: 14px;
-        }
+    }
+    div.login-title {
+        text-align: center;
+        color: @tipsColor;
+        margin: 30px 0;
+        font-size: 14px;
     }
     width: 703px;
     height: 400px;
@@ -274,5 +342,12 @@ export default {
     text-align: center;
     font-size: 14px;
     color: @titleColor;
+}
+.captcha-img {
+    width: 120px;
+    height: 40px;
+    vertical-align: middle;
+    border-radius: 4px;
+    border: 1px solid transparent;
 }
 </style>

@@ -1,20 +1,30 @@
 <template>
     <div class="system-setting">
         <page-header type="none" class="page-header-style">
-            <template slot="title">{{ $lang('sysinfo_set') }}</template>
+            <template slot="title">{{ $lang("sysinfo_set") }}</template>
             <template slot="content">
                 <el-button
                     type="primary"
                     size="small"
                     style="margin-left: 30px; width: 200px;"
                     @click="goBack"
-                >{{ $lang('goback_devmgmt') }}</el-button>
-                <el-form-item :label="$lang('lang') + ':'" style="margin-left: 30px;">
-                    <el-select v-model="language" size="small">
-                        <el-option value="en"></el-option>
-                        <el-option value="zh"></el-option>
-                    </el-select>
-                </el-form-item>
+                    >{{ $lang("goback_devmgmt") }}</el-button
+                >
+                <template
+                    v-if="
+                        custom.fix_lang !== undefined && custom.fix_lang !== 1
+                    "
+                >
+                    <el-form-item
+                        :label="$lang('lang') + ':'"
+                        style="margin-left: 30px;"
+                    >
+                        <el-select v-model="language" size="small">
+                            <el-option value="en" label="English"></el-option>
+                            <el-option value="zh" label="简体中文"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </template>
             </template>
         </page-header>
         <div class="system-setting-item">
@@ -30,14 +40,19 @@
                     accept="image/png, image/jpg, image/jpeg"
                     :on-change="loginLogoChange"
                 >
-                    <el-button slot="trigger" size="small" type="primary">{{ $lang('file_click') }}</el-button>
+                    <el-button slot="trigger" size="small" type="primary">{{
+                        $lang("file_click")
+                    }}</el-button>
                     <el-button
                         style="margin-left: 10px;"
                         size="small"
                         type="success"
                         @click="uploadImage('loginLogo')"
-                    >{{ $lang('commit') }}</el-button>
-                    <div slot="tip" class="el-upload__tip">{{ $lang('imagesize_tips') }}</div>
+                        >{{ $lang("commit") }}</el-button
+                    >
+                    <div slot="tip" class="el-upload__tip">
+                        {{ $lang("imagesize_tips") }}
+                    </div>
                 </el-upload>
             </div>
         </div>
@@ -54,19 +69,24 @@
                     accept="image/png, image/jpg, image/jpeg"
                     :on-change="logoChange"
                 >
-                    <el-button slot="trigger" size="small" type="primary">{{ $lang('file_click') }}</el-button>
+                    <el-button slot="trigger" size="small" type="primary">{{
+                        $lang("file_click")
+                    }}</el-button>
                     <el-button
                         style="margin-left: 10px;"
                         size="small"
                         type="success"
                         @click="uploadImage('logo')"
-                    >{{ $lang('commit') }}</el-button>
-                    <div slot="tip" class="el-upload__tip">{{ $lang('logosize_tips') }}</div>
+                        >{{ $lang("commit") }}</el-button
+                    >
+                    <div slot="tip" class="el-upload__tip">
+                        {{ $lang("logosize_tips") }}
+                    </div>
                 </el-upload>
             </div>
         </div>
         <div class="system-setting-item system-setting-company-info">
-            <h3>{{ $lang('company_info') }}</h3>
+            <h3>{{ $lang("company_info") }}</h3>
             <el-form
                 :model="form"
                 :rules="rules"
@@ -74,19 +94,34 @@
                 label-width="160px"
                 size="small"
             >
-                <el-form-item :label="$lang('company_name')" prop="company_name">
+                <el-form-item
+                    :label="$lang('company_name')"
+                    prop="company_name"
+                >
                     <el-input v-model="form.company_name"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('company_addr')" prop="company_addr">
+                <el-form-item
+                    :label="$lang('company_addr')"
+                    prop="company_addr"
+                >
                     <el-input v-model="form.company_addr"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('company_email')" prop="company_email">
+                <el-form-item
+                    :label="$lang('company_email')"
+                    prop="company_email"
+                >
                     <el-input v-model="form.company_email"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('company_phone')" prop="company_phone">
+                <el-form-item
+                    :label="$lang('company_phone')"
+                    prop="company_phone"
+                >
                     <el-input v-model="form.company_phone"></el-input>
                 </el-form-item>
-                <el-form-item :label="$lang('supplier_info')" prop="supplier_info">
+                <el-form-item
+                    :label="$lang('supplier_info')"
+                    prop="supplier_info"
+                >
                     <el-input v-model="form.supplier_info"></el-input>
                 </el-form-item>
             </el-form>
@@ -96,7 +131,8 @@
                     type="primary"
                     size="small"
                     @click="submitCompanyInfo"
-                >{{ $lang('commit') }}</el-button>
+                    >{{ $lang("commit") }}</el-button
+                >
             </div>
         </div>
     </div>
@@ -112,7 +148,7 @@ export default {
     name: "sysSetting",
     computed: {
         ...mapGetters(["$lang", "validateMsg"]),
-        ...mapState(["lang"])
+        ...mapState(["lang", "custom"])
     },
     mixins: [uploadFile, postData],
     created() {
