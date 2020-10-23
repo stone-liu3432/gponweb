@@ -1052,6 +1052,7 @@ var zh = {
     ds_ber: "下行SD Ber",
     olt_rxpower: "OLT接收ONT功率",
     anti_mask: "反掩码",
+    verification_code: "验证码",
 };
 
 export default zh;

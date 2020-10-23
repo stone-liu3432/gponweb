@@ -1079,6 +1079,7 @@ var en = {
     ds_ber: "Ds SD Ber",
     olt_rxpower: "OLT Rx ONT Power",
     anti_mask: "Anti-mask",
+    verification_code: "Verification",
 };
 
 export default en;
