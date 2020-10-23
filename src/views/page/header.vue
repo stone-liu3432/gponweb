@@ -1,43 +1,81 @@
 <template>
     <div id="header">
         <template v-if="system && system.vendor">
-            <div id="logo" :style="{ 'font-size': system.vendor.length > 10 ? '30px' : '' }">
+            <div
+                id="logo"
+                :style="{
+                    'font-size': system.vendor.length > 10 ? '30px' : ''
+                }"
+            >
                 <template v-if="hasLogo">
                     <img src="/logo.png" />
                 </template>
-                <template
-                    v-else
-                >{{ system.vendor ? system.vendor.length > 18 ? system.vendor.substring(0, 18) : system.vendor : "Neutral" }}</template>
+                <template v-else>{{
+                    system.vendor
+                        ? system.vendor.length > 18
+                            ? system.vendor.substring(0, 18)
+                            : system.vendor
+                        : "Neutral"
+                }}</template>
             </div>
         </template>
         <div>
             <div style="max-width: 150px;">
                 <el-tooltip v-model="userVisible" :open-delay="200">
-                    <template slot="content">{{ $lang('click_enter','user_mgmt') }}</template>
+                    <template slot="content">{{
+                        $lang("click_enter", "user_mgmt")
+                    }}</template>
                     <el-button
                         type="text"
                         style="width: 100%; overflow: hidden; text-overflow: ellipsis;"
                         @click="changeView('user_mgmt')"
-                    >{{ username }}</el-button>
+                        >{{ username }}</el-button
+                    >
                 </el-tooltip>
             </div>
             <div>
-                <el-dropdown @command="shortcutCommand" style="line-height: normal;">
+                <el-dropdown
+                    @command="shortcutCommand"
+                    style="line-height: normal;"
+                >
                     <span>
                         <el-button type="text">
-                            {{ $lang('shortcut') }}
+                            {{ $lang("shortcut") }}
                             <i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="socket">{{ wsTips }}</el-dropdown-item>
-                        <el-dropdown-item command="save">{{ $lang('save_config') }}</el-dropdown-item>
-                        <el-dropdown-item command="logout">{{ $lang('logout') }}</el-dropdown-item>
-                        <el-dropdown-item command="reboot">{{ $lang('reboot') }}</el-dropdown-item>
-                        <el-dropdown-item command="ponOptical">{{ $lang('pon_optical') }}</el-dropdown-item>
-                        <el-dropdown-item command="viewConfig">{{ $lang('view_cfg') }}</el-dropdown-item>
-                        <el-dropdown-item command="zh">简体中文</el-dropdown-item>
-                        <el-dropdown-item command="en">English</el-dropdown-item>
+                        <el-dropdown-item command="socket">{{
+                            wsTips
+                        }}</el-dropdown-item>
+                        <el-dropdown-item command="save">{{
+                            $lang("save_config")
+                        }}</el-dropdown-item>
+                        <el-dropdown-item command="logout">{{
+                            $lang("logout")
+                        }}</el-dropdown-item>
+                        <el-dropdown-item command="reboot">{{
+                            $lang("reboot")
+                        }}</el-dropdown-item>
+                        <el-dropdown-item command="ponOptical">{{
+                            $lang("pon_optical")
+                        }}</el-dropdown-item>
+                        <el-dropdown-item command="viewConfig">{{
+                            $lang("view_cfg")
+                        }}</el-dropdown-item>
+                        <template
+                            v-if="
+                                custom.fix_lang !== undefined &&
+                                    custom.fix_lang !== 1
+                            "
+                        >
+                            <el-dropdown-item command="zh"
+                                >简体中文</el-dropdown-item
+                            >
+                            <el-dropdown-item command="en"
+                                >English</el-dropdown-item
+                            >
+                        </template>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -54,7 +92,8 @@
                 <el-menu-item
                     :index="item.name"
                     style="height: 70px; line-height: 70px; user-select: none;"
-                >{{ $lang(item.name) || item.name }}</el-menu-item>
+                    >{{ $lang(item.name) || item.name }}</el-menu-item
+                >
             </template>
         </el-menu>
     </div>
@@ -103,7 +142,7 @@ export default {
     },
     computed: {
         ...mapGetters(["$lang"]),
-        ...mapState(["lang", "system"]),
+        ...mapState(["lang", "system", "custom"]),
         wsTips() {
             if (this.isOpenSocket) {
                 return this.$lang("close_rt_alarm");
