@@ -3,26 +3,39 @@
         <page-header type="none" :title="$lang('service')"></page-header>
         <el-tabs v-model="activeName" type="card" @tab-click="getData">
             <el-tab-pane :label="$lang('sys_port')" name="sys_port">
-                <sys-port :base-data="sysPortInfo" @refresh="getData"></sys-port>
+                <sys-port
+                    :base-data="sysPortInfo"
+                    @refresh="getData"
+                ></sys-port>
             </el-tab-pane>
             <!-- to do: custom -->
-            <template>
+            <template v-if="custom.frpc">
                 <el-tab-pane label="FRPC" name="frpc">
-                    <service-frpc :base-data="frpcData" @refresh="getData"></service-frpc>
+                    <service-frpc
+                        :base-data="frpcData"
+                        @refresh="getData"
+                    ></service-frpc>
                 </el-tab-pane>
             </template>
             <el-tab-pane label="SNMP" name="snmp">
-                <service-snmp :trap="snmpTrap" :community="snmpCommunity" @refresh="getData"></service-snmp>
+                <service-snmp
+                    :trap="snmpTrap"
+                    :community="snmpCommunity"
+                    @refresh="getData"
+                ></service-snmp>
             </el-tab-pane>
             <el-tab-pane label="SSH-Key" name="ssh">
-                <service-ssh :base-data="sshData" @refresh="getData"></service-ssh>
+                <service-ssh
+                    :base-data="sshData"
+                    @refresh="getData"
+                ></service-ssh>
             </el-tab-pane>
         </el-tabs>
     </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import serviceFrpc from "./service/frpc";
 import serviceSnmp from "./service/snmp";
 import serviceSsh from "./service/ssh";
@@ -32,7 +45,8 @@ export default {
     name: "sysService",
     components: { serviceFrpc, serviceSnmp, serviceSsh, sysPort },
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang"]),
+        ...mapState(["custom"])
     },
     data() {
         return {
