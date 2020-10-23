@@ -9,6 +9,6 @@ export default {
         return `Range: ${min} - ${max}`;
     },
     inputLength(min, max) {
-        return `${min} - ${max} characters`;
+        return `${min}${max ? " - " + max : ""} characters`;
     },
 };

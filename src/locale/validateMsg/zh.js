@@ -9,6 +9,6 @@ export default {
         return `取值范围: ${min} - ${max}`;
     },
     inputLength(min, max) {
-        return `${min} - ${max}位字符`;
+        return `${min}${max ? " - " + max : ""}位字符`;
     },
 };
