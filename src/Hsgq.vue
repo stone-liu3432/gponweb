@@ -21,6 +21,16 @@ export default {
         } else {
             this.updateLang(lang);
         }
+        this.$http
+            .get("/system_custom")
+            .then(res => {
+                if (res.data.code === 1) {
+                    if (isDef(res.data.data)) {
+                        this.updateCustom(res.data.data);
+                    }
+                }
+            })
+            .catch(err => {});
     },
     computed: {
         ...mapState(["lang"]),
@@ -33,7 +43,7 @@ export default {
     },
     mounted() {},
     methods: {
-        ...mapMutations(["updateLang"]),
+        ...mapMutations(["updateLang", "updateCustom"]),
         getLang() {
             this.$http
                 .get("/system_lang")
