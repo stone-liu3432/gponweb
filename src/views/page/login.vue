@@ -137,6 +137,16 @@ export default {
         ...mapState(["lang", "custom"])
     },
     created() {
+        this.$http
+            .get("/system_custom")
+            .then(res => {
+                if (res.data.code === 1) {
+                    if (isDef(res.data.data)) {
+                        this.updateCustom(res.data.data);
+                    }
+                }
+            })
+            .catch(err => {});
         this.language = this.lang;
         this.$http
             .get("/login_logo.png")
@@ -146,9 +156,6 @@ export default {
             .catch(err => {
                 this.hasLogo = false;
             });
-        if (this.custom.captcha) {
-            this.getCaptcha();
-        }
     },
     mounted() {
         document.body.style.overflow = "hidden";
@@ -159,7 +166,7 @@ export default {
         });
     },
     methods: {
-        ...mapMutations(["updateLang"]),
+        ...mapMutations(["updateLang", "updateCustom"]),
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
