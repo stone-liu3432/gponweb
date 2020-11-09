@@ -1,10 +1,18 @@
 <template>
-    <el-form :model="formData" label-width="140px" :rules="rules" ref="dba-form">
+    <el-form
+        :model="formData"
+        label-width="140px"
+        :rules="rules"
+        ref="dba-form"
+    >
         <el-form-item :label="$lang('profname')" prop="profname">
             <el-input v-model="formData.profname"></el-input>
         </el-form-item>
         <el-form-item :label="$lang('profid')" prop="profid">
-            <el-input v-model.number="formData.profid" :disabled="type === 'set'"></el-input>
+            <el-input
+                v-model.number="formData.profid"
+                :disabled="type === 'set'"
+            ></el-input>
         </el-form-item>
         <el-form-item :label="$lang('type')" prop="type">
             <el-select v-model.number="formData.type">
@@ -14,13 +22,22 @@
             </el-select>
         </el-form-item>
         <el-form-item :label="$lang('fix')" prop="fix">
-            <el-input v-model.number="formData.fix" :disabled="disabledItem('fix')"></el-input>
+            <el-input
+                v-model.number="formData.fix"
+                :disabled="disabledItem('fix')"
+            ></el-input>
         </el-form-item>
         <el-form-item :label="$lang('assure')" prop="assure">
-            <el-input v-model.number="formData.assure" :disabled="disabledItem('assure')"></el-input>
+            <el-input
+                v-model.number="formData.assure"
+                :disabled="disabledItem('assure')"
+            ></el-input>
         </el-form-item>
         <el-form-item :label="$lang('max')" prop="max">
-            <el-input v-model.number="formData.max" :disabled="disabledItem('max')"></el-input>
+            <el-input
+                v-model.number="formData.max"
+                :disabled="disabledItem('max')"
+            ></el-input>
         </el-form-item>
     </el-form>
 </template>
@@ -100,8 +117,8 @@ export default {
         },
         validProfid(rule, val, cb) {
             const min = this.type === "set" ? 0 : 10;
-            if (!regRange(val, min, 512)) {
-                return cb(new Error(this.validateMsg("inputRange", 10, 512)));
+            if (!regRange(val, min, 255)) {
+                return cb(new Error(this.validateMsg("inputRange", 10, 255)));
             }
             cb();
         },
