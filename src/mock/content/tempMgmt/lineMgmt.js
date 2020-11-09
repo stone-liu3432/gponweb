@@ -2,7 +2,9 @@ import Mock from "@/mock";
 
 const Random = Mock.Random;
 
-Mock.mock("/lineprofile?form=table", "get", () => {
+Mock.mock("/lineprofile?form=table", "get", "@BASESUCCESS");
+
+Mock.mock("/ont_line_prof_table", "get", () => {
     const data = Array.from({ length: Random.range(0, 2048) }).map(
         (item, index) => ({
             profname: Random.word(1, 32),
