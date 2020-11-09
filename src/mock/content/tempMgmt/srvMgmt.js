@@ -2,7 +2,9 @@ import Mock from "@/mock";
 
 const { Random } = Mock;
 
-Mock.mock("/srvprofile?form=table", "get", () => {
+Mock.mock("/srvprofile?form=table", "get", "@BASESUCCESS");
+
+Mock.mock("/ont_srv_prof_table", "get", () => {
     const Random = Mock.Random;
     const data = Array.from({ length: Random.range(0, 2048) }).map(
         (item, index) => ({
