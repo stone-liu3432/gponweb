@@ -3,7 +3,7 @@ import Mock from "@/mock";
 const { Random } = Mock;
 
 Mock.mock("/dbaprofile?form=table", "get", (req) => {
-    const data = Array.from({ length: Random.range(0, 502) }).map(
+    const data = Array.from({ length: Random.range(0, 245) }).map(
         (item, index) => ({
             profname: Random.word(1, 32),
             profid: 1 + index,
