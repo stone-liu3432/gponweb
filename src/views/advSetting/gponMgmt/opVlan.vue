@@ -152,7 +152,7 @@ export default {
                 if (formData) {
                     const url = "/gponont_mgmt?form=port_vlan";
                     const post_params = {
-                        method: this.dialogType || "set",
+                        method: this.dialogType === "config" ? "set" : "add",
                         param: {
                             identifier: (this.port_id << 8) | this.ont_id,
                             ...formData
