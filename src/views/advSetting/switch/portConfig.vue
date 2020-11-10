@@ -19,46 +19,46 @@
                         >
                     </template>
                     <el-form label-width="140px" label-position="left">
-                        <el-form-item :label="$lang('admin_status')">{{
+                        <el-form-item :label="$lang('admin_status') + ':'">{{
                             basic.admin_status
                                 ? $lang("enable")
                                 : $lang("disable")
                         }}</el-form-item>
-                        <el-form-item :label="$lang('link_status')">{{
+                        <el-form-item :label="$lang('link_status') + ':'">{{
                             basic.link_status
                                 ? $lang("link_up")
                                 : $lang("link_down")
                         }}</el-form-item>
-                        <el-form-item :label="$lang('auto_neg')">{{
+                        <el-form-item :label="$lang('auto_neg') + ':'">{{
                             basic.auto_neg ? $lang("enable") : $lang("disable")
                         }}</el-form-item>
-                        <el-form-item :label="$lang('speed')">{{
+                        <el-form-item :label="$lang('speed') + ':'">{{
                             basic.speed
                         }}</el-form-item>
-                        <el-form-item :label="$lang('duplex')">{{
+                        <el-form-item :label="$lang('duplex') + ':'">{{
                             basic.duplex ? "full" : "half"
                         }}</el-form-item>
-                        <el-form-item :label="$lang('flow_ctrl')">{{
+                        <el-form-item :label="$lang('flow_ctrl') + ':'">{{
                             basic.flow_ctrl ? $lang("enable") : $lang("disable")
                         }}</el-form-item>
-                        <el-form-item :label="$lang('mtu')">{{
+                        <el-form-item :label="$lang('mtu') + ':'">{{
                             basic.mtu
                         }}</el-form-item>
-                        <el-form-item :label="$lang('media')">{{
+                        <el-form-item :label="$lang('media') + ':'">{{
                             $lang(basic.media)
                         }}</el-form-item>
                         <template v-if="port_id > system.ponports">
-                            <el-form-item :label="$lang('erate')">{{
+                            <el-form-item :label="$lang('erate') + ':'">{{
                                 basic.erate
                             }}</el-form-item>
-                            <el-form-item :label="$lang('irate')">{{
+                            <el-form-item :label="$lang('irate') + ':'">{{
                                 basic.irate
                             }}</el-form-item>
                         </template>
-                        <el-form-item :label="$lang('pvid')">{{
+                        <el-form-item :label="$lang('pvid') + ':'">{{
                             basic.pvid
                         }}</el-form-item>
-                        <el-form-item :label="$lang('port_desc')">
+                        <el-form-item :label="$lang('port_desc') + ':'">
                             <div
                                 style="word-wrap: break-word; word-break: break-all;"
                             >
@@ -80,13 +80,13 @@
                         >
                     </template>
                     <el-form label-width="140px" label-position="left">
-                        <el-form-item :label="$lang('broadcast')">{{
+                        <el-form-item :label="$lang('broadcast') + ':'">{{
                             storm.broadcast
                         }}</el-form-item>
-                        <el-form-item :label="$lang('multicast')">{{
+                        <el-form-item :label="$lang('multicast') + ':'">{{
                             storm.multicast
                         }}</el-form-item>
-                        <el-form-item :label="$lang('unicast')">{{
+                        <el-form-item :label="$lang('unicast') + ':'">{{
                             storm.unicast
                         }}</el-form-item>
                     </el-form>
@@ -110,10 +110,10 @@
                         >
                     </template>
                     <el-form label-width="140px" label-position="left">
-                        <el-form-item :label="$lang('dst_port')">{{
+                        <el-form-item :label="$lang('dst_port') + ':'">{{
                             getPortName(mirror.dst_port) || " - "
                         }}</el-form-item>
-                        <el-form-item :label="$lang('type')">{{
+                        <el-form-item :label="$lang('type') + ':'">{{
                             types[mirror.type]
                         }}</el-form-item>
                     </el-form>
