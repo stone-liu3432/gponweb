@@ -173,9 +173,16 @@ const actions = {
             .get("/lineprofile?form=table")
             .then((res) => {
                 if (res.data.code === 1) {
-                    if (isArray(res.data.data)) {
-                        commit("updateLineProfs", res.data.data);
-                    }
+                    axios
+                        .get("/ont_line_prof_table")
+                        .then((_res) => {
+                            if (_res.data.code === 1) {
+                                if (isArray(_res.data.data)) {
+                                    commit("updateLineProfs", _res.data.data);
+                                }
+                            }
+                        })
+                        .catch((_err) => {});
                 }
             })
             .catch((err) => {});
@@ -186,9 +193,16 @@ const actions = {
             .get("/srvprofile?form=table")
             .then((res) => {
                 if (res.data.code === 1) {
-                    if (isArray(res.data.data)) {
-                        commit("updateSrvProfs", res.data.data);
-                    }
+                    axios
+                        .get("/ont_srv_prof_table")
+                        .then((_res) => {
+                            if (_res.data.code === 1) {
+                                if (isArray(_res.data.data)) {
+                                    commit("updateSrvProfs", _res.data.data);
+                                }
+                            }
+                        })
+                        .catch((_err) => {});
                 }
             })
             .catch((err) => {});
