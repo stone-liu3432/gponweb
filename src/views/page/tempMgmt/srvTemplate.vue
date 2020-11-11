@@ -7,31 +7,48 @@
             @change="dataChange"
         ></nms-filter>
         <el-table :data="srvTable" border>
-            <el-table-column prop="profname" :label="$lang('profname')"></el-table-column>
-            <el-table-column prop="profid" :label="$lang('profid')"></el-table-column>
-            <el-table-column prop="bindtimes" :label="$lang('bindtimes')"></el-table-column>
+            <el-table-column
+                prop="profname"
+                :label="$lang('profname')"
+            ></el-table-column>
+            <el-table-column
+                prop="profid"
+                :label="$lang('profid')"
+            ></el-table-column>
+            <el-table-column
+                prop="bindtimes"
+                :label="$lang('bindtimes')"
+            ></el-table-column>
             <el-table-column width="280px">
                 <template slot="header">
-                    <span>{{ $lang('config') }}</span>
+                    <span>{{ $lang("config") }}</span>
                     <el-button
                         type="primary"
                         style="margin-left: 30px;"
                         size="small"
                         @click="openDialog('add')"
-                    >{{ $lang('add') }}</el-button>
+                        >{{ $lang("add") }}</el-button
+                    >
                 </template>
                 <template slot-scope="scope">
-                    <el-button type="text" @click="showDetail(scope.row)">{{ $lang('show_detail') }}</el-button>
+                    <el-button type="text" @click="showDetail(scope.row)">{{
+                        $lang("show_detail")
+                    }}</el-button>
                     <el-button
                         type="text"
                         style="margin-left: 20px;"
                         @click="showBinding(scope.row)"
-                    >{{ $lang('show_binding') }}</el-button>
-                    <el-button
-                        type="text"
-                        style="margin-left: 20px;"
-                        @click="deleteProf(scope.row)"
-                    >{{ $lang('delete') }}</el-button>
+                        >{{ $lang("show_binding") }}</el-button
+                    >
+                    <template v-if="scope.row.profid !== 0">
+                        <el-button
+                            type="text"
+                            style="margin-left: 20px;"
+                            @click="deleteProf(scope.row)"
+                        >
+                            {{ $lang("delete") }}
+                        </el-button>
+                    </template>
                 </template>
             </el-table-column>
         </el-table>
@@ -52,29 +69,54 @@
             :before-close="beforeClose"
             destroy-on-close
         >
-            <srv-detail :data="detail" ref="srv-detail" @set-profile="setProfile"></srv-detail>
+            <srv-detail
+                :data="detail"
+                ref="srv-detail"
+                @set-profile="setProfile"
+            ></srv-detail>
         </el-dialog>
-        <el-dialog :visible.sync="setVisible" width="640px" append-to-body destroy-on-close>
+        <el-dialog
+            :visible.sync="setVisible"
+            width="640px"
+            append-to-body
+            destroy-on-close
+        >
             <template slot="title">{{ $lang(dialogType) }}</template>
-            <srv-form :type="dialogType" :data="dialogData" ref="srv-form"></srv-form>
+            <srv-form
+                :type="dialogType"
+                :data="dialogData"
+                ref="srv-form"
+            ></srv-form>
             <div slot="footer">
-                <el-button @click="setVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('srv-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="setVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button type="primary" @click="submitForm('srv-form')">{{
+                    $lang("apply")
+                }}</el-button>
             </div>
         </el-dialog>
-        <el-dialog :visible.sync="bindingVisible" width="800px" destroy-on-close>
+        <el-dialog
+            :visible.sync="bindingVisible"
+            width="800px"
+            destroy-on-close
+        >
             <div slot="title">
-                <span>{{ $lang('profid') }}:</span>
+                <span>{{ $lang("profid") }}:</span>
                 <span style="margin: 0 50px 0 12px;">{{ rowData.profid }}</span>
-                <span>{{ $lang('profname') }}:</span>
+                <span>{{ $lang("profname") }}:</span>
                 <span style="margin: 0 0 0 12px;">{{ rowData.profname }}</span>
             </div>
             <el-table :data="bindingDevices" border>
                 <el-table-column :label="$lang('port_id')" width="100px">
-                    <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                    <template slot-scope="scope">{{
+                        getPortName(scope.row.port_id)
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('ont_id')">
-                    <template slot-scope="scope">{{ getOntRange(scope.row) }}</template>
+                    <template slot-scope="scope">{{
+                        getOntRange(scope.row)
+                    }}</template>
                 </el-table-column>
             </el-table>
         </el-dialog>
