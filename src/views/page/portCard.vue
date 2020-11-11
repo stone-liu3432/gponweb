@@ -19,7 +19,19 @@ export default {
     },
     computed: {
         ...mapState(["system", "pon", "port"]),
-        ...mapGetters(["getPortName", "$lang"])
+        ...mapGetters(["getPortName", "$lang"]),
+        portDesc() {
+            if (!this.port.length) {
+                return "";
+            }
+            if (this.data.port_desc) {
+                return this.data.port_desc;
+            }
+            const port = this.port.filter(
+                item => item.port_id === this.data.port_id
+            )[0];
+            return port ? port.port_desc || "" : "";
+        }
     },
     methods: {
         ...mapActions(["getPon", "getPort"])
@@ -74,7 +86,7 @@ export default {
         const spans = this.type === "pon" ? [12, 12] : [8, 16];
         return (
             <el-card shadow="hover">
-                <el-row>
+                <el-row style="padding: 0 0 10px 0;">
                     <el-col
                         span={spans[0]}
                         style="text-align: center; height: 100px;"
@@ -91,12 +103,20 @@ export default {
                         span={spans[1]}
                         style={{
                             height: "100px",
-                            padding: this.type === "pon" ? "0 0 0 12px" : ""
+                            padding: this.type === "pon" ? "0 0 0 6px" : ""
                         }}
                     >
                         {DETAIL_MAPS[this.type]}
                     </el-col>
                 </el-row>
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content={this.portDesc}
+                    placement="bottom"
+                >
+                    <div class="port-card-desc">{this.portDesc}</div>
+                </el-tooltip>
             </el-card>
         );
     }
@@ -106,5 +126,13 @@ export default {
 <style lang="less" scoped>
 div {
     font-size: 14px;
+}
+div.port-card-desc {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    padding: 10px 6px 0 6px;
+    border-top: @border-style;
 }
 </style>
