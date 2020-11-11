@@ -400,8 +400,8 @@ export default {
             if (this.autoAssignID) {
                 return cb();
             }
-            if (!regRange(val, 0, 2048)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 2048)));
+            if (!regRange(val, 1, 2047)) {
+                return cb(new Error(this.validateMsg("inputRange", 1, 2047)));
             }
             cb();
         },
