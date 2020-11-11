@@ -41,6 +41,7 @@ Mock.mock("/switch_port?form=portlist_info", "get", () => {
     let i = 1;
     const pon = Array.from({ length: 16 }).map((_) => ({
         port_id: i++,
+        port_desc: Random.word(1, 64),
         admin_status: Random.range(0, 1),
         link_status: Random.range(0, 1),
         auto_neg: Random.range(0, 1),
@@ -54,6 +55,7 @@ Mock.mock("/switch_port?form=portlist_info", "get", () => {
     const data = pon.concat(
         Array.from({ length: 8 }).map((_) => ({
             port_id: i++,
+            port_desc: Random.word(1, 64),
             admin_status: Random.range(0, 1),
             link_status: Random.range(0, 1),
             auto_neg: Random.range(0, 1),
