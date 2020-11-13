@@ -7,6 +7,7 @@
 const data = {
     status: () =>
         import(/* webpackChunkName: "main-page" */ "@/views/page/status"),
+    topo: () => import(/* webpackChunkName: "main-page" */ "@/views/page/topo"),
     onu_allow: () =>
         import(/* webpackChunkName: "main-page" */ "@/views/page/onuAllow"),
     template_mgmt: () =>
@@ -69,9 +70,9 @@ const data = {
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portConfig"
         ),
-    port_vlan: () =>
+    port_optical: () =>
         import(
-            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portVlan"
+            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portOptical"
         ),
     loop_detect: () =>
         import(

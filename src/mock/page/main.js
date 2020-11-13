@@ -53,7 +53,7 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "port_info" },
                     { name: "perf_info" },
                     { name: "port_cfg" },
-                    { name: "port_vlan" },
+                    { name: "port_optical" },
                     { name: "loop_detect" },
                     { name: "port_group" },
                 ],
@@ -101,6 +101,7 @@ Mock.mock("/board?info=nav", "get", {
         page: "nav",
         menu: [
             { name: "status" },
+            { name: "topo" },
             { name: "onu_allow" },
             { name: "template_mgmt" },
             { name: "virtual_port" },
