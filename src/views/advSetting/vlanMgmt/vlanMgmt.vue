@@ -5,121 +5,169 @@
                 <el-button
                     type="primary"
                     size="small"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     @click="openDialog('create')"
-                    >{{ $lang("create") }}</el-button
                 >
+                    {{ $lang("create") }}
+                </el-button>
                 <el-button
                     type="primary"
                     size="small"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     @click="openDialog('delete')"
-                    >{{ $lang("delete") }}</el-button
                 >
+                    {{ $lang("delete") }}
+                </el-button>
                 <el-button
                     type="primary"
                     size="small"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     @click="openDialog('batch')"
-                    >{{ $lang("batch_cfg_vlan") }}</el-button
                 >
+                    {{ $lang("batch_cfg_vlan") }}
+                </el-button>
+                <el-button
+                    type="primary"
+                    size="small"
+                    style="margin-left: 30px"
+                    @click="refreshData"
+                >
+                    {{ $lang("refresh") }}
+                </el-button>
             </div>
         </page-header>
-        <el-form label-width="160px" label-position="left">
-            <el-form-item :label="$lang('vlan_list')" class="search-title">
-                <el-input
-                    size="small"
-                    placeholder="VLAN ID: 1 - 4094"
-                    prefix-icon="el-icon-search"
-                    style="width: 200px;"
-                    v-model="search"
-                    clearable
-                ></el-input>
-            </el-form-item>
-        </el-form>
-        <el-table :data="vlanTable" border>
-            <el-table-column
-                :label="$lang('vlan_id')"
-                prop="vlan_id"
-                width="100px"
-            ></el-table-column>
-            <el-table-column
-                prop="vlan_name"
-                :label="$lang('name')"
-            ></el-table-column>
-            <el-table-column :label="$lang('tagged_portlist')">
-                <template slot-scope="scope">{{
-                    getPort(scope.row.tagged_portlist) || "-"
-                }}</template>
-            </el-table-column>
-            <el-table-column :label="$lang('untagged_portlist')">
-                <template slot-scope="scope">{{
-                    getPort(scope.row.untagged_portlist) || "-"
-                }}</template>
-            </el-table-column>
-            <el-table-column :label="$lang('default_vlan_portlist')">
-                <template slot-scope="scope">{{
-                    getPort(scope.row.default_vlan_portlist) || "-"
-                }}</template>
-            </el-table-column>
-            <el-table-column
-                prop="vlan_desc"
-                :label="$lang('desc')"
-            ></el-table-column>
-            <el-table-column :label="$lang('config')" width="120px">
-                <template slot-scope="scope">
-                    <el-dropdown @command="commandHandler">
-                        <span class="el-dropdown-link">
-                            {{ $lang("config") }}
-                            <i class="el-icon-arrow-down el-icon--right"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item
-                                :command="{ action: 'config', row: scope.row }"
-                                >{{ $lang("config") }}</el-dropdown-item
-                            >
-                            <template v-if="scope.row.vlan_id !== 1">
-                                <el-dropdown-item
-                                    :command="{
-                                        action: 'delete',
-                                        row: scope.row
-                                    }"
-                                    >{{ $lang("delete") }}</el-dropdown-item
-                                >
+        <el-tabs v-model="activeName" type="card">
+            <el-tab-pane :label="$lang('vlan_list')" name="vlan_list">
+                <template>
+                    <el-form
+                        label-width="160px"
+                        label-position="left"
+                        style="margin-left: 10px"
+                    >
+                        <el-form-item
+                            :label="$lang('vlan_list')"
+                            class="search-title"
+                        >
+                            <el-input
+                                size="small"
+                                placeholder="VLAN ID: 1 - 4094"
+                                prefix-icon="el-icon-search"
+                                style="width: 200px"
+                                v-model="search"
+                                clearable
+                            ></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <el-table :data="vlanTable" border>
+                        <el-table-column
+                            :label="$lang('vlan_id')"
+                            prop="vlan_id"
+                            width="100px"
+                        ></el-table-column>
+                        <el-table-column
+                            prop="vlan_name"
+                            :label="$lang('name')"
+                        ></el-table-column>
+                        <el-table-column :label="$lang('tagged_portlist')">
+                            <template slot-scope="scope">{{
+                                getPort(scope.row.tagged_portlist) || "-"
+                            }}</template>
+                        </el-table-column>
+                        <el-table-column :label="$lang('untagged_portlist')">
+                            <template slot-scope="scope">{{
+                                getPort(scope.row.untagged_portlist) || "-"
+                            }}</template>
+                        </el-table-column>
+                        <el-table-column
+                            :label="$lang('default_vlan_portlist')"
+                        >
+                            <template slot-scope="scope">{{
+                                getPort(scope.row.default_vlan_portlist) || "-"
+                            }}</template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="vlan_desc"
+                            :label="$lang('desc')"
+                        ></el-table-column>
+                        <el-table-column :label="$lang('config')" width="120px">
+                            <template slot-scope="scope">
+                                <el-dropdown @command="commandHandler">
+                                    <span class="el-dropdown-link">
+                                        {{ $lang("config") }}
+                                        <i
+                                            class="el-icon-arrow-down el-icon--right"
+                                        ></i>
+                                    </span>
+                                    <el-dropdown-menu slot="dropdown">
+                                        <el-dropdown-item
+                                            :command="{
+                                                action: 'config',
+                                                row: scope.row,
+                                            }"
+                                            >{{
+                                                $lang("config")
+                                            }}</el-dropdown-item
+                                        >
+                                        <template
+                                            v-if="scope.row.vlan_id !== 1"
+                                        >
+                                            <el-dropdown-item
+                                                :command="{
+                                                    action: 'delete',
+                                                    row: scope.row,
+                                                }"
+                                                >{{
+                                                    $lang("delete")
+                                                }}</el-dropdown-item
+                                            >
+                                        </template>
+                                        <el-dropdown-item
+                                            :command="{
+                                                action: 'port_default_vlan',
+                                                row: scope.row,
+                                            }"
+                                            >{{
+                                                $lang("port_default_vlan")
+                                            }}</el-dropdown-item
+                                        >
+                                        <el-dropdown-item
+                                            :command="{
+                                                action: 'name',
+                                                row: scope.row,
+                                            }"
+                                            >{{
+                                                $lang("config", "name")
+                                            }}</el-dropdown-item
+                                        >
+                                        <el-dropdown-item
+                                            :command="{
+                                                action: 'desc',
+                                                row: scope.row,
+                                            }"
+                                            >{{
+                                                $lang("config", "desc")
+                                            }}</el-dropdown-item
+                                        >
+                                    </el-dropdown-menu>
+                                </el-dropdown>
                             </template>
-                            <el-dropdown-item
-                                :command="{
-                                    action: 'port_default_vlan',
-                                    row: scope.row
-                                }"
-                                >{{
-                                    $lang("port_default_vlan")
-                                }}</el-dropdown-item
-                            >
-                            <el-dropdown-item
-                                :command="{ action: 'name', row: scope.row }"
-                                >{{ $lang("config", "name") }}</el-dropdown-item
-                            >
-                            <el-dropdown-item
-                                :command="{ action: 'desc', row: scope.row }"
-                                >{{ $lang("config", "desc") }}</el-dropdown-item
-                            >
-                        </el-dropdown-menu>
-                    </el-dropdown>
+                        </el-table-column>
+                    </el-table>
+                    <el-pagination
+                        class="custom-clear-float"
+                        hide-on-single-page
+                        :current-page.sync="currentPage"
+                        :page-sizes="[10, 20, 30, 50]"
+                        :page-size.sync="pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="paginationTotal"
+                    ></el-pagination>
                 </template>
-            </el-table-column>
-        </el-table>
-        <div style="position: relative;">
-            <el-pagination
-                style="margin: 12px 0 30px 0; position: absolute; right: 0; top: 12px;"
-                hide-on-single-page
-                :current-page.sync="currentPage"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size.sync="pageSize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="paginationTotal"
-            ></el-pagination>
-        </div>
+            </el-tab-pane>
+            <el-tab-pane :label="$lang('port_vlan')" name="port_vlan">
+                <vlan-config :base-data="portVlan"></vlan-config>
+            </el-tab-pane>
+        </el-tabs>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ dialogTitle }}</div>
             <vlan-form ref="vlan-form"></vlan-form>
@@ -137,18 +185,24 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { isArray, isFunction, parseStringAsList } from "@/utils/common";
+import {
+    isArray,
+    isFunction,
+    parseStringAsList,
+    debounce,
+} from "@/utils/common";
 import postData from "@/mixin/postData";
 import vlanForm from "./vlanForm";
+import vlanConfig from "./portVlan/vlanConfig";
 export default {
     name: "vlanMgmt",
-    components: { vlanForm },
+    components: { vlanForm, vlanConfig },
     computed: {
         ...mapGetters(["$lang", "getPortName"]),
         vlanTable() {
             let list = this.vlanList.slice(0);
             if (this.search) {
-                list = list.filter(item => {
+                list = list.filter((item) => {
                     if (String(item.vlan_id).indexOf(this.search) > -1) {
                         return true;
                     }
@@ -164,15 +218,15 @@ export default {
                 create: "create",
                 delete: "delete",
                 batch: "config",
-                config: "config"
+                config: "config",
             };
             return `${this.$lang(title_map[this.dialogType])} VLAN`;
-        }
+        },
     },
     mixins: [postData],
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -185,7 +239,9 @@ export default {
             paginationTotal: 0,
             dialogVisible: false,
             dialogType: "",
-            dialogData: {}
+            dialogData: {},
+            activeName: "vlan_list",
+            portVlan: [],
         };
     },
     created() {
@@ -197,50 +253,50 @@ export default {
             this.search = "";
             this.$http
                 .get("/switch_vlan")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         this.$http
                             .get("/vlantable")
-                            .then(_res => {
+                            .then((_res) => {
                                 if (_res.data.code === 1) {
                                     if (isArray(_res.data.data)) {
                                         this.vlanList = _res.data.data;
                                     }
                                 }
                             })
-                            .catch(err => {});
+                            .catch((err) => {});
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getPort(str) {
             return parseStringAsList(str)
-                .map(item => this.getPortName(item))
+                .map((item) => this.getPortName(item))
                 .join(",");
         },
         openDialog(type, row) {
             this.dialogVisible = true;
             this.dialogType = type;
             this.dialogData = row;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["vlan-form"].init(type, row);
             });
         },
         deleteVlan(row) {
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
-                .then(_ => {
+                .then((_) => {
                     this.postData("/switch_vlan", {
                         method: "destroy",
                         param: {
-                            vlan_id: row.vlan_id
-                        }
+                            vlan_id: row.vlan_id,
+                        },
                     })
-                        .then(_ => {
+                        .then((_) => {
                             this.getVlan();
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         createVlan(form) {
             this.postData(
@@ -250,12 +306,12 @@ export default {
                     param: {
                         type: 1,
                         vlanid_s: form.vlanid_s,
-                        vlanid_e: form.vlanid_e
-                    }
+                        vlanid_e: form.vlanid_e,
+                    },
                 },
                 false
             )
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         const msg = this.$message.success(
                             this.$lang("create_vlan_info")
@@ -268,18 +324,18 @@ export default {
                                 tagged_portlist: form.tagged_portlist.join(","),
                                 untagged_portlist: form.untagged_portlist.join(
                                     ","
-                                )
-                            }
+                                ),
+                            },
                         })
-                            .then(_ => {
+                            .then((_) => {
                                 // isFunction(msg.close) && msg.close();
                                 this.getVlan();
                             })
-                            .catch(_ => {});
+                            .catch((_) => {});
                     }
                 })
-                .catch(_ => {})
-                .finally(_ => {
+                .catch((_) => {})
+                .finally((_) => {
                     this.dialogVisible = false;
                 });
         },
@@ -296,9 +352,9 @@ export default {
                                 method: "destroy",
                                 param: {
                                     vlanid_s: form.vlanid_s,
-                                    vlanid_e: form.vlanid_e
-                                }
-                            }
+                                    vlanid_e: form.vlanid_e,
+                                },
+                            },
                         };
                     },
                     batch(form) {
@@ -314,9 +370,9 @@ export default {
                                     ),
                                     untagged_portlist: form.untagged_portlist.join(
                                         ","
-                                    )
-                                }
-                            }
+                                    ),
+                                },
+                            },
                         };
                     },
                     config(form) {
@@ -332,9 +388,9 @@ export default {
                                     ),
                                     untagged_portlist: form.untagged_portlist.join(
                                         ","
-                                    )
-                                }
-                            }
+                                    ),
+                                },
+                            },
                         };
                     },
                     port_default_vlan(form) {
@@ -353,9 +409,9 @@ export default {
                                     vlan_id: form.vlanid_s,
                                     vlan_name:
                                         form.vlan_name.replace(/\s*/g, "") ||
-                                        `VLAN${form.vlanid_s}`
-                                }
-                            }
+                                        `VLAN${form.vlanid_s}`,
+                                },
+                            },
                         };
                     },
                     desc(form) {
@@ -370,11 +426,12 @@ export default {
                                 param: {
                                     vlan_id: form.vlanid_s,
                                     vlan_desc:
-                                        form.vlan_desc || `VLAN${form.vlanid_s}`
-                                }
-                            }
+                                        form.vlan_desc ||
+                                        `VLAN${form.vlanid_s}`,
+                                },
+                            },
                         };
-                    }
+                    },
                 };
                 if (isFunction(ACTIONS[type])) {
                     const res = ACTIONS[type].call(this, formData);
@@ -383,10 +440,10 @@ export default {
                         url &&
                             data &&
                             this.postData(url, data)
-                                .then(_ => {
+                                .then((_) => {
                                     this.getVlan();
                                 })
-                                .catch(err => {
+                                .catch((err) => {
                                     if (err.type === "warning") {
                                         this.getVlan();
                                     }
@@ -396,8 +453,6 @@ export default {
                 }
             });
         },
-        setVlanName(form) {},
-        setVlanDesc(form) {},
         defVlanHandler(form) {
             const base = parseStringAsList(
                     this.dialogData.default_vlan_portlist
@@ -429,15 +484,15 @@ export default {
                         method: "set",
                         param: {
                             vlan_id: 1,
-                            default_vlan_portlist: deleted.join(",")
-                        }
+                            default_vlan_portlist: deleted.join(","),
+                        },
                     },
                     false
                 )
-                    .then(_ => {
+                    .then((_) => {
                         cb();
                     })
-                    .catch(_ => {});
+                    .catch((_) => {});
             };
             const url = "/switch_vlan_pvid";
             if (added.length) {
@@ -447,19 +502,19 @@ export default {
                         method: "set",
                         param: {
                             vlan_id: form.vlanid_s,
-                            default_vlan_portlist: added.join(",")
-                        }
+                            default_vlan_portlist: added.join(","),
+                        },
                     },
                     false
                 )
-                    .then(_ => {
+                    .then((_) => {
                         if (deleted.length) {
                             deleteDefVlan(url, deleted);
                         } else {
                             cb();
                         }
                     })
-                    .catch(_ => {});
+                    .catch((_) => {});
             } else {
                 deleteDefVlan(url, deleted);
             }
@@ -484,8 +539,39 @@ export default {
                     this.openDialog("desc", row);
                     break;
             }
-        }
-    }
+        },
+        getPortVlan() {
+            this.portVlan = [];
+            this.$http
+                .get("/switch_port?form=vlanall")
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (isArray(res.data.data)) {
+                            this.portVlan = res.data.data;
+                        }
+                    }
+                })
+                .catch((err) => {});
+        },
+        getData() {
+            switch (this.activeName) {
+                case "vlan_list":
+                    this.getVlan();
+                    break;
+                case "port_vlan":
+                    this.getPortVlan();
+                    break;
+            }
+        },
+        refreshData() {
+            debounce(this.getData, 1000, this);
+        },
+    },
+    watch: {
+        activeName() {
+            this.getData();
+        },
+    },
 };
 </script>
 
@@ -501,5 +587,14 @@ export default {
 }
 .el-icon-arrow-down {
     font-size: 12px;
+}
+.custom-clear-float {
+    margin: 12px 0;
+    float: right;
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 }
 </style>
