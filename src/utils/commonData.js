@@ -196,3 +196,5 @@ export const TRX_TYPE_MAP = [
     "Superxon SOGP4321-PSGA",
     "gpon general 1",
 ];
+
+export const PORT_MIRROR_TYPE_MAP = [" - ", "ingress", "egress", "all"];
