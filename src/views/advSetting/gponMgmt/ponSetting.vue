@@ -1,21 +1,22 @@
 <template>
     <div>
         <page-header type="none">
-            <div slot="title">{{ $lang('pon_setting') }}</div>
+            <div slot="title">{{ $lang("pon_setting") }}</div>
         </page-header>
         <template v-if="Object.keys(ponInfo).length && ponInfo.gpon_setting">
             <div class="pon-setting-info">
-                <span>{{ $lang('af_aging_time') }}:</span>
+                <span>{{ $lang("af_aging_time") }}:</span>
                 <span>{{ ponInfo.af_aging_time }}</span>
                 <el-button
                     type="primary"
                     size="small"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     @click="openDialog('time', ponInfo)"
-                >{{ $lang('config') }}</el-button>
+                    >{{ $lang("config") }}</el-button
+                >
             </div>
             <div class="pon-setting-info">
-                <span>{{ $lang('af_interval') }}:</span>
+                <span>{{ $lang("af_interval") }}:</span>
                 <span>{{ ponInfo.af_interval }}</span>
                 <!-- <el-button
                     type="primary"
@@ -24,21 +25,28 @@
                     @click="openDialog('interval', ponInfo)"
                 >{{ $lang('config') }}</el-button>-->
             </div>
-            <div style="margin: 20px 0 20px 0px;">
+            <div style="margin: 20px 0 20px 0px">
                 <el-button
                     type="primary"
                     size="small"
                     @click="openDialog('all')"
-                >{{ $lang('config', 'all', 'port') }}</el-button>
+                    >{{ $lang("config", "all", "port") }}</el-button
+                >
             </div>
             <el-table :data="ponInfo.gpon_setting || []" border>
                 <el-table-column :label="$lang('port_id')" prop="port_id">
-                    <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                    <template slot-scope="scope">{{
+                        getPortName(scope.row.port_id)
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('autofind')" prop="autofind">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
-                            <span>{{ scope.row.autofind ? $lang('enable') : $lang('disable') }}</span>
+                            <span>{{
+                                scope.row.autofind
+                                    ? $lang("enable")
+                                    : $lang("disable")
+                            }}</span>
                             <el-switch
                                 v-model="scope.row.autofind"
                                 :active-value="1"
@@ -51,9 +59,9 @@
                 <el-table-column :label="$lang('laser')" prop="laser">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
-                            <span
-                                style="width: 50px;"
-                            >{{ scope.row.laser ? $lang('on') : $lang('off') }}</span>
+                            <span style="width: 50px">{{
+                                scope.row.laser ? $lang("on") : $lang("off")
+                            }}</span>
                             <el-switch
                                 v-model="scope.row.laser"
                                 @change="changeLaser(scope.row)"
@@ -66,35 +74,44 @@
                 <el-table-column :label="$lang('trx_type')" width="300px">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
-                            <span style="width: 200px;">{{ TRX_TYPE_MAP[scope.row.trx_type] }}</span>
+                            <span style="width: 200px">{{
+                                TRX_TYPE_MAP[scope.row.trx_type]
+                            }}</span>
                             <el-button
                                 type="text"
-                                style="margin-left: 12px;"
+                                style="margin-left: 12px"
                                 @click="openDialog('trx_type', scope.row)"
-                            >{{ $lang('config') }}</el-button>
+                                >{{ $lang("config") }}</el-button
+                            >
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column :label="$lang('auth_type')" prop="auth_type">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
-                            <span>{{ scope.row.auth_type ? 'Auto' : 'Manual' }}</span>
+                            <span>{{
+                                scope.row.auth_type ? "Auto" : "Manual"
+                            }}</span>
                             <el-button
                                 type="text"
                                 @click="openDialog('auth', scope.row)"
-                            >{{ $lang('config') }}</el-button>
+                                >{{ $lang("config") }}</el-button
+                            >
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column :label="$lang('lineprof_id')" prop="lineprof_id">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.auth_type ? scope.row.lineprof_id : "-" }}</template>
+                <el-table-column
+                    :label="$lang('lineprof_id')"
+                    prop="lineprof_id"
+                >
+                    <template slot-scope="scope">{{
+                        scope.row.auth_type ? scope.row.lineprof_id : "-"
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('srvprof_id')" prop="srvprof_id">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.auth_type ? scope.row.srvprof_id : "-" }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.auth_type ? scope.row.srvprof_id : "-"
+                    }}</template>
                 </el-table-column>
                 <!-- <el-table-column :label="$lang('config')" width="120px">
                     <template slot-scope="scope">
@@ -121,15 +138,24 @@
                     </template>
                 </el-table-column>-->
             </el-table>
-            <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
-                <div slot="title">{{ $lang(dialogTitle) || $lang('config', 'all', 'port') }}</div>
+            <el-dialog
+                :visible.sync="dialogVisible"
+                append-to-body
+                width="650px"
+            >
+                <div slot="title">
+                    {{ $lang(dialogTitle) || $lang("config", "all", "port") }}
+                </div>
                 <pon-setting-form ref="pon-setting-form"></pon-setting-form>
                 <div slot="footer">
-                    <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                    <el-button @click="dialogVisible = false">{{
+                        $lang("cancel")
+                    }}</el-button>
                     <el-button
                         type="primary"
                         @click="submitForm('pon-setting-form')"
-                    >{{ $lang('apply') }}</el-button>
+                        >{{ $lang("apply") }}</el-button
+                    >
                 </div>
             </el-dialog>
         </template>
@@ -145,7 +171,7 @@ import ponSettingForm from "./ponSetting/ponSettingForm";
 const TITLE_MAP = {
     time: "af_aging_time",
     interval: "af_interval",
-    auth: "auth_type"
+    auth: "auth_type",
 };
 export default {
     name: "ponSetting",
@@ -155,11 +181,11 @@ export default {
         ...mapGetters(["$lang", "getPortName"]),
         dialogTitle() {
             return TITLE_MAP[this.dialogType] || "";
-        }
+        },
     },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -169,7 +195,7 @@ export default {
             ponInfo: {},
             dialogVisible: false,
             dialogType: "",
-            dialogData: null
+            dialogData: null,
         };
     },
     created() {
@@ -182,14 +208,14 @@ export default {
         getData() {
             this.$http
                 .get("/gponmgmt?form=gpon_setting")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.ponInfo = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         changeAutofind(row) {
             row.autofind = Number(!row.autofind);
@@ -197,42 +223,42 @@ export default {
                 this.$lang("if_sure", row.autofind ? "off" : "on", "autofind") +
                     " ?"
             )
-                .then(_ => {
+                .then((_) => {
                     const url = `/gponmgmt?form=ont_autofind&port_id=${row.port_id}`,
                         data = {
                             method: "set",
                             param: {
-                                autofind: Number(!row.autofind)
-                            }
+                                autofind: Number(!row.autofind),
+                            },
                         };
                     this.postData(url, data)
-                        .then(_ => {
+                        .then((_) => {
                             this.getData();
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         changeLaser(row) {
             row.laser = Number(!row.laser);
             this.$confirm(
                 this.$lang("if_sure", row.laser ? "off" : "on", "laser") + " ?"
             )
-                .then(_ => {
+                .then((_) => {
                     const url = `/gponmgmt?form=laser&port_id=${row.port_id}`,
                         data = {
                             method: "set",
                             param: {
-                                laser: Number(!row.laser)
-                            }
+                                laser: Number(!row.laser),
+                            },
                         };
                     this.postData(url, data)
-                        .then(_ => {
+                        .then((_) => {
                             this.getData();
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         openDialog(type, data) {
             this.dialogVisible = true;
@@ -240,7 +266,7 @@ export default {
             if (data) {
                 this.dialogData = JSON.parse(JSON.stringify(data));
             }
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["pon-setting-form"].init(type, data);
             });
         },
@@ -249,7 +275,7 @@ export default {
                 if (
                     type === "auth" &&
                     ["auth_type", "lineprof_id", "srvprof_id"].every(
-                        key => data[key] === this.dialogData[key]
+                        (key) => data[key] === this.dialogData[key]
                     )
                 ) {
                     return this.$message.info(this.$lang("modify_tips"));
@@ -270,9 +296,9 @@ export default {
                                 param: {
                                     auth_type: form.auth_type,
                                     lineprof_id: form.lineprof_id,
-                                    srvprof_id: form.srvprof_id
-                                }
-                            }
+                                    srvprof_id: form.srvprof_id,
+                                },
+                            },
                         };
                     },
                     time(form) {
@@ -282,9 +308,9 @@ export default {
                                 method: "set",
                                 param: {
                                     af_aging_time: form.af_aging_time,
-                                    af_interval: form.af_interval
-                                }
-                            }
+                                    af_interval: form.af_interval,
+                                },
+                            },
                         };
                     },
                     interval(form) {
@@ -294,9 +320,9 @@ export default {
                                 method: "set",
                                 param: {
                                     af_aging_time: form.af_aging_time,
-                                    af_interval: form.af_interval
-                                }
-                            }
+                                    af_interval: form.af_interval,
+                                },
+                            },
                         };
                     },
                     trx_type(form) {
@@ -305,9 +331,9 @@ export default {
                             param: {
                                 method: "set",
                                 param: {
-                                    trx_type: form.trx_type
-                                }
-                            }
+                                    trx_type: form.trx_type,
+                                },
+                            },
                         };
                     },
                     all(form) {
@@ -321,11 +347,11 @@ export default {
                                     trx_type: form.trx_type,
                                     auth_type: form.auth_type,
                                     lineprof_id: form.lineprof_id,
-                                    srvprof_id: form.srvprof_id
-                                }
-                            }
+                                    srvprof_id: form.srvprof_id,
+                                },
+                            },
                         };
-                    }
+                    },
                 };
                 if (isFunction(ACTIONS[type])) {
                     const res = ACTIONS[type].call(this, data);
@@ -334,10 +360,10 @@ export default {
                         url &&
                             param &&
                             this.postData(url, param)
-                                .then(_ => {
+                                .then((_) => {
                                     this.getData();
                                 })
-                                .catch(_ => {});
+                                .catch((_) => {});
                         this.dialogVisible = false;
                     }
                 }
@@ -356,13 +382,13 @@ export default {
                 },
                 trx_type(data) {
                     this.openDialog("trx_type", data);
-                }
+                },
             };
             if (isFunction(ACTIONS[action])) {
                 ACTIONS[action].call(this, row);
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -374,7 +400,7 @@ export default {
         display: inline-block;
         vertical-align: middle;
         &:first-child {
-            width: 180px;
+            width: 200px;
         }
         & + span {
             width: 120px;

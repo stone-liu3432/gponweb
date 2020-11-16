@@ -1,10 +1,23 @@
 <template>
-    <el-form :model="form" :rules="rules" label-width="185px" ref="pon-setting-form">
+    <el-form
+        :model="form"
+        :rules="rules"
+        label-width="185px"
+        ref="pon-setting-form"
+    >
         <template v-if="type === 'time' || type === 'interval'">
-            <el-form-item :label="$lang('af_aging_time')" prop="af_aging_time" key="af_aging_time">
+            <el-form-item
+                :label="$lang('af_aging_time')"
+                prop="af_aging_time"
+                key="af_aging_time"
+            >
                 <el-input v-model.number="form.af_aging_time"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('af_interval')" prop="af_interval" key="af_interval">
+            <el-form-item
+                :label="$lang('af_interval')"
+                prop="af_interval"
+                key="af_interval"
+            >
                 <el-input v-model.number="form.af_interval"></el-input>
             </el-form-item>
         </template>
@@ -23,30 +36,54 @@
             </el-form-item>
         </template>
         <template v-if="type === 'auth' || type === 'all'">
-            <el-form-item :label="$lang('auth_type')" prop="auth_type" key="auth_type">
+            <el-form-item
+                :label="$lang('auth_type')"
+                prop="auth_type"
+                key="auth_type"
+            >
                 <el-select v-model.number="form.auth_type">
                     <el-option :value="0" label="Manual"></el-option>
                     <el-option :value="1" label="Auto"></el-option>
                 </el-select>
             </el-form-item>
             <template v-if="form.auth_type === 1">
-                <el-form-item :label="$lang('lineprof_name')" prop="lineprof_id" key="lineprof_id">
+                <el-form-item
+                    :label="$lang('lineprof_name')"
+                    prop="lineprof_id"
+                    key="lineprof_id"
+                >
                     <el-select v-model.number="form.lineprof_id">
                         <template v-for="item in lineProfs">
-                            <el-option :value="item.profid" :label="item.profname"></el-option>
+                            <el-option
+                                :value="item.profid"
+                                :label="item.profname"
+                            ></el-option>
                         </template>
                     </el-select>
-                    <span style="margin-left: 20px;">{{ $lang('lineprof_id') }}:</span>
-                    <span style="margin-left: 12px;">{{ form.lineprof_id }}</span>
+                    <span style="margin-left: 20px"
+                        >{{ $lang("lineprof_id") }}:</span
+                    >
+                    <span style="margin-left: 12px">{{
+                        form.lineprof_id
+                    }}</span>
                 </el-form-item>
-                <el-form-item :label="$lang('srvprof_name')" prop="srvprof_id" key="srvprof_id">
+                <el-form-item
+                    :label="$lang('srvprof_name')"
+                    prop="srvprof_id"
+                    key="srvprof_id"
+                >
                     <el-select v-model.number="form.srvprof_id">
                         <template v-for="item in srvProfs">
-                            <el-option :value="item.profid" :label="item.profname"></el-option>
+                            <el-option
+                                :value="item.profid"
+                                :label="item.profname"
+                            ></el-option>
                         </template>
                     </el-select>
-                    <span style="margin-left: 20px;">{{ $lang('srvprof_id') }}:</span>
-                    <span style="margin-left: 12px;">{{ form.srvprof_id }}</span>
+                    <span style="margin-left: 20px"
+                        >{{ $lang("srvprof_id") }}:</span
+                    >
+                    <span style="margin-left: 12px">{{ form.srvprof_id }}</span>
                 </el-form-item>
             </template>
         </template>
@@ -71,7 +108,7 @@ export default {
     name: "ponSettingForm",
     computed: {
         ...mapGetters(["$lang", "validateMsg"]),
-        ...mapState(["lineProfs", "srvProfs"])
+        ...mapState(["lineProfs", "srvProfs"]),
     },
     data() {
         return {
@@ -84,24 +121,24 @@ export default {
                 srvprof_id: 0,
                 af_aging_time: "",
                 af_interval: "",
-                trx_type: 3
+                trx_type: 3,
             },
             rules: {
                 af_aging_time: [
                     {
                         validator: this.validateTime,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 af_interval: [
                     {
                         validator: this.validateInterval,
-                        trigger: ["change", "blur"]
-                    }
-                ]
+                        trigger: ["change", "blur"],
+                    },
+                ],
             },
             type: "",
-            cacheData: null
+            cacheData: null,
         };
     },
     methods: {
@@ -109,7 +146,7 @@ export default {
             this.$refs["pon-setting-form"].resetFields();
             this.type = type;
             if (isDef(data)) {
-                Object.keys(this.form).forEach(key => {
+                Object.keys(this.form).forEach((key) => {
                     if (isDef(data[key])) {
                         this.form[key] = data[key];
                     }
@@ -124,7 +161,7 @@ export default {
                 return cb();
             }
             if (!regRange(val, 100, 300)) {
-                return cb(new Error(this.validateMsg("inputRange", 100, 300)));
+                return cb(new Error(`${this.$lang("range")}: 0, 100 - 300`));
             }
             cb();
         },
@@ -138,15 +175,15 @@ export default {
             cb();
         },
         validate(fn) {
-            this.$refs["pon-setting-form"].validate(valid => {
+            this.$refs["pon-setting-form"].validate((valid) => {
                 if (isFunction(fn)) {
                     if (valid) {
                         return fn.call(this, this.type, this.form);
                     }
                 }
             });
-        }
-    }
+        },
+    },
 };
 </script>
 
