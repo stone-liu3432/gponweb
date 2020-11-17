@@ -1,6 +1,12 @@
 <template>
     <div>
-        <page-header :title="$lang('port_info')" type="none"></page-header>
+        <page-header :title="$lang('port_cfg')" type="none">
+            <template slot="content">
+                <el-button type="primary" size="mini" @click="refreshData">{{
+                    $lang("refresh")
+                }}</el-button>
+            </template>
+        </page-header>
         <el-table
             :data="port"
             border
@@ -137,6 +143,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
+import { debounce } from "@/utils/common";
 import portConfigForm from "./portConfig/form";
 import postData from "@/mixin/postData";
 export default {
@@ -232,6 +239,9 @@ export default {
                 }
             });
             return flag;
+        },
+        refreshData() {
+            debounce(this.getPort, 1000, this);
         },
     },
 };
