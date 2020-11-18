@@ -507,7 +507,7 @@ var en = {
 
     batch_cfg_vlan: "Configure Multi-VLANs",
 
-    pon_optical: "Optical Diagnose",
+    pon_optical: "PON Optical Diagnose",
     pon_optical_tips:
         "Here it is the PON Module's RSSI, you need select the location of which ONT you want to trigger",
     loading: "Loading data, please wait ...",
@@ -1080,6 +1080,7 @@ var en = {
     olt_rxpower: "OLT Rx ONT Power",
     anti_mask: "Anti-mask",
     verification_code: "Verification",
+    port_optical: "Port Optical Diagnose",
 };
 
 export default en;

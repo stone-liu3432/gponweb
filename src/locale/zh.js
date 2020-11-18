@@ -1053,6 +1053,7 @@ var zh = {
     olt_rxpower: "OLT接收ONT功率",
     anti_mask: "反掩码",
     verification_code: "验证码",
+    port_optical: "端口光诊断",
 };
 
 export default zh;
