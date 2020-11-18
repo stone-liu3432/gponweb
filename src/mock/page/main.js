@@ -52,7 +52,8 @@ Mock.mock("/board?info=menu", "get", {
                 children: [
                     { name: "port_info" },
                     { name: "perf_info" },
-                    { name: "port_cfg" },
+                    { name: "stormctrl" },
+                    { name: "mirror" },
                     { name: "port_optical" },
                     { name: "loop_detect" },
                     { name: "port_group" },

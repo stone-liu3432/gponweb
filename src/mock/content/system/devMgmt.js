@@ -4,8 +4,8 @@ const file_d = {
     code: 1,
     message: "success",
     data: {
-        filename: "config.txt"
-    }
+        filename: "config.txt",
+    },
 };
 
 Mock.mock("/system_restore", "post", "@BASESUCCESS");

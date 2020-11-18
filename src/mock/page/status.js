@@ -63,6 +63,8 @@ Mock.mock("/switch_port?form=portlist_info", "get", () => {
             duplex: 1,
             flow_ctrl: Random.range(0, 1),
             mtu: 1500,
+            erate: Random.range(64, 1024000),
+            irate: Random.range(64, 1024000),
             media: i <= 20 ? "copper" : "fiber",
             pvid: 1,
             link_aggregation: Random.range(0, 8),
