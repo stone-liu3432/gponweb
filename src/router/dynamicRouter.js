@@ -66,9 +66,13 @@ const data = {
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/perfInfo"
         ),
-    port_cfg: () =>
+    stormctrl: () =>
         import(
-            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portConfig"
+            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/stormctrl"
+        ),
+    mirror: () =>
+        import(
+            /* webpackChunkName: "switch" */ "@/views/advSetting/switch/mirror"
         ),
     port_optical: () =>
         import(
