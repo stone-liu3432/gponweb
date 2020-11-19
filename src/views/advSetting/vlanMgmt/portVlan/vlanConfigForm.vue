@@ -37,7 +37,10 @@
             >
                 <el-input v-model="formData.vlanlist"></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('vlan_mode')" v-if="type !== 'pvid'">
+            <el-form-item
+                :label="$lang('vlan_mode')"
+                v-if="type !== 'pvid' && data.port_type !== 2"
+            >
                 <el-select
                     v-model.number="formData.vlan_mode"
                     :disabled="data.port_type === 2"
@@ -61,11 +64,14 @@ export default {
     name: "vlanConfigForm",
     props: {
         type: {
-            type: String
+            type: String,
         },
         data: {
-            type: Object
-        }
+            type: Object,
+        },
+    },
+    computed: {
+        ...mapGetters(["$lang", "getPortName"]),
     },
     inject: ["validateVlan"],
     data() {
@@ -76,26 +82,23 @@ export default {
                 port_type: 1,
                 pvid: "",
                 vlanlist: "",
-                vlan_mode: 1
+                vlan_mode: 1,
             },
             rules: {
                 pvid: [
                     {
                         validator: this.validateVlan,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 vlanlist: [
                     {
                         validator: this.validateVlanList,
-                        trigger: ["change", "blur"]
-                    }
-                ]
-            }
+                        trigger: ["change", "blur"],
+                    },
+                ],
+            },
         };
-    },
-    computed: {
-        ...mapGetters(["$lang", "getPortName"])
     },
     methods: {
         validateVlanList(rule, val, cb) {
@@ -110,7 +113,7 @@ export default {
             cb();
         },
         init() {
-            Object.keys(this.formData).forEach(key => {
+            Object.keys(this.formData).forEach((key) => {
                 if (isDef(this.data[key])) {
                     this.formData[key] = this.data[key];
                 }
@@ -119,14 +122,14 @@ export default {
                 this.formData.vlan_mode = 1;
             }
             this.formData.vlanlist = "";
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["port-vlan-config-form"].clearValidate("vlanlist");
             });
         },
         validate(fn) {
             const cb = this.$refs["port-vlan-config-form"].validate;
             if (isFunction(fn)) {
-                cb(valid => {
+                cb((valid) => {
                     if (valid) {
                         fn.call(this, this.formData);
                     } else {
@@ -136,8 +139,8 @@ export default {
             } else {
                 return cb();
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
