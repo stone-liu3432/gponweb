@@ -1,6 +1,34 @@
 <template>
     <div class="port-vlan-config">
-        <el-table :data="baseData" border>
+        <el-table
+            :data="baseData"
+            border
+            row-key="port_id"
+            :expand-row-keys="expandRowKeys"
+            @expand-change="expandChange"
+        >
+            <el-table-column type="expand">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.port_type !== 1">
+                        <template v-if="scope.row.port_type === 3">
+                            <div class="table-expand-item">
+                                <span>{{ $lang("tagged") }}:</span>
+                                <span>{{ scope.row.tagged_vlan }}</span>
+                            </div>
+                            <div class="table-expand-item">
+                                <span>{{ $lang("untagged") }}:</span>
+                                <span>{{ scope.row.untagged_vlan }}</span>
+                            </div>
+                        </template>
+                        <template v-if="scope.row.port_type === 2">
+                            <div class="table-expand-item">
+                                <span>{{ $lang("vlan_list") }}:</span>
+                                <span>{{ scope.row.tagged_vlan }}</span>
+                            </div>
+                        </template>
+                    </template>
+                </template>
+            </el-table-column>
             <el-table-column :label="$lang('port_id')">
                 <template slot-scope="scope">{{
                     getPortName(scope.row.port_id)
@@ -15,15 +43,7 @@
                 :label="$lang('pvid')"
                 prop="pvid"
             ></el-table-column>
-            <el-table-column
-                :label="$lang('tagged')"
-                prop="tagged_vlan"
-            ></el-table-column>
-            <el-table-column
-                :label="$lang('untagged')"
-                prop="untagged_vlan"
-            ></el-table-column>
-            <el-table-column :label="$lang('config')">
+            <el-table-column :label="$lang('config')" width="100px">
                 <template slot-scope="scope">
                     <el-dropdown @command="dropdownClick">
                         <span class="el-dropdown-link">
@@ -42,20 +62,22 @@
                                 :command="{ action: 'pvid', row: scope.row }"
                                 >{{ $lang("pvid") }}
                             </el-dropdown-item>
-                            <el-dropdown-item
-                                :command="{
-                                    action: 'add_vlan',
-                                    row: scope.row,
-                                }"
-                                >{{ $lang("add_vlan_list") }}
-                            </el-dropdown-item>
-                            <el-dropdown-item
-                                :command="{
-                                    action: 'del_vlan',
-                                    row: scope.row,
-                                }"
-                                >{{ $lang("del_vlan_list") }}
-                            </el-dropdown-item>
+                            <template v-if="scope.row.port_type !== 1">
+                                <el-dropdown-item
+                                    :command="{
+                                        action: 'add_vlan',
+                                        row: scope.row,
+                                    }"
+                                    >{{ $lang("add_vlan_list") }}
+                                </el-dropdown-item>
+                                <el-dropdown-item
+                                    :command="{
+                                        action: 'del_vlan',
+                                        row: scope.row,
+                                    }"
+                                    >{{ $lang("del_vlan_list") }}
+                                </el-dropdown-item>
+                            </template>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </template>
@@ -75,8 +97,8 @@
                 <el-button
                     type="primary"
                     @click="submitForm('port-vlan-config-form')"
-                    >{{ $lang("apply") }}</el-button
-                >
+                    >{{ $lang("apply") }}
+                </el-button>
             </span>
         </el-dialog>
     </div>
@@ -85,7 +107,7 @@
 <script>
 import { mapGetters } from "vuex";
 import vlanConfigForm from "./vlanConfigForm";
-import { isFunction, isDef } from "@/utils/common";
+import { isFunction, isDef, removeItem } from "@/utils/common";
 import { PORT_TYPE_MAP } from "@/utils/commonData";
 import postData from "@/mixin/postData";
 export default {
@@ -119,6 +141,7 @@ export default {
             dialogVisible: false,
             dialogType: "",
             row: {},
+            expandRowKeys: [],
         };
     },
     methods: {
@@ -209,7 +232,7 @@ export default {
                     const { url, data: post_params } = result;
                     this.postData(url, post_params)
                         .then(() => {
-                            this.$emit("refresh");
+                            this.$emit("refresh-data");
                         })
                         .catch(() => {});
                 }
@@ -235,6 +258,20 @@ export default {
                 ACTIONS[action].call(this, row);
             }
         },
+        expandChange(row) {
+            if (this.expandRowKeys.includes(row.port_id)) {
+                removeItem(this.expandRowKeys, row.port_id);
+            } else {
+                this.expandRowKeys.push(row.port_id);
+            }
+        },
+    },
+    watch: {
+        baseData() {
+            if (this.baseData.length) {
+                this.expandRowKeys = this.expandRowKeys.slice();
+            }
+        },
     },
 };
 </script>
@@ -253,5 +290,22 @@ export default {
 }
 .el-dropdown-link {
     color: @titleColor;
+}
+.table-expand-item {
+    margin: 20px;
+    > span {
+        display: inline-block;
+        vertical-align: middle;
+        box-sizing: border-box;
+        &:first-child {
+            width: 80px;
+        }
+    }
+    > span + span {
+        padding-left: 12px;
+        width: calc(~"100% - 80px");
+        word-wrap: break-word;
+        word-break: break-all;
+    }
 }
 </style>
