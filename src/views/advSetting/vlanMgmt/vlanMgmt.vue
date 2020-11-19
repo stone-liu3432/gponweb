@@ -22,14 +22,6 @@
                     type="primary"
                     size="small"
                     style="margin-left: 30px"
-                    @click="openDialog('batch')"
-                >
-                    {{ $lang("batch_cfg_vlan") }}
-                </el-button>
-                <el-button
-                    type="primary"
-                    size="small"
-                    style="margin-left: 30px"
                     @click="refreshData"
                 >
                     {{ $lang("refresh") }}
@@ -56,6 +48,14 @@
                                 v-model="search"
                                 clearable
                             ></el-input>
+                            <el-button
+                                type="primary"
+                                size="small"
+                                style="margin-left: 30px"
+                                @click="openDialog('batch')"
+                            >
+                                {{ $lang("batch_cfg_vlan") }}
+                            </el-button>
                         </el-form-item>
                     </el-form>
                     <el-table :data="vlanTable" border>
@@ -165,7 +165,10 @@
                 </template>
             </el-tab-pane>
             <el-tab-pane :label="$lang('port_vlan')" name="port_vlan">
-                <vlan-config :base-data="portVlan"></vlan-config>
+                <vlan-config
+                    :base-data="portVlan"
+                    @refresh-data="getData"
+                ></vlan-config>
             </el-tab-pane>
         </el-tabs>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
