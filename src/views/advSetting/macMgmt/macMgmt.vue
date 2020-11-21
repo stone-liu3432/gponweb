@@ -13,26 +13,30 @@
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 @click="openDialog('add')"
                 >{{ $lang("add_mac") }}</el-button
             >
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 @click="openDialog('flush')"
                 >{{ $lang("flush_mac") }}</el-button
             >
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px;"
-                @click="refreshMaclist"
+                style="margin-left: 30px"
+                @click="refreshData"
                 >{{ $lang("refresh") }}</el-button
             >
         </h4>
-        <query-form ref="query-form" @refresh-data="refreshData"></query-form>
+        <query-form
+            ref="query-form"
+            :mac-list="macList"
+            @data-change="dataChange"
+        ></query-form>
         <el-table :data="macTable" border>
             <el-table-column
                 :label="$lang('macaddr')"
@@ -75,24 +79,20 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div style="margin: 12px 0; text-align: center;">
-            <el-button
-                type="primary"
-                size="small"
-                v-if="isLoadMore"
-                @click="loadMoreData"
-                >{{ $lang("loadmore") }}</el-button
-            >
-        </div>
-        <div style="position: relative;">
+        <div style="position: relative">
             <el-pagination
-                style="margin: 12px 0 30px 0; position: absolute; right: 0; top: 12px;"
+                style="
+                    margin: 12px 0 30px 0;
+                    position: absolute;
+                    right: 0;
+                    top: 12px;
+                "
                 hide-on-single-page
                 :current-page.sync="currentPage"
                 :page-sizes="[10, 20, 30, 50]"
                 :page-size.sync="pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="macList.length"
+                :total="filterableList.length"
             ></el-pagination>
         </div>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="600px">
@@ -117,7 +117,7 @@ import {
     isDef,
     removeItem,
     isFunction,
-    debounce
+    debounce,
 } from "@/utils/common";
 import { MAC_TYPE_MAP } from "@/utils/commonData";
 import postData from "@/mixin/postData";
@@ -130,14 +130,8 @@ export default {
         ...mapState(["portName"]),
         macTable() {
             const start = (this.currentPage - 1) * this.pageSize;
-            return this.macList.slice(start, start + this.pageSize);
+            return this.filterableList.slice(start, start + this.pageSize);
         },
-        isLoadMore() {
-            return (
-                Math.ceil(this.macList.length / this.pageSize) ===
-                    this.currentPage && this.loadmore
-            );
-        }
     },
     components: { queryForm, macForm },
     mixins: [postData],
@@ -146,75 +140,70 @@ export default {
             MAC_TYPE_MAP,
             age: 0,
             macList: [],
+            filterableList: [],
             currentPage: 1,
             pageSize: 10,
             dialogType: "",
             dialogVisible: false,
             TITLE_MAP: {
                 add: "add_mac",
-                flush: "flush_mac"
+                flush: "flush_mac",
             },
-            loadmore: false
         };
     },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
     created() {
         this.getAge();
+        this.getMacList();
     },
     methods: {
         getAge() {
             this.$http
                 .get("/switch_mac?form=age")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.age = Number(res.data.data.age);
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
-        getMacList(param) {
-            if (!this.loadmore) {
-                this.macList = [];
-            }
+        getMacList() {
+            this.macList = [];
             this.$http
-                .post("/switch_mac?form=table", {
-                    method: "get",
-                    param
-                })
-                .then(res => {
+                .get("/switch_mac?form=table")
+                .then((res) => {
                     if (res.data.code === 1) {
-                        if (isArray(res.data.data)) {
-                            const data = res.data.data;
-                            if (this.loadmore) {
-                                this.macList = this.macList.concat(data);
-                            } else {
-                                this.macList = data;
-                            }
-                            if (data.length % 200 === 0) {
-                                this.loadmore = true;
-                            } else {
-                                this.loadmore = false;
-                            }
-                        } else {
-                            this.loadmore = false;
-                        }
+                        this.$http
+                            .get("/sw_mac_table")
+                            .then((_res) => {
+                                if (_res.data.code === 1) {
+                                    if (isArray(_res.data.data)) {
+                                        this.macList = _res.data.data;
+                                        this.$nextTick(() => {
+                                            const el = this.$refs["query-form"];
+                                            el && el.refresh();
+                                        });
+                                    }
+                                }
+                            })
+                            .catch((_err) => {});
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         setAge() {
             this.$prompt(this.$lang("age"), this.$lang("tips"), {
                 confirmButtonText: this.$lang("apply"),
                 cancelButtonText: this.$lang("cancel"),
                 inputValue: this.age,
-                inputValidator: value => {
+                inputValidator: (value) => {
                     const val = Number(value);
                     if (
                         val !== 0 &&
@@ -223,7 +212,7 @@ export default {
                         return this.validateMsg("inputRange", 10, 1000000);
                     }
                     return true;
-                }
+                },
             })
                 .then(({ value }) => {
                     if (Number(value) === this.age) {
@@ -231,7 +220,7 @@ export default {
                     }
                     this.$http
                         .get(`/switch_mac?form=age&value=${value}`)
-                        .then(res => {
+                        .then((res) => {
                             if (res.data.code === 1) {
                                 this.$message.success(this.$lang("setting_ok"));
                                 this.getAge();
@@ -241,16 +230,16 @@ export default {
                                 );
                             }
                         })
-                        .catch(err => {});
+                        .catch((err) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
-        refreshData(form) {
-            this.getMacList(form);
+        refreshData() {
+            debounce(this.getMacList, 1000, this);
         },
         deleteMac(row) {
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
-                .then(_ => {
+                .then((_) => {
                     this.postData("/switch_mac?form=table", {
                         method: "delete",
                         param: {
@@ -258,20 +247,20 @@ export default {
                             macaddr: row.macaddr,
                             vlan_id: row.vlan_id,
                             port_id: row.port_id,
-                            svp_id: row.svp_id
-                        }
+                            svp_id: row.svp_id,
+                        },
                     })
-                        .then(_ => {
+                        .then((_) => {
                             removeItem(this.macList, row);
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         openDialog(type) {
             this.dialogType = type;
             this.dialogVisible = true;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["mac-form"].init(type);
             });
         },
@@ -285,22 +274,22 @@ export default {
                                     ? {
                                           vlan_id: form.vlan_id,
                                           port_id: form.port_id,
-                                          svp_id: 0xffff
+                                          svp_id: 0xffff,
                                       }
                                     : {
-                                          svp_id: Number(form.svp_id)
+                                          svp_id: Number(form.svp_id),
                                       };
                             const param = {
                                 mac_type: form.mac_type,
                                 macaddr: form.macaddr,
-                                ...params
+                                ...params,
                             };
                             return {
                                 url: "/switch_mac?form=table",
                                 data: {
                                     method: "add",
-                                    param
-                                }
+                                    param,
+                                },
                             };
                         },
                         flush(form) {
@@ -312,11 +301,11 @@ export default {
                                         flags: form.flags,
                                         mac_type: form.mac_type,
                                         vlan_id: form.vlan_id,
-                                        port_list: form.port_list.join(",")
-                                    }
-                                }
+                                        port_list: form.port_list.join(","),
+                                    },
+                                },
                             };
-                        }
+                        },
                     };
                     if (isFunction(ACTIONS[type])) {
                         const res = ACTIONS[type].call(this, formData);
@@ -325,26 +314,20 @@ export default {
                             url &&
                                 data &&
                                 this.postData(url, data)
-                                    .then(_ => {
-                                        this.$refs["query-form"].getData();
+                                    .then(() => {
+                                        this.getMacList();
                                     })
-                                    .catch(_ => {});
+                                    .catch(() => {});
                             this.dialogVisible = false;
                         }
                     }
                 }
             });
         },
-        loadMoreData() {
-            this.$refs["query-form"].loadMore();
+        dataChange(list) {
+            this.filterableList = list;
         },
-        refresh() {
-            this.$refs["query-form"].getData();
-        },
-        refreshMaclist() {
-            debounce(this.refresh, 1000, this);
-        }
-    }
+    },
 };
 </script>
 
