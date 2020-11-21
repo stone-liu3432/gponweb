@@ -37,8 +37,8 @@
                 prop="transmit_bias"
             ></el-table-column>
             <el-table-column
-                :label="$lang('receive_power')"
-                prop="receive_power"
+                :label="$lang('transmit_power')"
+                prop="transmit_power"
             ></el-table-column>
             <el-table-column :label="$lang('config')">
                 <template slot-scope="scope">
