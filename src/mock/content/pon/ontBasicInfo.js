@@ -131,3 +131,32 @@ Mock.mock(
         };
     }
 );
+
+Mock.mock(
+    /\/gponont_mgmt\?form=ipconfig&port_id=\d+&ont_id=\d+&index=\d+/,
+    "get",
+    ({ url }) => {
+        const port_id = url.match(/(?<=port_id=)\d+/) >>> 0,
+            ont_id = url.match(/(?<=ont_id=)\d+/) >>> 0;
+        const data = Array.from({ length: Random.range(0, 2) }).map(
+            (item, index) => ({
+                identifier: (port_id << 8) | ont_id,
+                index: index,
+                ipoption: Random.range(1, 2),
+                vlan_id: Random.vlan(),
+                ipaddr: Random.ip(),
+                ipmask: Random.ip(),
+                gateway: Random.ip(),
+                primary: Random.ip(),
+                secondary: Random.ip(),
+            })
+        );
+        return {
+            code: 1,
+            message: "success",
+            data,
+        };
+    }
+);
+
+Mock.post("/gponont_mgmt?form=ipconfig");
