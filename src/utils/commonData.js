@@ -198,3 +198,6 @@ export const TRX_TYPE_MAP = [
 ];
 
 export const PORT_MIRROR_TYPE_MAP = [" - ", "ingress", "egress", "all"];
+
+// 风扇模式
+export const FAN_MODE_MAP = ["fullspeed", "manual", "auto"];
