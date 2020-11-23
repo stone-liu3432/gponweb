@@ -12,19 +12,19 @@
                 key="profname"
             >
                 <el-input
-                    style="width: 200px;"
+                    style="width: 200px"
                     v-model="form.profname"
                 ></el-input>
             </el-form-item>
             <el-form-item :label="$lang('profid')" prop="profid" key="profid">
                 <el-input
-                    style="width: 200px;"
+                    style="width: 200px"
                     v-model.number="form.profid"
                     :disabled="disabledItem('profid')"
                 ></el-input>
                 <el-checkbox
                     v-model="autoAssignID"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     :disabled="type === 'set'"
                     >{{ $lang("auto_assign") }}</el-checkbox
                 >
@@ -35,13 +35,13 @@
                 key="ont_ethport"
             >
                 <el-input
-                    style="width: 200px;"
+                    style="width: 200px"
                     v-model.number="form.ont_ethport"
                     :disabled="disabledItem('ont_ethport')"
                 ></el-input>
                 <el-checkbox
                     v-model="autoAssignEth"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     >{{ $lang("auto_assign") }}</el-checkbox
                 >
             </el-form-item>
@@ -51,13 +51,13 @@
                 key="ont_potsport"
             >
                 <el-input
-                    style="width: 200px;"
+                    style="width: 200px"
                     v-model.number="form.ont_potsport"
                     :disabled="disabledItem('ont_potsport')"
                 ></el-input>
                 <el-checkbox
                     v-model="autoAssignPots"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     >{{ $lang("auto_assign") }}</el-checkbox
                 >
             </el-form-item>
@@ -67,7 +67,7 @@
                 key="ont_catvport"
             >
                 <el-input
-                    style="width: 200px;"
+                    style="width: 200px"
                     v-model.number="form.ont_catvport"
                 ></el-input>
             </el-form-item>
@@ -194,7 +194,7 @@
                     <el-button
                         type="primary"
                         size="small"
-                        style="margin-left: 30px;"
+                        style="margin-left: 30px"
                         @click="openDialog"
                         >{{ $lang("add") }}</el-button
                     >
@@ -235,15 +235,15 @@ export default {
         ...mapGetters(["$lang", "validateMsg"]),
         btnText() {
             return this.$lang(this.showFlag ? "hidden" : "show", "is_exists");
-        }
+        },
     },
     props: {
         type: {
-            type: String
+            type: String,
         },
         data: {
-            type: Object
-        }
+            type: Object,
+        },
     },
     data() {
         return {
@@ -258,42 +258,45 @@ export default {
                 ont_potsport: "", // 0-2, 0xff
                 ont_catvport: "", // 0-1
                 native_vlan_flag: 0,
-                ont_veipport: 0
+                ont_veipport: 0,
             },
             rules: {
                 profname: [
                     {
                         validator: this.validateProfname,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 profid: [
                     {
                         validator: this.validateProfid,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 ont_ethport: [
-                    { validator: this.validateEth, trigger: ["change", "blur"] }
+                    {
+                        validator: this.validateEth,
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 ont_potsport: [
                     {
                         validator: this.validatePots,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 ont_catvport: [
                     {
                         validator: this.validateCatv,
-                        trigger: ["change", "blur"]
-                    }
-                ]
+                        trigger: ["change", "blur"],
+                    },
+                ],
             },
             dialogVisible: false,
             autoAssignID: false,
             autoAssignEth: false,
             autoAssignPots: false,
-            showFlag: ""
+            showFlag: "",
         };
     },
     methods: {
@@ -304,7 +307,7 @@ export default {
             this.$refs["srv-form"].resetFields();
             this.portvlan = [];
             if (this.type === "set") {
-                Object.keys(this.form).forEach(key => {
+                Object.keys(this.form).forEach((key) => {
                     this.form[key] = this.data[key];
                 });
                 if (this.form.ont_ethport === 0xff) {
@@ -325,7 +328,7 @@ export default {
                 return this.$message.info("Portvlan have reached the limit");
             }
             this.dialogVisible = true;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["portvlan-form"].init();
             });
         },
@@ -342,14 +345,14 @@ export default {
                 },
                 ont_potsport() {
                     return this.autoAssignPots;
-                }
+                },
             };
             if (isFunction(FLAGS[item])) {
                 return FLAGS[item].call(this);
             }
         },
         submitForm(formName) {
-            this.$refs[formName].validate(formData => {
+            this.$refs[formName].validate((formData) => {
                 if (formData) {
                     this.portvlan.push({
                         uniport: formData.uniport,
@@ -358,14 +361,14 @@ export default {
                         svlanid: formData.svlanid,
                         svlanpri: formData.svlanpri,
                         cvlanid: formData.cvlanid,
-                        cvlanpri: formData.cvlanpri
+                        cvlanpri: formData.cvlanpri,
                     });
                     this.dialogVisible = false;
                 }
             });
         },
         validate(fn) {
-            this.$refs["srv-form"].validate(valid => {
+            this.$refs["srv-form"].validate((valid) => {
                 if (isFunction(fn)) {
                     if (valid) {
                         fn.call(this, {
@@ -382,7 +385,7 @@ export default {
                             ont_catvport: Number(this.form.ont_catvport),
                             native_vlan_flag: this.form.native_vlan_flag,
                             portvlan: this.portvlan,
-                            ont_veipport: this.form.ont_veipport
+                            ont_veipport: this.form.ont_veipport,
                         });
                     } else {
                         fn.call(this, valid);
@@ -400,8 +403,8 @@ export default {
             if (this.autoAssignID) {
                 return cb();
             }
-            if (!regRange(val, 1, 2047)) {
-                return cb(new Error(this.validateMsg("inputRange", 1, 2047)));
+            if (!regRange(val, 0, 2047)) {
+                return cb(new Error(this.validateMsg("inputRange", 0, 2047)));
             }
             cb();
         },
@@ -431,7 +434,7 @@ export default {
         },
         deleteItem(row) {
             removeItem(this.portvlan, row);
-        }
+        },
     },
     watch: {
         autoAssignID() {
@@ -454,8 +457,8 @@ export default {
             } else {
                 this.form.ont_potsport = this.data.ont_potsport || "";
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
