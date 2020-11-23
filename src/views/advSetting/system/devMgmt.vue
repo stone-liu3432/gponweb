@@ -222,35 +222,136 @@
             </div>
         </div>
         <div class="dev-mgmt-item">
-            <div class="dev-mgmt-item-title">{{ $lang("") }}</div>
-            <div class="dev-mgmt-item-content">
-                <div class="dev-mgmt-item-tips">{{ $lang("") }}</div>
+            <div class="dev-mgmt-item-title" style="margin-bottom: 12px">
+                {{ $lang("fan_info") }}
             </div>
+            <el-table :data="fanctrls" border style="margin-left: 10px">
+                <el-table-column
+                    :label="$lang('fanid')"
+                    prop="fanid"
+                ></el-table-column>
+                <el-table-column :label="$lang('mode')" prop="mode">
+                    <template slot-scope="scope">
+                        {{ $lang(FAN_MODE_MAP[scope.row.mode]) }}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    :label="$lang('fan_speed')"
+                    prop="speed"
+                ></el-table-column>
+                <el-table-column
+                    :label="$lang('temperature')"
+                    prop="temperature"
+                ></el-table-column>
+                <el-table-column :label="$lang('config')" width="250px">
+                    <template slot-scope="scope">
+                        <el-button
+                            type="text"
+                            @click="openDialog('mode', scope.row)"
+                        >
+                            {{ $lang("config", "mode") }}
+                        </el-button>
+                        <el-button
+                            type="text"
+                            @click="openDialog('speed', scope.row)"
+                        >
+                            {{ $lang("config", "fan_speed") }}
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
         </div>
+        <div class="dev-mgmt-item">
+            <div class="dev-mgmt-item-title" style="margin-bottom: 12px">
+                {{ $lang("fan_mgmt") }}
+            </div>
+            <el-table :data="fanaps" border style="margin-left: 10px">
+                <el-table-column
+                    :label="$lang('fanid')"
+                    prop="fanid"
+                ></el-table-column>
+                <el-table-column
+                    :label="$lang('temp1')"
+                    prop="temp1"
+                ></el-table-column>
+                <el-table-column
+                    :label="$lang('speed1')"
+                    prop="speed1"
+                ></el-table-column>
+                <el-table-column
+                    :label="$lang('temp2')"
+                    prop="temp2"
+                ></el-table-column>
+                <el-table-column
+                    :label="$lang('speed2')"
+                    prop="speed2"
+                ></el-table-column>
+                <el-table-column :label="$lang('config')">
+                    <template slot-scope="scope">
+                        <el-button
+                            type="text"
+                            @click="openDialog('ap', scope.row)"
+                        >
+                            {{ $lang("config") }}
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <el-dialog
+            :visible.sync="dialogVisible"
+            append-to-body
+            destroy-on-close
+            width="650px"
+        >
+            <template slot="title">{{ $lang("config") }}</template>
+            <dev-mgmt-form ref="dev-mgmt-form"></dev-mgmt-form>
+            <template slot="footer">
+                <el-button @click="dialogVisible = false">
+                    {{ $lang("cancel") }}
+                </el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('dev-mgmt-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
+            </template>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { isPlainObject, isDef } from "@/utils/common";
+import { isPlainObject, isDef, isArray, isFunction } from "@/utils/common";
+import { FAN_MODE_MAP } from "@/utils/commonData";
 import uploadFile from "@/mixin/uploadFile";
 import rebootOlt from "@/mixin/rebootOlt";
 import saveConfig from "@/mixin/saveConfig";
+import devMgmtForm from "./devMgmt/devMgmtForm";
+import postData from "@/mixin/postData";
 export default {
     name: "devMgmt",
     computed: {
         ...mapGetters(["$lang"]),
     },
-    mixins: [uploadFile, rebootOlt, saveConfig],
+    components: { devMgmtForm },
+    mixins: [uploadFile, rebootOlt, saveConfig, postData],
     data() {
         return {
             configFile: null,
             fileList: [],
+            FAN_MODE_MAP,
+            fanctrls: [],
+            fanaps: [],
+            dialogVisible: false,
         };
     },
+    created() {
+        this.getFanInfo();
+    },
     inject: ["updateAdvMainScrollbar"],
-    mounted() {
-        this.$nextTick((_) => {
+    updated() {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -365,6 +466,90 @@ export default {
                         .catch((err) => {});
                 })
                 .catch((_) => {});
+        },
+        getFanInfo() {
+            this.$http
+                .get("/board?info=faninfo")
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (isDef(res.data.data)) {
+                            if (isArray(res.data.data.fanctrl)) {
+                                this.fanctrls = res.data.data.fanctrl;
+                            }
+                            if (isArray(res.data.data.fanap)) {
+                                this.fanaps = res.data.data.fanap;
+                            }
+                        }
+                    }
+                })
+                .catch((err) => {});
+        },
+        openDialog(type, row) {
+            this.dialogVisible = true;
+            this.$nextTick(() => {
+                this.$refs["dev-mgmt-form"].init(type, row);
+            });
+        },
+        submitForm(formName) {
+            this.$refs[formName].validate((type, form) => {
+                if (form) {
+                    const ACTIONS = {
+                        ap(form) {
+                            return {
+                                url: "/board?info=fanpoint",
+                                data: {
+                                    method: "set",
+                                    param: {
+                                        fanid: form.fanid,
+                                        speed1: form.speed1,
+                                        speed2: form.speed2,
+                                        temp1: form.temp1,
+                                        temp2: form.temp2,
+                                    },
+                                },
+                            };
+                        },
+                        mode(form) {
+                            return {
+                                url: "/board?info=fanmode",
+                                data: {
+                                    method: "set",
+                                    param: {
+                                        mode: form.mode,
+                                        fanid: form.fanid,
+                                    },
+                                },
+                            };
+                        },
+                        speed(form) {
+                            return {
+                                url: "/board?info=fanspeed",
+                                data: {
+                                    method: "set",
+                                    param: {
+                                        speed: form.speed,
+                                        fanid: form.fanid,
+                                    },
+                                },
+                            };
+                        },
+                    };
+                    if (isFunction(ACTIONS[type])) {
+                        const res = ACTIONS[type].call(this, form);
+                        if (res) {
+                            const { url, data } = res;
+                            this.postData(url, data)
+                                .then(() => {
+                                    this.getFanInfo();
+                                })
+                                .catch(() => {})
+                                .finally(() => {
+                                    this.dialogVisible = false;
+                                });
+                        }
+                    }
+                }
+            });
         },
     },
 };
