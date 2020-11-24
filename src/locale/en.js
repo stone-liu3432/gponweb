@@ -1081,6 +1081,18 @@ var en = {
     anti_mask: "Anti-mask",
     verification_code: "Verification",
     port_optical: "Port Optical Diagnose",
+    ont_ipconfig: "ONT IP Config",
+    ipoption: "IP Type",
+    ipconfig_tips:
+        "Only two configurations are allowed, please modify the existing items",
+    fan_mgmt: "Fan management",
+    temperature: "Temperature",
+    fullspeed: "Full speed",
+    fan_info: "Fan information",
+    temp1: "Temperature point 1",
+    temp2: "Temperature point 2",
+    speed1: "Fan speed when temperature exceeds 1",
+    speed2: "Fan speed when temperature exceeds 2",
 };
 
 export default en;

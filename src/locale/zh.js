@@ -1054,6 +1054,17 @@ var zh = {
     anti_mask: "反掩码",
     verification_code: "验证码",
     port_optical: "端口光诊断",
+    ont_ipconfig: "ONT IP配置 ",
+    ipoption: "IP类型",
+    ipconfig_tips: "只允许配置两条，请在已有项上进行修改",
+    fan_mgmt: "风扇管理",
+    temperature: "当前温度",
+    fullspeed: "全速",
+    fan_info: "风扇信息",
+    temp1: "温度点1",
+    temp2: "温度点2",
+    speed1: "超过温度点1时风扇转速",
+    speed2: "超过温度点2时风扇转速",
 };
 
 export default zh;
