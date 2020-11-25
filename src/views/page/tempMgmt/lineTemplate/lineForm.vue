@@ -16,13 +16,13 @@
             <el-form-item :label="$lang('profid')" prop="profid" key="profid">
                 <el-input
                     v-model.number="form.profid"
-                    style="width: 200px;"
+                    style="width: 200px"
                     :disabled="autoAssignProfid || type === 'set'"
                 ></el-input>
                 <el-checkbox
                     v-model="autoAssignProfid"
                     :disabled="type === 'set'"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     >{{ $lang("auto_assign") }}</el-checkbox
                 >
             </el-form-item>
@@ -110,7 +110,7 @@
                         >
                     </el-popover>
                     <el-button
-                        style="margin-left: 20px;"
+                        style="margin-left: 20px"
                         type="primary"
                         @click="openAddDialog('tcont')"
                         >{{ $lang("add") }}</el-button
@@ -276,7 +276,7 @@
                         >
                     </el-popover>
                     <el-button
-                        style="margin-left: 20px;"
+                        style="margin-left: 20px"
                         type="primary"
                         @click="openAddDialog('gem')"
                         >{{ $lang("add") }}</el-button
@@ -340,7 +340,7 @@ export default {
                 },
                 mapping() {
                     return this.gems;
-                }
+                },
             };
             if (isFunction(TYPES[this.dialogType])) {
                 return TYPES[this.dialogType].call(this);
@@ -351,28 +351,28 @@ export default {
             // gems为空，或者所有gem下的mapping的vlan模式全都为untag时，无法添加mapping
             return (
                 !this.gems.length ||
-                this.gems.every(item => {
+                this.gems.every((item) => {
                     if (item.mapping && item.mapping.length) {
                         return item.mapping[0].vlan_id === 0xffff;
                     }
                     return false;
                 })
             );
-        }
+        },
     },
     props: {
         lineData: {
-            type: Object
+            type: Object,
         },
         dbaData: {
-            type: Array
+            type: Array,
         },
         lineTable: {
-            type: Array
+            type: Array,
         },
         type: {
-            type: String
-        }
+            type: String,
+        },
     },
     data() {
         return {
@@ -381,7 +381,7 @@ export default {
                 profname: "",
                 profid: "",
                 type: 2,
-                mappingmode: 1
+                mappingmode: 1,
             },
             tconts: [],
             gems: [],
@@ -394,18 +394,18 @@ export default {
                 profname: [
                     {
                         validator: this.validateProfname,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 profid: [
                     {
                         validator: this.validateProfid,
-                        trigger: ["change", "blur"]
-                    }
-                ]
+                        trigger: ["change", "blur"],
+                    },
+                ],
             },
             // 自动分配ID时，profid值为 0xfffe
-            autoAssignProfid: false
+            autoAssignProfid: false,
         };
     },
     methods: {
@@ -415,7 +415,7 @@ export default {
             this.tconts = [];
             this.gems = [];
             if (this.type === "set") {
-                Object.keys(this.form).forEach(key => {
+                Object.keys(this.form).forEach((key) => {
                     this.form[key] = this.lineData[key];
                 });
                 // magic code: deep clone
@@ -445,19 +445,19 @@ export default {
                 }
             }
             this.dialogVisible = true;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["add-or-set-form"].init(data);
             });
         },
         submitForm(formName) {
-            this.$refs[formName].validate(formData => {
+            this.$refs[formName].validate((formData) => {
                 if (formData) {
                     const ACTIONS = {
                         tcont(data) {
                             this.tconts.push({
                                 tcid: data.tcid,
                                 dba_profid: data.dba_profid,
-                                dba_profname: data.dba_profname
+                                dba_profname: data.dba_profname,
                             });
                         },
                         gem(data) {
@@ -469,9 +469,9 @@ export default {
                                         mid: data.mid,
                                         mode: data.mode,
                                         vlan_id: data.vlan_id,
-                                        vlan_pri: data.vlan_pri
-                                    }
-                                ]
+                                        vlan_pri: data.vlan_pri,
+                                    },
+                                ],
                             });
                         },
                         mapping(data) {
@@ -479,9 +479,9 @@ export default {
                                 mid: data.mid,
                                 mode: data.mode,
                                 vlan_id: data.vlan_id,
-                                vlan_pri: data.vlan_pri
+                                vlan_pri: data.vlan_pri,
                             });
-                        }
+                        },
                     };
                     if (isFunction(ACTIONS[this.dialogType])) {
                         ACTIONS[this.dialogType].call(this, formData);
@@ -491,13 +491,13 @@ export default {
             });
         },
         validate(fn) {
-            this.$refs["add-line-form"].validate(valid => {
+            this.$refs["add-line-form"].validate((valid) => {
                 if (valid) {
                     if (isFunction(fn)) {
                         if (
                             this.type !== "set" &&
                             this.lineTable.some(
-                                item => item.profid === this.form.profid
+                                (item) => item.profid === this.form.profid
                             )
                         ) {
                             return this.$message.error(
@@ -518,7 +518,7 @@ export default {
                                     gem: this.gems || [],
                                     profid: this.autoAssignProfid
                                         ? 0xfffe
-                                        : this.form.profid
+                                        : this.form.profid,
                                 })
                             );
                             this.gemPopVisible = false;
@@ -534,7 +534,7 @@ export default {
             if (this.type === "set") {
                 return cb();
             }
-            if (this.lineTable.some(item => item.profname === val)) {
+            if (this.lineTable.some((item) => item.profname === val)) {
                 return cb(
                     new Error(
                         `${this.$lang("duplicate_param")}: ${this.$lang(
@@ -558,10 +558,10 @@ export default {
             if (val === 0xfffe) {
                 return cb();
             }
-            if (!regRange(val, 0, 2048)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 2048)));
+            if (!regRange(val, 0, 2047)) {
+                return cb(new Error(this.validateMsg("inputRange", 0, 2047)));
             }
-            if (this.lineTable.some(item => item.profid === val)) {
+            if (this.lineTable.some((item) => item.profid === val)) {
                 return cb(
                     new Error(
                         `${this.$lang("duplicate_param")}: ${this.$lang(
@@ -592,7 +592,7 @@ export default {
                 return removeItem(node.mapping, sub);
             }
             removeItem(this[type], node);
-        }
+        },
     },
     watch: {
         autoAssignProfid() {
@@ -603,8 +603,8 @@ export default {
                 this.type === "set" &&
                     (this.form.profid = this.lineData.profid);
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
