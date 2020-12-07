@@ -144,7 +144,9 @@ export default {
                         method: "delete",
                         param: {
                             port_id: this.port_id,
-                            ont_sn: this.selection.map((item) => item.ont_sn),
+                            ont_sn: this.selection.map((item) =>
+                                item.ont_sn.replace(/\(\w+\)/gi, "")
+                            ),
                         },
                     })
                         .then(() => {
@@ -184,7 +186,7 @@ export default {
                         method: "add",
                         param: {
                             port_id: this.port_id,
-                            ont_sn: form.ont_sn,
+                            ont_sn: form.ont_sn.replace(/\(\w+\)/gi, ""),
                             reason: form.reason,
                         },
                     })
