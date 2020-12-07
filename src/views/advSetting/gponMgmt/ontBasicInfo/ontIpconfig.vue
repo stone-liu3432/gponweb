@@ -12,11 +12,7 @@
             ></el-table-column>
             <el-table-column :label="$lang('ipoption')">
                 <template slot-scope="scope">
-                    {{
-                        scope.row.ipoption === 1
-                            ? $lang("static") + " IP"
-                            : "DHCP"
-                    }}
+                    {{ IP_OPTION_MAP[scope.row.ipoption] }}
                 </template>
             </el-table-column>
             <el-table-column
@@ -105,6 +101,7 @@ export default {
     },
     data() {
         return {
+            IP_OPTION_MAP: ["None", "Static IP", "DHCP"],
             dialogVisible: false,
             row: {},
             dialogType: "",
