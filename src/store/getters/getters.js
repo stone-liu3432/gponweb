@@ -8,7 +8,7 @@ const langMap = { zh, en };
 const msgMap = { en: msg_en, zh: msg_zh };
 
 const getters = {
-    $lang: state => (...keys) => {
+    $lang: (state) => (...keys) => {
         // 防止用户手动修改sessionStroage中的内容并刷新页面
         const maps = langMap[state.lang] || langMap["en"];
         if (keys.length === 0) {
@@ -24,12 +24,12 @@ const getters = {
             }, "");
         }
     },
-    getPortName: state => port_id =>
+    getPortName: (state) => (port_id) =>
         state.portName[port_id] ? state.portName[port_id].name : port_id,
-    validateMsg: state => (msg, ...args) =>
+    validateMsg: (state) => (msg, ...args) =>
         isFunction(msgMap[state.lang][msg])
             ? msgMap[state.lang][msg].apply(null, args)
-            : ""
+            : "",
 };
 
 export default getters;
