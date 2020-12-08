@@ -1,22 +1,22 @@
 <template>
-    <div style="margin: 20px;">
+    <div style="margin: 20px">
         <el-tabs v-model="activeName" type="card">
             <el-tab-pane label="PON" name="pon">
                 <div class="ont-status-statistics">
                     <span>{{ $lang("registered_onu") }}:</span>
                     <span>{{ online + offline }}</span>
-                    <span style="margin-left: 30px;"
+                    <span style="margin-left: 30px"
                         >{{ $lang("online") }}:</span
                     >
                     <span>{{ online }}</span>
-                    <span style="margin-left: 30px;color: #F56C6C;"
+                    <span style="margin-left: 30px; color: #f56c6c"
                         >{{ $lang("offline") }}:</span
                     >
-                    <span style="color: #F56C6C;">{{ offline }}</span>
+                    <span style="color: #f56c6c">{{ offline }}</span>
                 </div>
                 <el-row :gutter="40">
                     <template v-for="item in pon">
-                        <el-col :span="6" style="margin: 20px 0;">
+                        <el-col :span="6" style="margin: 20px 0">
                             <port-card
                                 type="pon"
                                 :data="item"
@@ -30,7 +30,7 @@
                 <el-row :gutter="30">
                     <template v-for="item in port">
                         <template v-if="item.port_id > system.ponports">
-                            <el-col :span="6" style="margin: 20px 0;">
+                            <el-col :span="6" style="margin: 20px 0">
                                 <template v-if="item.media === 'fiber'">
                                     <port-card
                                         type="fiber"
@@ -62,7 +62,7 @@ export default {
     components: { portCard },
     data() {
         return {
-            activeName: "pon"
+            activeName: "pon",
         };
     },
     inject: ["updateNavScrollbar"],
@@ -74,10 +74,10 @@ export default {
         },
         offline() {
             return this.pon.reduce((pre, item) => pre + item.offline, 0);
-        }
+        },
     },
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick(() => {
             this.updateNavScrollbar();
         });
     },
@@ -87,10 +87,10 @@ export default {
     mounted() {
         // 定时刷新数据
         const interval = setInterval(this.refreshData, 5000);
-        this.$once("hook:beforeDestroy", _ => {
+        this.$once("hook:beforeDestroy", () => {
             clearInterval(interval);
         });
-        this.$nextTick(_ => {
+        this.$nextTick(() => {
             this.updateNavScrollbar();
         });
     },
@@ -101,25 +101,25 @@ export default {
             if (row.port_id <= ponports) {
                 this.$router.push({
                     path: "/onu_allow",
-                    query: { port_id: row.port_id }
+                    query: { port_id: row.port_id },
                 });
             } else {
                 this.$router.push({
-                    path: "/port_cfg",
-                    query: { port_id: row.port_id }
+                    path: "/port_info",
+                    query: { port_id: row.port_id },
                 });
             }
         },
         refreshData() {
             this.activeName === "pon" && this.getPon();
             this.activeName === "uplink" && this.getPort();
-        }
+        },
     },
     watch: {
         activeName() {
             this.refreshData();
-        }
-    }
+        },
+    },
 };
 </script>
 
