@@ -147,7 +147,7 @@
         </template>
         <template v-if="type === 'mirror'">
             <el-form-item :label="$lang('src_port')" prop="src_port">
-                <span>{{ getPortName(data.src_port) }}</span>
+                <span>{{ getPortName(data.port_id) }}</span>
             </el-form-item>
             <el-form-item
                 :label="$lang('dst_port')"
@@ -374,6 +374,9 @@ export default {
                     this.formData[item] = this.data[item];
                 }
             });
+            if (this.type === "mirror") {
+                this.formData.src_port = this.data.port_id;
+            }
             if (isDef(this.data.speed)) {
                 if (
                     toLower.call(this.data.speed) === "0M" ||

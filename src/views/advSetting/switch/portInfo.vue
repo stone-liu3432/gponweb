@@ -12,6 +12,9 @@
             border
             :header-cell-style="{ 'text-align': 'center' }"
             :cell-style="{ 'text-align': 'center' }"
+            row-key="port_id"
+            :expand-row-keys="expandRowKeys"
+            :current-row-key="currentRowKey"
         >
             <el-table-column type="expand">
                 <template slot-scope="scope">
@@ -158,13 +161,15 @@ export default {
         return {
             dialogVisible: false,
             row: {},
+            expandRowKeys: [],
+            currentRowKey: 0,
         };
     },
     created() {
         this.getPort();
     },
-    inject: ["updateAdvMainScrollbar"],
-    mounted() {
+    inject: ["updateAdvMainScrollbar", "scrollRef"],
+    updated() {
         this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
@@ -242,6 +247,30 @@ export default {
         },
         refreshData() {
             debounce(this.getPort, 1000, this);
+        },
+    },
+    watch: {
+        port() {
+            if (this.port.length) {
+                if (this.$route.query.port_id) {
+                    const port_id = this.$route.query.port_id;
+                    // 防止在当前页面刷新时，滚动条滚动至跳转进来的位置
+                    // 此功能只在从首页跳转过来时生效一次
+                    delete this.$route.query.port_id;
+                    this.expandRowKeys.push(port_id);
+                    this.currentRowKey = port_id;
+                    this.$nextTick(() => {
+                        const tr = document.getElementsByClassName(
+                            "expanded"
+                        )[0];
+                        if (tr) {
+                            const { top } = tr.getBoundingClientRect();
+                            // 减去顶部导航栏的高度
+                            this.scrollRef(top - 71);
+                        }
+                    });
+                }
+            }
         },
     },
 };
