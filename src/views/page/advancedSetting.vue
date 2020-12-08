@@ -44,6 +44,7 @@ export default {
             updateAdvMainScrollbar: this.updateAdvMainScrollbar,
             // 有需要添加 backtop组件的 target
             backTopTarget: ".backtop-target",
+            scrollRef: this.scrollRefToTarget,
         };
     },
     mounted() {
@@ -75,6 +76,9 @@ export default {
         },
         updateAdvMainScrollbar() {
             this.$refs["adv-main-scrollbar"].update();
+        },
+        scrollRefToTarget(top) {
+            this.$refs["adv-main-scrollbar"].wrap.scrollTop = top;
         },
     },
 };
