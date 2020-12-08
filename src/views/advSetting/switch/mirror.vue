@@ -9,19 +9,19 @@
             </template>
         </page-header>
         <el-table :data="mirrors" border>
-            <el-table-column :label="$lang('src_port')" prop="src_port">
+            <el-table-column :label="$lang('src_port')" prop="port_id">
                 <template slot-scope="scope">{{
-                    getPortName(scope.row.src_port)
+                    getPortName(scope.row.port_id)
                 }}</template>
             </el-table-column>
             <el-table-column :label="$lang('dst_port')" prop="dst_port">
                 <template slot-scope="scope">{{
-                    getPortName(scope.row.dst_port)
+                    getPortName(scope.row.dst_port) || "-"
                 }}</template>
             </el-table-column>
             <el-table-column :label="$lang('type')" prop="type">
                 <template slot-scope="scope">
-                    {{ $lang(PORT_MIRROR_TYPE_MAP[scope.row.type]) }}
+                    {{ $lang(PORT_MIRROR_TYPE_MAP[scope.row.type]) || "-" }}
                 </template>
             </el-table-column>
             <el-table-column :label="$lang('config')" width="150px">
@@ -148,7 +148,7 @@ export default {
                     this.postData("/switch_port?form=mirror", {
                         method: "clear",
                         param: {
-                            src_port: row.src_port,
+                            src_port: row.port_id,
                         },
                     })
                         .then(() => {
