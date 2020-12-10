@@ -8,7 +8,7 @@
 
 <script>
 import { isUndef, isDef } from "@/utils/common";
-import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
+import { mapMutations, mapState, mapGetters } from "vuex";
 export default {
     name: "HSGQ",
     created() {
@@ -21,23 +21,33 @@ export default {
         } else {
             this.updateLang(lang);
         }
+        this.$http
+            .get("/system_custom")
+            .then((res) => {
+                if (res.data.code === 1) {
+                    if (isDef(res.data.data)) {
+                        this.updateCustom(res.data.data);
+                    }
+                }
+            })
+            .catch((err) => {});
     },
     computed: {
         ...mapState(["lang"]),
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang"]),
     },
     data() {
         return {
-            transitionName: ""
+            transitionName: "",
         };
     },
     mounted() {},
     methods: {
-        ...mapMutations(["updateLang"]),
+        ...mapMutations(["updateLang", "updateCustom"]),
         getLang() {
             this.$http
                 .get("/system_lang")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.updateLang(res.data.data.lang || "en");
@@ -48,8 +58,8 @@ export default {
                         }
                     }
                 })
-                .catch(err => {});
-        }
+                .catch((err) => {});
+        },
     },
     watch: {
         // 路由切换时的过渡效果(左滑动或右滑动)
@@ -65,7 +75,7 @@ export default {
         //                 : "";
         //     }
         // }
-    }
+    },
 };
 </script>
 
