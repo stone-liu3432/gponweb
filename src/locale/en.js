@@ -1093,6 +1093,8 @@ var en = {
     temp2: "Temperature point 2",
     speed1: "Fan speed when temperature exceeds 1",
     speed2: "Fan speed when temperature exceeds 2",
+    reason: "Reason",
+    trycount: "Retry Count",
 };
 
 export default en;

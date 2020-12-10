@@ -1065,6 +1065,8 @@ var zh = {
     temp2: "温度点2",
     speed1: "超过温度点1时风扇转速",
     speed2: "超过温度点2时风扇转速",
+    reason: "原因",
+    trycount: "尝试注册次数",
 };
 
 export default zh;
