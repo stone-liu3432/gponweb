@@ -2,7 +2,7 @@
     <div id="login" @keyup.enter="submitForm('loginForm')">
         <canvas ref="login-canvas"></canvas>
         <el-row class="login-form">
-            <el-col class="login-logo" style="width: 300px;">
+            <el-col class="login-logo" style="width: 300px">
                 <template v-if="hasLogo">
                     <img src="/login_logo.png" />
                 </template>
@@ -13,7 +13,7 @@
                     </div>
                 </template>
             </el-col>
-            <el-col class="login-content" style="width: 400px;">
+            <el-col class="login-content" style="width: 400px">
                 <!-- <h3>{{ $lang("login_user") }}</h3> -->
                 <div class="login-title">
                     {{ $lang("login_page_login_hit") }}
@@ -27,14 +27,14 @@
                     <el-form-item
                         :label="$lang('user_name')"
                         prop="uname"
-                        style="margin-bottom: 30px;"
+                        style="margin-bottom: 30px"
                     >
                         <el-input v-model="form.uname"></el-input>
                     </el-form-item>
                     <el-form-item
                         :label="$lang('password')"
                         prop="password"
-                        style="margin-bottom: 30px;"
+                        style="margin-bottom: 30px"
                     >
                         <el-input
                             :type="inputType"
@@ -59,17 +59,12 @@
                                 ref="captcha-img"
                             />
                             <el-input
-                                style="width: 120px; margin-left: 12px;"
+                                style="width: 120px; margin-left: 12px"
                                 v-model="form.captcha"
                             ></el-input>
                         </el-form-item>
                     </template>
-                    <template
-                        v-if="
-                            custom.fix_lang !== undefined &&
-                                custom.fix_lang !== 1
-                        "
-                    >
+                    <template v-if="custom.fix_lang === 0">
                         <el-form-item :label="$lang('lang')">
                             <el-radio-group v-model="language">
                                 <el-radio label="zh">简体中文</el-radio>
@@ -79,7 +74,7 @@
                     </template>
                     <el-form-item>
                         <el-button
-                            style="width: 220px;"
+                            style="width: 220px"
                             type="primary"
                             @click="submitForm('loginForm')"
                             >{{ $lang("login_user") }}</el-button
@@ -104,7 +99,7 @@ export default {
             form: {
                 uname: "",
                 password: "",
-                captcha: ""
+                captcha: "",
             },
             language: "",
             inputType: "password",
@@ -114,61 +109,51 @@ export default {
                 uname: [
                     {
                         validator: this.validUserName,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 password: [
                     {
                         validator: this.validPassword,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 captcha: [
                     {
                         validator: this.validateCaptcha,
-                        trigger: ["change", "blur"]
-                    }
-                ]
-            }
+                        trigger: ["change", "blur"],
+                    },
+                ],
+            },
         };
     },
     computed: {
         ...mapGetters(["$lang", "validateMsg"]),
-        ...mapState(["lang", "custom"])
+        ...mapState(["lang", "custom"]),
     },
     created() {
-        this.$http
-            .get("/system_custom")
-            .then(res => {
-                if (res.data.code === 1) {
-                    if (isDef(res.data.data)) {
-                        this.updateCustom(res.data.data);
-                    }
-                }
-            })
-            .catch(err => {});
         this.language = this.lang;
         this.$http
             .get("/login_logo.png")
-            .then(res => {
+            .then((res) => {
                 this.hasLogo = true;
             })
-            .catch(err => {
+            .catch((err) => {
                 this.hasLogo = false;
             });
     },
     mounted() {
         document.body.style.overflow = "hidden";
         const star = starMap(this.$refs["login-canvas"]);
-        this.$once("hook:beforeDestroy", _ => {
+        this.$once("hook:beforeDestroy", (_) => {
             document.body.style.overflow = "";
             star.destroy();
         });
     },
     methods: {
-        ...mapMutations(["updateLang", "updateCustom"]),
+        ...mapMutations(["updateLang"]),
         submitForm(formName) {
-            this.$refs[formName].validate(valid => {
+            this.$refs[formName].validate((valid) => {
                 if (valid) {
                     const data = {
                         method: "set",
@@ -178,17 +163,17 @@ export default {
                                 `${this.form.uname}:${this.form.password}`
                             ),
                             captcha_v: this.form.captcha,
-                            captcha_f: this.captchaSrc
-                        }
+                            captcha_f: this.captchaSrc,
+                        },
                     };
                     this.$http
                         .post("/userlogin", data, {
                             timeout: 5000,
                             params: {
-                                form: "login"
-                            }
+                                form: "login",
+                            },
                         })
-                        .then(res => {
+                        .then((res) => {
                             if (res.data.code === 1) {
                                 const token = res.headers["x-token"];
                                 sessionStorage.setItem("x-token", token);
@@ -208,7 +193,7 @@ export default {
                                 );
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             this.$message.error(
                                 this.$lang("http_login_timeout")
                             );
@@ -248,7 +233,7 @@ export default {
             this.captchaSrc = "";
             this.$http
                 .get("/system_captcha")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             const fname = res.data.data.filename;
@@ -257,8 +242,8 @@ export default {
                         }
                     }
                 })
-                .catch(err => {});
-        }
+                .catch((err) => {});
+        },
     },
     watch: {
         lang() {
@@ -273,8 +258,8 @@ export default {
             if (this.custom.captcha) {
                 this.getCaptcha();
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
