@@ -77,6 +77,7 @@ Mock.mock("/switch_port?form=stormctrl_all", "get", () => {
 
 Mock.mock("/switch_port?form=mirror_all", "get", () => {
     const data = Array.from({ length: 24 }).map((item, index) => ({
+        port_id: index + 1,
         src_port: index + 1,
         dst_port: Random.range(1, 24),
         type: Random.range(1, 3),
