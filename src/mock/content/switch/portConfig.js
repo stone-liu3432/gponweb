@@ -46,6 +46,7 @@ Mock.mock(/\/switch_port\?form=mirror&port_id=\d+/, "get", ({ url }) => {
         code: 1,
         message: "success",
         data: {
+            port_id,
             src_port: port_id,
             dst_port: Random.range(0, 12),
             type: Random.range(0, 3),
