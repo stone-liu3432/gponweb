@@ -1,8 +1,29 @@
 import Mock from "@/mock";
+import { mock } from "mockjs";
 
 const Random = Mock.Random;
 
 Mock.mock("/board?info=system", "get", {
+    code: 1,
+    message: "success",
+    data: {
+        product_name: "HSGQ-E08",
+        sys_ver: "I_V1.0.0_Rel",
+        fw_ver: "I_V1.0.0_Rel",
+        hw_ver: "I_V1.0.0_Rel",
+        bl_ver: "V1.0_Rel",
+        macaddr: "38:3a:21:f0:01:b0",
+        ponports: 16,
+        geports: 8,
+        xgeports: 8,
+        vendor: "hsgq",
+        build_time: "2017/11/22 09:32:48",
+        panel_temp: 1000,
+        right_temp: 1000,
+    },
+});
+
+Mock.mock("/board_info", "get", {
     code: 1,
     message: "success",
     data: {
