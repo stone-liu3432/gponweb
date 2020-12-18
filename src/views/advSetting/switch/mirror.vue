@@ -47,7 +47,7 @@
             <template slot="title">{{ $lang("config") }}</template>
             <port-config-form
                 type="mirror"
-                :port_id="row.src_port"
+                :port_id="row.port_id"
                 :data="row"
                 ref="port-config-form"
             ></port-config-form>
