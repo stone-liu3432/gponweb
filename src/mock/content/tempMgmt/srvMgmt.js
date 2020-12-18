@@ -51,6 +51,13 @@ Mock.mock(
                 ont_catvport: Random.range(0, 1),
                 ont_veipport: Random.range(0, 2),
                 native_vlan_flag: Random.range(0, 1),
+                igmp_version: Random.range(0, 4),
+                igmp_upstream: Random.range(0, 2),
+                igmp_up_vid: Random.range(1, 4094),
+                igmp_up_pri: Random.range(0, 8),
+                mcast_downstream: Random.range(0, 3),
+                mcast_down_vid: Random.range(1, 4094),
+                mcast_down_pri: Random.range(0, 8),
                 portvlan,
             },
         };
