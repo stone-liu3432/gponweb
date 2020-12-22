@@ -1,52 +1,73 @@
 <template>
     <div>
         <h3>
-            <span>{{ $lang('multicast') }}</span>
+            <span>{{ $lang("multicast") }}</span>
             <el-button
                 type="primary"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 size="small"
                 @click="openDialog"
-            >{{ $lang('add', 'static_table') }}</el-button>
+                >{{ $lang("add", "static_table") }}</el-button
+            >
             <el-button
                 type="primary"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 size="small"
                 @click="deleteAll('static')"
-            >{{ $lang('delete_all', 'static_table') }}</el-button>
+                >{{ $lang("delete_all", "static_table") }}</el-button
+            >
             <el-button
                 type="primary"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 size="small"
                 @click="deleteAll('dynamic')"
-            >{{ $lang('delete_all', 'dynamic_table') }}</el-button>
+                >{{ $lang("delete_all", "dynamic_table") }}</el-button
+            >
             <el-button
                 type="primary"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 size="small"
                 @click="refreshData"
-            >{{ $lang('refresh') }}</el-button>
+                >{{ $lang("refresh") }}</el-button
+            >
         </h3>
         <el-table :data="multiTable" border>
-            <el-table-column :label="$lang('multi_ip')" prop="multi_ip"></el-table-column>
+            <el-table-column
+                :label="$lang('multi_ip')"
+                prop="multi_ip"
+            ></el-table-column>
             <el-table-column :label="$lang('vid')" prop="vid"></el-table-column>
             <el-table-column :label="$lang('action')" prop="action">
-                <template slot-scope="scope">{{ MULTICAST_ACTIONS[scope.row.action] }}</template>
+                <template slot-scope="scope">{{
+                    MULTICAST_ACTIONS[scope.row.action]
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('host_portlist')" prop="host_portlist">
-                <template slot-scope="scope">{{ parsePortList(scope.row.host_portlist) }}</template>
+            <el-table-column
+                :label="$lang('host_portlist')"
+                prop="host_portlist"
+            >
+                <template slot-scope="scope">{{
+                    parsePortList(scope.row.host_portlist)
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('router_portlist')" prop="router_portlist">
-                <template slot-scope="scope">{{ parsePortList(scope.row.router_portlist) }}</template>
+            <el-table-column
+                :label="$lang('router_portlist')"
+                prop="router_portlist"
+            >
+                <template slot-scope="scope">{{
+                    parsePortList(scope.row.router_portlist)
+                }}</template>
             </el-table-column>
             <el-table-column :label="$lang('config')" width="100px">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="delStatic(scope.row)">{{ $lang('delete') }}</el-button>
+                    <el-button type="text" @click="delStatic(scope.row)">{{
+                        $lang("delete")
+                    }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-pagination
-            style="float: right; margin: 12px 0;"
+            style="float: right; margin: 12px 0"
             hide-on-single-page
             :current-page.sync="currentPage"
             :page-sizes="[10, 20, 30, 50]"
@@ -55,11 +76,17 @@
             :total="multiData.length"
         ></el-pagination>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
-            <div slot="title">{{ $lang('add', 'static_table') }}</div>
+            <div slot="title">{{ $lang("add", "static_table") }}</div>
             <multicast-form ref="multicast-form"></multicast-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
-                <el-button type="primary" @click="submitForm('multicast-form')">{{ $lang('apply') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="submitForm('multicast-form')"
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -78,13 +105,13 @@ export default {
         multiTable() {
             const start = (this.currentPage - 1) * this.pageSize;
             return this.multiData.slice(start, start + this.pageSize);
-        }
+        },
     },
     components: { multicastForm },
     mixins: [postData],
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -94,7 +121,7 @@ export default {
             currentPage: 1,
             pageSize: 10,
             MULTICAST_ACTIONS,
-            dialogVisible: false
+            dialogVisible: false,
         };
     },
     created() {
@@ -105,23 +132,30 @@ export default {
             this.multiData = [];
             this.$http
                 .get("/switch_igmp?form=entry")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
-                        if (isArray(res.data.data)) {
-                            this.multiData = res.data.data;
-                        }
+                        this.$http
+                            .get("/igmp_snooping_table")
+                            .then((_res) => {
+                                if (_res.data.code === 1) {
+                                    if (isArray(_res.data.data)) {
+                                        this.multiData = _res.data.data;
+                                    }
+                                }
+                            })
+                            .catch((_err) => {});
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         parsePortList(str) {
             return parseStringAsList(str)
-                .map(item => this.getPortName(item))
+                .map((item) => this.getPortName(item))
                 .join(",");
         },
         delStatic(data) {
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
-                .then(_ => {
+                .then((_) => {
                     const url = data.action
                             ? "/switch_igmp?form=static_entry"
                             : "/switch_igmp?form=dynamic_entry",
@@ -129,16 +163,16 @@ export default {
                             method: "delete",
                             param: {
                                 multi_ip: data.multi_ip,
-                                vid: data.vid
-                            }
+                                vid: data.vid,
+                            },
                         };
                     this.postData(url, post_param)
-                        .then(_ => {
+                        .then((_) => {
                             this.getData();
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         deleteAll(type) {
             this.$confirm(
@@ -148,27 +182,27 @@ export default {
                     type === "static" ? "static_table" : "dynamic_table"
                 ) + " ?"
             )
-                .then(_ => {
+                .then((_) => {
                     const url =
                             type === "static"
                                 ? "/switch_igmp?form=static_entry_all"
                                 : "/switch_igmp?form=dynamic_entry_all",
                         post_param = {
-                            method: "delete"
+                            method: "delete",
                         };
                     this.postData(url, post_param)
-                        .then(_ => {
+                        .then((_) => {
                             this.getData();
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         openDialog() {
             this.dialogVisible = true;
         },
         submitForm(formName) {
-            this.$refs[formName].validate(data => {
+            this.$refs[formName].validate((data) => {
                 if (data) {
                     const url = "/switch_igmp?form=static_entry",
                         post_params = {
@@ -176,22 +210,22 @@ export default {
                             param: {
                                 multi_ip: data.multi_ip,
                                 vid: data.vid,
-                                port_id: data.port_id
-                            }
+                                port_id: data.port_id,
+                            },
                         };
                     this.postData(url, post_params)
-                        .then(_ => {
+                        .then((_) => {
                             this.getData();
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                     this.dialogVisible = false;
                 }
             });
         },
         refreshData() {
             debounce(this.getData, 1000, this);
-        }
-    }
+        },
+    },
 };
 </script>
 

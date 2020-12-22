@@ -27,7 +27,9 @@ Mock.mock("/switch_igmp?form=mode", "post", "@BASESUCCESS");
 
 Mock.mock("/switch_igmp?form=config", "post", "@BASESUCCESS");
 
-Mock.mock("/switch_igmp?form=entry", "get", () => {
+Mock.mock("/switch_igmp?form=entry", "get", "@BASESUCCESS");
+
+Mock.mock("/igmp_snooping_table", "get", () => {
     const data = Array.from({ length: Random.range(0, 1024) }).map(
         (item, index) => {
             return {
