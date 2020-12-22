@@ -2,7 +2,9 @@ import Mock from "@/mock";
 
 const { Random } = Mock;
 
-Mock.mock("/switch_route?form=arp_table", "get", () => {
+Mock.mock("/switch_route?form=arp_table", "get", "@BASESUCCESS");
+
+Mock.mock("/arp_table", "get", () => {
     const data = Array.from({ length: Random.range(0, 4094) }).map(
         (item, index) => ({
             ipaddress: Random.ip(),

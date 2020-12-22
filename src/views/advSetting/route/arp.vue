@@ -2,26 +2,45 @@
     <div>
         <page-header title="ARP" type="none">
             <div slot="content">
-                <el-button type="primary" size="small" @click="deleteAll">{{ $lang('delete_all') }}</el-button>
+                <el-button type="primary" size="small" @click="deleteAll">{{
+                    $lang("delete_all")
+                }}</el-button>
                 <el-button
                     type="primary"
                     size="small"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     @click="refreshData"
-                >{{ $lang('refresh') }}</el-button>
+                    >{{ $lang("refresh") }}</el-button
+                >
             </div>
         </page-header>
         <el-table :data="arpTable" border>
-            <el-table-column :label="$lang('ipaddr')" prop="ipaddress"></el-table-column>
-            <el-table-column :label="$lang('macaddr')" prop="macaddress"></el-table-column>
-            <el-table-column :label="$lang('vlan_id')" prop="vlanid"></el-table-column>
+            <el-table-column
+                :label="$lang('ipaddr')"
+                prop="ipaddress"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('macaddr')"
+                prop="macaddress"
+            ></el-table-column>
+            <el-table-column
+                :label="$lang('vlan_id')"
+                prop="vlanid"
+            ></el-table-column>
             <el-table-column :label="$lang('port_id')" prop="protid">
-                <template slot-scope="scope">{{ getPortName(scope.row.portid) }}</template>
+                <template slot-scope="scope">{{
+                    getPortName(scope.row.portid)
+                }}</template>
             </el-table-column>
         </el-table>
-        <div style="position: relative;">
+        <div style="position: relative">
             <el-pagination
-                style="margin: 12px 0 30px 0; position: absolute; right: 0; top: 12px;"
+                style="
+                    margin: 12px 0 30px 0;
+                    position: absolute;
+                    right: 0;
+                    top: 12px;
+                "
                 hide-on-single-page
                 :current-page.sync="currentPage"
                 :page-sizes="[10, 20, 30, 50]"
@@ -44,12 +63,12 @@ export default {
         arpTable() {
             const start = (this.currentPage - 1) * this.pageSize;
             return this.arpList.slice(start, start + this.pageSize);
-        }
+        },
     },
     mixins: [postData],
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -57,7 +76,7 @@ export default {
         return {
             arpList: [],
             currentPage: 1,
-            pageSize: 10
+            pageSize: 10,
         };
     },
     created() {
@@ -68,33 +87,40 @@ export default {
             this.arpList = [];
             this.$http
                 .get("/switch_route?form=arp_table")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
-                        if (isArray(res.data.data)) {
-                            this.arpList = res.data.data;
-                        }
+                        this.$http
+                            .get("/arp_table")
+                            .then((_res) => {
+                                if (_res.data.code === 1) {
+                                    if (isArray(_res.data.data)) {
+                                        this.arpList = _res.data.data;
+                                    }
+                                }
+                            })
+                            .catch((_err) => {});
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         deleteAll() {
             this.$confirm(this.$lang("if_sure", "delete_all") + " ARP ?")
-                .then(_ => {
+                .then((_) => {
                     this.postData("/switch_route?form=arp_flush", {
                         method: "destroy",
-                        param: {}
+                        param: {},
                     })
-                        .then(_ => {
+                        .then((_) => {
                             this.getArp();
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         refreshData() {
             debounce(this.getArp, 1000, this);
-        }
-    }
+        },
+    },
 };
 </script>
 
