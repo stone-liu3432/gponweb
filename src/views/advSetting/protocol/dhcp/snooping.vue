@@ -1,78 +1,98 @@
 <template>
     <div>
         <div class="dhcp-snooping-item">
-            <span>{{ $lang('snooping_admin') }}:</span>
+            <span>{{ $lang("snooping_admin") }}:</span>
             <span>{{ $lang(SWITCH[data.snooping_admin]) }}</span>
             <el-button
                 type="primary"
                 size="small"
                 @click="changeSnoopingAdmin"
-            >{{ $lang(BUTTON_TEXT[data.snooping_admin]) }}</el-button>
+                >{{ $lang(BUTTON_TEXT[data.snooping_admin]) }}</el-button
+            >
         </div>
         <template v-if="data.snooping_admin">
             <div class="dhcp-snooping-item">
-                <span>{{ $lang('chaddr_check') }}:</span>
+                <span>{{ $lang("chaddr_check") }}:</span>
                 <span>{{ $lang(SWITCH[data.chaddr_check]) }}</span>
-                <el-button
-                    type="primary"
-                    size="small"
-                    @click="changeCheck"
-                >{{ $lang(BUTTON_TEXT[data.chaddr_check]) }}</el-button>
+                <el-button type="primary" size="small" @click="changeCheck">{{
+                    $lang(BUTTON_TEXT[data.chaddr_check])
+                }}</el-button>
             </div>
             <div class="dhcp-snooping-item">
-                <span>{{ $lang('response_time') }}:</span>
+                <span>{{ $lang("response_time") }}:</span>
                 <span>{{ data.response_time }} s</span>
                 <el-button
                     type="primary"
                     size="small"
                     @click="openDialog('response_time')"
-                >{{ $lang('config') }}</el-button>
+                    >{{ $lang("config") }}</el-button
+                >
             </div>
             <div class="dhcp-snooping-item">
-                <span>{{ $lang('trust_portlist') }}:</span>
+                <span>{{ $lang("trust_portlist") }}:</span>
                 <span>{{ portlist }}</span>
                 <el-button
                     type="primary"
                     size="small"
                     @click="openDialog('add_port')"
-                >{{ $lang('add') }}</el-button>
+                    >{{ $lang("add") }}</el-button
+                >
                 <el-button
                     type="primary"
                     size="small"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     @click="openDialog('delete_port')"
-                >{{ $lang('delete') }}</el-button>
+                    >{{ $lang("delete") }}</el-button
+                >
             </div>
             <div class="dhcp-snooping-item">
                 <h3>
-                    <span>{{ $lang('snooping_table') }}</span>
+                    <span>{{ $lang("snooping_table") }}</span>
                     <el-button
                         type="primary"
                         size="small"
-                        style="margin-left: 30px;"
+                        style="margin-left: 30px"
                         @click="clearSnoopingTable"
-                    >{{ $lang('clear') }}</el-button>
+                        >{{ $lang("clear") }}</el-button
+                    >
                     <el-button
                         type="primary"
                         size="small"
-                        style="margin-left: 30px;"
+                        style="margin-left: 30px"
                         @click="refreshData"
-                    >{{ $lang('refresh') }}</el-button>
+                        >{{ $lang("refresh") }}</el-button
+                    >
                 </h3>
                 <el-table :data="sonnpingTable" border>
-                    <el-table-column :label="$lang('ipaddr')" prop="ipaddr"></el-table-column>
-                    <el-table-column :label="$lang('macaddr')" prop="macaddr"></el-table-column>
+                    <el-table-column
+                        :label="$lang('ipaddr')"
+                        prop="ipaddr"
+                    ></el-table-column>
+                    <el-table-column
+                        :label="$lang('macaddr')"
+                        prop="macaddr"
+                    ></el-table-column>
                     <el-table-column :label="$lang('port_id')">
-                        <template slot-scope="scope">{{ getPortName(scope.row.port_id) }}</template>
+                        <template slot-scope="scope">{{
+                            getPortName(scope.row.port_id)
+                        }}</template>
                     </el-table-column>
-                    <el-table-column :label="$lang('vlan_id')" prop="vlan_id"></el-table-column>
-                    <el-table-column :label="$lang('lease_time')" prop="lease_time"></el-table-column>
+                    <el-table-column
+                        :label="$lang('vlan_id')"
+                        prop="vlan_id"
+                    ></el-table-column>
+                    <el-table-column
+                        :label="$lang('lease_time')"
+                        prop="lease_time"
+                    ></el-table-column>
                     <el-table-column :label="$lang('entry_status')">
-                        <template slot-scope="scope">{{ ENTRY_STATUS[scope.row.entry_status] }}</template>
+                        <template slot-scope="scope">{{
+                            ENTRY_STATUS[scope.row.entry_status]
+                        }}</template>
                     </el-table-column>
                 </el-table>
                 <el-pagination
-                    style="float: right; margin: 12px 0;"
+                    style="float: right; margin: 12px 0"
                     hide-on-single-page
                     :current-page.sync="currentPage"
                     :page-sizes="[10, 20, 30, 50]"
@@ -86,11 +106,14 @@
             <div slot="title">{{ $lang(dialogTitle) }}</div>
             <dhcp-snooping-form ref="dhcp-snooping-form"></dhcp-snooping-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('dhcp-snooping-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -104,7 +127,7 @@ import {
     isArray,
     parseStringAsList,
     distinctArray,
-    debounce
+    debounce,
 } from "@/utils/common";
 import { SWITCH, BUTTON_TEXT, ENTRY_STATUS } from "@/utils/commonData";
 import dhcpSnoopingForm from "./snoopingForm";
@@ -115,7 +138,7 @@ export default {
         ...mapGetters(["$lang", "getPortName"]),
         portlist() {
             return parseStringAsList(this.data.trust_portlist)
-                .map(item => this.getPortName(item))
+                .map((item) => this.getPortName(item))
                 .join(",");
         },
         sonnpingTable() {
@@ -126,20 +149,20 @@ export default {
             const TITLES = {
                 response_time: "config",
                 add_port: "add",
-                delete_port: "delete"
+                delete_port: "delete",
             };
             return TITLES[this.dialogType];
-        }
+        },
     },
     props: {
         data: {
-            type: Object
-        }
+            type: Object,
+        },
     },
     mixins: [postData],
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -152,7 +175,7 @@ export default {
             currentPage: 1,
             pageSize: 10,
             dialogVisible: false,
-            dialogType: ""
+            dialogType: "",
         };
     },
     created() {
@@ -166,32 +189,39 @@ export default {
             this.snoopingList = [];
             this.$http
                 .get("/switch_dhcp?form=snooping_table")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
-                        if (isArray(res.data.data)) {
-                            this.snoopingList = res.data.data;
-                        }
+                        this.$http
+                            .get("/dhcp_snooping_table")
+                            .then((_res) => {
+                                if (_res.data.code === 1) {
+                                    if (isArray(_res.data.data)) {
+                                        this.snoopingList = _res.data.data;
+                                    }
+                                }
+                            })
+                            .catch((_err) => {});
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         clearSnoopingTable() {
             this.$confirm(
                 this.$lang("if_sure", "clear", "snooping_table") + " ?"
             )
-                .then(_ => {
+                .then((_) => {
                     const url = "/switch_dhcp?form=snooping_flush",
                         post_params = {
                             method: "set",
-                            param: {}
+                            param: {},
                         };
                     this.postData(url, post_params)
-                        .then(_ => {
+                        .then((_) => {
                             this.getSnooping();
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         refreshData() {
             debounce(this.getSnooping, 1000, this);
@@ -201,23 +231,23 @@ export default {
                 this.$lang("if_sure", BUTTON_TEXT[this.data.snooping_admin]) +
                     " DHCP Snooping ?"
             )
-                .then(_ => {
+                .then((_) => {
                     const url = "/switch_dhcp?form=snooping_admin",
                         post_params = {
                             method: "set",
                             param: {
                                 snooping_admin: Number(
                                     !this.data.snooping_admin
-                                )
-                            }
+                                ),
+                            },
                         };
                     this.postData(url, post_params)
-                        .then(_ => {
+                        .then((_) => {
                             this.$emit("refresh-data");
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         changeCheck() {
             this.$confirm(
@@ -227,26 +257,26 @@ export default {
                     "chaddr_check"
                 ) + " ?"
             )
-                .then(_ => {
+                .then((_) => {
                     const url = "/switch_dhcp?form=snooping_chaddr",
                         post_params = {
                             method: "set",
                             param: {
-                                chaddr_check: !this.data.chaddr_check
-                            }
+                                chaddr_check: !this.data.chaddr_check,
+                            },
                         };
                     this.postData(url, post_params)
-                        .then(_ => {
+                        .then((_) => {
                             this.$emit("refresh-data");
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         openDialog(type) {
             this.dialogVisible = true;
             this.dialogType = type;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["dhcp-snooping-form"].init(type, this.data);
             });
         },
@@ -266,9 +296,9 @@ export default {
                                 data: {
                                     method: "set",
                                     param: {
-                                        response_time: form.response_time
-                                    }
-                                }
+                                        response_time: form.response_time,
+                                    },
+                                },
                             };
                         },
                         add_port(form) {
@@ -286,9 +316,9 @@ export default {
                                 data: {
                                     method: "set",
                                     param: {
-                                        trust_portlist: list.join(",")
-                                    }
-                                }
+                                        trust_portlist: list.join(","),
+                                    },
+                                },
                             };
                         },
                         delete_port(form) {
@@ -303,11 +333,11 @@ export default {
                                     param: {
                                         trust_portlist: form.trust_portlist.join(
                                             ","
-                                        )
-                                    }
-                                }
+                                        ),
+                                    },
+                                },
                             };
-                        }
+                        },
                     };
                     if (isFunction(ACTIONS[type])) {
                         const res = ACTIONS[type].call(this, formData);
@@ -316,17 +346,17 @@ export default {
                             url &&
                                 data &&
                                 this.postData(url, data)
-                                    .then(_ => {
+                                    .then((_) => {
                                         this.$emit("refresh-data");
                                     })
-                                    .catch(_ => {});
+                                    .catch((_) => {});
                             this.dialogVisible = false;
                         }
                     }
                 }
             });
-        }
-    }
+        },
+    },
 };
 </script>
 

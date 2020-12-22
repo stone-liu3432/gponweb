@@ -57,7 +57,9 @@ Mock.mock("/switch_dhcp?form=relay_option60", "get", () => {
     };
 });
 
-Mock.mock("/switch_dhcp?form=snooping_table", "get", () => {
+Mock.mock("/switch_dhcp?form=snooping_table", "get", "@BASESUCCESS");
+
+Mock.mock("/dhcp_snooping_table", "get", () => {
     const data = Array.from({ length: Random.range(0, 128) }).map((item) => ({
         ipaddr: Random.ip(),
         macaddr: Random.mac(),
