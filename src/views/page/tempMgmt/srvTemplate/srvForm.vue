@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-form
-            label-width="140px"
+            label-width="220px"
             :model="form"
             :rules="rules"
             ref="srv-form"
@@ -95,6 +95,74 @@
                     ></el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item :label="$lang('igmp_version')" prop="igmp_version">
+                <el-select v-model.number="form.igmp_version">
+                    <template v-for="(item, index) in IGMP_VERSION_MAP">
+                        <el-option :value="index" :label="item"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <el-form-item :label="$lang('igmp_upstream')" prop="igmp_upstream">
+                <el-select v-model.number="form.igmp_upstream">
+                    <template v-for="(item, index) in IGMP_UPSTREAM_MAP">
+                        <el-option :value="index" :label="item"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <template v-if="form.igmp_upstream !== 0">
+                <el-form-item :label="$lang('igmp_up_vid')" prop="igmp_up_vid">
+                    <el-input
+                        style="width: 220px"
+                        v-model.number="form.igmp_up_vid"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item :label="$lang('igmp_up_pri')" prop="igmp_up_pri">
+                    <el-select v-model="form.igmp_up_pri">
+                        <el-option :value="0"></el-option>
+                        <template v-for="i in 7">
+                            <el-option :value="i"></el-option>
+                        </template>
+                        <el-option :value="8" label="-"></el-option>
+                    </el-select>
+                </el-form-item>
+            </template>
+            <el-form-item
+                :label="$lang('mcast_downstream')"
+                prop="mcast_downstream"
+            >
+                <el-select v-model.number="form.mcast_downstream">
+                    <template v-for="(item, index) in IGMP_DOWNSTREAM_MAP">
+                        <el-option :value="index" :label="item"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <template
+                v-if="
+                    form.mcast_downstream === 2 || form.mcast_downstream === 3
+                "
+            >
+                <el-form-item
+                    :label="$lang('mcast_down_vid')"
+                    prop="mcast_down_vid"
+                >
+                    <el-input
+                        style="width: 220px"
+                        v-model.number="form.mcast_down_vid"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item
+                    :label="$lang('mcast_down_pri')"
+                    prop="mcast_down_pri"
+                >
+                    <el-select v-model.number="form.mcast_down_pri">
+                        <el-option :value="0"></el-option>
+                        <template v-for="i in 7">
+                            <el-option :value="i"></el-option>
+                        </template>
+                        <el-option :value="8" label="-"></el-option>
+                    </el-select>
+                </el-form-item>
+            </template>
             <template v-if="type === 'add'">
                 <el-form-item
                     :label="$lang('portvlan')"
@@ -224,7 +292,14 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { UNI_TYPES, VLAN_MODES, ONT_VEIPPORT_MAP } from "@/utils/commonData";
+import {
+    UNI_TYPES,
+    VLAN_MODES,
+    ONT_VEIPPORT_MAP,
+    IGMP_VERSION_MAP,
+    IGMP_UPSTREAM_MAP,
+    IGMP_DOWNSTREAM_MAP,
+} from "@/utils/commonData";
 import portvlanForm from "./portvlanForm";
 import { isFunction, removeItem } from "@/utils/common";
 import { regRange, regLength } from "@/utils/validator";
@@ -245,11 +320,15 @@ export default {
             type: Object,
         },
     },
+    inject: ["validateVlan"],
     data() {
         return {
             UNI_TYPES,
             VLAN_MODES,
             ONT_VEIPPORT_MAP,
+            IGMP_VERSION_MAP,
+            IGMP_UPSTREAM_MAP,
+            IGMP_DOWNSTREAM_MAP,
             portvlan: [], // 0-64
             form: {
                 profname: "", // 1-32 length
@@ -259,6 +338,13 @@ export default {
                 ont_catvport: "", // 0-1
                 native_vlan_flag: 0,
                 ont_veipport: 0,
+                igmp_version: 1,
+                igmp_upstream: 0,
+                igmp_up_vid: "",
+                igmp_up_pri: 8,
+                mcast_downstream: 0,
+                mcast_down_vid: "",
+                mcast_down_pri: 8,
             },
             rules: {
                 profname: [
@@ -288,6 +374,18 @@ export default {
                 ont_catvport: [
                     {
                         validator: this.validateCatv,
+                        trigger: ["change", "blur"],
+                    },
+                ],
+                igmp_up_vid: [
+                    {
+                        validator: this.validateUpVid,
+                        trigger: ["change", "blur"],
+                    },
+                ],
+                mcast_down_vid: [
+                    {
+                        validator: this.validateDownVid,
                         trigger: ["change", "blur"],
                     },
                 ],
@@ -386,6 +484,13 @@ export default {
                             native_vlan_flag: this.form.native_vlan_flag,
                             portvlan: this.portvlan,
                             ont_veipport: this.form.ont_veipport,
+                            igmp_version: this.form.igmp_version,
+                            igmp_upstream: this.form.igmp_upstream,
+                            igmp_up_vid: this.form.igmp_up_vid || 0,
+                            igmp_up_pri: this.form.igmp_up_pri,
+                            mcast_downstream: this.form.mcast_downstream,
+                            mcast_down_vid: this.form.mcast_down_vid || 0,
+                            mcast_down_pri: this.form.mcast_down_pri,
                         });
                     } else {
                         fn.call(this, valid);
@@ -434,6 +539,21 @@ export default {
         },
         deleteItem(row) {
             removeItem(this.portvlan, row);
+        },
+        validateUpVid(rule, val, cb) {
+            if (this.form.igmp_upstream === 0) {
+                return cb();
+            }
+            return this.validateVlan(rule, val, cb);
+        },
+        validateDownVid(rule, val, cb) {
+            if (
+                this.form.mcast_downstream === 0 ||
+                this.form.mcast_downstream === 1
+            ) {
+                return cb();
+            }
+            return this.validateVlan(rule, val, cb);
         },
     },
     watch: {
