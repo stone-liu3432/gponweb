@@ -1,7 +1,7 @@
 <template>
     <div>
         <nms-filter
-            style="margin-left: 10px;"
+            style="margin-left: 10px"
             :data="srvProfs"
             :primary="filterable"
             @change="dataChange"
@@ -24,7 +24,7 @@
                     <span>{{ $lang("config") }}</span>
                     <el-button
                         type="primary"
-                        style="margin-left: 30px;"
+                        style="margin-left: 30px"
                         size="small"
                         @click="openDialog('add')"
                         >{{ $lang("add") }}</el-button
@@ -36,14 +36,14 @@
                     }}</el-button>
                     <el-button
                         type="text"
-                        style="margin-left: 20px;"
+                        style="margin-left: 20px"
                         @click="showBinding(scope.row)"
                         >{{ $lang("show_binding") }}</el-button
                     >
                     <template v-if="scope.row.profid !== 0">
                         <el-button
                             type="text"
-                            style="margin-left: 20px;"
+                            style="margin-left: 20px"
                             @click="deleteProf(scope.row)"
                         >
                             {{ $lang("delete") }}
@@ -53,7 +53,7 @@
             </el-table-column>
         </el-table>
         <el-pagination
-            style="margin: 12px 0; float: right;"
+            style="margin: 12px 0; float: right"
             :current-page.sync="currentPage"
             :page-sizes="[10, 20, 30, 50]"
             :page-size.sync="pageSize"
@@ -77,7 +77,7 @@
         </el-dialog>
         <el-dialog
             :visible.sync="setVisible"
-            width="640px"
+            width="700px"
             append-to-body
             destroy-on-close
         >
@@ -103,9 +103,9 @@
         >
             <div slot="title">
                 <span>{{ $lang("profid") }}:</span>
-                <span style="margin: 0 50px 0 12px;">{{ rowData.profid }}</span>
+                <span style="margin: 0 50px 0 12px">{{ rowData.profid }}</span>
                 <span>{{ $lang("profname") }}:</span>
-                <span style="margin: 0 0 0 12px;">{{ rowData.profname }}</span>
+                <span style="margin: 0 0 0 12px">{{ rowData.profname }}</span>
             </div>
             <el-table :data="bindingDevices" border>
                 <el-table-column :label="$lang('port_id')" width="100px">
@@ -145,19 +145,19 @@ export default {
                 {
                     prop: "profid",
                     value: 0,
-                    label: this.$lang("profid")
+                    label: this.$lang("profid"),
                 },
                 {
                     prop: "profname",
                     value: 1,
-                    label: this.$lang("profname")
-                }
+                    label: this.$lang("profname"),
+                },
             ];
-        }
+        },
     },
     inject: ["updateNavScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateNavScrollbar();
         });
     },
@@ -173,7 +173,7 @@ export default {
             filterableList: [],
             bindingVisible: false,
             rowData: {},
-            bindingDevices: []
+            bindingDevices: [],
         };
     },
     created() {
@@ -190,7 +190,7 @@ export default {
             const url = `/srvprofile?form=self&profid=${row.profid}&profname=${row.profname}`;
             this.$http
                 .get(url)
-                .then(res => {
+                .then((res) => {
                     loading.close();
                     loading = null;
                     if (res.data.code === 1) {
@@ -200,7 +200,7 @@ export default {
                                 detail.portvlan = [];
                             }
                             this.detail = detail;
-                            this.$nextTick(_ => {
+                            this.$nextTick((_) => {
                                 this.detailVisible = true;
                             });
                         }
@@ -210,25 +210,25 @@ export default {
                         );
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         deleteProf(row) {
             this.$confirm(
                 `${this.$lang("if_sure", "delete")} ${row.profname} ?`
             )
-                .then(_ => {
+                .then((_) => {
                     const post_param = {
                         method: "delete",
                         param: {
                             profname: row.profname,
-                            profid: row.profid
-                        }
+                            profid: row.profid,
+                        },
                     };
-                    this.postData("/srvprofile", post_param).then(_ => {
+                    this.postData("/srvprofile", post_param).then((_) => {
                         this.getSrvProfs();
                     });
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         openDialog(type, data) {
             if (isDef(data)) {
@@ -236,20 +236,20 @@ export default {
             }
             this.dialogType = type;
             this.setVisible = true;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["srv-form"].init();
             });
         },
         setProfile(data) {
             this.postProfile(data)
-                .then(_ => {
+                .then(() => {
                     this.getSrvProfs();
                     this.detailVisible = false;
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         submitForm(formName) {
-            this.$refs[formName].validate(formData => {
+            this.$refs[formName].validate((formData) => {
                 if (formData) {
                     const post_param = {
                         method: this.dialogType,
@@ -261,15 +261,22 @@ export default {
                             ont_catvport: formData.ont_catvport,
                             native_vlan_flag: formData.native_vlan_flag,
                             portvlan: formData.portvlan,
-                            ont_veipport: formData.ont_veipport
-                        }
+                            ont_veipport: formData.ont_veipport,
+                            igmp_version: formData.igmp_version,
+                            igmp_upstream: formData.igmp_upstream,
+                            igmp_up_vid: formData.igmp_up_vid,
+                            igmp_up_pri: formData.igmp_up_pri,
+                            mcast_downstream: formData.mcast_downstream,
+                            mcast_down_vid: formData.mcast_down_vid,
+                            mcast_down_pri: formData.mcast_down_pri,
+                        },
                     };
                     this.postProfile(post_param)
-                        .then(_ => {
+                        .then((_) => {
                             this.getSrvProfs();
                             this.setVisible = false;
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 }
             });
         },
@@ -282,10 +289,10 @@ export default {
                 done();
             } else {
                 this.$confirm(this.$lang("unsave_info"))
-                    .then(_ => {
+                    .then((_) => {
                         comp.saveAllChanges(false);
                     })
-                    .catch(_ => {
+                    .catch((_) => {
                         done();
                     });
             }
@@ -296,12 +303,12 @@ export default {
         showBinding(row) {
             const loading = this.$loading();
             this.getBindingDevices(row)
-                .then(_ => {
+                .then((_) => {
                     this.bindingVisible = true;
                     this.rowData = row;
                 })
-                .catch(_ => {})
-                .finally(_ => {
+                .catch((_) => {})
+                .finally((_) => {
                     loading.close();
                 });
         },
@@ -311,14 +318,14 @@ export default {
                 .get(
                     `/srvprofile?form=boundinfo&profid=${row.profid}&profname=${row.profname}`
                 )
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.bindingDevices = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getOntRange(row) {
             const range = parseStringAsList(row.resource);
@@ -341,15 +348,15 @@ export default {
                 return pre;
             }, []);
             return res
-                .map(item => {
+                .map((item) => {
                     if (item.length > 1) {
                         return `${item[0]}-${item[item.length - 1]}`;
                     }
                     return item.toString();
                 })
                 .join(",");
-        }
-    }
+        },
+    },
 };
 </script>
 
