@@ -1,128 +1,151 @@
 <template>
-    <el-form label-width="120px" :model="bound" :rules="rules" ref="remote-form">
+    <el-form
+        label-width="120px"
+        :model="bound"
+        :rules="rules"
+        ref="remote-form"
+    >
         <el-form-item :label="$lang('interface')" v-if="showInterface">
-            <span>{{ formData.interface }}</span>
+            <span>{{ row.interface }}</span>
         </el-form-item>
-        <el-form-item :label="$lang('ipaddr')" prop="ipaddr">
-            <el-input v-model="bound.ipaddr"></el-input>
+        <el-form-item :label="$lang('type')" prop="type">
+            <el-select v-model.number="flag">
+                <el-option :value="0" :label="$lang('ipv4')"></el-option>
+                <el-option :value="1" :label="$lang('ipv6')"></el-option>
+            </el-select>
         </el-form-item>
-        <el-form-item :label="$lang('ipmask')" prop="ipmask">
-            <el-input v-model="bound.ipmask"></el-input>
-        </el-form-item>
-        <el-form-item
-            :label="$lang('vlan_id')"
-            prop="vlan_id"
-            v-show="!(formData && formData.interface === 'outbound')"
-        >
-            <el-input :disabled="type === 'config'" v-model.number="bound.vlan_id"></el-input>
-        </el-form-item>
+        <template v-if="flag === 0">
+            <el-form-item :label="$lang('ipaddr')" prop="ipaddr" key="ipaddr">
+                <el-input v-model="bound.ipaddr"></el-input>
+            </el-form-item>
+            <el-form-item :label="$lang('ipmask')" prop="ipmask" key="ipmask">
+                <el-input v-model="bound.ipmask"></el-input>
+            </el-form-item>
+        </template>
+        <template v-if="flag === 1">
+            <el-form-item :label="$lang('ipv6')" prop="ipv6" key="ipv6">
+                <el-input v-model="bound.ipv6"></el-input>
+            </el-form-item>
+        </template>
+        <template v-if="type === 'add'">
+            <el-form-item
+                :label="$lang('vlan_id')"
+                prop="vlan_id"
+                key="vlan-id"
+            >
+                <el-input
+                    :disabled="type === 'config'"
+                    v-model.number="bound.vlan_id"
+                ></el-input>
+            </el-form-item>
+        </template>
     </el-form>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import { regRange } from "@/utils/validator";
-import { isFunction } from "@/utils/common";
+import { isFunction, isIPv6, isDef } from "@/utils/common";
 export default {
     name: "remoteForm",
-    props: {
-        type: {
-            type: String
-        },
-        formData: {
-            type: Object
-        }
-    },
     computed: {
         ...mapGetters(["$lang", "validateMsg"]),
         showInterface() {
-            return this.formData && this.type === "config";
-        }
+            return this.row && this.type === "config";
+        },
     },
     inject: ["validateIp"],
     data() {
         return {
+            flag: 0,
+            type: "",
+            row: {},
             bound: {
                 ipaddr: "",
                 ipmask: "",
                 vlan_id: "",
-                interface: ""
+                interface: "",
+                ipv6: "",
             },
             rules: {
                 ipaddr: [
                     {
-                        validator: this.validateIp,
-                        trigger: ["change", "blur"]
-                    }
+                        validator: this.validIpv4,
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 ipmask: [
                     {
-                        validator: this.validateIp,
-                        trigger: ["change", "blur"]
-                    }
+                        validator: this.validIpv4,
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 vlan_id: [
                     {
                         validator: this.validateVlan,
-                        trigger: ["change", "blur"]
-                    }
-                ]
-            }
+                        trigger: ["change", "blur"],
+                    },
+                ],
+                ipv6: [
+                    {
+                        validator: this.validIpv6,
+                        trigger: ["change", "blur"],
+                    },
+                ],
+            },
         };
     },
-    created() {
-        if (this.formData) {
-            for (let key in this.bound) {
-                this.bound[key] = this.formData[key] || "";
-            }
-        }
-    },
     methods: {
-        validate(fn) {
-            return new Promise((resolve, reject) => {
-                this.$refs["remote-form"].validate(valid => {
-                    if (isFunction(fn)) {
-                        if (valid) {
-                            return fn.call(this, this.bound);
-                        } else {
-                            return fn.call(this);
-                        }
-                    } else {
-                        if (valid) {
-                            resolve(this.bound);
-                        } else {
-                            reject();
-                        }
+        init(row, type) {
+            this.type = type;
+            this.row = row || {};
+            if (row) {
+                Object.keys(this.bound).forEach((key) => {
+                    if (isDef(row[key])) {
+                        this.bound[key] = row[key];
                     }
                 });
+            }
+        },
+        validate(fn) {
+            this.$refs["remote-form"].validate((valid) => {
+                if (isFunction(fn)) {
+                    if (valid) {
+                        const flag = this.flag ? "v6" : "v4";
+                        return fn.call(this, this.bound, flag);
+                    } else {
+                        return fn.call(this);
+                    }
+                }
             });
         },
         resetForm() {
-            this.$nextTick(_ => {
+            this.$nextTick(() => {
                 this.$refs["remote-form"].resetFields();
             });
         },
         validateVlan(rule, value, cb) {
-            if (this.type !== "add" && this.formData.interface === "outbound") {
-                return cb();
-            }
             if (!regRange(this.bound.vlan_id, 1, 4094)) {
                 return cb(new Error(this.validateMsg("inputRange", 1, 4094)));
             }
             cb();
-        }
-    },
-    watch: {
-        formData() {
-            if (this.formData) {
-                for (let key in this.bound) {
-                    this.bound[key] = this.formData[key] || "";
-                }
-            } else {
-                this.resetForm();
+        },
+        validIpv4(rule, val, cb) {
+            if (this.flag !== 0) {
+                return cb();
             }
-        }
-    }
+            return this.validateIp(rule, val, cb);
+        },
+        validIpv6(rule, val, cb) {
+            if (this.flag !== 1) {
+                return cb();
+            }
+            if (!isIPv6(val)) {
+                return cb(new Error(""));
+            }
+            cb();
+        },
+    },
 };
 </script>
 
