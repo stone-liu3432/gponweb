@@ -83,15 +83,12 @@
                     </template>
                 </template>
             </el-table-column>
-            <el-table-column :label="$lang('auto_neg')">
-                <template slot-scope="scope">{{
-                    scope.row.auto_neg ? "Enable" : "Disable"
-                }}</template>
-            </el-table-column>
             <el-table-column :label="$lang('speed')">
                 <template slot-scope="scope">{{
-                    scope.row.speed === "10/100/1000M"
-                        ? "Auto"
+                    scope.row.auto_neg
+                        ? `Auto(${
+                              scope.row.speed === "0M" ? "--" : scope.row.speed
+                          })`
                         : scope.row.speed
                 }}</template>
             </el-table-column>
