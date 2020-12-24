@@ -13,6 +13,27 @@ const _hex = () => {
     return n.length < 2 ? "0" + n : n;
 };
 
+const ipv6 = () => {
+    const hex = () => {
+        let n = Math.floor(Math.random() * 0xffff);
+        n = n < 0x4000 ? 0 : n;
+        n = n.toString(16);
+        while (n.length < 4) {
+            n = "0" + n;
+        }
+        return n;
+    };
+    let str = `${hex()}:${hex()}:${hex()}:${hex()}:${hex()}:${hex()}:${hex()}:${hex()}`;
+    str = str.replace(/^0+(?!:)/, "");
+    str = str.replace(/(?::)0+/g, ":0");
+    str = str.replace(/:0/, ":");
+    while (str.match(/(?:::)0:/)) {
+        str = str.replace(/(?:::)0:/, "::");
+    }
+    str = str.replace(/0+(?=\w)/g, "");
+    return str;
+};
+
 // 自定义指令，调用"@STATUS" 有参数时，直接 "@RANGE(min,max)"
 Random.extend({
     status(data) {
@@ -39,6 +60,9 @@ Random.extend({
             0,
             255
         )}.${this.natural(0, 255)}`;
+    },
+    ipv6() {
+        return ipv6();
     },
     portlist(flag = "port") {
         const length =
