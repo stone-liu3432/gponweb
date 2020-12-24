@@ -58,6 +58,10 @@ const data = {
         import(
             /* webpackChunkName: "system" */ "@/views/advSetting/system/log"
         ),
+    sys_acl: () =>
+        import(
+            /* webpackChunkName: "system" */ "@/views/advSetting/system/sysAcl"
+        ),
     port_info: () =>
         import(
             /* webpackChunkName: "switch" */ "@/views/advSetting/switch/portInfo"
