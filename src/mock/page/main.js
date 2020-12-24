@@ -16,6 +16,7 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "dev_mgmt" },
                     { name: "diagonose" },
                     { name: "remote_mgmt" },
+                    { name: "sys_acl" },
                     { name: "upgrade" },
                     { name: "time" },
                     { name: "service" },
