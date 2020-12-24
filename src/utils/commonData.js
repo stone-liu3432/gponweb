@@ -210,3 +210,12 @@ export const IGMP_UPSTREAM_MAP = ["transparent", "tag", "translate"];
 
 // 业务模板 IGMP下行流
 export const IGMP_DOWNSTREAM_MAP = ["transparent", "untag", "tag", "translate"];
+
+// 系统ACL
+export const AFI_MAP = { 1: "ipv4", 2: "ipv6" };
+export const SYSTEM_ACL_ACCESS_MAP = {
+    1: "Telnet",
+    2: "Web",
+    3: "SSH",
+    4: "All",
+};
