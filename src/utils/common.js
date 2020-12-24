@@ -161,3 +161,44 @@ export function clearSessionStorage() {
     sessionStorage.clear();
     sessionStorage.setItem("lang", lang);
 }
+
+/**
+ * @param {String} string IPv6 string
+ * @return {Boolean} true if the String is a valid IPv6 address; false otherwise
+ */
+export function isIPv6(value) {
+    if (!value) {
+        return false;
+    }
+    const components = value.split(":");
+    if (components.length < 2 || components.length > 8) {
+        return false;
+    }
+    if (components[0] !== "" || components[1] !== "") {
+        // Address does not begin with a zero compression ("::")
+        if (!components[0].match(/^[\da-f]{1,4}/i)) {
+            // Component must contain 1-4 hex characters
+            return false;
+        }
+    }
+    let numberOfZeroCompressions = 0;
+    for (let i = 1; i < components.length; ++i) {
+        if (components[i] === "") {
+            // We're inside a zero compression ("::")
+            ++numberOfZeroCompressions;
+            if (numberOfZeroCompressions > 1) {
+                // Zero compression can only occur once in an address
+                return false;
+            }
+            continue;
+        }
+        if (!components[i].match(/^[\da-f]{1,4}/i)) {
+            // Component must contain 1-4 hex characters
+            return false;
+        }
+    }
+    if (value.match(/[0-9a-f]:$/i)) {
+        return false;
+    }
+    return true;
+}
