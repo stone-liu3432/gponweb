@@ -69,3 +69,11 @@ Mock.mock("/system_service?form=port", "get", () => ({
 }));
 
 Mock.post("/system_service?form=port");
+
+Mock.mock("/system_service?form=syslog", "get", () => ({
+    code: 1,
+    message: "success",
+    data: {
+        ipaddr: Random.ip(),
+    },
+}));
