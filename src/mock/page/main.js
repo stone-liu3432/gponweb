@@ -117,3 +117,5 @@ Mock.post("/upgrade?type=logo");
 Mock.post("/board?info=setting_board");
 
 Mock.post("/upgrade?type=login_logo");
+
+Mock.post("/system_lang");
