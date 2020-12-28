@@ -42,7 +42,12 @@
             >
                 {{ $lang("config") }}
             </el-button>
-            <el-button type="primary" size="small" style="margin-left: 30px">
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px"
+                @click="deleteSysLog"
+            >
                 {{ $lang("delete") }}
             </el-button>
         </h3>
@@ -193,6 +198,20 @@ export default {
                         .catch((_) => {});
                 })
                 .catch((_) => {});
+        },
+        deleteSysLog() {
+            this.$confirm(this.$lang("if_sure", "delete") + " ?")
+                .then(() => {
+                    this.postData("/system_service?form=syslog", {
+                        method: "set",
+                        param: {},
+                    })
+                        .then(() => {
+                            this.$emit("refresh");
+                        })
+                        .catch(() => {});
+                })
+                .catch(() => {});
         },
     },
 };
