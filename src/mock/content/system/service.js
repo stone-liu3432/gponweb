@@ -77,3 +77,5 @@ Mock.mock("/system_service?form=syslog", "get", () => ({
         ipaddr: Random.ip(),
     },
 }));
+
+Mock.post("/system_service?form=syslog");
