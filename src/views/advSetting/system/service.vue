@@ -5,6 +5,7 @@
             <el-tab-pane :label="$lang('sys_port')" name="sys_port">
                 <sys-port
                     :base-data="sysPortInfo"
+                    :sys-log-ip="sysLogIp"
                     @refresh="getData"
                 ></sys-port>
             </el-tab-pane>
@@ -46,7 +47,7 @@ export default {
     components: { serviceFrpc, serviceSnmp, serviceSsh, sysPort },
     computed: {
         ...mapGetters(["$lang"]),
-        ...mapState(["custom"])
+        ...mapState(["custom"]),
     },
     data() {
         return {
@@ -55,7 +56,8 @@ export default {
             snmpTrap: {},
             snmpCommunity: {},
             sshData: [],
-            sysPortInfo: {}
+            sysPortInfo: {},
+            sysLogIp: "",
         };
     },
     created() {
@@ -63,7 +65,7 @@ export default {
     },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -76,7 +78,7 @@ export default {
                     this.getSnmpTrap();
                     this.getSnmpCommunity();
                 },
-                ssh: this.getSsh
+                ssh: this.getSsh,
             };
             if (isFunction(ACTIONS[this.activeName])) {
                 ACTIONS[this.activeName].call(this);
@@ -86,68 +88,82 @@ export default {
             this.frpcData = {};
             this.$http
                 .get("/system_service?form=frpc")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.frpcData = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getSnmpTrap() {
             this.snmpTrap = {};
             this.$http
                 .get("/snmp_cfg?form=trap")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.snmpTrap = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getSnmpCommunity() {
             this.snmpCommunity = {};
             this.$http
                 .get("/snmp_cfg?form=community")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.snmpCommunity = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getSsh() {
             this.sshData = [];
             this.$http
                 .get("/system_service?form=sshd")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.sshData = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getSysPort() {
             this.sysPortInfo = {};
             this.$http
                 .get("/system_service?form=port")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.sysPortInfo = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
-        }
-    }
+                .catch((err) => {});
+            this.getSysLogIp();
+        },
+        getSysLogIp() {
+            this.sysLogIp = "";
+            this.$http
+                .get("/system_service?form=syslog")
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (res.data.data) {
+                            this.sysLogIp = res.data.data.ipaddr || "-";
+                        }
+                    }
+                })
+                .catch((err) => {});
+        },
+    },
 };
 </script>
 
