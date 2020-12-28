@@ -5,18 +5,20 @@
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px;"
-                @click="openDialog"
-                >{{ $lang("config") }}</el-button
+                style="margin-left: 30px"
+                @click="openDialog('sysport')"
             >
+                {{ $lang("config") }}
+            </el-button>
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 v-if="showRestoreBtn"
                 @click="restoreDefPorts"
-                >{{ $lang("restore_defaults") }}</el-button
             >
+                {{ $lang("restore_defaults") }}
+            </el-button>
         </h3>
         <div class="system-port-item">
             <span>http:</span>
@@ -29,6 +31,24 @@
         <div class="system-port-item">
             <span>telnet:</span>
             <span>{{ baseData.telnet || "-" }}</span>
+        </div>
+        <h3>
+            {{ $lang("syslog_server") }}
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 30px"
+                @click="openDialog('syslog')"
+            >
+                {{ $lang("config") }}
+            </el-button>
+            <el-button type="primary" size="small" style="margin-left: 30px">
+                {{ $lang("delete") }}
+            </el-button>
+        </h3>
+        <div class="system-port-item">
+            <span>{{ $lang("ipaddr") }}:</span>
+            <span>{{ sysLogIp }}</span>
         </div>
         <el-dialog
             :visible.sync="dialogVisible"
@@ -56,6 +76,7 @@
 import { mapGetters } from "vuex";
 import sysPortForm from "./sysPortForm";
 import postData from "@/mixin/postData";
+import { isFunction } from "@/utils/common";
 export default {
     name: "sysPort",
     mixins: [postData],
@@ -68,70 +89,112 @@ export default {
                 this.baseData.https === 443 &&
                 this.baseData.telnet === 23
             );
-        }
+        },
     },
     props: {
         baseData: {
-            type: Object
-        }
+            type: Object,
+        },
+        sysLogIp: {
+            type: String,
+        },
     },
     data() {
         return {
-            dialogVisible: false
+            dialogVisible: false,
+            dialogType: "",
         };
     },
     methods: {
-        openDialog() {
+        openDialog(type) {
             this.dialogVisible = true;
-            this.$nextTick(_ => {
-                this.$refs["sys-port-form"].init(this.baseData);
+            this.dialogType = type;
+            this.$nextTick(() => {
+                this.$refs["sys-port-form"].init(
+                    type === "sysport"
+                        ? this.baseData
+                        : { ipaddr: this.sysLogIp },
+                    this.dialogType
+                );
             });
         },
         submitForm(formName) {
-            this.$refs[formName].validate(form => {
+            this.$refs[formName].validate((form, type) => {
                 if (form) {
-                    if (
-                        Number(form.http) === this.baseData.http &&
-                        Number(form.https) === this.baseData.https &&
-                        Number(form.telnet) === this.baseData.telnet
-                    ) {
-                        return this.$message.info(this.$lang("modify_tips"));
-                    }
-                    this.postData("/system_service?form=port", {
-                        method: "set",
-                        param: {
-                            http: Number(form.http),
-                            https: Number(form.https),
-                            telnet: Number(form.telnet)
+                    const ACTIONS = {
+                        sysport(form) {
+                            if (
+                                Number(form.http) === this.baseData.http &&
+                                Number(form.https) === this.baseData.https &&
+                                Number(form.telnet) === this.baseData.telnet
+                            ) {
+                                this.$message.info(this.$lang("modify_tips"));
+                                return;
+                            }
+                            return {
+                                url: "/system_service?form=port",
+                                data: {
+                                    method: "set",
+                                    param: {
+                                        http: Number(form.http),
+                                        https: Number(form.https),
+                                        telnet: Number(form.telnet),
+                                    },
+                                },
+                            };
+                        },
+                        syslog(form) {
+                            if (form.ipaddr === this.sysLogIp) {
+                                this.$message.info(this.$lang("modify_tips"));
+                                return;
+                            }
+                            return {
+                                url: "/system_service?form=syslog",
+                                data: {
+                                    method: "set",
+                                    param: {
+                                        ipaddr: form.ipaddr,
+                                    },
+                                },
+                            };
+                        },
+                    };
+                    if (isFunction(ACTIONS[type])) {
+                        const res = ACTIONS[type].call(this, form);
+                        if (res) {
+                            const { url, data } = res;
+                            this.postData(url, data)
+                                .then(() => {
+                                    this.$emit("refresh");
+                                })
+                                .catch(() => {})
+                                .finally(() => {
+                                    this.dialogVisible = false;
+                                });
                         }
-                    })
-                        .then(_ => {
-                            this.$emit("refresh");
-                        })
-                        .catch(_ => {});
-                    this.dialogVisible = false;
+                    }
                 }
             });
         },
         restoreDefPorts() {
             this.$confirm(this.$lang("if_sure", "restore_defaults") + " ?")
-                .then(_ => {
+                .then((_) => {
                     this.postData("/system_service?form=port", {
                         method: "set",
                         param: {
                             http: 80,
                             https: 443,
-                            telnet: 23
-                        }
+                            telnet: 23,
+                        },
                     })
-                        .then(_ => {
+                        .then((_) => {
                             this.$emit("refresh");
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
-        }
-    }
+                .catch((_) => {});
+        },
+    },
 };
 </script>
 
