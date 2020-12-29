@@ -240,6 +240,17 @@ const actions = {
             })
             .catch((err) => {});
     },
+    setLanguage({ commit }, lang) {
+        axios
+            .post("/system_lang", {
+                method: "set",
+                param: {
+                    lang,
+                },
+            })
+            .then((res) => {})
+            .catch((err) => {});
+    },
 };
 
 export default actions;
