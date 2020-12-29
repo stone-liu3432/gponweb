@@ -1,7 +1,6 @@
 const mutations = {
     updateLang(state, data) {
         state.lang = data;
-        sessionStorage.setItem("lang", data);
     },
     updateSystem(state, data) {
         state.system = data;
