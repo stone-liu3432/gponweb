@@ -1,86 +1,130 @@
 <template>
     <div>
         <page-header type="none">
-            <template slot="title">{{ $lang('running_status') }}</template>
+            <template slot="title">{{ $lang("running_status") }}</template>
         </page-header>
-        <el-row :gutter="30" style="margin: 20px 0;">
+        <el-row :gutter="30" style="margin: 20px 0">
             <el-col :span="11">
                 <el-card shadow="never" class="company-info">
                     <template slot="header">
-                        <span class="company-info-title">{{ $lang('sys_info') }}</span>
+                        <span class="company-info-title">
+                            {{ $lang("sys_info") }}
+                        </span>
+                        <el-button
+                            type="primary"
+                            size="mini"
+                            style="float: right"
+                            @click="setHostName"
+                        >
+                            {{ $lang("set_dev_name") }}
+                        </el-button>
                     </template>
+                    <p>
+                        <span>{{ $lang("dev_name") }}:</span>
+                        <span>{{ hostname || "-" }}</span>
+                    </p>
                     <template v-for="key in sysKey">
                         <p>
                             <span>{{ $lang(key) }}:</span>
-                            <span>{{ system[key] || '' }}</span>
+                            <span>{{ system[key] || "" }}</span>
                         </p>
                     </template>
                     <p>
-                        <span>{{ $lang('current_time') }}:</span>
+                        <span>{{ $lang("current_time") }}:</span>
                         <span>{{ cur_time }}</span>
                     </p>
                     <p>
-                        <span>{{ $lang('run_time') }}:</span>
+                        <span>{{ $lang("run_time") }}:</span>
                         <span>{{ run_time }}</span>
                     </p>
                     <p>
-                        <span>{{ $lang('panel_temp') }}:</span>
-                        <span>{{ (system['panel_temp'] / 1000).toFixed(2) }} °C</span>
+                        <span>{{ $lang("panel_temp") }}:</span>
+                        <span>
+                            {{ (system["panel_temp"] / 1000).toFixed(2) }}
+                            °C
+                        </span>
                     </p>
                     <p>
-                        <span>{{ $lang('right_temp') }}:</span>
-                        <span>{{ (system['right_temp'] / 1000).toFixed(2) }} °C</span>
+                        <span>{{ $lang("right_temp") }}:</span>
+                        <span>
+                            {{ (system["right_temp"] / 1000).toFixed(2) }}
+                            °C
+                        </span>
                     </p>
                 </el-card>
             </el-col>
             <el-col :span="13">
                 <el-card shadow="never" class="company-info">
                     <template slot="header">
-                        <span class="company-info-title">{{ $lang('hw_status') }}</span>
+                        <span class="company-info-title">{{
+                            $lang("hw_status")
+                        }}</span>
                     </template>
                     <el-row :gutter="30">
-                        <el-col :span="10" style="text-align: center;">
-                            <p class="base-font-style">{{ $lang('cpu_usage') }}</p>
-                            <canvas width="200" height="200" ref="cpu-detail"></canvas>
+                        <el-col :span="10" style="text-align: center">
+                            <p class="base-font-style">
+                                {{ $lang("cpu_usage") }}
+                            </p>
+                            <canvas
+                                width="200"
+                                height="200"
+                                ref="cpu-detail"
+                            ></canvas>
                         </el-col>
-                        <el-col :span="10" style="text-align: center;">
-                            <p class="base-font-style">{{ $lang('memory_usage') }}</p>
-                            <canvas width="200" height="200" ref="memory-detail"></canvas>
+                        <el-col :span="10" style="text-align: center">
+                            <p class="base-font-style">
+                                {{ $lang("memory_usage") }}
+                            </p>
+                            <canvas
+                                width="200"
+                                height="200"
+                                ref="memory-detail"
+                            ></canvas>
                         </el-col>
                     </el-row>
-                    <h3>{{ $lang('fan_speed') }}</h3>
+                    <h3>{{ $lang("fan_speed") }}</h3>
                     <template v-for="item in fans">
-                        <el-row style="padding: 6px;" class="base-font-style">
-                            <el-col
-                                :span="6"
-                                style="line-height: 38px;"
-                            >{{ $lang('fanid') + item.fanid }}:</el-col>
+                        <el-row style="padding: 6px" class="base-font-style">
+                            <el-col :span="6" style="line-height: 38px"
+                                >{{ $lang("fanid") + item.fanid }}:</el-col
+                            >
                             <el-col :span="12">
-                                <el-slider v-model="item.speed" :max="255" disabled></el-slider>
+                                <el-slider
+                                    v-model="item.speed"
+                                    :max="255"
+                                    disabled
+                                ></el-slider>
                             </el-col>
                         </el-row>
                     </template>
                 </el-card>
             </el-col>
         </el-row>
-        <el-card shadow="never" class="company-info" style="margin: 0 15px;" v-if="showCompanyInfo">
+        <el-card
+            shadow="never"
+            class="company-info"
+            style="margin: 0 15px"
+            v-if="showCompanyInfo"
+        >
             <template slot="header">
-                <span class="company-info-title">{{ $lang('company_info') }}</span>
+                <span class="company-info-title">{{
+                    $lang("company_info")
+                }}</span>
             </template>
             <p v-if="!!company_name">
-                <span>{{ $lang('company_name') }}:</span>
+                <span>{{ $lang("company_name") }}:</span>
                 <span>{{ this.company_name }}</span>
             </p>
             <p v-if="!!company_addr">
-                <span>{{ $lang('company_addr') }}:</span>
+                <span>{{ $lang("company_addr") }}:</span>
                 <span>{{ this.company_addr }}</span>
             </p>
             <p v-if="!!company_email">
-                <span>{{ $lang('company_email') }}:</span>
+                <span>{{ $lang("company_email") }}:</span>
                 <span>{{ this.company_email }}</span>
             </p>
             <p v-if="!!company_phone">
-                <span>{{ $lang('company_phone') }}:</span>
+                <span>{{ $lang("company_phone") }}:</span>
                 <span>{{ this.company_phone }}</span>
             </p>
         </el-card>
@@ -90,10 +134,12 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 import { isPlainObject, isArray } from "@/utils/common";
+import postData from "@/mixin/postData";
 export default {
     name: "runningStatus",
+    mixins: [postData],
     computed: {
-        ...mapGetters(["$lang"]),
+        ...mapGetters(["$lang", "validateMsg"]),
         ...mapState(["system", "time"]),
         sysKey() {
             return [
@@ -105,7 +151,7 @@ export default {
                 "ponports",
                 "geports",
                 "xgeports",
-                "build_time"
+                "build_time",
             ];
         },
         cur_time() {
@@ -131,11 +177,11 @@ export default {
                 !!this.company_email ||
                 !!this.company_phone
             );
-        }
+        },
     },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -148,7 +194,9 @@ export default {
             company_addr: "",
             company_email: "",
             company_phone: "",
-            fans: []
+            fans: [],
+            hostname: "",
+            devName: "",
         };
     },
     created() {
@@ -156,6 +204,7 @@ export default {
         this.getTime();
         this.getUsage();
         this.getCompanyInfo();
+        this.getDevName();
         const fn = () => {
             if (isArray(this.now) && this.now.length) {
                 let now = +new Date(...this.now);
@@ -189,11 +238,11 @@ export default {
             }
         };
         const interval = setInterval(fn, 1000);
-        const refreshTimer = setInterval(_ => {
+        const refreshTimer = setInterval((_) => {
             this.getFanInfo();
             this.getUsage();
         }, 10000);
-        this.$once("hook:beforeDestroy", _ => {
+        this.$once("hook:beforeDestroy", (_) => {
             clearInterval(interval);
             clearInterval(refreshTimer);
         });
@@ -204,30 +253,30 @@ export default {
             this.usage = {};
             this.$http
                 .get("/board?info=cpu")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isPlainObject(res.data.data)) {
                             this.usage = res.data.data;
                             const { cpu_usage, memory_usage } = res.data.data;
-                            this.$nextTick(_ => {
+                            this.$nextTick((_) => {
                                 this.drawing(cpu_usage, memory_usage);
                             });
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getFanInfo() {
             this.$http
                 .get("/board?info=fan")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.fans = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         drawing(cpuNum, memoryNum) {
             var cpu = this.$refs["cpu-detail"];
@@ -287,7 +336,7 @@ export default {
             this.company_phone = "";
             this.$http
                 .get("/board?info=setting_board")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isPlainObject(res.data.data)) {
                             const data = res.data.data;
@@ -298,8 +347,48 @@ export default {
                         }
                     }
                 })
-                .catch(err => {});
-        }
+                .catch((err) => {});
+        },
+        getDevName() {
+            this.$http
+                .get("/system?form=hostname")
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (res.data.data) {
+                            this.hostname = res.data.data.hostname;
+                        }
+                    }
+                })
+                .catch((err) => {});
+        },
+        setHostName() {
+            this.devName = this.hostname;
+            this.$prompt(this.$lang("dev_name"), this.$lang("config"), {
+                confirmButtonText: this.$lang("apply"),
+                cancelButtonText: this.$lang("cancel"),
+                closeOnClickModal: false,
+                closeOnPressEscape: false,
+                inputValue: this.devName,
+                inputPattern: /^[a-z].{0,63}$/i,
+                inputErrorMessage: this.validateMsg("inputLength", 1, 64),
+            })
+                .then(({ value }) => {
+                    if (value === this.hostname) {
+                        return this.$message.info(this.$lang("modify_tips"));
+                    }
+                    this.postData("/system?form=hostname", {
+                        method: "set",
+                        param: {
+                            hostname: value,
+                        },
+                    })
+                        .then(() => {
+                            this.getDevName();
+                        })
+                        .catch((_) => {});
+                })
+                .catch(() => {});
+        },
     },
     watch: {
         time() {
@@ -311,8 +400,8 @@ export default {
                     this.runtime = this.time.uptime;
                 }
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
@@ -351,6 +440,11 @@ p {
             &:first-child {
                 width: 140px;
             }
+        }
+        span + span {
+            width: calc(~"100% - 140px");
+            overflow-wrap: break-word;
+            word-break: break-all;
         }
     }
     .company-info-title {
