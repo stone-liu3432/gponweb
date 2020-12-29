@@ -10,7 +10,7 @@ const msgMap = { en: msg_en, zh: msg_zh };
 const getters = {
     $lang: (state) => (...keys) => {
         // 防止用户手动修改sessionStroage中的内容并刷新页面
-        const maps = langMap[state.lang] || langMap["en"];
+        const maps = langMap[state.lang];
         if (keys.length === 0) {
             return "";
         } else if (keys.length === 1) {
