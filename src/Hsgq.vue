@@ -8,19 +8,11 @@
 
 <script>
 import { isUndef, isDef } from "@/utils/common";
-import { mapMutations, mapState, mapGetters } from "vuex";
+import { mapMutations } from "vuex";
 export default {
     name: "HSGQ",
     created() {
-        // 刷新时
-        const lang = sessionStorage.getItem("lang");
-        // sessionStorage的值会转换为 string类型
-        // 防止用户手动修改sessionStroage的内容并刷新页面
-        if (!["zh", "en"].includes(lang)) {
-            this.getLang();
-        } else {
-            this.updateLang(lang);
-        }
+        this.getLang();
         this.$http
             .get("/system_custom")
             .then((res) => {
@@ -31,10 +23,6 @@ export default {
                 }
             })
             .catch((err) => {});
-    },
-    computed: {
-        ...mapState(["lang"]),
-        ...mapGetters(["$lang"]),
     },
     data() {
         return {
@@ -50,11 +38,8 @@ export default {
                 .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
-                            this.updateLang(res.data.data.lang || "en");
-                            sessionStorage.setItem(
-                                "lang",
-                                res.data.data.lang || "en"
-                            );
+                            this.updateLang(res.data.data.lang);
+                            this.$i18n.locale = res.data.data.lang;
                         }
                     }
                 })
