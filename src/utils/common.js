@@ -157,9 +157,7 @@ export function distinctArray(arr1, arr2) {
 }
 
 export function clearSessionStorage() {
-    const lang = sessionStorage.getItem("lang") || "en";
     sessionStorage.clear();
-    sessionStorage.setItem("lang", lang);
 }
 
 /**
