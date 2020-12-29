@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from "vuex";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { isFunction, clearSessionStorage } from "@/utils/common";
 import {
     LEVEL,
@@ -167,6 +167,7 @@ export default {
     },
     methods: {
         ...mapMutations(["updateLang"]),
+        ...mapActions(["setLanguage"]),
         shortcutCommand(command) {
             const ACTIONS = {
                 socket() {
@@ -250,6 +251,7 @@ export default {
             }
             this.$i18n.locale = lang;
             this.updateLang(lang);
+            this.setLanguage(lang);
         },
         initSocket() {
             if ("WebSocket" in window) {
@@ -400,7 +402,7 @@ export default {
                     const notify = this.msgQueue.shift();
                     isFunction(notify.close) && notify.close(notify.id);
                 }
-                this.$nextTick((_) => {
+                this.$nextTick(() => {
                     const { content, level, alarm_id } = this.msgs.shift();
                     content &&
                         this.msgQueue.push(

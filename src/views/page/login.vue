@@ -152,6 +152,7 @@ export default {
     },
     methods: {
         ...mapMutations(["updateLang"]),
+        ...mapActions(["setLanguage"]),
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
@@ -253,6 +254,7 @@ export default {
         language() {
             this.updateLang(this.language);
             this.$i18n.locale = this.language;
+            this.setLanguage(this.language);
         },
         custom() {
             if (this.custom.captcha) {
