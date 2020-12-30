@@ -21,14 +21,26 @@
             </el-form-item>
         </template>
         <template v-else>
-            <el-form-item :label="$lang('port_type')" v-if="type !== 'pvid'">{{
-                PORT_TYPE_MAP[data.port_type]
-            }}</el-form-item>
+            <el-form-item :label="$lang('port_type')" v-if="type !== 'pvid'">
+                {{ PORT_TYPE_MAP[data.port_type] }}
+            </el-form-item>
             <el-form-item :label="$lang('pvid')" prop="pvid">
                 <template v-if="type === 'pvid'">
                     <el-input v-model.number="formData.pvid"></el-input>
                 </template>
                 <template v-else>{{ data.pvid }}</template>
+            </el-form-item>
+            <el-form-item :label="$lang('priority')" prop="priority">
+                <template v-if="type === 'pvid'">
+                    <el-select v-model.number="formData.priority">
+                        <el-option :value="0"></el-option>
+                        <template v-for="i in 7">
+                            <el-option :value="i"></el-option>
+                        </template>
+                        <el-option label="-" :value="8"></el-option>
+                    </el-select>
+                </template>
+                <template v-else>{{ data.priority }}</template>
             </el-form-item>
             <el-form-item
                 :label="$lang('vlan_list')"
@@ -83,6 +95,7 @@ export default {
                 pvid: "",
                 vlanlist: "",
                 vlan_mode: 1,
+                priority: 8,
             },
             rules: {
                 pvid: [

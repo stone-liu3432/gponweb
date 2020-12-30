@@ -43,6 +43,11 @@
                 :label="$lang('pvid')"
                 prop="pvid"
             ></el-table-column>
+            <el-table-column :label="$lang('priority')">
+                <template slot-scope="scope">
+                    {{ scope.row.priority === 8 ? "-" : scope.row.priority }}
+                </template>
+            </el-table-column>
             <el-table-column :label="$lang('config')" width="100px">
                 <template slot-scope="scope">
                     <el-dropdown @command="dropdownClick">
@@ -163,10 +168,10 @@ export default {
         closeDialog() {
             this.dialogVisible = false;
         },
-        submitAction(data, type) {
+        submitAction(form, type) {
             const ACTIONS = {
                 port_type(data) {
-                    if (data.port_type === this.baseData.port_type) {
+                    if (data.port_type === this.row.port_type) {
                         this.$message.info(this.$lang("modify_tips"));
                         return;
                     }
@@ -182,7 +187,17 @@ export default {
                     };
                 },
                 pvid(data) {
-                    if (data.pvid === this.baseData.pvid) {
+                    const flagMap = {
+                            pvid: 0x1,
+                            priority: 0x2,
+                        },
+                        flags = Object.keys(flagMap).reduce((pre, item) => {
+                            if (this.row[item] !== data[item]) {
+                                pre += flagMap[item];
+                            }
+                            return pre;
+                        }, 0);
+                    if (!flags) {
                         this.$message.info(this.$lang("modify_tips"));
                         return;
                     }
@@ -191,8 +206,10 @@ export default {
                         data: {
                             method: "set",
                             param: {
+                                flags,
                                 port_id: data.port_id,
                                 pvid: data.pvid,
+                                priority: data.priority,
                             },
                         },
                     };
@@ -227,16 +244,18 @@ export default {
                 },
             };
             if (isFunction(ACTIONS[type])) {
-                const result = ACTIONS[type].call(this, data);
+                const result = ACTIONS[type].call(this, form);
                 if (isDef(result)) {
-                    const { url, data: post_params } = result;
-                    this.postData(url, post_params)
+                    const { url, data } = result;
+                    this.postData(url, data)
                         .then(() => {
                             this.$emit("refresh-data");
                         })
-                        .catch(() => {});
+                        .catch(() => {})
+                        .finally(() => {
+                            this.closeDialog();
+                        });
                 }
-                this.closeDialog();
             }
         },
         dropdownClick({ action, row }) {
