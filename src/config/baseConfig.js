@@ -57,9 +57,9 @@ const baseConfig = (Vue) => {
     Vue.use(nmsPanel);
     Vue.use(nmsPortCheckbox);
     Vue.use(nmsFilter);
-    const lang = sessionStorage.getItem("lang");
+
     const i18n = new VueI18n({
-        locale: ["zh", "en"].includes(lang) ? lang : "en",
+        locale: "en",
         messages: {
             en: enLocale,
             zh: zhLocale,
