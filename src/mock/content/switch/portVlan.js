@@ -74,6 +74,7 @@ Mock.mock("/switch_port?form=vlanall", "get", () => {
         port_id: index + 1,
         port_type: Random.range(1, 3),
         pvid: Random.vlan(),
+        priority: Random.range(0, 8),
         tagged_vlan: "1,3-18",
         untagged_vlan: "2,22-24",
         link_aggregation: 0,

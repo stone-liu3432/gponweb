@@ -49,3 +49,13 @@ Mock.mock("/board?info=fan", "get", () => {
         data,
     };
 });
+
+Mock.mock("/system?form=hostname", "get", () => ({
+    code: 1,
+    message: "success",
+    data: {
+        hostname: "OLT",
+    },
+}));
+
+Mock.post("/system?form=hostname");
