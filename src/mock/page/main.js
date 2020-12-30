@@ -29,9 +29,7 @@ Mock.mock("/board?info=menu", "get", {
                 name: "pon_mgmt",
                 children: [
                     { name: "onu_deny" },
-                    { name: "sla_cfg" },
                     { name: "pon_setting" },
-                    { name: "loid_mgmt" },
                     { name: "onu_batch_upgrade" },
                     { name: "pon_optical" },
                     { name: "batch_config" },
@@ -73,6 +71,7 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "igmp" },
                     { name: "dhcp" },
                     { name: "mstp" },
+                    { name: "dhcp_v6" },
                 ],
             },
             {

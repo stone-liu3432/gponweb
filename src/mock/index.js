@@ -26,7 +26,7 @@ const ipv6 = () => {
     let str = `${hex()}:${hex()}:${hex()}:${hex()}:${hex()}:${hex()}:${hex()}:${hex()}`;
     str = str.replace(/^0+(?!:)/, "");
     str = str.replace(/(?::)0+/g, ":0");
-    str = str.replace(/:0/, ":");
+    str = str.replace(/:0(?!$)/, ":");
     while (str.match(/(?:::)0:/)) {
         str = str.replace(/(?:::)0:/, "::");
     }
