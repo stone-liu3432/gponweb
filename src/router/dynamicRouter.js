@@ -142,6 +142,10 @@ const data = {
         import(
             /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/rstp"
         ),
+    dhcp_v6: () =>
+        import(
+            /* webpackChunkName: "protocol" */ "@/views/advSetting/protocol/dhcpv6"
+        ),
     time_range: () =>
         import(
             /* webpackChunkName: "acl-qos" */ "@/views/advSetting/acl-qos/timerange"
