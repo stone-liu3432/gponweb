@@ -83,7 +83,7 @@
                     ></el-table-column>
                     <el-table-column
                         :label="$lang('lease_time')"
-                        prop="lease_time"
+                        prop="lease_time_string"
                     ></el-table-column>
                     <el-table-column :label="$lang('entry_status')">
                         <template slot-scope="scope">{{
