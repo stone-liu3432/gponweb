@@ -1119,6 +1119,10 @@ var en = {
     dev_name: "Device Name",
     set_dev_name: "Set device name",
     syslog_server: "System Log",
+    dhcp_v6: "DHCPv6",
+    dhcpv6_admin: "DHCPv6 Status",
+    option18_admin: "Option18 Status",
+    option37_admin: "Option37 Status",
 };
 
 export default en;

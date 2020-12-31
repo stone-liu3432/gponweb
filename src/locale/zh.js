@@ -1091,6 +1091,10 @@ var zh = {
     dev_name: "设备名称",
     set_dev_name: "配置设备名称",
     syslog_server: "System Log",
+    dhcp_v6: "DHCPv6",
+    dhcpv6_admin: "DHCPv6状态",
+    option18_admin: "Option18状态",
+    option37_admin: "Option37状态",
 };
 
 export default zh;
