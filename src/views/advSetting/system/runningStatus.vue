@@ -148,6 +148,7 @@ export default {
                 "fw_ver",
                 "hw_ver",
                 "macaddr",
+                "sn",
                 "ponports",
                 "geports",
                 "xgeports",
