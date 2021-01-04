@@ -1,7 +1,7 @@
 <template>
     <div class="port-vlan-config">
         <el-table
-            :data="baseData"
+            :data="portVlanRows"
             border
             row-key="port_id"
             :expand-row-keys="expandRowKeys"
@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import vlanConfigForm from "./vlanConfigForm";
 import { isFunction, isDef, removeItem } from "@/utils/common";
 import { PORT_TYPE_MAP } from "@/utils/commonData";
@@ -127,6 +127,7 @@ export default {
     },
     computed: {
         ...mapGetters(["$lang", "getPortName"]),
+        ...mapState(["system"]),
         title() {
             if (this.dialogVisible) {
                 if (this.dialogType === "add") {
@@ -138,6 +139,11 @@ export default {
                 return this.$lang("set");
             }
             return "";
+        },
+        portVlanRows() {
+            return this.baseData.filter(
+                (item) => item.port_id > this.system.ponports
+            );
         },
     },
     data() {
