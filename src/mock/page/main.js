@@ -42,7 +42,6 @@ Mock.mock("/board?info=menu", "get", {
                     { name: "onu_port_info" },
                     { name: "onu_port_cfg" },
                     { name: "op_vlan" },
-                    { name: "onu_multicast" },
                     { name: "onu_perf_info" },
                 ],
             },
