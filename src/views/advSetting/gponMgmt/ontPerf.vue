@@ -1,17 +1,28 @@
 <template>
     <div>
-        <page-header type="pon" has-onu @port-change="portChange">
-            <template slot="title">{{ $lang('onu_perf_info') }}</template>
+        <page-header
+            type="pon"
+            has-onu
+            @port-change="portChange"
+            :portid="pid"
+            :onuid="oid"
+        >
+            <template slot="title">{{ $lang("onu_perf_info") }}</template>
             <template slot="content">
                 <el-button
                     type="primary"
                     size="small"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     @click="refreshData"
-                >{{ $lang('refresh') }}</el-button>
+                    >{{ $lang("refresh") }}</el-button
+                >
             </template>
         </page-header>
-        <el-tabs v-model="activeName" type="card" @tab-click="getPerfs(port_id, ont_id)">
+        <el-tabs
+            v-model="activeName"
+            type="card"
+            @tab-click="getPerfs(port_id, ont_id)"
+        >
             <el-tab-pane
                 :label="$lang('olt_gem_statistics')"
                 name="olt_gem_perf"
@@ -46,12 +57,12 @@ import ontEthPerf from "./ontPerf/ontEth";
 export default {
     name: "ontPerf",
     computed: {
-        ...mapGetters(["$lang", "getPortName"])
+        ...mapGetters(["$lang", "getPortName"]),
     },
     components: { oltGemPerf, ontGemPerf, ontEthPerf },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -60,8 +71,14 @@ export default {
             activeName: "olt_gem_perf",
             perfs: [],
             port_id: 1,
-            ont_id: 0
+            ont_id: 0,
+            pid: 0,
+            oid: 0,
         };
+    },
+    created() {
+        this.pid = Number(sessionStorage.getItem("port_id")) || 0;
+        this.oid = Number(sessionStorage.getItem("ont_id")) || 0xffff;
     },
     methods: {
         portChange(port_id, ont_id) {
@@ -71,6 +88,8 @@ export default {
             }
             this.port_id = port_id;
             this.ont_id = ont_id;
+            sessionStorage.setItem("port_id", port_id);
+            sessionStorage.setItem("ont_id", ont_id);
             this.getPerfs(port_id, ont_id);
         },
         getPerfs(port_id, ont_id) {
@@ -92,47 +111,47 @@ export default {
                 .get(
                     `/gponont_mgmt?form=olt_gemport&port_id=${port_id}&ont_id=${ont_id}&gemport_id=0`
                 )
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.perfs = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getOntGemPerf(port_id, ont_id) {
             this.$http
                 .get(
                     `/gponont_mgmt?form=ont_gemport&port_id=${port_id}&ont_id=${ont_id}&gemport_id=0`
                 )
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.perfs = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getOntEthPerf(port_id, ont_id) {
             this.$http
                 .get(
                     `/gponont_mgmt?form=ont_ethport&port_id=${port_id}&ont_id=${ont_id}&uniport_id=0`
                 )
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.perfs = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         refreshData() {
             debounce(this.getPerfs, 1000, this, this.port_id, this.ont_id);
-        }
-    }
+        },
+    },
 };
 </script>
 

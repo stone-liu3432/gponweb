@@ -192,8 +192,14 @@ export default {
         };
     },
     created() {
-        const port_id = this.$route.query.port_id || 0,
-            ont_id = this.$route.query.ont_id || 0xffff;
+        const port_id =
+                this.$route.query.port_id ||
+                sessionStorage.getItem("port_id") ||
+                0,
+            ont_id =
+                this.$route.query.ont_id ||
+                sessionStorage.getItem("ont_id") ||
+                0xffff;
         this.pid = Number(port_id);
         this.oid = Number(ont_id);
     },
@@ -255,6 +261,8 @@ export default {
         portChange(port_id, ont_id) {
             this.port_id = port_id;
             this.ont_id = ont_id;
+            sessionStorage.setItem("port_id", port_id);
+            sessionStorage.setItem("ont_id", ont_id);
             if (ont_id === 0xffff) {
                 this.baseInfo = {};
                 this.portInfo = {};

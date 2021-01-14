@@ -1,9 +1,15 @@
 <template>
     <div>
-        <page-header type="pon" hasOnu @port-change="portChange">
+        <page-header
+            type="pon"
+            hasOnu
+            @port-change="portChange"
+            :portid="pid"
+            :onuid="oid"
+        >
             <template slot="title">{{ $lang("op_vlan") }}</template>
         </page-header>
-        <div style="margin: 12px 0;" v-if="ont_id !== 0xffff">
+        <div style="margin: 12px 0" v-if="ont_id !== 0xffff">
             <el-button type="primary" size="small" @click="openDialog('add')">{{
                 $lang("add")
             }}</el-button>
@@ -92,24 +98,30 @@ export default {
     components: { opVlanForm },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
     },
     mixins: [postData],
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang"]),
     },
     data() {
         return {
+            pid: 0,
+            oid: 0,
             port_id: 0,
             ont_id: 0xffff,
             vlanList: {},
             UNI_TYPES,
             VLAN_MODES,
             dialogVisible: false,
-            dialogType: ""
+            dialogType: "",
         };
+    },
+    created() {
+        this.pid = Number(sessionStorage.getItem("port_id")) || 0;
+        this.oid = Number(sessionStorage.getItem("ont_id")) || 0xffff;
     },
     methods: {
         getData(port_id, ont_id) {
@@ -119,21 +131,23 @@ export default {
                     params: {
                         form: "port_vlan",
                         port_id,
-                        ont_id
-                    }
+                        ont_id,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.vlanList = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         portChange(port_id, ont_id) {
             this.port_id = port_id;
             this.ont_id = ont_id;
+            sessionStorage.setItem("port_id", port_id);
+            sessionStorage.setItem("ont_id", ont_id);
             if (ont_id === 0xffff) {
                 this.vlanList = {};
                 return;
@@ -148,15 +162,15 @@ export default {
             });
         },
         submitForm(formName) {
-            this.$refs[formName].validate(formData => {
+            this.$refs[formName].validate((formData) => {
                 if (formData) {
                     const url = "/gponont_mgmt?form=port_vlan";
                     const post_params = {
                         method: this.dialogType === "config" ? "set" : "add",
                         param: {
                             identifier: (this.port_id << 8) | this.ont_id,
-                            ...formData
-                        }
+                            ...formData,
+                        },
                     };
                     this.postData(url, post_params)
                         .then(() => {
@@ -169,7 +183,7 @@ export default {
         },
         deleteOpvlan(row) {
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
-                .then(_ => {
+                .then((_) => {
                     this.postData("/gponont_mgmt?form=port_vlan", {
                         method: "delete",
                         param: {
@@ -180,17 +194,17 @@ export default {
                             svlanid: row.svlanid,
                             svlanpri: row.svlanpri,
                             cvlanid: row.cvlanid,
-                            cvlanpri: row.cvlanpri
-                        }
+                            cvlanpri: row.cvlanpri,
+                        },
                     })
-                        .then(_ => {
+                        .then((_) => {
                             this.getData(this.port_id, this.ont_id);
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
-        }
-    }
+                .catch((_) => {});
+        },
+    },
 };
 </script>
 

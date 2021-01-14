@@ -1,31 +1,51 @@
 <template>
     <div>
-        <page-header type="pon" hasOnu @port-change="portChange">
-            <template slot="title">{{ $lang('ont', 'port_info') }}</template>
+        <page-header
+            type="pon"
+            hasOnu
+            @port-change="portChange"
+            :portid="pid"
+            :onuid="oid"
+        >
+            <template slot="title">{{ $lang("ont", "port_info") }}</template>
         </page-header>
         <template v-if="portList.length">
             <el-table :data="portList" border>
-                <el-table-column :label="$lang('ethport_id')" prop="ethport_id"></el-table-column>
-                <el-table-column :label="$lang('porttype')" prop="porttype"></el-table-column>
-                <el-table-column :label="$lang('epspeed')" prop="epspeed"></el-table-column>
+                <el-table-column
+                    :label="$lang('ethport_id')"
+                    prop="ethport_id"
+                ></el-table-column>
+                <el-table-column
+                    :label="$lang('porttype')"
+                    prop="porttype"
+                ></el-table-column>
+                <el-table-column
+                    :label="$lang('epspeed')"
+                    prop="epspeed"
+                ></el-table-column>
                 <el-table-column :label="$lang('epduplex')">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.epduplex ? "Half" : scope.row.epspeed ? "Full" : "-" }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.epduplex
+                            ? "Half"
+                            : scope.row.epspeed
+                            ? "Full"
+                            : "-"
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('epstatus')">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.epspeed ? scope.row.epstatus ? "Down" : "Up" : "Down" }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.epspeed
+                            ? scope.row.epstatus
+                                ? "Down"
+                                : "Up"
+                            : "Down"
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('ring')">
-                    <template slot-scope="scope">{{ RING_MAP[scope.row.ring] }}</template>
+                    <template slot-scope="scope">{{
+                        RING_MAP[scope.row.ring]
+                    }}</template>
                 </el-table-column>
-                <!-- <el-table-column :label="$lang('config')" width="80px">
-                <template slot-scope="scope">
-                    <el-button type="text">{{ $lang('config') }}</el-button>
-                </template>
-                </el-table-column>-->
             </el-table>
         </template>
     </div>
@@ -39,20 +59,26 @@ export default {
     name: "ontPortCfg",
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
     },
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang"]),
     },
     data() {
         return {
             RING_MAP,
+            pid: 0,
+            oid: 0xffff,
             port_id: 0,
             ont_id: 0xffff,
-            portList: []
+            portList: [],
         };
+    },
+    created() {
+        this.pid = Number(sessionStorage.getItem("port_id")) || 0;
+        this.oid = Number(sessionStorage.getItem("ont_id")) || 0xffff;
     },
     methods: {
         getData(port_id, ont_id) {
@@ -62,28 +88,30 @@ export default {
                     params: {
                         form: "ethport",
                         port_id,
-                        ont_id
-                    }
+                        ont_id,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.portList = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         portChange(port_id, ont_id) {
             this.port_id = port_id;
             this.ont_id = ont_id;
+            sessionStorage.setItem("port_id", port_id);
+            sessionStorage.setItem("ont_id", ont_id);
             if (ont_id === 0xffff) {
                 this.portList = [];
                 return;
             }
             this.getData(port_id, ont_id);
-        }
-    }
+        },
+    },
 };
 </script>
 

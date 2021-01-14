@@ -1,68 +1,105 @@
 <template>
     <div>
-        <page-header type="pon" hasOnu @port-change="portChange">
-            <template slot="title">{{ $lang('onu_port_cfg') }}</template>
+        <page-header
+            type="pon"
+            hasOnu
+            @port-change="portChange"
+            :portid="pid"
+            :onuid="oid"
+        >
+            <template slot="title">{{ $lang("onu_port_cfg") }}</template>
         </page-header>
         <template v-if="ont_id !== 0xffff">
             <el-table :data="portList" border>
-                <el-table-column :label="$lang('uniport')" prop="uniport"></el-table-column>
+                <el-table-column
+                    :label="$lang('uniport')"
+                    prop="uniport"
+                ></el-table-column>
                 <el-table-column :label="$lang('unitype')" prop="unitype">
-                    <template slot-scope="scope">{{ UNI_TYPES[scope.row.unitype] }}</template>
+                    <template slot-scope="scope">{{
+                        UNI_TYPES[scope.row.unitype]
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('epspeed')">
-                    <template
-                        slot-scope="scope"
-                    >{{ (scope.row.epspeed === 0xffff || scope.row.epspeed === 0) ? 'Auto' : scope.row.epspeed }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.epspeed === 0xffff || scope.row.epspeed === 0
+                            ? "Auto"
+                            : scope.row.epspeed
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('epduplex')">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.epduplex ? $lang('half') : $lang('full') }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.epduplex ? $lang("half") : $lang("full")
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('adminstate')">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.adminstate ? $lang('disable') : $lang('enable') }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.adminstate
+                            ? $lang("disable")
+                            : $lang("enable")
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('epautoneg')">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.epautoneg ? $lang('disable') : $lang('enable') }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.epautoneg ? $lang("disable") : $lang("enable")
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('flow_ctrl')">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.flow_ctrl ? $lang('disable') : $lang('enable') }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.flow_ctrl ? $lang("disable") : $lang("enable")
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('ring')">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.ring === 1 ? $lang('on') : $lang('off') }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.ring === 1 ? $lang("on") : $lang("off")
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('na_vlan_id')" prop="na_vlan_id">
-                    <template
-                        slot-scope="scope"
-                    >{{ scope.row.na_vlan_id === 0x1000 ? '-' : scope.row.na_vlan_id }}</template>
+                    <template slot-scope="scope">{{
+                        scope.row.na_vlan_id === 0x1000
+                            ? "-"
+                            : scope.row.na_vlan_id
+                    }}</template>
                 </el-table-column>
-                <el-table-column :label="$lang('na_vlan_pri')" prop="na_vlan_pri">
-                    <template
-                        slot-scope="scope"
-                    >{{ (scope.row.na_vlan_id === 0x1000 || scope.row.na_vlan_pri > 7) ? '-' : scope.row.na_vlan_pri }}</template>
+                <el-table-column
+                    :label="$lang('na_vlan_pri')"
+                    prop="na_vlan_pri"
+                >
+                    <template slot-scope="scope">{{
+                        scope.row.na_vlan_id === 0x1000 ||
+                        scope.row.na_vlan_pri > 7
+                            ? "-"
+                            : scope.row.na_vlan_pri
+                    }}</template>
                 </el-table-column>
                 <el-table-column :label="$lang('config')">
                     <template slot-scope="scope">
                         <el-dropdown @command="command">
                             <span class="el-dropdown-link">
-                                <span>{{ $lang('config') }}</span>
-                                <i class="el-icon-arrow-down el-icon--right"></i>
+                                <span>{{ $lang("config") }}</span>
+                                <i
+                                    class="el-icon-arrow-down el-icon--right"
+                                ></i>
                             </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item
-                                    :command="{ action: 'port', data: scope.row }"
-                                >{{ $lang('config', 'port') }}</el-dropdown-item>
+                                    :command="{
+                                        action: 'port',
+                                        data: scope.row,
+                                    }"
+                                    >{{
+                                        $lang("config", "port")
+                                    }}</el-dropdown-item
+                                >
                                 <el-dropdown-item
-                                    :command="{ action: 'vlan', data: scope.row }"
-                                >{{$lang('config', 'na_vlan_id')}}</el-dropdown-item>
+                                    :command="{
+                                        action: 'vlan',
+                                        data: scope.row,
+                                    }"
+                                    >{{
+                                        $lang("config", "na_vlan_id")
+                                    }}</el-dropdown-item
+                                >
                             </el-dropdown-menu>
                         </el-dropdown>
                     </template>
@@ -70,14 +107,19 @@
             </el-table>
         </template>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
-            <div slot="title">{{ $lang('config') }}</div>
-            <ont-port-config-form ref="ont-port-config-form"></ont-port-config-form>
+            <div slot="title">{{ $lang("config") }}</div>
+            <ont-port-config-form
+                ref="ont-port-config-form"
+            ></ont-port-config-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('ont-port-config-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -94,22 +136,28 @@ export default {
     mixins: [postData],
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
     },
     components: { ontPortConfigForm },
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang"]),
     },
     data() {
         return {
             UNI_TYPES,
+            pid: 0,
+            oid: 0,
             port_id: 0,
             ont_id: 0xffff,
             portList: [],
-            dialogVisible: false
+            dialogVisible: false,
         };
+    },
+    created() {
+        this.pid = Number(sessionStorage.getItem("port_id")) || 0;
+        this.oid = Number(sessionStorage.getItem("ont_id")) || 0xffff;
     },
     methods: {
         getData(port_id, ont_id) {
@@ -119,21 +167,23 @@ export default {
                     params: {
                         form: "port_attr",
                         port_id,
-                        ont_id
-                    }
+                        ont_id,
+                    },
                 })
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.portList = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         portChange(port_id, ont_id) {
             this.port_id = port_id;
             this.ont_id = ont_id;
+            sessionStorage.setItem("port_id", port_id);
+            sessionStorage.setItem("ont_id", ont_id);
             if (ont_id === 0xffff) {
                 this.portList = [];
                 return;
@@ -169,9 +219,9 @@ export default {
                                         epautoneg: form.epautoneg,
                                         adminstate: form.adminstate,
                                         flow_ctrl: form.flow_ctrl,
-                                        ring: form.ring
-                                    }
-                                }
+                                        ring: form.ring,
+                                    },
+                                },
                             };
                         },
                         vlan(form) {
@@ -188,11 +238,11 @@ export default {
                                         uniport: form.uniport,
                                         unitype: form.unitype,
                                         na_vlan_id: form.na_vlan_id,
-                                        na_vlan_pri: form.na_vlan_pri
-                                    }
-                                }
+                                        na_vlan_pri: form.na_vlan_pri,
+                                    },
+                                },
                             };
-                        }
+                        },
                     };
                     if (isFunction(ACTIONS[type])) {
                         const res = ACTIONS[type].call(this, formData);
@@ -213,8 +263,8 @@ export default {
         },
         command({ action, data }) {
             this.openDialog(action, data);
-        }
-    }
+        },
+    },
 };
 </script>
 
