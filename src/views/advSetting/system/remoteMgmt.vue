@@ -7,7 +7,7 @@
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px"
+                style="margin-left: 20px"
                 @click="setDefRoute"
             >
                 {{ $lang("config") }}
@@ -15,7 +15,7 @@
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px"
+                style="margin-left: 20px"
                 v-if="!!gateway && gateway !== '0.0.0.0'"
                 @click="deleteDefRoute"
             >
@@ -28,7 +28,7 @@
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px"
+                style="margin-left: 20px"
                 @click="setDefRouteV6"
             >
                 {{ $lang("config") }}
@@ -36,7 +36,7 @@
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px"
+                style="margin-left: 20px"
                 @click="deleteDefRouteV6"
             >
                 {{ $lang("delete") }}
@@ -55,10 +55,18 @@
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px"
+                style="margin-left: 20px"
                 @click="openDnsDialog('v4')"
             >
                 {{ $lang("config") }}
+            </el-button>
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 20px"
+                @click="deleteDns('ipv4')"
+            >
+                {{ $lang("delete") }}
             </el-button>
         </div>
         <div class="remote-mgmt-dns">
@@ -73,10 +81,18 @@
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px"
+                style="margin-left: 20px"
                 @click="openDnsDialog('v6')"
             >
                 {{ $lang("config") }}
+            </el-button>
+            <el-button
+                type="primary"
+                size="small"
+                style="margin-left: 20px"
+                @click="deleteDns('ipv6')"
+            >
+                {{ $lang("delete") }}
             </el-button>
         </div>
         <h3>
@@ -732,6 +748,43 @@ export default {
                             this.getInterfaces();
                         })
                         .catch(() => {});
+                })
+                .catch(() => {});
+        },
+        deleteDns(type) {
+            this.$confirm(this.$lang("if_sure", "delete", type) + " DNS ?")
+                .then(() => {
+                    const url =
+                            type === "ipv4"
+                                ? "/system?form=dns"
+                                : type === "ipv6"
+                                ? "/system?form=dns_v6"
+                                : "",
+                        data =
+                            type === "ipv4"
+                                ? {
+                                      method: "set",
+                                      param: {
+                                          primary: "",
+                                          secondary: "",
+                                      },
+                                  }
+                                : type === "ipv6"
+                                ? {
+                                      method: "set",
+                                      param: {
+                                          primary_v6: "",
+                                          secondary_v6: "",
+                                      },
+                                  }
+                                : "";
+                    url &&
+                        data &&
+                        this.postData(url, data)
+                            .then(() => {
+                                this.getDns();
+                            })
+                            .catch(() => {});
                 })
                 .catch(() => {});
         },
