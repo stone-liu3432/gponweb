@@ -6,14 +6,14 @@
             :portid="port_id"
             @port-change="portChange"
         ></page-header>
-        <el-row :gutter="30" style="overflow: hidden;">
+        <el-row :gutter="30" style="overflow: hidden">
             <el-col :span="8">
                 <el-card shadow="never">
                     <template slot="header">
                         <span>{{ $lang("port_cfg") }}</span>
                         <el-button
                             type="text"
-                            style="float: right; padding: 3px 0;"
+                            style="float: right; padding: 3px 0"
                             @click="openDialog('sw_port_cfg')"
                             >{{ $lang("config") }}</el-button
                         >
@@ -60,7 +60,10 @@
                         }}</el-form-item>
                         <el-form-item :label="$lang('port_desc') + ':'">
                             <div
-                                style="word-wrap: break-word; word-break: break-all;"
+                                style="
+                                    word-wrap: break-word;
+                                    word-break: break-all;
+                                "
                             >
                                 {{ basic.port_desc }}
                             </div>
@@ -74,7 +77,7 @@
                         <span>{{ $lang("stormctrl") }}</span>
                         <el-button
                             type="text"
-                            style="float: right; padding: 3px 0;"
+                            style="float: right; padding: 3px 0"
                             @click="openDialog('stormctrl')"
                             >{{ $lang("config") }}</el-button
                         >
@@ -98,13 +101,17 @@
                         <span>{{ $lang("mirror") }}</span>
                         <el-button
                             type="text"
-                            style="float: right; padding: 3px 0;"
+                            style="float: right; padding: 3px 0"
                             @click="flushMirror"
                             >{{ $lang("flush") }}</el-button
                         >
                         <el-button
                             type="text"
-                            style="float: right; padding: 3px 0; margin-right: 20px;"
+                            style="
+                                float: right;
+                                padding: 3px 0;
+                                margin-right: 20px;
+                            "
                             @click="openDialog('mirror')"
                             >{{ $lang("config") }}</el-button
                         >
@@ -153,7 +160,7 @@ export default {
     components: { portConfigForm },
     computed: {
         ...mapState(["system"]),
-        ...mapGetters(["$lang", "getPortName"])
+        ...mapGetters(["$lang", "getPortName"]),
     },
     data() {
         return {
@@ -164,12 +171,12 @@ export default {
             mirror: {},
             dialogData: {},
             dialogType: "",
-            dialogVisible: false
+            dialogVisible: false,
         };
     },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -191,56 +198,56 @@ export default {
             this.basic = {};
             this.$http
                 .get("/switch_port?form=port_info&port_id=" + port_id)
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.basic = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getStorm(port_id) {
             this.storm = {};
             this.$http
                 .get("/switch_port?form=stormctrl&port_id=" + port_id)
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.storm = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         getMirror(port_id) {
             this.mirror = {};
             this.$http
                 .get("/switch_port?form=mirror&port_id=" + port_id)
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.mirror = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         openDialog(type) {
             const data = {
                 sw_port_cfg: this.basic,
                 stormctrl: this.storm,
-                mirror: this.mirror
+                mirror: this.mirror,
             };
             this.dialogData = data[type];
             this.dialogType = type;
             this.dialogVisible = true;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["port-config-form"].init();
             });
         },
         submitForm(formName) {
-            this.$refs["port-config-form"].validate(data => {
+            this.$refs["port-config-form"].validate((data) => {
                 if (data) {
                     this.submitAction(data, this.dialogType);
                 }
@@ -259,7 +266,7 @@ export default {
                         erate: 0x100,
                         irate: 0x200,
                         pvid: 0x400,
-                        port_desc: 0x800
+                        port_desc: 0x800,
                     };
                     const flag = this.computedFlag(flags, data, this.basic);
                     if (flag === 0) {
@@ -282,16 +289,16 @@ export default {
                                 erate: data.erate,
                                 irate: data.irate,
                                 pvid: data.pvid,
-                                port_desc: data.port_desc
-                            }
-                        }
+                                port_desc: data.port_desc,
+                            },
+                        },
                     };
                 },
                 stormctrl(data, type) {
                     const flags = {
                         broadcast: 0x04,
                         multicast: 0x02,
-                        unicast: 0x01
+                        unicast: 0x01,
                     };
                     const flag = this.computedFlag(flags, data, this.storm);
                     if (flag === 0) {
@@ -307,9 +314,9 @@ export default {
                                 flags: flag,
                                 broadcast: data.broadcast,
                                 multicast: data.multicast,
-                                unicast: data.unicast
-                            }
-                        }
+                                unicast: data.unicast,
+                            },
+                        },
                     };
                 },
                 mirror(data) {
@@ -320,31 +327,39 @@ export default {
                             param: {
                                 src_port: this.port_id,
                                 dst_port: data.dst_port,
-                                type: data.type
-                            }
-                        }
+                                type: data.type,
+                            },
+                        },
                     };
-                }
+                },
             };
             if (isFunction(ACTIONS[type])) {
                 const result = ACTIONS[type].call(this, data, type);
                 if (result) {
                     const { data: post_param, url } = result;
                     this.postData(url, post_param)
-                        .then(_ => {
+                        .then((_) => {
                             type === "sw_port_cfg" &&
                                 this.getBasic(this.port_id);
                             type === "stormctrl" && this.getStorm(this.port_id);
                             type === "mirror" && this.getMirror(this.port_id);
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                     this.closeDialog();
                 }
             }
         },
         computedFlag(flags, data, baseData) {
             let flag = 0;
-            Object.keys(flags).forEach(key => {
+            Object.keys(flags).forEach((key) => {
+                if (
+                    key === "speed" &&
+                    baseData.auto_neg &&
+                    data.speed !== "auto"
+                ) {
+                    flag |= flags[key];
+                    return;
+                }
                 if (data[key] !== baseData[key]) {
                     flag |= flags[key];
                 }
@@ -356,21 +371,21 @@ export default {
         },
         flushMirror() {
             this.$confirm(this.$lang("if_sure", "flush", "mirror") + " ?")
-                .then(_ => {
+                .then((_) => {
                     this.postData("/switch_port?form=mirror", {
                         method: "clear",
                         param: {
-                            src_port: this.port_id
-                        }
+                            src_port: this.port_id,
+                        },
                     })
-                        .then(_ => {
+                        .then((_) => {
                             this.getMirror(this.port_id);
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
-        }
-    }
+                .catch((_) => {});
+        },
+    },
 };
 </script>
 
