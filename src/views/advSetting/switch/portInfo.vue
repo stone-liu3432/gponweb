@@ -120,21 +120,23 @@
             destroy-on-close
             width="650px"
         >
-            <template slot="title">{{ $lang("config") }}</template
-            ><port-config-form
+            <template slot="title">{{ $lang("config") }}</template>
+            <port-config-form
                 type="sw_port_cfg"
                 :port_id="row.port_id"
                 :data="row"
                 ref="port-config-form"
-            ></port-config-form>
+            >
+            </port-config-form>
             <template slot="footer">
-                <el-button @click="dialogVisible = false">{{
-                    $lang("cancel")
-                }}</el-button>
+                <el-button @click="dialogVisible = false">
+                    {{ $lang("cancel") }}
+                </el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('port-config-form')"
-                    >{{ $lang("apply") }}
+                >
+                    {{ $lang("apply") }}
                 </el-button>
             </template>
         </el-dialog>
@@ -236,6 +238,14 @@ export default {
         computedFlag(flags, data, baseData) {
             let flag = 0;
             Object.keys(flags).forEach((key) => {
+                if (
+                    key === "speed" &&
+                    baseData.auto_neg &&
+                    data.speed !== "auto"
+                ) {
+                    flag |= flags[key];
+                    return;
+                }
                 if (data[key] !== baseData[key]) {
                     flag |= flags[key];
                 }
