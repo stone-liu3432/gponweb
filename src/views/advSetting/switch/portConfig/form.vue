@@ -369,6 +369,7 @@ export default {
             cb();
         },
         init() {
+            this.$refs["port-config-form"].resetFields();
             Object.keys(this.formData).forEach((item) => {
                 if (isDef(this.data[item])) {
                     this.formData[item] = this.data[item];
@@ -377,18 +378,21 @@ export default {
             if (this.type === "mirror") {
                 this.formData.src_port = this.data.port_id;
             }
-            if (isDef(this.data.speed)) {
-                if (
-                    toLower.call(this.data.speed) === "0M" ||
-                    this.data.speed === ""
-                ) {
+            if (this.type === "sw_port_cfg") {
+                if (this.data.speed === "0M" || this.data.speed === "") {
                     this.data.speed = "auto";
+                }
+                if (this.data.auto_neg) {
+                    this.formData["speed"] = "auto";
                 }
             }
         },
         disabled(key, port_id) {
+            if (key === "auto_neg") {
+                return true;
+            }
             const { ponports, geports } = this.system;
-            const keys = ["admin_status", "duplex", "speed", "auto_neg"];
+            const keys = ["admin_status", "duplex", "speed"];
             if (keys.includes(key) && port_id <= ponports) {
                 return true;
             }
