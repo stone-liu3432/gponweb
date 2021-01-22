@@ -77,7 +77,7 @@
                 <el-form-item :label="$lang('mid')" prop="mid" key="mid">
                     <el-input
                         v-model.number="form.mid"
-                        style="width: 216px;"
+                        style="width: 216px"
                     ></el-input>
                 </el-form-item>
                 <el-form-item
@@ -87,12 +87,12 @@
                 >
                     <el-input
                         v-model.number="form.vlan_id"
-                        style="width: 216px;"
+                        style="width: 216px"
                         :disabled="disabledItem('vlan_id')"
                     ></el-input>
                     <el-checkbox
                         v-model="autoAssignVlan"
-                        style="margin-left: 30px;"
+                        style="margin-left: 30px"
                         :disabled="disabledItem('untag')"
                         >untag</el-checkbox
                     >
@@ -125,26 +125,26 @@ import { regRange } from "@/utils/validator";
 export default {
     name: "addForm",
     computed: {
-        ...mapGetters(["$lang", "validateMsg"])
+        ...mapGetters(["$lang", "validateMsg"]),
     },
     inject: ["validateVlan"],
     props: {
         type: {
-            type: String
+            type: String,
         },
         data: {
-            type: Object
+            type: Object,
         },
         dbaData: {
-            type: Array
+            type: Array,
         },
         tconts: {
-            type: Array
+            type: Array,
         },
         existsData: {
             type: Array,
-            default: _ => []
-        }
+            default: (_) => [],
+        },
     },
     data() {
         return {
@@ -158,37 +158,43 @@ export default {
                 mid: "",
                 mode: 1,
                 vlan_id: "",
-                vlan_pri: 0
+                vlan_pri: 0,
             },
             rules: {
                 tcid: [
                     {
                         validator: this.validateTcid,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 gemindex: [
                     {
                         validator: this.validateGemindex,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 vlan_id: [
                     {
                         validator: this.validateVlanid,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 mid: [
-                    { validator: this.validateMid, trigger: ["change", "blur"] }
+                    {
+                        validator: this.validateMid,
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 vlan_pri: [
-                    { validator: this.validatePri, trigger: ["change", "blur"] }
-                ]
+                    {
+                        validator: this.validatePri,
+                        trigger: ["change", "blur"],
+                    },
+                ],
             },
             disabledMode: false,
             autoAssignVlan: false,
-            gemCache: {}
+            gemCache: {},
         };
     },
     methods: {
@@ -207,7 +213,7 @@ export default {
                 this.disabledMode = false;
                 this.form.gemindex = "";
                 if (this.existsData.length) {
-                    this.existsData.forEach(item => {
+                    this.existsData.forEach((item) => {
                         if (item.mapping && item.mapping.length) {
                             const mapping = item.mapping[0];
                             this.form.mode = mapping.mode;
@@ -224,7 +230,7 @@ export default {
         // 1-VLAN,2-Priority,3-TCI
         disabledModeItem(val) {
             if (this.existsData && this.existsData.length) {
-                return this.existsData.some(item => {
+                return this.existsData.some((item) => {
                     if (item.mapping && item.mapping.length) {
                         const mode = item.mapping[0].mode;
                         if (mode === 2) {
@@ -248,7 +254,7 @@ export default {
             }
         },
         validate(fn) {
-            this.$refs["add-line-profile-form"].validate(valid => {
+            this.$refs["add-line-profile-form"].validate((valid) => {
                 if (valid) {
                     if (isFunction(fn)) {
                         fn.call(this, this.form);
@@ -259,7 +265,7 @@ export default {
             });
         },
         validateTcid(rule, val, cb) {
-            if (this.existsData.some(item => item.tcid === val)) {
+            if (this.existsData.some((item) => item.tcid === val)) {
                 return cb(
                     new Error(
                         `${this.$lang("duplicate_param")}: ${this.$lang(
@@ -276,7 +282,7 @@ export default {
         validateGemindex(rule, val, cb) {
             if (
                 this.type !== "mapping" &&
-                this.existsData.some(item => item.gemindex === val)
+                this.existsData.some((item) => item.gemindex === val)
             ) {
                 return cb(
                     new Error(
@@ -349,7 +355,7 @@ export default {
                 return cb(new Error(this.validateMsg("inputRange", 0, 7)));
             }
             const mapping = this.gemCache.mapping || [];
-            if (mapping.some(item => val === item.mid)) {
+            if (mapping.some((item) => val === item.mid)) {
                 return cb(
                     new Error(
                         `${this.$lang("duplicate_param")}: ${this.$lang("mid")}`
@@ -367,12 +373,12 @@ export default {
                 this.form.mode === 2
             ) {
                 const sameGemFlag = (this.gemCache.mapping || []).some(
-                        item => item.vlan_pri === val
+                        (item) => item.vlan_pri === val
                     ),
-                    disparityGemFlag = this.existsData.some(item => {
+                    disparityGemFlag = this.existsData.some((item) => {
                         if (item.mapping && item.mapping.length) {
                             return item.mapping.some(
-                                _item => _item.vlan_pri === val
+                                (_item) => _item.vlan_pri === val
                             );
                         }
                     });
@@ -401,12 +407,12 @@ export default {
                 this.form.mode !== 2
             ) {
                 const sameGemFlag = (this.gemCache.mapping || []).some(
-                        item => item.vlan_id === val
+                        (item) => item.vlan_id === val
                     ),
-                    disparityGemFlag = this.existsData.some(item => {
+                    disparityGemFlag = this.existsData.some((item) => {
                         if (item.mapping && item.mapping.length) {
                             return item.mapping.some(
-                                _item => _item.vlan_id === val
+                                (_item) => _item.vlan_id === val
                             );
                         }
                     });
@@ -421,11 +427,11 @@ export default {
                 }
             }
             return this.validateVlan(rule, val, cb);
-        }
+        },
     },
     watch: {
         "form.dba_profid"() {
-            this.form.dba_profname = this.dbaData.filter(item => {
+            this.form.dba_profname = this.dbaData.filter((item) => {
                 if (item.profid === this.form.dba_profid) {
                     return true;
                 }
@@ -435,31 +441,30 @@ export default {
         autoAssignVlan() {
             if (this.autoAssignVlan) {
                 this.form.vlan_id = 0xffff;
-                this.form.vlan_pri = "";
             } else {
                 this.form.vlan_id = "";
-                this.form.vlan_pri = 0;
             }
+            this.form.vlan_pri = 0;
         },
         "form.mode"() {
             if (this.form.mode === 2) {
                 this.$refs["add-line-profile-form"].clearValidate([
                     "vlan_id",
-                    "vlan_pri"
+                    "vlan_pri",
                 ]);
             }
         },
         "form.gemindex"() {
             if (this.type === "addMapping") {
                 const data = this.existsData.filter(
-                    item => item.gemindex === this.form.gemindex
+                    (item) => item.gemindex === this.form.gemindex
                 )[0];
                 if (data) {
                     this.lockMode(data.mapping);
                 }
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
