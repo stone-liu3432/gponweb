@@ -4,12 +4,20 @@
         <el-row class="login-form">
             <el-col class="login-logo" style="width: 300px">
                 <template v-if="hasLogo">
-                    <img src="/login_logo.png" />
+                    <div class="login-logo-img">
+                        <img src="/login_logo.png" />
+                    </div>
                 </template>
                 <p v-else>GPON-OLT</p>
                 <template v-if="custom.hsgq">
                     <div class="copyright-design-info">
                         Copyright 2017-2020. Design by HSGQ.
+                    </div>
+                </template>
+                <template v-if="system.product_name">
+                    <div class="product-name">
+                        <span>{{ system.product_name }}</span>
+                        <span>{{ `(${system.ponports} PON Ports)` }}</span>
                     </div>
                 </template>
             </el-col>
@@ -77,8 +85,9 @@
                             style="width: 220px"
                             type="primary"
                             @click="submitForm('loginForm')"
-                            >{{ $lang("login_user") }}</el-button
                         >
+                            {{ $lang("login_user") }}
+                        </el-button>
                     </el-form-item>
                 </el-form>
             </el-col>
@@ -125,6 +134,7 @@ export default {
                     },
                 ],
             },
+            system: {},
         };
     },
     computed: {
@@ -141,6 +151,7 @@ export default {
             .catch((err) => {
                 this.hasLogo = false;
             });
+        this.getSystem();
     },
     mounted() {
         document.body.style.overflow = "hidden";
@@ -245,6 +256,18 @@ export default {
                 })
                 .catch((err) => {});
         },
+        getSystem() {
+            this.$http
+                .get("/board_info")
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (isDef(res.data.data)) {
+                            this.system = res.data.data;
+                        }
+                    }
+                })
+                .catch((err) => {});
+        },
     },
     watch: {
         lang() {
@@ -300,14 +323,34 @@ export default {
     height: 100%;
     width: 300px;
     text-align: center;
-    line-height: 360px;
+    line-height: 320px;
     > p {
         font-size: 42px;
         font-weight: 600;
         text-align: center;
         color: @titleColor;
-        line-height: 360px;
+        line-height: 320px;
         margin: 0;
+    }
+    > div.login-logo-img {
+        height: 320px;
+        line-height: 320px;
+        overflow: hidden;
+    }
+    > div.product-name {
+        height: auto;
+        line-height: normal;
+        width: 100%;
+        color: @titleColor;
+        font-weight: bold;
+        margin-top: 12px;
+        height: 21px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        word-break: break-all;
+        padding: 0 6px;
+        box-sizing: border-box;
     }
     img {
         max-width: 300px;
@@ -343,5 +386,6 @@ export default {
     vertical-align: middle;
     border-radius: 4px;
     border: 1px solid transparent;
+    cursor: pointer;
 }
 </style>
