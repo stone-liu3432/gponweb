@@ -50,15 +50,15 @@ import { DBA_PROFILE_TYPES } from "@/utils/commonData";
 export default {
     name: "dbaForm",
     computed: {
-        ...mapGetters(["$lang", "validateMsg"])
+        ...mapGetters(["$lang", "validateMsg"]),
     },
     props: {
         type: {
-            type: String
+            type: String,
         },
         data: {
-            type: Object
-        }
+            type: Object,
+        },
     },
     data() {
         return {
@@ -68,39 +68,47 @@ export default {
                 type: 1,
                 fix: "", // 128-1000000
                 assure: "",
-                max: ""
+                max: "",
             },
             rules: {
                 profname: [
                     {
                         validator: this.validProfname,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 profid: [
-                    { validator: this.validProfid, trigger: ["change", "blur"] }
+                    {
+                        validator: this.validProfid,
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 fix: [
-                    { validator: this.validFix, trigger: ["change", "blur"] }
+                    { validator: this.validFix, trigger: ["change", "blur"] },
                 ],
                 assure: [
-                    { validator: this.validAssure, trigger: ["change", "blur"] }
+                    {
+                        validator: this.validAssure,
+                        trigger: ["change", "blur"],
+                    },
                 ],
-                max: [{ validator: this.validMax, trigger: ["change", "blur"] }]
-            }
+                max: [
+                    { validator: this.validMax, trigger: ["change", "blur"] },
+                ],
+            },
         };
     },
     methods: {
         init() {
             this.$refs["dba-form"].resetFields();
             if (this.type === "set") {
-                Object.keys(this.formData).forEach(key => {
+                Object.keys(this.formData).forEach((key) => {
                     this.formData[key] = this.data[key];
                 });
             }
         },
         validate(fn) {
-            this.$refs["dba-form"].validate(valid => {
+            this.$refs["dba-form"].validate((valid) => {
                 if (isFunction(fn)) {
                     if (valid) {
                         return fn.call(this, this.formData);
@@ -110,8 +118,8 @@ export default {
             });
         },
         validProfname(rule, val, cb) {
-            if (!regLength(val, 1, 32)) {
-                return cb(new Error(this.validateMsg("inputLength", 1, 32)));
+            if (!/^[\w-]{1,32}$/i.test(val)) {
+                return cb(new Error(this.validateMsg("inputName", 1, 32)));
             }
             cb();
         },
@@ -151,13 +159,13 @@ export default {
         disabledItem(key) {
             const type = this.formData.type;
             return DBA_PROFILE_TYPES[type].includes(key) ? false : true;
-        }
+        },
     },
     watch: {
         "formData.type"() {
             this.$refs["dba-form"].clearValidate(["fix", "assure", "max"]);
-        }
-    }
+        },
+    },
 };
 </script>
 
