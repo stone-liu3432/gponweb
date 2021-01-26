@@ -531,10 +531,10 @@ export default {
             });
         },
         validateProfname(rule, val, cb) {
-            if (this.type === "set") {
-                return cb();
-            }
-            if (this.lineTable.some((item) => item.profname === val)) {
+            if (
+                this.type !== "set" &&
+                this.lineTable.some((item) => item.profname === val)
+            ) {
                 return cb(
                     new Error(
                         `${this.$lang("duplicate_param")}: ${this.$lang(
@@ -543,8 +543,8 @@ export default {
                     )
                 );
             }
-            if (!regLength(val, 0, 32)) {
-                return cb(new Error(this.validateMsg("inputLength", 0, 32)));
+            if (!/^[\w-]{0,32}$/i.test(val)) {
+                return cb(new Error(this.validateMsg("inputName", 0, 32)));
             }
             cb();
         },
