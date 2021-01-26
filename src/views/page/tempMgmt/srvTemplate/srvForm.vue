@@ -499,8 +499,8 @@ export default {
             });
         },
         validateProfname(rule, val, cb) {
-            if (!regLength(val, 0, 32)) {
-                return cb(new Error(this.validateMsg("inputLength", 0, 32)));
+            if (!/^[\w-]{0,32}$/i.test(val)) {
+                return cb(new Error(this.validateMsg("inputName", 0, 32)));
             }
             cb();
         },
