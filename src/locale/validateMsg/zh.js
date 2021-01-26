@@ -11,4 +11,9 @@ export default {
     inputLength(min, max) {
         return `${min}${max ? " - " + max : ""}位字符`;
     },
+    inputName(min, max) {
+        return `由数字,字母,下划线或连字符(-)组成, ${min}${
+            max ? " - " + max : ""
+        }位字符`;
+    },
 };

@@ -11,4 +11,9 @@ export default {
     inputLength(min, max) {
         return `${min}${max ? " - " + max : ""} characters`;
     },
+    inputName(min, max) {
+        return `Consists of numbers, letters, underscores or hyphens(-), ${min}${
+            max ? " - " + max : ""
+        } characters`;
+    },
 };
