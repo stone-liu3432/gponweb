@@ -1,7 +1,7 @@
 // 通用数据
 "use strict";
 
-export const SWITCH = ["disable", "enable"];
+export const SWITCH_MAP = ["disable", "enable"];
 export const LINK_STATUS = ["link_down", "link_up"];
 export const STATUS = ["offline", "online"];
 // 对应状态的开关按钮文字， 0关闭状态时，文字应显示为开启(on)，反之则为关闭(off)
@@ -201,6 +201,9 @@ export const PORT_MIRROR_TYPE_MAP = [" - ", "ingress", "egress", "all"];
 
 // 风扇模式
 export const FAN_MODE_MAP = ["fullspeed", "manual", "auto"];
+
+// 业务模板 IGMP功能
+export const IGMP_FUNCTION_MAP = ["igmp-snooping", "spr", "proxy"];
 
 // 业务模板 IGMP版本号
 export const IGMP_VERSION_MAP = ["V2", "V3", "V2", "MLDV1", "MLDV2"];
