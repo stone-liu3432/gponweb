@@ -1,48 +1,58 @@
 <template>
     <div>
         <div class="dhcp-relay-item">
-            <span>{{ $lang('relay_admin') }}:</span>
-            <span>{{ $lang(SWITCH[data.relay_admin || 0]) }}</span>
-            <el-button
-                size="small"
-                type="primary"
-                @click="chagneAdmin"
-            >{{ $lang(BUTTON_TEXT[data.relay_admin]) }}</el-button>
+            <span>{{ $lang("relay_admin") }}:</span>
+            <span>{{ $lang(SWITCH_MAP[data.relay_admin || 0]) }}</span>
+            <el-button size="small" type="primary" @click="chagneAdmin">{{
+                $lang(BUTTON_TEXT[data.relay_admin])
+            }}</el-button>
         </div>
         <template v-if="data.relay_admin">
             <div class="dhcp-relay-item">
-                <span>{{ $lang('relay_policy') }}:</span>
+                <span>{{ $lang("relay_policy") }}:</span>
                 <span>{{ $lang(RELAY_POLICY[data.relay_policy]) }}</span>
                 <el-button
                     type="primary"
                     size="small"
                     @click="openDialog('set')"
-                >{{ $lang('config') }}</el-button>
+                    >{{ $lang("config") }}</el-button
+                >
                 <el-button
                     type="primary"
                     size="small"
                     @click="openDialog('add')"
-                >{{ $lang('add', 'server_ip') }}</el-button>
+                    >{{ $lang("add", "server_ip") }}</el-button
+                >
             </div>
             <el-table :data="serverTable" border>
                 <template v-if="!data.relay_policy">
-                    <el-table-column :label="$lang('vlan_id')" prop="vlan_id"></el-table-column>
+                    <el-table-column
+                        :label="$lang('vlan_id')"
+                        prop="vlan_id"
+                    ></el-table-column>
                 </template>
                 <template v-else>
-                    <el-table-column :label="$lang('option60')" prop="option60"></el-table-column>
+                    <el-table-column
+                        :label="$lang('option60')"
+                        prop="option60"
+                    ></el-table-column>
                 </template>
-                <el-table-column :label="$lang('server_ip')" prop="server_ip"></el-table-column>
+                <el-table-column
+                    :label="$lang('server_ip')"
+                    prop="server_ip"
+                ></el-table-column>
                 <el-table-column :label="$lang('config')" width="120px">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
                             @click="deleteServerIp(scope.row)"
-                        >{{ $lang('delete') }}</el-button>
+                            >{{ $lang("delete") }}</el-button
+                        >
                     </template>
                 </el-table-column>
             </el-table>
             <el-pagination
-                style="float: right; margin: 12px 0;"
+                style="float: right; margin: 12px 0"
                 hide-on-single-page
                 :current-page.sync="currentPage"
                 :page-sizes="[10, 20, 30, 50]"
@@ -55,11 +65,14 @@
             <div slot="title">{{ $lang(dialogType) }}</div>
             <dhcp-relay-form ref="dhcp-relay-form"></dhcp-relay-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('dhcp-relay-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -67,7 +80,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { RELAY_POLICY, SWITCH, BUTTON_TEXT } from "@/utils/commonData";
+import { RELAY_POLICY, SWITCH_MAP, BUTTON_TEXT } from "@/utils/commonData";
 import { isArray, isFunction } from "@/utils/common";
 import postData from "@/mixin/postData";
 import dhcpRelayForm from "./relayForm";
@@ -79,30 +92,30 @@ export default {
         serverTable() {
             const start = (this.currentPage - 1) * this.pageSize;
             return this.serverList.slice(start, start + this.pageSize);
-        }
+        },
     },
     mixins: [postData],
     props: {
         data: {
-            type: Object
-        }
+            type: Object,
+        },
     },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick((_) => {
             this.updateAdvMainScrollbar();
         });
     },
     data() {
         return {
             RELAY_POLICY,
-            SWITCH,
+            SWITCH_MAP,
             BUTTON_TEXT,
             currentPage: 1,
             pageSize: 10,
             serverList: [],
             dialogVisible: false,
-            dialogType: ""
+            dialogType: "",
         };
     },
     created() {
@@ -112,7 +125,7 @@ export default {
         getRelay(relay_policy) {
             const URLS = [
                 "/switch_dhcp?form=relay_standard",
-                "/switch_dhcp?form=relay_option60"
+                "/switch_dhcp?form=relay_option60",
             ];
             const url = URLS[relay_policy];
             if (!url || !this.data.relay_admin) {
@@ -121,60 +134,60 @@ export default {
             this.serverList = [];
             this.$http
                 .get(url)
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isArray(res.data.data)) {
                             this.serverList = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         deleteServerIp(row) {
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
-                .then(_ => {
+                .then((_) => {
                     const URLS = [
                             "/switch_dhcp?form=relay_standard_del",
-                            "/switch_dhcp?form=relay_option60_del"
+                            "/switch_dhcp?form=relay_option60_del",
                         ],
                         param = this.data.relay_policy
                             ? {
-                                  option60: row.option60
+                                  option60: row.option60,
                               }
                             : {
-                                  vlan_id: row.vlan_id
+                                  vlan_id: row.vlan_id,
                               };
                     const url = URLS[this.data.relay_policy],
                         post_params = {
                             method: "set",
                             param: {
                                 ...param,
-                                server_ip: row.server_ip
-                            }
+                                server_ip: row.server_ip,
+                            },
                         };
                     this.postData(url, post_params)
-                        .then(_ => {
+                        .then((_) => {
                             this.getRelay(this.data.relay_policy);
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         chagneAdmin() {
             const flag = !!this.data.relay_admin;
             this.$confirm(
                 this.$lang("if_sure", flag ? "off" : "on") + " DHCP Relay ?"
             )
-                .then(_ => {
+                .then((_) => {
                     const url = "/switch_dhcp?form=relay_admin",
                         post_params = {
                             method: "set",
                             param: {
-                                relay_admin: Number(!flag)
-                            }
+                                relay_admin: Number(!flag),
+                            },
                         };
                     this.postData(url, post_params, false)
-                        .then(res => {
+                        .then((res) => {
                             if (res.data.code === 1) {
                                 this.$message.success(this.$lang("setting_ok"));
                                 this.$emit("refresh-data");
@@ -185,10 +198,10 @@ export default {
                                     ) > -1
                                 ) {
                                     this.$confirm(this.$lang("dhcp_relay_tips"))
-                                        .then(_ => {
+                                        .then((_) => {
                                             this.enableRoute();
                                         })
-                                        .catch(_ => {});
+                                        .catch((_) => {});
                                 } else {
                                     this.$message.error(
                                         `(${res.data.code}) ${res.data.message}`
@@ -196,9 +209,9 @@ export default {
                                 }
                             }
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         enableRoute() {
             this.postData(
@@ -206,36 +219,36 @@ export default {
                 {
                     method: "set",
                     param: {
-                        status: 1
-                    }
+                        status: 1,
+                    },
                 },
                 false
             )
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         const data = {
                             method: "set",
                             param: {
-                                relay_admin: 1
-                            }
+                                relay_admin: 1,
+                            },
                         };
                         this.postData("/switch_dhcp?form=relay_admin", data)
-                            .then(_ => {
+                            .then((_) => {
                                 this.$emit("refresh-data");
                             })
-                            .catch(_ => {});
+                            .catch((_) => {});
                     } else {
                         this.$message.error(
                             `(${res.data.code}) ${res.data.message}`
                         );
                     }
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         openDialog(type) {
             this.dialogType = type;
             this.dialogVisible = true;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["dhcp-relay-form"].init(type, this.data);
             });
         },
@@ -251,9 +264,9 @@ export default {
                                         method: "set",
                                         param: {
                                             vlan_id: form.vlan_id,
-                                            server_ip: form.server_ip
-                                        }
-                                    }
+                                            server_ip: form.server_ip,
+                                        },
+                                    },
                                 };
                             }
                             return {
@@ -262,9 +275,9 @@ export default {
                                     method: "set",
                                     param: {
                                         option60: form.option60,
-                                        server_ip: form.server_ip
-                                    }
-                                }
+                                        server_ip: form.server_ip,
+                                    },
+                                },
                             };
                         },
                         set(form) {
@@ -277,11 +290,11 @@ export default {
                                 data: {
                                     method: "set",
                                     param: {
-                                        relay_policy: form.relay_policy
-                                    }
-                                }
+                                        relay_policy: form.relay_policy,
+                                    },
+                                },
                             };
-                        }
+                        },
                     };
                     if (isFunction(ACTIONS[type])) {
                         const res = ACTIONS[type].call(this, formData);
@@ -290,7 +303,7 @@ export default {
                             url &&
                                 data &&
                                 this.postData(url, data)
-                                    .then(_ => {
+                                    .then((_) => {
                                         // 策略改变时，获取对应策略的 url
                                         if (type === "set") {
                                             // this.$emit("refresh-data");
@@ -299,14 +312,14 @@ export default {
                                         }
                                         this.getRelay(this.data.relay_policy);
                                     })
-                                    .catch(_ => {});
+                                    .catch((_) => {});
                             this.dialogVisible = false;
                         }
                     }
                 }
             });
-        }
-    }
+        },
+    },
 };
 </script>
 

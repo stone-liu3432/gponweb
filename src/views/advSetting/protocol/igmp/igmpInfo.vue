@@ -36,7 +36,11 @@
 <script>
 import { mapGetters } from "vuex";
 import { isDef } from "@/utils/common";
-import { IGMP_MODES, IGMP_PROTOCOL_POLICIES, SWITCH } from "@/utils/commonData";
+import {
+    IGMP_MODES,
+    IGMP_PROTOCOL_POLICIES,
+    SWITCH_MAP,
+} from "@/utils/commonData";
 import igmpInfoForm from "./igmpInfoForm";
 import postData from "@/mixin/postData";
 export default {
@@ -90,7 +94,7 @@ export default {
                     return IGMP_MODES[val];
                 },
                 fast_leave(key, val) {
-                    return SWITCH[val];
+                    return SWITCH_MAP[val];
                 },
                 // protocol_policy(key, val) {
                 //     return IGMP_PROTOCOL_POLICIES[val];

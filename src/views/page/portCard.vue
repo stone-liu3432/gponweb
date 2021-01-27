@@ -4,18 +4,18 @@ import { mapState, mapActions, mapGetters } from "vuex";
 import svgRj45 from "@/views/common/svg/rj45";
 import svgPon from "@/views/common/svg/pon";
 import svgFiber from "@/views/common/svg/fiber";
-import { STATUS, LINK_STATUS, SWITCH } from "@/utils/commonData";
+import { STATUS, LINK_STATUS, SWITCH_MAP } from "@/utils/commonData";
 export default {
     name: "status-card",
     components: { svgRj45, svgPon, svgFiber },
     props: {
         type: {
             type: String,
-            default: "pon"
+            default: "pon",
         },
         data: {
-            type: Object
-        }
+            type: Object,
+        },
     },
     computed: {
         ...mapState(["system", "pon", "port"]),
@@ -28,13 +28,13 @@ export default {
                 return this.data.port_desc;
             }
             const port = this.port.filter(
-                item => item.port_id === this.data.port_id
+                (item) => item.port_id === this.data.port_id
             )[0];
             return port ? port.port_desc || "" : "";
-        }
+        },
     },
     methods: {
-        ...mapActions(["getPon", "getPort"])
+        ...mapActions(["getPon", "getPort"]),
     },
     render(h) {
         const SVG_MAPS = {
@@ -44,15 +44,15 @@ export default {
                     link_status={this.data.link_status}
                     admin_status={this.data.admin_status}
                     style="margin-top: 16px;"
-                ></svg-fiber>
+                ></svg-fiber>,
             ],
             rj45: [
                 <svg-rj45
                     link_status={this.data.link_status}
                     admin_status={this.data.admin_status}
                     style="margin-top: 16px;"
-                ></svg-rj45>
-            ]
+                ></svg-rj45>,
+            ],
         };
         const UPLINK_DETAIL = [
             <div style="margin: 10px 0 10px 10px;">
@@ -60,12 +60,12 @@ export default {
             </div>,
             <div style="margin: 10px 0 10px 10px;">
                 {this.$lang("admin_status")}:{" "}
-                {this.$lang(SWITCH[this.data.admin_status])}
+                {this.$lang(SWITCH_MAP[this.data.admin_status])}
             </div>,
             <div style="margin: 10px 0 10px 10px;">
                 {this.$lang("link_status")}:{" "}
                 {this.$lang(LINK_STATUS[this.data.link_status])}
-            </div>
+            </div>,
         ];
         const DETAIL_MAPS = {
             pon: [
@@ -78,10 +78,10 @@ export default {
                 </div>,
                 <div style="margin-bottom: 16px;">
                     {this.$lang("offline")}: {this.data.offline}
-                </div>
+                </div>,
             ],
             fiber: UPLINK_DETAIL,
-            rj45: UPLINK_DETAIL
+            rj45: UPLINK_DETAIL,
         };
         const spans = this.type === "pon" ? [12, 12] : [8, 16];
         return (
@@ -103,7 +103,7 @@ export default {
                         span={spans[1]}
                         style={{
                             height: "100px",
-                            padding: this.type === "pon" ? "0 0 0 6px" : ""
+                            padding: this.type === "pon" ? "0 0 0 6px" : "",
                         }}
                     >
                         {DETAIL_MAPS[this.type]}
@@ -119,7 +119,7 @@ export default {
                 </el-tooltip>
             </el-card>
         );
-    }
+    },
 };
 </script>
 

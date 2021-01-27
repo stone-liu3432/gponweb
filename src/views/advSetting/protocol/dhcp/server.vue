@@ -1,69 +1,72 @@
 <template>
     <div>
         <div class="dhcp-server-item">
-            <span>{{ $lang('server_admin') }}:</span>
-            <span>{{ $lang(SWITCH[data.server_admin]) }}</span>
+            <span>{{ $lang("server_admin") }}:</span>
+            <span>{{ $lang(SWITCH_MAP[data.server_admin]) }}</span>
+            <el-button type="primary" size="small" @click="changeServerAdmin">{{
+                $lang(BUTTON_TEXT[data.server_admin])
+            }}</el-button>
             <el-button
                 type="primary"
                 size="small"
-                @click="changeServerAdmin"
-            >{{ $lang(BUTTON_TEXT[data.server_admin]) }}</el-button>
-            <el-button
-                type="primary"
-                size="small"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 v-if="data.server_admin"
                 @click="openDialog('info')"
-            >{{ $lang('config') }}</el-button>
+                >{{ $lang("config") }}</el-button
+            >
         </div>
         <template v-if="data.server_admin">
             <div class="dhcp-server-item">
-                <span>{{ $lang('interface') }}:</span>
+                <span>{{ $lang("interface") }}:</span>
                 <span>{{ getInterface(data.interface) }}</span>
                 <el-button
                     type="primary"
                     size="small"
                     @click="openDialog('interface')"
-                >{{ $lang('config', 'interface') }}</el-button>
+                    >{{ $lang("config", "interface") }}</el-button
+                >
             </div>
             <div class="dhcp-server-item">
-                <span>{{ $lang('ipaddress_s') }}:</span>
-                <span>{{ data.ipaddress_s || '-' }}</span>
+                <span>{{ $lang("ipaddress_s") }}:</span>
+                <span>{{ data.ipaddress_s || "-" }}</span>
             </div>
             <div class="dhcp-server-item">
-                <span>{{ $lang('ipaddress_e') }}:</span>
-                <span>{{ data.ipaddress_e || '-' }}</span>
+                <span>{{ $lang("ipaddress_e") }}:</span>
+                <span>{{ data.ipaddress_e || "-" }}</span>
             </div>
             <div class="dhcp-server-item">
-                <span>{{ $lang('ipmask') }}:</span>
-                <span>{{ data.ipmask || '-' }}</span>
+                <span>{{ $lang("ipmask") }}:</span>
+                <span>{{ data.ipmask || "-" }}</span>
             </div>
             <div class="dhcp-server-item">
-                <span>{{ $lang('pridns') }}:</span>
-                <span>{{ data.pridns || '-' }}</span>
+                <span>{{ $lang("pridns") }}:</span>
+                <span>{{ data.pridns || "-" }}</span>
             </div>
             <div class="dhcp-server-item">
-                <span>{{ $lang('secdns') }}:</span>
-                <span>{{ data.secdns || '-' }}</span>
+                <span>{{ $lang("secdns") }}:</span>
+                <span>{{ data.secdns || "-" }}</span>
             </div>
             <div class="dhcp-server-item">
-                <span>{{ $lang('gateway') }}:</span>
-                <span>{{ data.gateway || '-' }}</span>
+                <span>{{ $lang("gateway") }}:</span>
+                <span>{{ data.gateway || "-" }}</span>
             </div>
             <div class="dhcp-server-item">
-                <span>{{ $lang('lease_time') }}:</span>
+                <span>{{ $lang("lease_time") }}:</span>
                 <span>{{ data.lease_time }}</span>
             </div>
         </template>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
-            <div slot="title">{{ $lang('config') }}</div>
+            <div slot="title">{{ $lang("config") }}</div>
             <dhcp-server-form ref="dhcp-server-form"></dhcp-server-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false;">{{ $lang('cancel') }}</el-button>
+                <el-button @click="dialogVisible = false">{{
+                    $lang("cancel")
+                }}</el-button>
                 <el-button
                     type="primary"
                     @click="submitForm('dhcp-server-form')"
-                >{{ $lang('apply') }}</el-button>
+                    >{{ $lang("apply") }}</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -71,7 +74,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
-import { SWITCH, BUTTON_TEXT } from "@/utils/commonData";
+import { SWITCH_MAP, BUTTON_TEXT } from "@/utils/commonData";
 import { isFunction } from "@/utils/common";
 import postData from "@/mixin/postData";
 import dhcpServerForm from "./serverForm";
@@ -79,14 +82,14 @@ export default {
     name: "dhcpServer",
     computed: {
         ...mapGetters(["$lang"]),
-        ...mapState(["interfaces"])
+        ...mapState(["interfaces"]),
     },
     components: { dhcpServerForm },
     mixins: [postData],
     props: {
         data: {
-            type: Object
-        }
+            type: Object,
+        },
     },
     inject: ["updateAdvMainScrollbar"],
     mounted() {
@@ -94,9 +97,9 @@ export default {
     },
     data() {
         return {
-            SWITCH,
+            SWITCH_MAP,
             BUTTON_TEXT,
-            dialogVisible: false
+            dialogVisible: false,
         };
     },
     methods: {
@@ -105,31 +108,31 @@ export default {
                 this.$lang("if_sure", BUTTON_TEXT[this.data.server_admin]) +
                     " DHCP Server ?"
             )
-                .then(_ => {
+                .then((_) => {
                     const url = "/switch_dhcp?form=server_admin",
                         post_params = {
                             method: "set",
                             param: {
-                                server_admin: Number(!this.data.server_admin)
-                            }
+                                server_admin: Number(!this.data.server_admin),
+                            },
                         };
                     this.postData(url, post_params)
-                        .then(_ => {
+                        .then((_) => {
                             this.$emit("refresh-data");
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         getInterface(vlan_id) {
             const res = this.interfaces.filter(
-                item => item.vlan_id === vlan_id
+                (item) => item.vlan_id === vlan_id
             )[0];
             return res ? res.interface : "-";
         },
         openDialog(type) {
             this.dialogVisible = true;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["dhcp-server-form"].init(type, this.data);
             });
         },
@@ -148,9 +151,9 @@ export default {
                                     method: "set",
                                     param: {
                                         flags: 0x4,
-                                        interface: form.interface
-                                    }
-                                }
+                                        interface: form.interface,
+                                    },
+                                },
                             };
                         },
                         info(form) {
@@ -171,11 +174,11 @@ export default {
                                         pridns: form.pridns,
                                         secdns: form.secdns,
                                         gateway: form.gateway,
-                                        lease_time: form.lease_time
-                                    }
-                                }
+                                        lease_time: form.lease_time,
+                                    },
+                                },
                             };
-                        }
+                        },
                     };
                     if (isFunction(ACTIONS[type])) {
                         const res = ACTIONS[type].call(this, formData);
@@ -184,17 +187,17 @@ export default {
                             url &&
                                 data &&
                                 this.postData(url, data)
-                                    .then(_ => {
+                                    .then((_) => {
                                         this.$emit("refresh-data");
                                     })
-                                    .catch(_ => {});
+                                    .catch((_) => {});
                             this.dialogVisible = false;
                         }
                     }
                 }
             });
-        }
-    }
+        },
+    },
 };
 </script>
 

@@ -2,13 +2,11 @@
     <div>
         <page-header type="none" title="DHCP"></page-header>
         <div class="dhcp-global-config">
-            <span>{{ $lang('dhcp_admin') }}:</span>
-            <span>{{ $lang(SWITCH[info.dhcp_admin || 0]) }}</span>
-            <el-button
-                size="small"
-                type="primary"
-                @click="setGlobalAdmin"
-            >{{ $lang(BUTTON_TEXT[info.dhcp_admin]) || 'Config' }}</el-button>
+            <span>{{ $lang("dhcp_admin") }}:</span>
+            <span>{{ $lang(SWITCH_MAP[info.dhcp_admin || 0]) }}</span>
+            <el-button size="small" type="primary" @click="setGlobalAdmin">{{
+                $lang(BUTTON_TEXT[info.dhcp_admin]) || "Config"
+            }}</el-button>
         </div>
         <template v-if="info.dhcp_admin">
             <el-tabs v-model="activeName" type="card">
@@ -52,7 +50,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { isDef } from "@/utils/common";
-import { SWITCH, BUTTON_TEXT } from "@/utils/commonData";
+import { SWITCH_MAP, BUTTON_TEXT } from "@/utils/commonData";
 import dhcpRelay from "./dhcp/relay";
 import dhcpOption82 from "./dhcp/option82";
 import dhcpSnooping from "./dhcp/snooping";
@@ -61,16 +59,16 @@ import postData from "@/mixin/postData";
 export default {
     name: "dhcpMgmt",
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang"]),
     },
     mixins: [postData],
     components: { dhcpRelay, dhcpOption82, dhcpSnooping, dhcpServer },
     data() {
         return {
-            SWITCH,
+            SWITCH_MAP,
             BUTTON_TEXT,
             info: {},
-            activeName: "relay"
+            activeName: "relay",
         };
     },
     created() {
@@ -83,37 +81,37 @@ export default {
             this.info = {};
             this.$http
                 .get("/switch_dhcp?form=global_config")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.info = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         setGlobalAdmin() {
             this.$confirm(
                 this.$lang("if_sure", BUTTON_TEXT[this.info.dhcp_admin]) +
                     " DHCP ?"
             )
-                .then(_ => {
+                .then((_) => {
                     const url = "/switch_dhcp?form=dhcp_admin",
                         post_param = {
                             method: "set",
                             param: {
-                                dhcp_admin: Number(!this.info.dhcp_admin)
-                            }
+                                dhcp_admin: Number(!this.info.dhcp_admin),
+                            },
                         };
                     this.postData(url, post_param)
-                        .then(_ => {
+                        .then((_) => {
                             this.getGlobalInfo();
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
-        }
-    }
+                .catch((_) => {});
+        },
+    },
 };
 </script>
 

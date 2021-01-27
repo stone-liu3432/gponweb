@@ -15,7 +15,7 @@
         <template v-if="form.mode !== 0">
             <el-form-item :label="$lang('fast_leave')" prop="fast_leave">
                 <el-select v-model.number="form.fast_leave">
-                    <template v-for="(item, index) in SWITCH">
+                    <template v-for="(item, index) in SWITCH_MAP">
                         <el-option :value="index" :label="item"></el-option>
                     </template>
                 </el-select>
@@ -82,7 +82,11 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { IGMP_MODES, SWITCH, IGMP_PROTOCOL_POLICIES } from "@/utils/commonData";
+import {
+    IGMP_MODES,
+    SWITCH_MAP,
+    IGMP_PROTOCOL_POLICIES,
+} from "@/utils/commonData";
 import { isDef, isFunction } from "@/utils/common";
 import { regRange } from "@/utils/validator";
 export default {
@@ -94,7 +98,7 @@ export default {
     data() {
         return {
             IGMP_MODES,
-            SWITCH,
+            SWITCH_MAP,
             IGMP_PROTOCOL_POLICIES,
             form: {
                 mode: 0,

@@ -2,7 +2,7 @@
     <div>
         <div class="dhcp-snooping-item">
             <span>{{ $lang("snooping_admin") }}:</span>
-            <span>{{ $lang(SWITCH[data.snooping_admin]) }}</span>
+            <span>{{ $lang(SWITCH_MAP[data.snooping_admin]) }}</span>
             <el-button
                 type="primary"
                 size="small"
@@ -13,7 +13,7 @@
         <template v-if="data.snooping_admin">
             <div class="dhcp-snooping-item">
                 <span>{{ $lang("chaddr_check") }}:</span>
-                <span>{{ $lang(SWITCH[data.chaddr_check]) }}</span>
+                <span>{{ $lang(SWITCH_MAP[data.chaddr_check]) }}</span>
                 <el-button type="primary" size="small" @click="changeCheck">{{
                     $lang(BUTTON_TEXT[data.chaddr_check])
                 }}</el-button>
@@ -129,7 +129,7 @@ import {
     distinctArray,
     debounce,
 } from "@/utils/common";
-import { SWITCH, BUTTON_TEXT, ENTRY_STATUS } from "@/utils/commonData";
+import { SWITCH_MAP, BUTTON_TEXT, ENTRY_STATUS } from "@/utils/commonData";
 import dhcpSnoopingForm from "./snoopingForm";
 export default {
     name: "dhcpSnooping",
@@ -168,7 +168,7 @@ export default {
     },
     data() {
         return {
-            SWITCH,
+            SWITCH_MAP,
             BUTTON_TEXT,
             ENTRY_STATUS,
             snoopingList: [],
