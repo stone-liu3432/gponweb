@@ -1,36 +1,39 @@
 <template>
     <div>
         <div class="multicast-vlan-detail-item">
-            <span>{{ $lang('mvlan') }}:</span>
+            <span>{{ $lang("mvlan") }}:</span>
             <span>{{ row.mvlan }}</span>
         </div>
         <div class="multicast-vlan-detail-item">
-            <span>{{ $lang('mvlan_desc') }}:</span>
+            <span>{{ $lang("mvlan_desc") }}:</span>
             <span>{{ row.mvlan_desc }}</span>
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 @click="setData('desc', row)"
-            >{{ $lang('config') }}</el-button>
+                >{{ $lang("config") }}</el-button
+            >
         </div>
         <div class="multicast-vlan-detail-item">
-            <span>{{ $lang('router_portlist') }}:</span>
+            <span>{{ $lang("router_portlist") }}:</span>
             <span>{{ generateList(row.router_portlist) }}</span>
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 @click="setData('add_router', row)"
-            >{{ $lang('add') }}</el-button>
+                >{{ $lang("add") }}</el-button
+            >
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 @click="setData('del_router', row)"
-            >{{ $lang('delete') }}</el-button>
+                >{{ $lang("delete") }}</el-button
+            >
         </div>
-        <div class="multicast-vlan-detail-item">
+        <!-- <div class="multicast-vlan-detail-item">
             <span>{{ $lang('mc_unknown_policy') }}:</span>
             <span>{{ $lang(MULTICAST_UNKNOWN_POLICYS[mcUnknown.mc_unknown_policy]) || '' }}</span>
             <el-button
@@ -39,30 +42,38 @@
                 style="margin-left: 30px;"
                 @click="setData('policy', row, mcUnknown)"
             >{{ $lang('config') }}</el-button>
-        </div>
+        </div> -->
         <div class="multicast-vlan-detail-item">
-            <span>{{ $lang('program') }}:</span>
+            <span>{{ $lang("program") }}:</span>
             <el-button
                 type="primary"
                 size="small"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 @click="setData('program', row)"
-            >{{ $lang('add') }}</el-button>
+                >{{ $lang("add") }}</el-button
+            >
         </div>
         <el-table :data="programTable" border>
             <el-table-column :label="$lang('ipaddr')" prop="ipaddr">
-                <template slot-scope="scope">{{ `${scope.row.program_s} - ${scope.row.program_e}` }}</template>
+                <template slot-scope="scope">{{
+                    `${scope.row.program_s} - ${scope.row.program_e}`
+                }}</template>
             </el-table-column>
-            <el-table-column :label="$lang('program_desc')" prop="program_desc"></el-table-column>
+            <el-table-column
+                :label="$lang('program_desc')"
+                prop="program_desc"
+            ></el-table-column>
             <el-table-column :label="$lang('config')" width="80px">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="deleteProgram(scope.row)">{{ $lang('delete') }}</el-button>
+                    <el-button type="text" @click="deleteProgram(scope.row)">{{
+                        $lang("delete")
+                    }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <div class="multicast-vlan-detail-item">
             <el-pagination
-                style="float: right; margin: 12px 0;"
+                style="float: right; margin: 12px 0"
                 hide-on-single-page
                 :current-page.sync="currentPage"
                 :page-sizes="[10, 20, 30, 50]"
@@ -86,36 +97,36 @@ export default {
         programTable() {
             const start = (this.currentPage - 1) * this.pageSize;
             return this.programs.slice(start, start + this.pageSize);
-        }
+        },
     },
     mixins: [postData],
     data() {
         return {
             currentPage: 1,
             pageSize: 10,
-            MULTICAST_UNKNOWN_POLICYS
+            MULTICAST_UNKNOWN_POLICYS,
         };
     },
     props: {
         row: {
-            type: Object
+            type: Object,
         },
         mcUnknown: {
-            type: Object
+            type: Object,
         },
         programs: {
-            type: Array
-        }
+            type: Array,
+        },
     },
     methods: {
         generateList(portlist) {
             return parseStringAsList(portlist)
-                .map(item => this.getPortName(item))
+                .map((item) => this.getPortName(item))
                 .join(",");
         },
         deleteProgram(data) {
             this.$confirm(this.$lang("if_sure", "delete") + " ?")
-                .then(_ => {
+                .then((_) => {
                     const url = "/switch_igmp?form=program",
                         post_params = {
                             method: "delete",
@@ -123,16 +134,16 @@ export default {
                                 mvlan: this.row.mvlan,
                                 program_s: data.program_s,
                                 program_e: data.program_e,
-                                program_desc: data.program_desc
-                            }
+                                program_desc: data.program_desc,
+                            },
                         };
                     this.postData(url, post_params)
-                        .then(_ => {
+                        .then((_) => {
                             removeItem(this.programs, data);
                         })
-                        .catch(_ => {});
+                        .catch((_) => {});
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         /**
          * type: dialog type
@@ -141,8 +152,8 @@ export default {
          */
         setData(type, row, data) {
             this.$emit("config-mvlan", type, row, data);
-        }
-    }
+        },
+    },
 };
 </script>
 

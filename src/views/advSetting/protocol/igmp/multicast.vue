@@ -7,29 +7,33 @@
                 style="margin-left: 30px"
                 size="small"
                 @click="openDialog"
-                >{{ $lang("add", "static_table") }}</el-button
             >
+                {{ $lang("add", "static_table") }}
+            </el-button>
             <el-button
                 type="primary"
                 style="margin-left: 30px"
                 size="small"
                 @click="deleteAll('static')"
-                >{{ $lang("delete_all", "static_table") }}</el-button
             >
+                {{ $lang("delete_all", "static_table") }}
+            </el-button>
             <el-button
                 type="primary"
                 style="margin-left: 30px"
                 size="small"
                 @click="deleteAll('dynamic')"
-                >{{ $lang("delete_all", "dynamic_table") }}</el-button
             >
+                {{ $lang("delete_all", "dynamic_table") }}
+            </el-button>
             <el-button
                 type="primary"
                 style="margin-left: 30px"
                 size="small"
                 @click="refreshData"
-                >{{ $lang("refresh") }}</el-button
             >
+                {{ $lang("refresh") }}
+            </el-button>
         </h3>
         <el-table :data="multiTable" border>
             <el-table-column
@@ -38,31 +42,31 @@
             ></el-table-column>
             <el-table-column :label="$lang('vid')" prop="vid"></el-table-column>
             <el-table-column :label="$lang('action')" prop="action">
-                <template slot-scope="scope">{{
-                    MULTICAST_ACTIONS[scope.row.action]
-                }}</template>
+                <template slot-scope="scope">
+                    {{ MULTICAST_ACTIONS[scope.row.action] }}
+                </template>
             </el-table-column>
             <el-table-column
                 :label="$lang('host_portlist')"
                 prop="host_portlist"
             >
-                <template slot-scope="scope">{{
-                    parsePortList(scope.row.host_portlist)
-                }}</template>
+                <template slot-scope="scope">
+                    {{ parsePortList(scope.row.host_portlist) }}
+                </template>
             </el-table-column>
             <el-table-column
                 :label="$lang('router_portlist')"
                 prop="router_portlist"
             >
-                <template slot-scope="scope">{{
-                    parsePortList(scope.row.router_portlist)
-                }}</template>
+                <template slot-scope="scope">
+                    {{ parsePortList(scope.row.router_portlist) }}
+                </template>
             </el-table-column>
             <el-table-column :label="$lang('config')" width="100px">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="delStatic(scope.row)">{{
-                        $lang("delete")
-                    }}</el-button>
+                    <el-button type="text" @click="delStatic(scope.row)">
+                        {{ $lang("delete") }}
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -79,14 +83,12 @@
             <div slot="title">{{ $lang("add", "static_table") }}</div>
             <multicast-form ref="multicast-form"></multicast-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false">{{
-                    $lang("cancel")
-                }}</el-button>
-                <el-button
-                    type="primary"
-                    @click="submitForm('multicast-form')"
-                    >{{ $lang("apply") }}</el-button
-                >
+                <el-button @click="dialogVisible = false">
+                    {{ $lang("cancel") }}
+                </el-button>
+                <el-button type="primary" @click="submitForm('multicast-form')">
+                    {{ $lang("apply") }}
+                </el-button>
             </div>
         </el-dialog>
     </div>

@@ -182,7 +182,7 @@ export default {
     },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick((_) => {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -208,7 +208,14 @@ export default {
         this.getDevName();
         const fn = () => {
             if (isArray(this.now) && this.now.length) {
-                let now = +new Date(...this.now);
+                let now = +new Date(
+                    ...this.now.map((item, index) => {
+                        if (index === 1) {
+                            return item - 1;
+                        }
+                        return item;
+                    })
+                );
                 now += 1000;
                 const date = new Date(now);
                 const y = date.getFullYear(),
@@ -217,7 +224,7 @@ export default {
                     h = date.getHours(),
                     _m = date.getMinutes(),
                     s = date.getSeconds();
-                this.now = [y, m, d, h, _m, s];
+                this.now = [y, m + 1, d, h, _m, s];
             }
             if (isArray(this.runtime) && this.runtime.length) {
                 let [d, h, m, s] = this.runtime;
@@ -239,11 +246,11 @@ export default {
             }
         };
         const interval = setInterval(fn, 1000);
-        const refreshTimer = setInterval((_) => {
+        const refreshTimer = setInterval(() => {
             this.getFanInfo();
             this.getUsage();
         }, 10000);
-        this.$once("hook:beforeDestroy", (_) => {
+        this.$once("hook:beforeDestroy", () => {
             clearInterval(interval);
             clearInterval(refreshTimer);
         });

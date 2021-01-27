@@ -11,24 +11,23 @@
                 <el-button
                     type="primary"
                     size="small"
-                    style="margin-left: 30px;"
+                    style="margin-left: 30px"
                     @click="openDialog"
-                    >{{ $lang("config") }}</el-button
                 >
+                    {{ $lang("config") }}
+                </el-button>
             </div>
         </nms-panel>
         <el-dialog :visible.sync="dialogVisible" append-to-body width="650px">
             <div slot="title">{{ $lang("config") }}</div>
             <igmp-info-form ref="igmp-info-form"></igmp-info-form>
             <div slot="footer">
-                <el-button @click="dialogVisible = false">{{
-                    $lang("cancel")
-                }}</el-button>
-                <el-button
-                    type="primary"
-                    @click="submitForm('igmp-info-form')"
-                    >{{ $lang("apply") }}</el-button
-                >
+                <el-button @click="dialogVisible = false">
+                    {{ $lang("cancel") }}
+                </el-button>
+                <el-button type="primary" @click="submitForm('igmp-info-form')">
+                    {{ $lang("apply") }}
+                </el-button>
             </div>
         </el-dialog>
     </div>
@@ -58,9 +57,10 @@ export default {
                     "gen_query_interval",
                     "sp_response_time",
                     "sp_query_interval",
-                    "sp_query_number"
+                    "sp_query_number",
                 ],
                 [
+                    "protocol_policy",
                     "robustness",
                     "query_src_ip",
                     "query_src_mac",
@@ -68,17 +68,17 @@ export default {
                     "gen_query_interval",
                     "sp_response_time",
                     "sp_query_interval",
-                    "sp_query_number"
+                    "sp_query_number",
                 ],
-                ["group_aging_time"]
+                ["protocol_policy", "group_aging_time"],
             ];
             return EXCLUDES[Number(this.info.mode)];
-        }
+        },
     },
     mixins: [postData],
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -92,9 +92,9 @@ export default {
                 fast_leave(key, val) {
                     return SWITCH[val];
                 },
-                protocol_policy(key, val) {
-                    return IGMP_PROTOCOL_POLICIES[val];
-                },
+                // protocol_policy(key, val) {
+                //     return IGMP_PROTOCOL_POLICIES[val];
+                // },
                 group_aging_time(key, val) {
                     return `${val} s`;
                 },
@@ -109,9 +109,9 @@ export default {
                 },
                 sp_query_interval(key, val) {
                     return `${val} ms`;
-                }
+                },
             },
-            dialogVisible: false
+            dialogVisible: false,
         };
     },
     created() {
@@ -122,23 +122,23 @@ export default {
             this.info = {};
             this.$http
                 .get("/switch_igmp?form=config")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data)) {
                             this.info = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         openDialog() {
             this.dialogVisible = true;
-            this.$nextTick(_ => {
+            this.$nextTick((_) => {
                 this.$refs["igmp-info-form"].init(this.info);
             });
         },
         submitForm(formName) {
-            this.$refs[formName].validate(data => {
+            this.$refs[formName].validate((data) => {
                 if (data) {
                     if (this.info.mode !== data.mode) {
                         this.changeMode(data);
@@ -157,11 +157,11 @@ export default {
                 post_params = {
                     method: "set",
                     param: {
-                        mode: data.mode
-                    }
+                        mode: data.mode,
+                    },
                 };
             this.postData(url, post_params, false)
-                .then(_ => {
+                .then((_) => {
                     if (data.mode !== 0) {
                         this.submitChange(data);
                     } else {
@@ -170,7 +170,7 @@ export default {
                         this.getData();
                     }
                 })
-                .catch(_ => {});
+                .catch((_) => {});
         },
         submitChange(data) {
             const url = "/switch_igmp?form=config",
@@ -188,17 +188,17 @@ export default {
                         query_src_mac: data.query_src_mac,
                         sp_query_interval: data.sp_query_interval,
                         sp_response_time: data.sp_response_time,
-                        sp_query_number: data.sp_query_number
-                    }
+                        sp_query_number: data.sp_query_number,
+                    },
                 };
             this.postData(url, post_params)
-                .then(_ => {
+                .then((_) => {
                     this.getData();
                 })
-                .catch(_ => {});
+                .catch((_) => {});
             this.dialogVisible = false;
-        }
-    }
+        },
+    },
 };
 </script>
 
