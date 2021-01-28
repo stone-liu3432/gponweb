@@ -46,6 +46,7 @@ Mock.mock("/switch_svp?form=svp_auto_profile", "get", () => {
     let i = 1;
     const data = Array.from({ length: n }).map((item, index) => ({
         new_svlan: Random.range(1, 4094),
+        gemport: Random.range(0, 32),
         port_id: i++,
         tag_action: Random.range(1, 5),
         inner_vlan: Random.range(0, 4094),
@@ -59,6 +60,7 @@ Mock.mock("/switch_svp?form=svp_auto_profile", "get", () => {
 
 Mock.mock("/switch_svp?form=svp_auto_profile_set", "post", "@BASESUCCESS");
 Mock.mock("/switch_svp?form=svp_auto_profile_del", "post", "@BASESUCCESS");
+Mock.post("/switch_svp?form=svp_auto_profile_del_all");
 
 /**
  * 虚端口自动发现列表

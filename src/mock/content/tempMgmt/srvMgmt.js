@@ -52,6 +52,8 @@ Mock.mock(
                 ont_veipport: Random.range(0, 2),
                 native_vlan_flag: Random.range(0, 1),
                 igmp_version: Random.range(0, 4),
+                igmp_function: Random.range(0, 2),
+                immediate_leave: Random.range(0, 1),
                 igmp_upstream: Random.range(0, 2),
                 igmp_up_vid: Random.range(1, 4094),
                 igmp_up_pri: Random.range(0, 8),
