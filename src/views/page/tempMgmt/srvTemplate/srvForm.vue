@@ -102,6 +102,26 @@
                     </template>
                 </el-select>
             </el-form-item>
+            <el-form-item :label="$lang('igmp_function')" prop="igmp_function">
+                <el-select v-model.number="form.igmp_function">
+                    <template v-for="(item, index) in IGMP_FUNCTION_MAP">
+                        <el-option :value="index" :label="item"></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
+            <el-form-item
+                :label="$lang('immediate_leave')"
+                prop="immediate_leave"
+            >
+                <el-select v-model.number="form.immediate_leave">
+                    <template v-for="(item, index) in SWITCH_MAP">
+                        <el-option
+                            :value="index"
+                            :label="$lang(item)"
+                        ></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
             <el-form-item :label="$lang('igmp_upstream')" prop="igmp_upstream">
                 <el-select v-model.number="form.igmp_upstream">
                     <template v-for="(item, index) in IGMP_UPSTREAM_MAP">
@@ -293,12 +313,14 @@
 <script>
 import { mapGetters } from "vuex";
 import {
+    SWITCH_MAP,
     UNI_TYPES,
     VLAN_MODES,
     ONT_VEIPPORT_MAP,
     IGMP_VERSION_MAP,
     IGMP_UPSTREAM_MAP,
     IGMP_DOWNSTREAM_MAP,
+    IGMP_FUNCTION_MAP,
 } from "@/utils/commonData";
 import portvlanForm from "./portvlanForm";
 import { isFunction, removeItem } from "@/utils/common";
@@ -323,12 +345,14 @@ export default {
     inject: ["validateVlan"],
     data() {
         return {
+            SWITCH_MAP,
             UNI_TYPES,
             VLAN_MODES,
             ONT_VEIPPORT_MAP,
             IGMP_VERSION_MAP,
             IGMP_UPSTREAM_MAP,
             IGMP_DOWNSTREAM_MAP,
+            IGMP_FUNCTION_MAP,
             portvlan: [], // 0-64
             form: {
                 profname: "", // 1-32 length
@@ -339,6 +363,8 @@ export default {
                 native_vlan_flag: 0,
                 ont_veipport: 0,
                 igmp_version: 1,
+                igmp_function: 0, //  0-igmp-snooping,1-spr, 2-proxy
+                immediate_leave: 0, //	0-关闭,1-使能
                 igmp_upstream: 0,
                 igmp_up_vid: "",
                 igmp_up_pri: 8,
@@ -485,6 +511,8 @@ export default {
                             portvlan: this.portvlan,
                             ont_veipport: this.form.ont_veipport,
                             igmp_version: this.form.igmp_version,
+                            igmp_function: this.form.igmp_function,
+                            immediate_leave: this.form.immediate_leave,
                             igmp_upstream: this.form.igmp_upstream,
                             igmp_up_vid: this.form.igmp_up_vid || 0,
                             igmp_up_pri: this.form.igmp_up_pri,

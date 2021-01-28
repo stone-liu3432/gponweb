@@ -157,7 +157,7 @@ export default {
     },
     inject: ["updateNavScrollbar"],
     updated() {
-        this.$nextTick((_) => {
+        this.$nextTick(() => {
             this.updateNavScrollbar();
         });
     },
@@ -200,7 +200,7 @@ export default {
                                 detail.portvlan = [];
                             }
                             this.detail = detail;
-                            this.$nextTick((_) => {
+                            this.$nextTick(() => {
                                 this.detailVisible = true;
                             });
                         }
@@ -216,7 +216,7 @@ export default {
             this.$confirm(
                 `${this.$lang("if_sure", "delete")} ${row.profname} ?`
             )
-                .then((_) => {
+                .then(() => {
                     const post_param = {
                         method: "delete",
                         param: {
@@ -224,11 +224,11 @@ export default {
                             profid: row.profid,
                         },
                     };
-                    this.postData("/srvprofile", post_param).then((_) => {
+                    this.postData("/srvprofile", post_param).then(() => {
                         this.getSrvProfs();
                     });
                 })
-                .catch((_) => {});
+                .catch(() => {});
         },
         openDialog(type, data) {
             if (isDef(data)) {
@@ -236,7 +236,7 @@ export default {
             }
             this.dialogType = type;
             this.setVisible = true;
-            this.$nextTick((_) => {
+            this.$nextTick(() => {
                 this.$refs["srv-form"].init();
             });
         },
@@ -246,7 +246,7 @@ export default {
                     this.getSrvProfs();
                     this.detailVisible = false;
                 })
-                .catch((_) => {});
+                .catch(() => {});
         },
         submitForm(formName) {
             this.$refs[formName].validate((formData) => {
@@ -263,6 +263,8 @@ export default {
                             portvlan: formData.portvlan,
                             ont_veipport: formData.ont_veipport,
                             igmp_version: formData.igmp_version,
+                            igmp_function: formData.igmp_function,
+                            immediate_leave: formData.immediate_leave,
                             igmp_upstream: formData.igmp_upstream,
                             igmp_up_vid: formData.igmp_up_vid,
                             igmp_up_pri: formData.igmp_up_pri,
@@ -272,11 +274,11 @@ export default {
                         },
                     };
                     this.postProfile(post_param)
-                        .then((_) => {
+                        .then(() => {
                             this.getSrvProfs();
                             this.setVisible = false;
                         })
-                        .catch((_) => {});
+                        .catch(() => {});
                 }
             });
         },
@@ -289,10 +291,10 @@ export default {
                 done();
             } else {
                 this.$confirm(this.$lang("unsave_info"))
-                    .then((_) => {
+                    .then(() => {
                         comp.saveAllChanges(false);
                     })
-                    .catch((_) => {
+                    .catch(() => {
                         done();
                     });
             }
@@ -303,12 +305,12 @@ export default {
         showBinding(row) {
             const loading = this.$loading();
             this.getBindingDevices(row)
-                .then((_) => {
+                .then(() => {
                     this.bindingVisible = true;
                     this.rowData = row;
                 })
-                .catch((_) => {})
-                .finally((_) => {
+                .catch(() => {})
+                .finally(() => {
                     loading.close();
                 });
         },

@@ -65,6 +65,20 @@
         </el-row>
         <el-row class="srv-detail-item">
             <el-col :span="6" class="srv-detail-title">
+                {{ $lang("igmp_function") }}:
+            </el-col>
+            <el-col :span="6" class="srv-detail-value">
+                {{ IGMP_FUNCTION_MAP[data.igmp_function] }}
+            </el-col>
+            <el-col :span="6" class="srv-detail-title">
+                {{ $lang("immediate_leave") }}:
+            </el-col>
+            <el-col :span="6" class="srv-detail-value">
+                {{ SWITCH_MAP[data.immediate_leave] }}
+            </el-col>
+        </el-row>
+        <el-row class="srv-detail-item">
+            <el-col :span="6" class="srv-detail-title">
                 {{ $lang("igmp_upstream") }}:
             </el-col>
             <el-col :span="6" class="srv-detail-value">
@@ -280,12 +294,14 @@
 <script>
 import { mapGetters } from "vuex";
 import {
+    SWITCH_MAP,
     VLAN_MODES,
     UNI_TYPES,
     ONT_VEIPPORT_MAP,
     IGMP_VERSION_MAP,
     IGMP_UPSTREAM_MAP,
     IGMP_DOWNSTREAM_MAP,
+    IGMP_FUNCTION_MAP,
 } from "@/utils/commonData";
 import { removeItem, isDef } from "@/utils/common";
 import portvlanForm from "./portvlanForm";
@@ -303,12 +319,14 @@ export default {
     },
     data() {
         return {
+            SWITCH_MAP,
             VLAN_MODES,
             UNI_TYPES,
             ONT_VEIPPORT_MAP,
             IGMP_VERSION_MAP,
             IGMP_UPSTREAM_MAP,
             IGMP_DOWNSTREAM_MAP,
+            IGMP_FUNCTION_MAP,
             dialogVisible: false,
             dialogType: "",
             portvlan: [],
@@ -383,6 +401,8 @@ export default {
                 "native_vlan_flag",
                 "ont_veipport",
                 "igmp_version",
+                "igmp_function",
+                "immediate_leave",
                 "igmp_upstream",
                 "igmp_up_vid",
                 "igmp_up_pri",
@@ -410,7 +430,7 @@ export default {
 
 <style lang="less" scoped>
 .srv-detail-item {
-    margin: 20px 0;
+    margin: 10px 0;
     line-height: 28px;
     > div:first-child {
         text-align: right;
