@@ -27,9 +27,13 @@
             <el-checkbox
                 v-model="selectAllPort"
                 v-if="type === 'add'"
-                style="margin-left: 30px;"
-                >{{ $lang("select_all") }}</el-checkbox
+                style="margin-left: 30px"
             >
+                {{ $lang("select_all") }}
+            </el-checkbox>
+        </el-form-item>
+        <el-form-item :label="$lang('gemport')" prop="gemport">
+            <el-input v-model.number="form.gemport"></el-input>
         </el-form-item>
         <el-form-item :label="$lang('new_svlan')" prop="new_svlan">
             <el-input v-model.number="form.new_svlan"></el-input>
@@ -55,10 +59,11 @@
 import { mapGetters, mapState } from "vuex";
 import { TAG_ACTIONS } from "@/utils/commonData";
 import { isFunction } from "@/utils/common";
+import { regRange } from "@/utils/validator";
 export default {
     name: "autoTempForm",
     computed: {
-        ...mapGetters(["$lang", "getPortName"]),
+        ...mapGetters(["$lang", "getPortName", "validateMsg"]),
         ...mapState(["system"]),
         disabledInnervlan() {
             if (this.form.tag_action === 5 || this.form.tag_action === 4) {
@@ -66,18 +71,18 @@ export default {
             }
             this.form.inner_vlan = "";
             return true;
-        }
+        },
     },
     props: {
         type: {
-            type: String
+            type: String,
         },
         data: {
-            type: Object
+            type: Object,
         },
         tempList: {
-            type: Array
-        }
+            type: Array,
+        },
     },
     inject: ["validateVlan"],
     data() {
@@ -85,26 +90,33 @@ export default {
             TAG_ACTIONS,
             form: {
                 port_id: 1,
+                gemport: "",
                 new_svlan: "",
                 tag_action: 0,
-                inner_vlan: ""
+                inner_vlan: "",
             },
             rules: {
                 new_svlan: [
                     {
                         validator: this.validateVlan,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 inner_vlan: [
                     {
                         validator: this.validateInnervlan,
-                        trigger: ["change", "blur"]
-                    }
-                ]
+                        trigger: ["change", "blur"],
+                    },
+                ],
+                gemport: [
+                    {
+                        validator: this.validGemport,
+                        trigger: ["change", "blur"],
+                    },
+                ],
             },
             selectAllPort: false,
-            cachePort: 0
+            cachePort: 0,
         };
     },
     methods: {
@@ -117,13 +129,13 @@ export default {
                 const ports = Array.from({ length: this.system.ponports }).map(
                     (item, index) => index + 1
                 );
-                const exists = this.tempList.map(item => item.port_id);
-                const list = ports.filter(item => !exists.includes(item));
+                const exists = this.tempList.map((item) => item.port_id);
+                const list = ports.filter((item) => !exists.includes(item));
                 this.form.port_id = list[0] || 0;
                 this.cachePort = list[0] || 0;
             }
             if (this.type === "set") {
-                Object.keys(this.form).forEach(key => {
+                Object.keys(this.form).forEach((key) => {
                     this.form[key] = this.data[key];
                 });
             }
@@ -135,7 +147,7 @@ export default {
             return this.validateVlan(rule, val, cb);
         },
         validate(fn) {
-            this.$refs["auto-temp-form"].validate(valid => {
+            this.$refs["auto-temp-form"].validate((valid) => {
                 if (isFunction(fn)) {
                     if (valid) {
                         fn.call(this, this.form);
@@ -147,10 +159,16 @@ export default {
         },
         isShowPort(port_id) {
             if (this.type === "add") {
-                return !this.tempList.some(item => item.port_id === port_id);
+                return !this.tempList.some((item) => item.port_id === port_id);
             }
             return true;
-        }
+        },
+        validGemport(rule, val, cb) {
+            if (!regRange(val, 0, 32)) {
+                return cb(new Error(this.validateMsg("inputRange", 0, 32)));
+            }
+            cb();
+        },
     },
     watch: {
         selectAllPort() {
@@ -162,8 +180,8 @@ export default {
         },
         "form.tag_action"() {
             this.$refs["auto-temp-form"].clearValidate("inner_vlan");
-        }
-    }
+        },
+    },
 };
 </script>
 
