@@ -1,5 +1,5 @@
 const state = {
-    lang: "en",
+    lang: "",
     system: {},
     navMenu: [],
     advMenu: [],

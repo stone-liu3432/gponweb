@@ -142,7 +142,9 @@ export default {
         ...mapState(["lang", "custom"]),
     },
     created() {
-        this.language = this.lang;
+        if (this.lang) {
+            this.language = this.lang;
+        }
         this.$http
             .get("/login_logo.png")
             .then((res) => {
@@ -156,7 +158,7 @@ export default {
     mounted() {
         document.body.style.overflow = "hidden";
         const star = starMap(this.$refs["login-canvas"]);
-        this.$once("hook:beforeDestroy", (_) => {
+        this.$once("hook:beforeDestroy", () => {
             document.body.style.overflow = "";
             star.destroy();
         });
@@ -274,7 +276,10 @@ export default {
             if (this.language === this.lang) return;
             this.language = this.lang;
         },
-        language() {
+        language(nv, ov) {
+            if (this.custom.fix_lang || ov === "") {
+                return;
+            }
             this.updateLang(this.language);
             this.$i18n.locale = this.language;
             this.setLanguage(this.language);
