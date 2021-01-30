@@ -1,14 +1,12 @@
 <template>
     <div id="app">
-        <!-- <transition :name="transitionName"> -->
-        <router-view />
-        <!-- </transition> -->
+        <router-view v-if="!!lang" />
     </div>
 </template>
 
 <script>
 import { isUndef, isDef } from "@/utils/common";
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 export default {
     name: "HSGQ",
     created() {
@@ -24,12 +22,14 @@ export default {
             })
             .catch((err) => {});
     },
+    computed: {
+        ...mapState(["lang"]),
+    },
     data() {
         return {
             transitionName: "",
         };
     },
-    mounted() {},
     methods: {
         ...mapMutations(["updateLang", "updateCustom"]),
         getLang() {
@@ -46,52 +46,12 @@ export default {
                 .catch((err) => {});
         },
     },
-    watch: {
-        // 路由切换时的过渡效果(左滑动或右滑动)
-        // $route(to, from) {
-        //     const tIdx = to.meta.index,
-        //         fIdx = from.meta.index;
-        //     if (isDef(tIdx) && isDef(fIdx)) {
-        //         this.transitionName =
-        //             tIdx > fIdx
-        //                 ? "slide-right"
-        //                 : tIdx < fIdx
-        //                 ? "slide-left"
-        //                 : "";
-        //     }
-        // }
-    },
 };
 </script>
 
 <style lang="less">
 body {
     margin: 0;
-    // background: @bodyBg;
     min-width: 1280px;
 }
-// .slide-right-enter-active,
-// .slide-right-leave-active,
-// .slide-left-enter-active,
-// .slide-left-leave-active {
-//     will-change: transform;
-//     transition: all 300ms;
-//     height: 100%;
-//     top: 0px;
-//     position: absolute;
-//     backface-visibility: hidden;
-//     perspective: 1000;
-// }
-// .slide-left-enter {
-//     transform: translate3d(-100%, 0, 0);
-// }
-// .slide-left-leave-active {
-//     transform: translate3d(0, 0, 0);
-// }
-// .slide-right-enter {
-//     transform: translate3d(100%, 0, 0);
-// }
-// .slide-right-leave-active {
-//     transform: translate3d(0, 0, 0);
-// }
 </style>
