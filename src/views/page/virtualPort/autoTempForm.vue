@@ -16,12 +16,7 @@
                     :disabled="!selectAllPort"
                 ></el-option>
                 <template v-for="i in system.ponports">
-                    <template v-if="isShowPort(i)">
-                        <el-option
-                            :value="i"
-                            :label="getPortName(i)"
-                        ></el-option>
-                    </template>
+                    <el-option :value="i" :label="getPortName(i)"></el-option>
                 </template>
             </el-select>
             <el-checkbox
@@ -33,7 +28,14 @@
             </el-checkbox>
         </el-form-item>
         <el-form-item :label="$lang('gemport')" prop="gemport">
-            <el-input v-model.number="form.gemport"></el-input>
+            <el-input
+                v-model.number="form.gemport"
+                style="width: 222px"
+                :disabled="gemportFlag"
+            ></el-input>
+            <el-checkbox v-model="gemportFlag" style="margin-left: 30px">
+                {{ $lang("not_concerned") }}
+            </el-checkbox>
         </el-form-item>
         <el-form-item :label="$lang('new_svlan')" prop="new_svlan">
             <el-input v-model.number="form.new_svlan"></el-input>
@@ -117,6 +119,7 @@ export default {
             },
             selectAllPort: false,
             cachePort: 0,
+            gemportFlag: false,
         };
     },
     methods: {
@@ -124,20 +127,19 @@ export default {
             this.$refs["auto-temp-form"].resetFields();
             this.selectAllPort = false;
             if (this.type === "add") {
-                // 添加端口时，去除已经存在的端口
-                // 所有端口都已有配置时，只存在配置所有端口选项
-                const ports = Array.from({ length: this.system.ponports }).map(
-                    (item, index) => index + 1
-                );
-                const exists = this.tempList.map((item) => item.port_id);
-                const list = ports.filter((item) => !exists.includes(item));
-                this.form.port_id = list[0] || 0;
-                this.cachePort = list[0] || 0;
+                this.gemportFlag = true;
+                this.form.port_id = 0;
+                this.cachePort = 0;
             }
             if (this.type === "set") {
                 Object.keys(this.form).forEach((key) => {
                     this.form[key] = this.data[key];
                 });
+                if (this.form.gemport) {
+                    this.gemportFlag = false;
+                } else {
+                    this.gemportFlag = true;
+                }
             }
         },
         validateInnervlan(rule, val, cb) {
@@ -157,15 +159,13 @@ export default {
                 }
             });
         },
-        isShowPort(port_id) {
-            if (this.type === "add") {
-                return !this.tempList.some((item) => item.port_id === port_id);
-            }
-            return true;
-        },
         validGemport(rule, val, cb) {
-            if (!regRange(val, 0, 32)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 32)));
+            if (this.gemportFlag) {
+                this.form.gemport = 0;
+                return cb();
+            }
+            if (!regRange(val, 1, 32)) {
+                return cb(new Error(this.validateMsg("inputRange", 1, 32)));
             }
             cb();
         },
