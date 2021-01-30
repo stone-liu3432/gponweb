@@ -19,11 +19,11 @@
                     </template>
                 </el-select>
             </el-form-item>
-        </template>
-        <template v-if="type === 'speed'">
-            <el-form-item :label="$lang('fan_speed')" prop="speed">
-                <el-input v-model.number="form.speed"></el-input>
-            </el-form-item>
+            <template v-if="form.mode === 1">
+                <el-form-item :label="$lang('fan_speed')" prop="speed">
+                    <el-input v-model.number="form.speed"></el-input>
+                </el-form-item>
+            </template>
         </template>
         <template v-if="type === 'ap'">
             <el-form-item :label="$lang('temp1')" prop="temp1">
@@ -58,7 +58,7 @@ export default {
             form: {
                 fanid: "",
                 mode: 2,
-                speed: "",
+                speed: 255,
                 speed1: "",
                 speed2: "",
                 temp1: "",
@@ -118,7 +118,10 @@ export default {
                     return this.$message.info(this.$lang("modify_tips"));
                 }
             } else {
-                if (this.row[this.type] === this.form[this.type]) {
+                if (
+                    this.form.mode === this.row.mode &&
+                    this.form.speed === this.row.speed
+                ) {
                     return this.$message.info(this.$lang("modify_tips"));
                 }
             }
@@ -131,6 +134,13 @@ export default {
                     }
                 }
             });
+        },
+    },
+    watch: {
+        "form.mode"() {
+            if (this.form.mode === 1) {
+                this.form.speed = this.row.speed || 255;
+            }
         },
     },
 };

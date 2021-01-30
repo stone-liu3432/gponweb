@@ -3,122 +3,6 @@
         <page-header type="none">
             <template slot="title">{{ $lang("dev_mgmt") }} </template>
         </page-header>
-        <!-- <el-row :gutter="30" style="margin: 30px 0">
-            <el-col :span="12">
-                <el-card shadow="never" class="dev-mgmt-item">
-                    <template slot="header">
-                        <span>
-                            <span>{{ $lang("restore_config") }}</span>
-                        </span>
-                    </template>
-                    <p>{{ $lang("res_cfg_info") }}</p>
-                    <el-upload
-                        :auto-upload="false"
-                        action="www.hsgq.com"
-                        :limit="1"
-                        :multiple="false"
-                        :on-change="fileChange"
-                        :before-remove="removeFile"
-                        :file-list="fileList"
-                    >
-                        <el-button slot="trigger" size="small" type="primary">{{
-                            $lang("file_click")
-                        }}</el-button>
-                        <el-button
-                            style="margin-left: 10px"
-                            size="small"
-                            type="success"
-                            @click="uploadConfigFile"
-                            >{{ $lang("restore_config") }}</el-button
-                        >
-                    </el-upload>
-                </el-card>
-            </el-col>
-            <el-col :span="12">
-                <el-card shadow="never" class="dev-mgmt-item">
-                    <template slot="header">
-                        <span>
-                            <span>{{ $lang("reboot") }}</span>
-                        </span>
-                    </template>
-                    <p>{{ $lang("reboot_olt") }}</p>
-                    <el-button
-                        size="small"
-                        type="primary"
-                        @click="rebootOlt()"
-                        >{{ $lang("reboot") }}</el-button
-                    >
-                </el-card>
-            </el-col>
-        </el-row>
-        <el-row :gutter="30" style="margin: 30px 0">
-            <el-col :span="12">
-                <el-card shadow="never" class="dev-mgmt-item">
-                    <template slot="header">
-                        <span>
-                            <span>{{ $lang("backup_config") }}</span>
-                        </span>
-                    </template>
-                    <p>{{ $lang("bkup_cfg_info") }}</p>
-                    <el-button
-                        size="small"
-                        type="primary"
-                        @click="backupConfig"
-                        >{{ $lang("backup_config") }}</el-button
-                    >
-                </el-card>
-            </el-col>
-            <el-col :span="12">
-                <el-card shadow="never" class="dev-mgmt-item">
-                    <template slot="header">
-                        <span>
-                            <span>{{ $lang("default_config") }}</span>
-                        </span>
-                    </template>
-                    <p>{{ $lang("def_cfg_info") }}</p>
-                    <el-button
-                        size="small"
-                        type="primary"
-                        @click="defaultConfig"
-                        >{{ $lang("default_config") }}</el-button
-                    >
-                </el-card>
-            </el-col>
-        </el-row>
-        <el-row :gutter="30" style="margin: 30px 0">
-            <el-col :span="12">
-                <el-card shadow="never" class="dev-mgmt-item">
-                    <template slot="header">
-                        <span>
-                            <span>{{ $lang("save_config") }}</span>
-                        </span>
-                    </template>
-                    <p>{{ $lang("save_cfg_info") }}</p>
-                    <el-button
-                        size="small"
-                        type="primary"
-                        @click="saveConfig"
-                        >{{ $lang("save_config") }}</el-button
-                    >
-                </el-card>
-            </el-col>
-            <el-col :span="12">
-                <el-card shadow="never" class="dev-mgmt-item">
-                    <template slot="header">
-                        <span>
-                            <span>{{ $lang("view_cfg") }}</span>
-                        </span>
-                    </template>
-                    <p>{{ $lang("view_cfg_tips") }}</p>
-                    <el-button
-                        size="small"
-                        type="primary"
-                        @click="viewCurrentConfig"
-                        >{{ $lang("view_cfg") }}</el-button
-                    >
-                </el-card>
-            </el-col>
-        </el-row> -->
         <div class="dev-mgmt-item">
             <div class="dev-mgmt-item-title">{{ $lang("restore_config") }}</div>
             <div class="dev-mgmt-item-content">
@@ -243,19 +127,13 @@
                     :label="$lang('temperature')"
                     prop="temperature"
                 ></el-table-column>
-                <el-table-column :label="$lang('config')" width="250px">
+                <el-table-column :label="$lang('config')" width="150px">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
                             @click="openDialog('mode', scope.row)"
                         >
                             {{ $lang("config", "mode") }}
-                        </el-button>
-                        <el-button
-                            type="text"
-                            @click="openDialog('speed', scope.row)"
-                        >
-                            {{ $lang("config", "fan_speed") }}
                         </el-button>
                     </template>
                 </el-table-column>
@@ -286,7 +164,7 @@
                     :label="$lang('speed2')"
                     prop="speed2"
                 ></el-table-column>
-                <el-table-column :label="$lang('config')">
+                <el-table-column :label="$lang('config')" width="150px">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
@@ -517,18 +395,7 @@ export default {
                                     param: {
                                         mode: form.mode,
                                         fanid: form.fanid,
-                                    },
-                                },
-                            };
-                        },
-                        speed(form) {
-                            return {
-                                url: "/board?info=fanspeed",
-                                data: {
-                                    method: "set",
-                                    param: {
-                                        speed: form.speed,
-                                        fanid: form.fanid,
+                                        speed: Number(form.speed),
                                     },
                                 },
                             };
@@ -556,14 +423,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// .dev-mgmt-item {
-//     span {
-//         color: @titleColor;
-//     }
-//     p {
-//         .base-font-style;
-//     }
-// }
 .lf {
     float: left;
 }
