@@ -6,24 +6,27 @@
             <el-button
                 size="small"
                 type="primary"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 @click="openDialog('add')"
-                >{{ $lang("add", "user") }}</el-button
             >
+                {{ $lang("add", "user") }}
+            </el-button>
             <el-button
                 size="small"
                 type="primary"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 @click="openDialog('delete')"
-                >{{ $lang("delete", "user") }}</el-button
             >
+                {{ $lang("delete", "user") }}
+            </el-button>
             <el-button
                 size="small"
                 type="primary"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 @click="openDialog('modify')"
-                >{{ $lang("modify_user_pwd") }}</el-button
             >
+                {{ modifyBtnText }}
+            </el-button>
         </div>
         <el-table
             border
@@ -41,18 +44,18 @@
                 prop="status"
                 width="80px"
             >
-                <template slot-scope="scope">{{
-                    scope.row.status ? $lang("online") : $lang("offline")
-                }}</template>
+                <template slot-scope="scope">
+                    {{ scope.row.status ? $lang("online") : $lang("offline") }}
+                </template>
             </el-table-column>
             <el-table-column
                 :label="$lang('user_level')"
                 prop="level"
                 width="120px"
             >
-                <template slot-scope="scope">{{
-                    USER_LEVEL[scope.row.level]
-                }}</template>
+                <template slot-scope="scope">
+                    {{ USER_LEVEL[scope.row.level] }}
+                </template>
             </el-table-column>
             <el-table-column
                 :label="$lang('user_reenter')"
@@ -81,14 +84,12 @@
                 ref="user-mgmt-form"
             ></user-mgmt-form>
             <span slot="footer">
-                <el-button @click="closeDialog">{{
-                    $lang("cancel")
-                }}</el-button>
-                <el-button
-                    type="primary"
-                    @click="submitForm('user-mgmt-form')"
-                    >{{ $lang("apply") }}</el-button
-                >
+                <el-button @click="closeDialog">
+                    {{ $lang("cancel") }}
+                </el-button>
+                <el-button type="primary" @click="submitForm('user-mgmt-form')">
+                    {{ $lang("apply") }}
+                </el-button>
             </span>
         </el-dialog>
     </div>
@@ -100,7 +101,7 @@ import {
     isDef,
     isArray,
     isFunction,
-    clearSessionStorage
+    clearSessionStorage,
 } from "@/utils/common";
 import { USER_LEVEL } from "@/utils/commonData";
 import userMgmtForm from "./userMgmt/form";
@@ -112,48 +113,75 @@ export default {
     components: { userMgmtForm },
     mixins: [postData, logout],
     computed: {
-        ...mapGetters(["$lang"])
+        ...mapGetters(["$lang"]),
+        modifyBtnText() {
+            if (this.currUserLevel > 2) {
+                return this.$lang("modify_user_pwd");
+            }
+            return this.$lang("modify", "password");
+        },
     },
     data() {
         return {
             USER_LEVEL,
             userList: [],
             dialogVisible: false,
-            dialogType: ""
+            dialogType: "",
+            currUserLevel: 5,
+            currUserName: "",
         };
     },
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick(_ => {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
     created() {
         this.getData();
+        this.getUserLevel();
     },
     methods: {
         getData() {
             this.userList = [];
             this.$http
                 .get("/usermgmt?form=userlist")
-                .then(res => {
+                .then((res) => {
                     if (res.data.code === 1) {
                         if (isDef(res.data.data) && isArray(res.data.data)) {
                             this.userList = res.data.data;
                         }
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
+        },
+        getUserLevel() {
+            this.currUserName = "";
+            this.currUserLevel = 5;
+            this.$http
+                .get("/usermgmt?form=userlevel")
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (isDef(res.data.data)) {
+                            this.currUserLevel = res.data.data.level;
+                            this.currUserName = res.data.data.name;
+                        }
+                    }
+                })
+                .catch((err) => {});
         },
         openDialog(type) {
             this.dialogVisible = true;
             this.dialogType = type;
-            this.$nextTick(_ => {
-                this.$refs["user-mgmt-form"].init();
+            this.$nextTick(() => {
+                this.$refs["user-mgmt-form"].init(
+                    this.currUserLevel,
+                    this.currUserName
+                );
             });
         },
         submitForm(formName) {
-            this.$refs[formName].validate(data => {
+            this.$refs[formName].validate((data) => {
                 if (data) {
                     this.submitAction(data, this.dialogType);
                 }
@@ -161,7 +189,7 @@ export default {
         },
         closeDialog(fn) {
             this.$refs["user-mgmt-form"].resetForm();
-            this.$nextTick(_ => {
+            this.$nextTick(() => {
                 this.dialogType = "";
                 if (isFunction(fn)) {
                     fn();
@@ -181,8 +209,8 @@ export default {
                             key: md5(`${data.user}:${data.user_pwd1}`),
                             level: data.user_level,
                             reenter: data.user_reenter,
-                            info: data.desc
-                        }
+                            info: data.desc,
+                        },
                     };
                     return { url, post_param };
                 },
@@ -191,42 +219,49 @@ export default {
                     const post_param = {
                         method: "delete",
                         param: {
-                            name: data.user
-                        }
+                            name: data.user,
+                        },
                     };
                     return { url, post_param };
                 },
                 modify(data) {
-                    const url = "/usermgmt?form=modifyps";
-                    const post_param = {
-                        method: "set",
-                        param: {
-                            name: data.user,
-                            key: md5(`${data.user}:${data.current_pwd}`),
-                            key1: md5(`${data.user}:${data.user_pwd1}`)
-                        }
-                    };
+                    const url = "/usermgmt?form=modifyps",
+                        flag =
+                            this.currUserLevel > 2 ||
+                            (this.currUserLevel <= 2 &&
+                                this.currUserName === data.user),
+                        post_param = {
+                            method: "set",
+                            param: {
+                                name: data.user,
+                                key: flag
+                                    ? md5(`${data.user}:${data.current_pwd}`)
+                                    : "",
+                                key1: md5(`${data.user}:${data.user_pwd1}`),
+                            },
+                        };
                     return { url, post_param };
-                }
+                },
             };
             if (isFunction(ACTIONS[type])) {
                 const res = ACTIONS[type].call(this, data);
                 if (res) {
                     const { post_param, url } = res;
-                    const flag = type !== "modify";
-                    this.postData(url, post_param, flag)
-                        .then(res => {
-                            if (!flag) {
+                    const flag =
+                        type === "modify" && this.currUserName === data.user;
+                    this.postData(url, post_param, !flag)
+                        .then((res) => {
+                            if (flag) {
                                 return this.logoutAction();
                             }
                             this.getData();
                             this.closeDialog();
                         })
-                        .catch(err => {});
+                        .catch((err) => {});
                 }
             }
-        }
-    }
+        },
+    },
 };
 </script>
 

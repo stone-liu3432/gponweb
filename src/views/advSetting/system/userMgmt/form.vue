@@ -1,7 +1,16 @@
 <template>
-    <el-form label-width="150px" :model="formData" :rules="rules" ref="user-mgmt-form">
+    <el-form
+        label-width="150px"
+        :model="formData"
+        :rules="rules"
+        ref="user-mgmt-form"
+    >
         <template v-if="type === 'add'">
-            <el-form-item :label="$lang('user')" prop="user" style="margin-bottom: 28px;">
+            <el-form-item
+                :label="$lang('user')"
+                prop="user"
+                style="margin-bottom: 28px"
+            >
                 <el-input v-model="formData.user"></el-input>
             </el-form-item>
             <el-form-item :label="$lang('new_pwd')" prop="user_pwd1">
@@ -13,7 +22,11 @@
             <el-form-item :label="$lang('user_level')" prop="user_level">
                 <el-select v-model.number="formData.user_level">
                     <template v-for="(item, index) in USER_LEVEL">
-                        <el-option :label="item" :value="index" v-if="index > 2"></el-option>
+                        <el-option
+                            :label="item"
+                            :value="index"
+                            v-if="index > 2"
+                        ></el-option>
                     </template>
                 </el-select>
             </el-form-item>
@@ -35,15 +48,43 @@
         </template>
         <template v-if="type === 'modify'">
             <el-form-item :label="$lang('user')" prop="user">
-                <span>{{ formData.user }}</span>
+                <!-- 超级用户修改其他用户密码 -->
+                <template v-if="currUserLevel > 2">
+                    <span>{{ formData.user }}</span>
+                </template>
+                <template v-else>
+                    <el-select v-model="formData.user">
+                        <template v-for="item in data">
+                            <el-option :value="item.name"></el-option>
+                        </template>
+                    </el-select>
+                </template>
             </el-form-item>
-            <el-form-item :label="$lang('current_pwd')" prop="current_pwd" key="current_pwd">
-                <el-input v-model="formData.current_pwd" show-password></el-input>
-            </el-form-item>
-            <el-form-item :label="$lang('new_pwd')" prop="user_pwd1" key="new_pwd">
+            <!-- 超级用户修改其他用户密码时，无须密码直接修改 -->
+            <template v-if="showCurrPwd">
+                <el-form-item
+                    :label="$lang('current_pwd')"
+                    prop="current_pwd"
+                    key="current_pwd"
+                >
+                    <el-input
+                        v-model="formData.current_pwd"
+                        show-password
+                    ></el-input>
+                </el-form-item>
+            </template>
+            <el-form-item
+                :label="$lang('new_pwd')"
+                prop="user_pwd1"
+                key="new_pwd"
+            >
                 <el-input v-model="formData.user_pwd1" show-password></el-input>
             </el-form-item>
-            <el-form-item :label="$lang('cfm_pwd')" prop="user_pwd2" key="cfm_pwd">
+            <el-form-item
+                :label="$lang('cfm_pwd')"
+                prop="user_pwd2"
+                key="cfm_pwd"
+            >
                 <el-input v-model="formData.user_pwd2" show-password></el-input>
             </el-form-item>
         </template>
@@ -57,16 +98,23 @@ import { USER_LEVEL } from "@/utils/commonData";
 export default {
     name: "userMgmtForm",
     computed: {
-        ...mapGetters(["$lang", "validateMsg"])
+        ...mapGetters(["$lang", "validateMsg"]),
+        showCurrPwd() {
+            return (
+                this.currUserLevel > 2 ||
+                (this.currUserLevel <= 2 &&
+                    this.formData.user === this.currUserName)
+            );
+        },
     },
     props: {
         type: {
             type: String,
-            required: true
+            required: true,
         },
         data: {
-            type: Array
-        }
+            type: Array,
+        },
     },
     data() {
         return {
@@ -78,37 +126,48 @@ export default {
                 user_level: 5,
                 user_reenter: "",
                 desc: "",
-                current_pwd: ""
+                current_pwd: "",
             },
             rules: {
                 user: [
                     {
                         validator: this.validateName,
-                        trigger: ["blur", "change"]
-                    }
+                        trigger: ["blur", "change"],
+                    },
                 ],
                 user_pwd1: [
-                    { validator: this.validatePwd, trigger: ["blur", "change"] }
+                    {
+                        validator: this.validatePwd,
+                        trigger: ["blur", "change"],
+                    },
                 ],
                 user_pwd2: [
-                    { validator: this.validatePwd, trigger: ["blur", "change"] }
+                    {
+                        validator: this.validatePwd,
+                        trigger: ["blur", "change"],
+                    },
                 ],
                 user_reenter: [
                     {
                         validator: this.validateReenter,
-                        trigger: ["blur", "change"]
-                    }
+                        trigger: ["blur", "change"],
+                    },
                 ],
                 desc: [
                     {
                         validator: this.validateDesc,
-                        trigger: ["blur", "change"]
-                    }
+                        trigger: ["blur", "change"],
+                    },
                 ],
                 current_pwd: [
-                    { validator: this.validatePwd, trigger: ["blur", "change"] }
-                ]
-            }
+                    {
+                        validator: this.validatePwd,
+                        trigger: ["blur", "change"],
+                    },
+                ],
+            },
+            currUserLevel: 5,
+            currUserName: "",
         };
     },
     methods: {
@@ -122,6 +181,14 @@ export default {
             cb();
         },
         validatePwd(rule, val, cb) {
+            if (
+                rule.field === "current_pwd" ||
+                rule.fullField === "current_pwd"
+            ) {
+                if (!this.showCurrPwd) {
+                    return cb();
+                }
+            }
             if (rule.field === "user_pwd2" || rule.fullField === "user_pwd2") {
                 if (this.formData.user_pwd1 !== this.formData.user_pwd2) {
                     return cb(new Error(this.$lang("pwd_not_match")));
@@ -145,7 +212,7 @@ export default {
             cb();
         },
         validate(fn) {
-            this.$refs["user-mgmt-form"].validate(valid => {
+            this.$refs["user-mgmt-form"].validate((valid) => {
                 return valid
                     ? fn.call(this, this.formData)
                     : fn.call(this, valid);
@@ -154,14 +221,16 @@ export default {
         resetForm() {
             this.$refs["user-mgmt-form"].resetFields();
         },
-        init() {
+        init(level, name) {
             if (this.type === "delete") {
                 this.formData.user = this.data[0] ? this.data[0].name : "";
             } else if (this.type === "modify") {
                 this.formData.user = sessionStorage.getItem("uname");
+                this.currUserLevel = level;
+                this.currUserName = name;
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
