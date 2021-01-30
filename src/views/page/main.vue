@@ -1,6 +1,6 @@
 <template>
     <el-container>
-        <el-header style="border-bottom: 1px solid #CCCCCC;" height="71px">
+        <el-header style="border-bottom: 1px solid #cccccc" height="71px">
             <nav-header :nav-data="nav"></nav-header>
         </el-header>
         <el-scrollbar
@@ -9,7 +9,7 @@
             :viewStyle="{ height: `${height}px` }"
             ref="nav-scrollbar"
         >
-            <el-main style="padding: 0;">
+            <el-main style="padding: 0">
                 <router-view></router-view>
             </el-main>
         </el-scrollbar>
@@ -17,14 +17,14 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
 import pageComponents from "@/router/dynamicRouter";
 import {
     isDef,
     isArray,
     isUndef,
     clearSessionStorage,
-    throttle
+    throttle,
 } from "@/utils/common";
 import { ADVANCED_MENU } from "@/utils/commonData";
 import provider from "@/utils/provider";
@@ -32,7 +32,7 @@ const navHeader = () => import(/* webpackChunkName: "main-page" */ "./header");
 export default {
     name: "mainContent",
     computed: {
-        ...mapGetters(["validateMsg", "$lang"])
+        ...mapGetters(["validateMsg", "$lang"]),
     },
     components: { navHeader },
     mixins: [provider],
@@ -41,7 +41,7 @@ export default {
             nav: [],
             adv: [],
             height: 0,
-            showMessage: true
+            showMessage: true,
         };
     },
     created() {
@@ -54,33 +54,33 @@ export default {
                 this.updateAdvMenu(this.adv);
                 const routes = this.$router.options.routes;
                 const rts = this.cerateRoutes(this.nav, routes, {
-                    root: "main"
+                    root: "main",
                 });
                 const sub = this.cerateRoutes(this.adv, rts, {
-                    root: ADVANCED_MENU
+                    root: ADVANCED_MENU,
                 });
                 this.$router.addRoutes(sub);
                 // 路由加载完成后，跳转默认路由
-                this.$nextTick(_ => {
+                this.$nextTick((_) => {
                     const nav = sessionStorage.getItem("nav");
                     nav
                         ? this.$router.push(`/${nav}`)
                         : this.$router.push("/status");
                 });
             })
-            .catch(err => {});
+            .catch((err) => {});
         this.getSystemInfo()
-            .then(_ => {
+            .then(() => {
                 this.getPort();
             })
-            .catch(err => {});
+            .catch((err) => {});
         this.getPon();
     },
     mounted() {
         const height = document.documentElement.clientHeight;
         this.height = height - 71;
         const resizeCb = throttle(
-            e => {
+            (e) => {
                 const height = document.documentElement.clientHeight;
                 this.height = height - 71;
                 this.$nextTick(() => {
@@ -99,44 +99,34 @@ export default {
         ...mapActions(["getSystemInfo", "getPon", "getPort"]),
         ...mapMutations(["updateAdvMenu", "updatePortName", "updateNavMenu"]),
         getNav() {
-            return new Promise((resolve, reject) => {
-                this.$http
-                    .get("/board?info=nav")
-                    .then(res => {
-                        if (res.data.code === 1) {
-                            if (isDef(res.data.data)) {
-                                if (isArray(res.data.data.menu)) {
-                                    resolve(res.data.data.menu);
-                                }
+            return this.$http
+                .get("/board?info=nav")
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (isDef(res.data.data)) {
+                            if (isArray(res.data.data.menu)) {
+                                return Promise.resolve(res.data.data.menu);
                             }
-                        } else {
-                            reject(res.data);
                         }
-                    })
-                    .catch(err => {
-                        reject(err);
-                    });
-            });
+                    }
+                    return Promise.reject(res.data);
+                })
+                .catch((err) => {});
         },
         getAdvMenu() {
-            return new Promise((resolve, reject) => {
-                this.$http
-                    .get("/board?info=menu")
-                    .then(res => {
-                        if (res.data.code === 1) {
-                            if (isDef(res.data.data)) {
-                                if (isArray(res.data.data.menu)) {
-                                    resolve(res.data.data.menu);
-                                }
+            return this.$http
+                .get("/board?info=menu")
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (isDef(res.data.data)) {
+                            if (isArray(res.data.data.menu)) {
+                                return Promise.resolve(res.data.data.menu);
                             }
-                        } else {
-                            reject(res.data);
                         }
-                    })
-                    .catch(err => {
-                        reject(err);
-                    });
-            });
+                    }
+                    return Promise.reject(res.data);
+                })
+                .catch((err) => {});
         },
         /**
          * @method 创建符合routes选项的数组
@@ -156,7 +146,7 @@ export default {
                                 isDef(item.children) &&
                                 isArray(item.children)
                             ) {
-                                item.children.forEach(_item => {
+                                item.children.forEach((_item) => {
                                     prev.push(this.createRoute(_item, 4));
                                 });
                             } else {
@@ -169,7 +159,7 @@ export default {
                             parent.children.unshift({
                                 path: `/${root}`,
                                 component: child.component,
-                                meta: child.meta
+                                meta: child.meta,
                             });
                     }
                 }
@@ -182,8 +172,8 @@ export default {
                 path: `/${path}`,
                 component: pageComponents[path],
                 meta: {
-                    requireAuth: true
-                }
+                    requireAuth: true,
+                },
             };
             if (isDef(index)) {
                 item.meta.index = index;
@@ -192,7 +182,7 @@ export default {
         },
         findParent(node, path) {
             const result = [];
-            node.forEach(item => {
+            node.forEach((item) => {
                 if (item.children) {
                     result.push(...this.findParent(item.children, path));
                 }
@@ -207,7 +197,7 @@ export default {
         },
         httpInterceptors() {
             this.$http.interceptors.response.use(
-                response => {
+                (response) => {
                     const jumpToLogin = () => {
                         clearSessionStorage();
                         this.$router.push("/login");
@@ -239,12 +229,12 @@ export default {
                     }
                     return response;
                 },
-                err => {
+                (err) => {
                     return Promise.reject(err);
                 }
             );
-        }
-    }
+        },
+    },
 };
 </script>
 
