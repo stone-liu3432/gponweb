@@ -80,6 +80,7 @@ Mock.mock(
                 tcont_num: Random.range(1, 4),
                 iphost_num: Random.range(1, 4),
                 veip_num: Random.range(0, 1),
+                wan: Random.range(0, 1),
             },
         };
     }
@@ -160,3 +161,39 @@ Mock.mock(
 );
 
 Mock.post("/gponont_mgmt?form=ipconfig");
+
+Mock.mock(
+    /\/gponont_mgmt\?form=wanconfig&port_id=\d+&onu_id=\d+/,
+    "get",
+    ({ url }) => {
+        const data = Array.from({ length: 3 }).map((item, index) => ({
+            name: "wan" + index,
+            index: 0,
+            status: Random.range(0, 1),
+            ipmode: Random.range(0, 3),
+            ctype: Random.range(0, 7),
+            tagmode: Random.range(0, 1),
+            vlan_id: Random.vlan(),
+            vlan_priority: Random.range(0, 8),
+            ipproto: Random.range(1, 3),
+            igmpproxy: Random.range(0, 2),
+            ipaddr: Random.ip(),
+            ipmask: Random.ip(),
+            gateway: Random.ip(),
+            pppoemode: Random.range(0, 2),
+            user: Random.word(1, 16),
+            password: Random.word(1, 16),
+            requestdns: Random.range(0, 1),
+            pridns: Random.ip(),
+            secdns: Random.ip(),
+            portmap: [1, 2, 3, 4, 5, 9].slice(0, Random.range(1, 5)),
+        }));
+        return {
+            code: 1,
+            message: "success",
+            data,
+        };
+    }
+);
+
+Mock.post("/gponont_mgmt?form=wanconfig");
