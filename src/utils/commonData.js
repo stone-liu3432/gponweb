@@ -4,6 +4,10 @@
 export const SWITCH_MAP = ["disable", "enable"];
 export const LINK_STATUS = ["link_down", "link_up"];
 export const STATUS = ["offline", "online"];
+
+// 带有不关注状态的开关
+export const NOT_CONCERNED_STATUS_MAP = ["not_concerned", "enable", "disable"];
+
 // 对应状态的开关按钮文字， 0关闭状态时，文字应显示为开启(on)，反之则为关闭(off)
 export const BUTTON_TEXT = ["on", "off"];
 
@@ -221,4 +225,29 @@ export const SYSTEM_ACL_ACCESS_MAP = {
     2: "Web",
     3: "SSH",
     4: "All",
+};
+
+// ONT WAN连接类型
+export const CTYPE_MAP = [
+    "tr069",
+    "internet",
+    "other",
+    "voice",
+    "voice_internet",
+    "internet_tr069",
+    "voice_tr069",
+    "voice_internet_tr069",
+];
+
+// ONT IP模式
+export const IPMODE_MAP = ["Static IP", "DHCP", "PPPoE", "Bridge"];
+
+// ONT Port map
+export const ONT_PORT_MAP = {
+    1: "LAN1",
+    2: "LAN2",
+    3: "LAN3",
+    4: "LAN4",
+    5: "WLAN1",
+    9: "WLAN2",
 };
