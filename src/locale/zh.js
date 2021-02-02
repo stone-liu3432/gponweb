@@ -907,7 +907,7 @@ var zh = {
     af_interval: "自动发现间隔",
     laser: "端口光状态",
     fanid: "风扇",
-    fan_speed: " 风扇转速",
+    fan_speed: "风扇转速",
     ipaddress_s: "起始IP地址",
     ipaddress_e: "结束IP地址",
     server_admin: "Server状态",
@@ -1095,6 +1095,10 @@ var zh = {
     dhcpv6_admin: "DHCPv6状态",
     option18_admin: "Option18状态",
     option37_admin: "Option37状态",
+    igmp_function: "IGMP模式",
+    immediate_leave: "快速离开",
+    wan: "WAN链接",
+    wan_not_support: "当前ONT不支持配置WAN连接",
 };
 
 export default zh;

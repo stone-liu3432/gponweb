@@ -1123,6 +1123,10 @@ var en = {
     dhcpv6_admin: "DHCPv6 Status",
     option18_admin: "Option18 Status",
     option37_admin: "Option37 Status",
+    igmp_function: "IGMP Mode",
+    immediate_leave: "Fast leave",
+    wan: "WAN Interface",
+    wan_not_support: "This ONT does not support configuring WAN connections",
 };
 
 export default en;
