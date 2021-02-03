@@ -21,26 +21,25 @@
         <el-tabs v-model="activeName" type="card" v-if="ont_id !== 0xffff">
             <el-tab-pane :label="$lang('onu_basic_info')" name="basic_info">
                 <div style="margin: 12px 0">
-                    <el-button
-                        type="primary"
-                        size="small"
-                        @click="changeState"
-                        >{{ $lang("switch", "ont", "state") }}</el-button
-                    >
+                    <el-button type="primary" size="small" @click="changeState">
+                        {{ $lang("switch", "ont", "state") }}
+                    </el-button>
                     <el-button
                         type="primary"
                         size="small"
                         style="margin-left: 30px"
                         @click="reboot"
-                        >{{ $lang("reboot", "ont") }}</el-button
                     >
+                        {{ $lang("reboot", "ont") }}
+                    </el-button>
                     <el-button
                         type="primary"
                         size="small"
                         style="margin-left: 30px"
                         @click="setInfo"
-                        >{{ $lang("config", "desc") }}</el-button
                     >
+                        {{ $lang("config", "desc") }}
+                    </el-button>
                 </div>
                 <el-row :gutter="30" style="width: 1030px">
                     <el-col :span="12">
@@ -51,9 +50,9 @@
                             border
                             v-if="Object.keys(baseInfo).length"
                         >
-                            <span slot="title">{{
-                                $lang("ont", "basic", "info")
-                            }}</span>
+                            <span slot="title">
+                                {{ $lang("ont", "basic", "info") }}
+                            </span>
                         </nms-panel>
                     </el-col>
                     <el-col :span="12">
@@ -64,9 +63,9 @@
                                 border
                                 v-if="Object.keys(versionInfo).length"
                             >
-                                <span slot="title">{{
-                                    $lang("version", "info")
-                                }}</span>
+                                <span slot="title">
+                                    {{ $lang("version", "info") }}
+                                </span>
                             </nms-panel>
                         </div>
                         <div style="margin-top: 30px">
@@ -77,9 +76,9 @@
                                 :contentRender="contentRender"
                                 v-if="Object.keys(portInfo).length"
                             >
-                                <span slot="title">{{
-                                    $lang("port", "info")
-                                }}</span>
+                                <span slot="title">
+                                    {{ $lang("port", "info") }}
+                                </span>
                             </nms-panel>
                         </div>
                     </el-col>
@@ -98,19 +97,31 @@
                     :identifier="identifier"
                 ></ont-ipconfig>
             </el-tab-pane>
+            <el-tab-pane :label="$lang('wan_connect')" name="wan_connect">
+                <template v-if="portInfo.wan">
+                    <ont-wan
+                        :data="wanConnect"
+                        :identifier="identifier"
+                        @refresh-data="getData"
+                    ></ont-wan>
+                </template>
+                <template v-else>
+                    <span class="wan-not-support">{{
+                        $lang("wan_not_support")
+                    }}</span>
+                </template>
+            </el-tab-pane>
         </el-tabs>
         <el-dialog :visible.sync="dialogVisible" append-to-body>
             <span slot="title">{{ $lang("config") }}</span>
             <ont-basic-form ref="ont-basic-info"></ont-basic-form>
             <span slot="footer">
-                <el-button @click="dialogVisible = false">{{
-                    $lang("cancel")
-                }}</el-button>
-                <el-button
-                    type="primary"
-                    @click="submitForm('ont-basic-info')"
-                    >{{ $lang("apply") }}</el-button
-                >
+                <el-button @click="dialogVisible = false">
+                    {{ $lang("cancel") }}
+                </el-button>
+                <el-button type="primary" @click="submitForm('ont-basic-info')">
+                    {{ $lang("apply") }}
+                </el-button>
             </span>
         </el-dialog>
     </div>
@@ -132,9 +143,10 @@ import ontAlarm from "./ontBasicInfo/ontAlarm";
 import ontIpconfig from "./ontBasicInfo/ontIpconfig";
 import postData from "@/mixin/postData";
 import rebootOnt from "@/mixin/onu/rebootOnt";
+import ontWan from "./ontBasicInfo/ontWan";
 export default {
     name: "ontBasicInfo",
-    components: { ontBasicForm, ontAlarm, ontOptical, ontIpconfig },
+    components: { ontBasicForm, ontAlarm, ontOptical, ontIpconfig, ontWan },
     computed: {
         ...mapGetters(["$lang"]),
         identifier() {
@@ -144,7 +156,7 @@ export default {
     mixins: [postData, rebootOnt],
     inject: ["updateAdvMainScrollbar"],
     updated() {
-        this.$nextTick((_) => {
+        this.$nextTick(() => {
             this.updateAdvMainScrollbar();
         });
     },
@@ -183,12 +195,18 @@ export default {
                 mstate(key, val) {
                     return ONT_MSTATES[val];
                 },
+                wan(key, val) {
+                    return val > 0
+                        ? this.$lang("support")
+                        : this.$lang("not_support");
+                },
             },
             dialogVisible: false,
             activeName: "basic_info",
             opticalInfo: {},
             alarmList: [],
             ontIpconfig: [],
+            wanConnect: [],
         };
     },
     created() {
@@ -287,7 +305,7 @@ export default {
                     ? this.$lang("tips_deactive_state")
                     : this.$lang("tips_active_state")
             )
-                .then((_) => {
+                .then(() => {
                     const flags = flag ? 0x2 : 0x1;
                     const post_params = {
                         method: "set",
@@ -299,16 +317,16 @@ export default {
                         },
                     };
                     this.postData("/gponont_mgmt?form=info", post_params)
-                        .then((_) => {
+                        .then(() => {
                             this.getBaseInfo(this.port_id, this.ont_id);
                         })
-                        .catch((_) => {});
+                        .catch(() => {});
                 })
-                .catch((_) => {});
+                .catch(() => {});
         },
         setInfo() {
             this.dialogVisible = true;
-            this.$nextTick((_) => {
+            this.$nextTick(() => {
                 this.$refs["ont-basic-info"].init(this.baseInfo);
             });
         },
@@ -328,10 +346,10 @@ export default {
                         param: result,
                     };
                     this.postData("/gponont_mgmt?form=info", data)
-                        .then((_) => {
+                        .then(() => {
                             this.getBaseInfo(this.port_id, this.ont_id);
                         })
-                        .catch((_) => {});
+                        .catch(() => {});
                     this.dialogVisible = false;
                 }
             });
@@ -384,6 +402,21 @@ export default {
                 })
                 .catch((err) => {});
         },
+        getWanConnect(port_id, ont_id) {
+            this.wanConnect = [];
+            this.$http
+                .get(
+                    `/gponont_mgmt?form=wanconfig&port_id=${port_id}&onu_id=${ont_id}`
+                )
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (isArray(res.data.data)) {
+                            this.wanConnect = res.data.data;
+                        }
+                    }
+                })
+                .catch((err) => {});
+        },
         getData() {
             switch (this.activeName) {
                 case "basic_info": {
@@ -412,6 +445,11 @@ export default {
                     }
                     break;
                 }
+                case "wan_connect": {
+                    if (this.port_id && this.ont_id !== 0xffff) {
+                        this.getWanConnect(this.port_id, this.ont_id);
+                    }
+                }
             }
         },
     },
@@ -424,4 +462,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.wan-not-support {
+    .base-font-style;
+    margin-left: 12px;
+}
 </style>
