@@ -1099,6 +1099,7 @@ var zh = {
     immediate_leave: "快速离开",
     wan: "WAN链接",
     wan_not_support: "当前ONT不支持配置WAN连接",
+    device_type: "设备类型",
 };
 
 export default zh;

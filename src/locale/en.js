@@ -1127,6 +1127,7 @@ var en = {
     immediate_leave: "Fast leave",
     wan: "WAN Interface",
     wan_not_support: "This ONT does not support configuring WAN connections",
+    device_type: "Device Type",
 };
 
 export default en;
