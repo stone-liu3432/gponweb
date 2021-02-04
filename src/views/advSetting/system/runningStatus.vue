@@ -26,7 +26,14 @@
                     <template v-for="key in sysKey">
                         <p>
                             <span>{{ $lang(key) }}:</span>
-                            <span>{{ system[key] || "" }}</span>
+                            <template v-if="key !== 'device_type'">
+                                <span>{{ system[key] || "" }}</span>
+                            </template>
+                            <template v-else>
+                                <span>
+                                    {{ system[key] === 1 ? "EPON" : "GPON" }}
+                                </span>
+                            </template>
                         </p>
                     </template>
                     <p>
@@ -149,6 +156,7 @@ export default {
                 "hw_ver",
                 "macaddr",
                 "sn",
+                "device_type",
                 "ponports",
                 "geports",
                 "xgeports",
