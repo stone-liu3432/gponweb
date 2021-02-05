@@ -20,6 +20,8 @@ Mock.mock("/board?info=system", "get", {
         build_time: "2017/11/22 09:32:48",
         panel_temp: 1000,
         right_temp: 1000,
+        sn: Random.word(1, 32),
+        device_type: 2,
     },
 });
 
@@ -40,6 +42,8 @@ Mock.mock("/board_info", "get", {
         build_time: "2017/11/22 09:32:48",
         panel_temp: 1000,
         right_temp: 1000,
+        sn: Random.word(1, 32),
+        device_type: 2,
     },
 });
 
