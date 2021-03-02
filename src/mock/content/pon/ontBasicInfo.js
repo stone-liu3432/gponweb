@@ -163,7 +163,7 @@ Mock.mock(
 Mock.post("/gponont_mgmt?form=ipconfig");
 
 Mock.mock(
-    /\/gponont_mgmt\?form=wanconfig&port_id=\d+&onu_id=\d+/,
+    /\/gponont_mgmt\?form=wanconfig&port_id=\d+&ont_id=\d+/,
     "get",
     ({ url }) => {
         const data = Array.from({ length: 3 }).map((item, index) => ({
@@ -172,6 +172,7 @@ Mock.mock(
             status: Random.range(0, 1),
             ipmode: Random.range(0, 3),
             ctype: Random.range(0, 7),
+            mtu: Random.range(70, 1500),
             tagmode: Random.range(0, 1),
             vlan_id: Random.vlan(),
             vlan_priority: Random.range(0, 8),
