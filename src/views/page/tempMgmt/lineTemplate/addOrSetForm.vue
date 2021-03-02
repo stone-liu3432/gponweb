@@ -292,8 +292,8 @@ export default {
                     )
                 );
             }
-            if (!regRange(val, 1, 32)) {
-                return cb(new Error(this.validateMsg("inputRange", 1, 32)));
+            if (!regRange(val, 1, 30)) {
+                return cb(new Error(this.validateMsg("inputRange", 1, 30)));
             }
             cb();
         },
