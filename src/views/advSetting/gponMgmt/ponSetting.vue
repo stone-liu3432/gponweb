@@ -12,41 +12,43 @@
                     size="small"
                     style="margin-left: 30px"
                     @click="openDialog('time', ponInfo)"
-                    >{{ $lang("config") }}</el-button
                 >
+                    {{ $lang("config") }}
+                </el-button>
             </div>
             <div class="pon-setting-info">
                 <span>{{ $lang("af_interval") }}:</span>
                 <span>{{ ponInfo.af_interval }}</span>
-                <!-- <el-button
-                    type="primary"
-                    size="small"
-                    style="margin-left: 30px;"
-                    @click="openDialog('interval', ponInfo)"
-                >{{ $lang('config') }}</el-button>-->
             </div>
             <div style="margin: 20px 0 20px 0px">
                 <el-button
                     type="primary"
                     size="small"
                     @click="openDialog('all')"
-                    >{{ $lang("config", "all", "port") }}</el-button
                 >
+                    {{ $lang("config", "all", "port") }}
+                </el-button>
             </div>
             <el-table :data="ponInfo.gpon_setting || []" border>
-                <el-table-column :label="$lang('port_id')" prop="port_id">
-                    <template slot-scope="scope">{{
-                        getPortName(scope.row.port_id)
-                    }}</template>
+                <el-table-column
+                    :label="$lang('port_id')"
+                    prop="port_id"
+                    width="100px"
+                >
+                    <template slot-scope="scope">
+                        {{ getPortName(scope.row.port_id) }}
+                    </template>
                 </el-table-column>
                 <el-table-column :label="$lang('autofind')" prop="autofind">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
-                            <span>{{
-                                scope.row.autofind
-                                    ? $lang("enable")
-                                    : $lang("disable")
-                            }}</span>
+                            <span>
+                                {{
+                                    scope.row.autofind
+                                        ? $lang("enable")
+                                        : $lang("disable")
+                                }}
+                            </span>
                             <el-switch
                                 v-model="scope.row.autofind"
                                 :active-value="1"
@@ -59,9 +61,11 @@
                 <el-table-column :label="$lang('laser')" prop="laser">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
-                            <span style="width: 50px">{{
-                                scope.row.laser ? $lang("on") : $lang("off")
-                            }}</span>
+                            <span>
+                                {{
+                                    scope.row.laser ? $lang("on") : $lang("off")
+                                }}
+                            </span>
                             <el-switch
                                 v-model="scope.row.laser"
                                 @change="changeLaser(scope.row)"
@@ -74,29 +78,31 @@
                 <el-table-column :label="$lang('trx_type')" width="300px">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
-                            <span style="width: 200px">{{
-                                TRX_TYPE_MAP[scope.row.trx_type]
-                            }}</span>
+                            <span style="width: 200px">
+                                {{ TRX_TYPE_MAP[scope.row.trx_type] }}
+                            </span>
                             <el-button
                                 type="text"
                                 style="margin-left: 12px"
                                 @click="openDialog('trx_type', scope.row)"
-                                >{{ $lang("config") }}</el-button
                             >
+                                {{ $lang("config") }}
+                            </el-button>
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column :label="$lang('auth_type')" prop="auth_type">
                     <template slot-scope="scope">
                         <div class="pon-setting-info-item">
-                            <span>{{
-                                scope.row.auth_type ? "Auto" : "Manual"
-                            }}</span>
+                            <span>
+                                {{ scope.row.auth_type ? "Auto" : "Manual" }}
+                            </span>
                             <el-button
                                 type="text"
                                 @click="openDialog('auth', scope.row)"
-                                >{{ $lang("config") }}</el-button
                             >
+                                {{ $lang("config") }}
+                            </el-button>
                         </div>
                     </template>
                 </el-table-column>
@@ -104,39 +110,15 @@
                     :label="$lang('lineprof_id')"
                     prop="lineprof_id"
                 >
-                    <template slot-scope="scope">{{
-                        scope.row.auth_type ? scope.row.lineprof_id : "-"
-                    }}</template>
+                    <template slot-scope="scope">
+                        {{ scope.row.auth_type ? scope.row.lineprof_id : "-" }}
+                    </template>
                 </el-table-column>
                 <el-table-column :label="$lang('srvprof_id')" prop="srvprof_id">
-                    <template slot-scope="scope">{{
-                        scope.row.auth_type ? scope.row.srvprof_id : "-"
-                    }}</template>
-                </el-table-column>
-                <!-- <el-table-column :label="$lang('config')" width="120px">
                     <template slot-scope="scope">
-                        <el-dropdown @command="command">
-                            <span class="el-dropdown-link">
-                                {{ $lang('config') }}
-                                <i class="el-icon-arrow-down el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item
-                                    :command="{ action: 'autofind', row: scope.row }"
-                                >{{ $lang(scope.row.autofind ? 'off' : 'on', 'autofind') }}</el-dropdown-item>
-                                <el-dropdown-item
-                                    :command="{ action: 'laser', row: scope.row }"
-                                >{{ $lang(scope.row.laser ? "off" : "on", "laser") }}</el-dropdown-item>
-                                <el-dropdown-item
-                                    :command="{ action: 'auth_type', row: scope.row }"
-                                >{{ $lang('config', 'auth_type') }}</el-dropdown-item>
-                                <el-dropdown-item
-                                    :command="{ action: 'trx_type', row: scope.row }"
-                                >{{ $lang('config', 'trx_type') }}</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        {{ scope.row.auth_type ? scope.row.srvprof_id : "-" }}
                     </template>
-                </el-table-column>-->
+                </el-table-column>
             </el-table>
             <el-dialog
                 :visible.sync="dialogVisible"
@@ -148,14 +130,15 @@
                 </div>
                 <pon-setting-form ref="pon-setting-form"></pon-setting-form>
                 <div slot="footer">
-                    <el-button @click="dialogVisible = false">{{
-                        $lang("cancel")
-                    }}</el-button>
+                    <el-button @click="dialogVisible = false">
+                        {{ $lang("cancel") }}
+                    </el-button>
                     <el-button
                         type="primary"
                         @click="submitForm('pon-setting-form')"
-                        >{{ $lang("apply") }}</el-button
                     >
+                        {{ $lang("apply") }}
+                    </el-button>
                 </div>
             </el-dialog>
         </template>
