@@ -7,14 +7,14 @@
     >
         <el-form-item :label="$lang('svp_id')" prop="svp_id" key="svp-id">
             <el-input
-                style="width: 200px;"
+                style="width: 200px"
                 :disabled="disabledSvpid"
                 v-model.number="form.svp_id"
             ></el-input>
             <el-checkbox
                 v-model="autoAssignSvpid"
                 v-if="type === 'add'"
-                style="margin-left: 30px;"
+                style="margin-left: 30px"
                 >{{ $lang("auto_assign") }}</el-checkbox
             >
         </el-form-item>
@@ -117,7 +117,7 @@ import { mapGetters, mapState } from "vuex";
 import {
     TAG_ACTIONS,
     SVP_TYPE_MAP,
-    INSTALL_MODE_MAP
+    INSTALL_MODE_MAP,
 } from "@/utils/commonData";
 import { regRange, regLength } from "@/utils/validator";
 import { isFunction, isDef } from "@/utils/common";
@@ -142,15 +142,15 @@ export default {
             }
             this.form.inner_vlan = "";
             return true;
-        }
+        },
     },
     props: {
         type: {
-            type: String
+            type: String,
         },
         data: {
-            type: Object
-        }
+            type: Object,
+        },
     },
     inject: ["validateVlan"],
     data() {
@@ -168,54 +168,54 @@ export default {
                 user_vlan: "", // 0-4094
                 tag_action: 1,
                 inner_vlan: "", // 1-4094
-                desc: ""
+                desc: "",
                 // install_mode: 1
             },
             rules: {
                 svp_id: [
                     {
                         validator: this.validateSvpid,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 new_svlan: [
                     {
                         validator: this.validateVlan,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 ont_id: [
                     {
                         validator: this.validateOntid,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 gemport: [
                     {
                         validator: this.validateGemport,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 user_vlan: [
                     {
                         validator: this.validateUservlan,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 inner_vlan: [
                     {
                         validator: this.validateInnerVlan,
-                        trigger: ["change", "blur"]
-                    }
+                        trigger: ["change", "blur"],
+                    },
                 ],
                 desc: [
                     {
                         validator: this.validateDesc,
-                        trigger: ["change", "blur"]
-                    }
-                ]
+                        trigger: ["change", "blur"],
+                    },
+                ],
             },
-            autoAssignSvpid: false
+            autoAssignSvpid: false,
         };
     },
     methods: {
@@ -243,8 +243,9 @@ export default {
             if (this.autoAssignSvpid) {
                 return cb();
             }
-            if (!regRange(val, 0, 8190)) {
-                return cb(new Error(this.validateMsg("inputRange", 0, 8190)));
+            const max = this.system.ponports < 16 ? 4094 : 8190;
+            if (!regRange(val, 0, max)) {
+                return cb(new Error(this.validateMsg("inputRange", 0, max)));
             }
             cb();
         },
@@ -304,7 +305,7 @@ export default {
             if (this.type === "desc" && this.form.desc === this.data.desc) {
                 return this.$message.error(this.$lang("modify_tips"));
             }
-            this.$refs["virtual-port-form"].validate(valid => {
+            this.$refs["virtual-port-form"].validate((valid) => {
                 if (isFunction(fn)) {
                     if (valid) {
                         return fn.call(this, {
@@ -319,13 +320,13 @@ export default {
                             tag_action: this.form.tag_action,
                             inner_vlan: Number(this.form.inner_vlan),
                             desc: this.form.desc,
-                            svp_type: this.form.svp_type
+                            svp_type: this.form.svp_type,
                         });
                     }
                     return fn.call(this, valid);
                 }
             });
-        }
+        },
     },
     watch: {
         autoAssignSvpid() {
@@ -343,10 +344,10 @@ export default {
         "form.tag_action"() {
             this.$refs["virtual-port-form"].clearValidate([
                 "user_vlan",
-                "inner_vlan"
+                "inner_vlan",
             ]);
-        }
-    }
+        },
+    },
 };
 </script>
 
