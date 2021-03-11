@@ -68,6 +68,7 @@ export const ONT_MSTATES = ["initial", "match", "mismatch"];
 
 // IGMP
 export const IGMP_MODES = ["disable", "snooping", "proxy"];
+export const TGMP_AGING_MODE_MAP = ["timer", "not-timer"];
 export const IGMP_PROTOCOL_POLICIES = ["pass", "discard"];
 export const MULTICAST_ACTIONS = ["dynamic", "static"];
 export const MULTICAST_UNKNOWN_POLICYS = ["transparent", "discard"];
@@ -250,4 +251,12 @@ export const ONT_PORT_MAP = {
     4: "LAN4",
     5: "WLAN1",
     9: "WLAN2",
+};
+
+// ONT WI-FI encrypt
+export const ENCRYPT_MAP = {
+    0: "None",
+    1: "WEP",
+    4: "WPA2",
+    6: "WPA2Mixed",
 };
