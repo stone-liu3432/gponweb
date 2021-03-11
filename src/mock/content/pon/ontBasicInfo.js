@@ -197,4 +197,80 @@ Mock.mock(
     }
 );
 
+Mock.mock(
+    /\/gponont_mgmt\?form=wlanconfig&port_id=\d+&ont_id=\d+/,
+    "get",
+    ({ url }) => {
+        const port_id = url.match(/(?<=port_id=)\d+/) >>> 0,
+            ont_id = url.match(/(?<=ont_id=)\d+/) >>> 0;
+        return {
+            code: 1,
+            message: "success",
+            data: {
+                identifier: (port_id << 8) | ont_id,
+                name: Random.word(1, 32),
+                wlan_2_4g_administrator: Random.range(0, 1),
+                wlan_2_4g_encrypt: Random.pick([0, 1, 4, 6]),
+                wlan_2_4g_ssid: Random.word(1, 32),
+                wlan_2_4g_password: Random.word(1, 32),
+                wlan_5g_administrator: Random.range(0, 1),
+                wlan_5g_encrypt: Random.pick([0, 1, 4, 6]),
+                wlan_5g_ssid: Random.word(1, 32),
+                wlan_5g_password: Random.word(1, 32),
+            },
+        };
+    }
+);
+
 Mock.post("/gponont_mgmt?form=wanconfig");
+
+Mock.post("/gponont_mgmt?form=wlanconfig");
+
+Mock.post("/gponmgmt?form=wlan");
+
+Mock.mock(
+    /\/gponont_mgmt\?form=wlanclients&port_id=\d+&ont_id=\d+/,
+    "get",
+    ({ url }) => {
+        const port_id = url.match(/(?<=port_id=)\d+/) >>> 0,
+            ont_id = url.match(/(?<=ont_id=)\d+/) >>> 0,
+            data = Array.from({
+                length: Random.range(1, 8),
+            }).map((item, index) => ({
+                identifier: (port_id << 8) | ont_id,
+                wlan_type: Random.pick([1, 2, 3]),
+                macaddr: Random.mac(),
+                tx_pkts: Random.range(0, 1024000),
+                rx_pkts: Random.range(0, 1024000),
+                tx_rate: Random.rage(0, 1000),
+                rssi: Random.range(-120, 0),
+                expired_time: Range.range(0, 600),
+            }));
+        return {
+            code: 1,
+            message: "success",
+            data,
+        };
+    }
+);
+
+Mock.mock(
+    /\/gponont_mgmt\?form=wanaclconfig&port_id=\d+&ont_id=\d+/,
+    "get",
+    ({ url }) => {
+        const port_id = url.match(/(?<=port_id=)\d+/) >>> 0,
+            ont_id = url.match(/(?<=ont_id=)\d+/) >>> 0;
+        return {
+            code: 1,
+            message: "success",
+            data: {
+                identifier: (port_id << 8) | ont_id,
+                telnet: Random.range(0, 1),
+                http: Random.range(0, 1),
+                ping: Random.range(0, 1),
+            },
+        };
+    }
+);
+
+Mock.post("/gponont_mgmt?form=wanaclconfig");

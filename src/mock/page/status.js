@@ -22,6 +22,8 @@ Mock.mock("/board?info=system", "get", {
         right_temp: 1000,
         sn: Random.word(1, 32),
         device_type: 2,
+        lic_available: Random.range(0, 30),
+        lic_total: Random.pick([0, 30, 60]),
     },
 });
 
@@ -101,3 +103,5 @@ Mock.mock("/switch_port?form=portlist_info", "get", () => {
         data,
     };
 });
+
+Mock.post("/board?info=trylic");

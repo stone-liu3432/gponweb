@@ -8,6 +8,7 @@ Mock.mock("/switch_igmp?form=config", "get", () => {
         message: "success",
         data: {
             mode: Random.range(0, 2),
+            aging_mode: Random.range(0, 1),
             fast_leave: Random.range(0, 1),
             protocol_policy: Random.range(0, 1),
             group_aging_time: Random.range(1, 3000),
@@ -34,6 +35,7 @@ Mock.mock("/igmp_snooping_table", "get", () => {
         (item, index) => {
             return {
                 multi_ip: Random.ip(),
+                user_num: Random.range(0, 30),
                 vid: Random.vlan(),
                 action: Random.range(0, 1),
                 host_portlist: Random.portlist(),
