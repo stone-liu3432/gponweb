@@ -94,8 +94,15 @@
                         v-model="autoAssignVlan"
                         style="margin-left: 30px"
                         :disabled="disabledItem('untag')"
-                        >untag</el-checkbox
                     >
+                        untag
+                    </el-checkbox>
+                    <el-checkbox
+                        v-model="transparent"
+                        :disabled="disabledItem('transparent')"
+                    >
+                        transparent
+                    </el-checkbox>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('vlan_pri')"
@@ -143,7 +150,7 @@ export default {
         },
         existsData: {
             type: Array,
-            default: (_) => [],
+            default: () => [],
         },
     },
     data() {
@@ -194,6 +201,7 @@ export default {
             },
             disabledMode: false,
             autoAssignVlan: false,
+            transparent: false,
             gemCache: {},
         };
     },
@@ -312,12 +320,12 @@ export default {
                 if (prop === "vlan_pri") {
                     return true;
                 } else if (prop === "vlan_id") {
-                    return this.autoAssignVlan;
+                    return this.autoAssignVlan || this.transparent;
                 }
                 return this.type === "mapping";
             }
             if (this.form.mode === 2) {
-                if (prop === "untag") {
+                if (prop === "untag" || prop === "transparent") {
                     return true;
                 } else {
                     return prop === "vlan_id";
@@ -325,9 +333,9 @@ export default {
             }
             if (this.form.mode === 3) {
                 if (prop === "vlan_id") {
-                    return this.autoAssignVlan;
+                    return this.autoAssignVlan || this.transparent;
                 } else if (prop === "vlan_pri") {
-                    return this.autoAssignVlan;
+                    return this.autoAssignVlan || this.transparent;
                 } else {
                     return this.type === "mapping";
                 }
@@ -399,7 +407,7 @@ export default {
                 return cb();
             }
             // untag
-            if (val === 0xffff) {
+            if (val === 0xffff || val === 0xfffe) {
                 return cb();
             }
             if (
@@ -440,9 +448,23 @@ export default {
         },
         autoAssignVlan() {
             if (this.autoAssignVlan) {
+                this.transparent = false;
                 this.form.vlan_id = 0xffff;
             } else {
-                this.form.vlan_id = "";
+                if (!this.transparent) {
+                    this.form.vlan_id = "";
+                }
+            }
+            this.form.vlan_pri = 0;
+        },
+        transparent() {
+            if (this.transparent) {
+                this.autoAssignVlan = false;
+                this.form.vlan_id = 0xfffe;
+            } else {
+                if (!this.autoAssignVlan) {
+                    this.form.vlan_id = "";
+                }
             }
             this.form.vlan_pri = 0;
         },

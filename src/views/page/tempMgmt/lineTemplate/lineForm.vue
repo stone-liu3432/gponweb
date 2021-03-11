@@ -173,6 +173,9 @@
                                                 sub.row.mode !== 2
                                                     ? sub.row.vlan_id === 0xffff
                                                         ? "untag"
+                                                        : sub.row.vlan_id ===
+                                                          0xfffe
+                                                        ? "transparent"
                                                         : sub.row.vlan_id
                                                     : "-"
                                             }}</template>
@@ -439,7 +442,7 @@ export default {
                 this.mappings = data.mapping || [];
                 if (this.mappings.length) {
                     const map = this.mappings[0];
-                    if (map.vlan_id === 0xffff) {
+                    if (map.vlan_id === 0xffff || map.vlan_id === 0xfffe) {
                         return this.$message.error(this.$lang("untag_tips"));
                     }
                 }

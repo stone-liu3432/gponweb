@@ -36,6 +36,8 @@
                             sub.row.mode !== 2
                                 ? sub.row.vlan_id === 0xffff
                                     ? "untag"
+                                    : sub.row.vlan_id === 0xfffe
+                                    ? "transparent"
                                     : sub.row.vlan_id
                                 : "-"
                         }}</template>
@@ -106,12 +108,12 @@ export default {
     name: "lineGemTable",
     props: {
         data: {
-            type: Array
-        }
+            type: Array,
+        },
     },
     data() {
         return {
-            MAPPING_MODES
+            MAPPING_MODES,
         };
     },
     computed: { ...mapGetters(["$lang"]) },
@@ -130,8 +132,8 @@ export default {
         },
         getRowKey(row) {
             return row.gemport;
-        }
-    }
+        },
+    },
 };
 </script>
 
