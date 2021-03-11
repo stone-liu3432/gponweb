@@ -749,7 +749,6 @@ var en = {
     ex_cali: "Externally Calibrated",
     in_cali: "Internal Calibrated",
 
-    onu_wlan: "WLAN",
     encrypt: "Encryption",
     clear_wlan_tips:
         "Note: Clearing the WLAN connection will only clear the configured WLAN connection on the current device.",
@@ -845,7 +844,7 @@ var en = {
     is_exists: "Already exists",
     no_dba_prf: "There's not find DBA Profile, Please add before using !",
     no_tcont_info: "There's not find T-CONT, Please add before using !",
-    untag_tips: "Only one untag rule it is permit.",
+    untag_tips: "No need to add repeatedly in untag or transparent mode",
     duplicate_param: "Duplicate parameters",
     svlan: "S-VLAN ID",
     tag_action: "Tag Transform",
@@ -1128,6 +1127,25 @@ var en = {
     wan: "WAN Interface",
     wan_not_support: "This ONT does not support configuring WAN connections",
     device_type: "Device Type",
+    file_size: "Ont Upgrade File Size",
+    upgrade_state: "Current upgrade state",
+    bytes_transmitted: "Bytes transmitted",
+    upgrade_status: "Ont upgrade status",
+    onu_upgrade_status: " ONT Upgrade Status ",
+    upgrade_progress: "Download progress",
+    start_upgrade: "Start upgrade",
+    cancel_upgrade: "Cancel upgrade",
+    select_ont_file: "Select the ONT upgrade file provided by the manufacturer",
+    ont_upgrade_succ_msg:
+        "File upload is successful, please see specific upgrade status in ONT upgrade status page",
+    clear_select: "Clear selected",
+    lic_available: "Remaining validity period",
+    lic_total: "Valid period",
+    forever: " Forever",
+    aging_mode: "Aging Mode",
+    timer: "Timer",
+    "not-timer": "Not Timer",
+    user_num: "User Numbers",
 };
 
 export default en;
