@@ -40,6 +40,7 @@ import {
     IGMP_MODES,
     IGMP_PROTOCOL_POLICIES,
     SWITCH_MAP,
+    TGMP_AGING_MODE_MAP,
 } from "@/utils/commonData";
 import igmpInfoForm from "./igmpInfoForm";
 import postData from "@/mixin/postData";
@@ -51,6 +52,7 @@ export default {
         excludes() {
             const EXCLUDES = [
                 [
+                    "aging_mode",
                     "fast_leave",
                     "protocol_policy",
                     "group_aging_time",
@@ -78,20 +80,13 @@ export default {
             ];
             return EXCLUDES[Number(this.info.mode)];
         },
-    },
-    mixins: [postData],
-    inject: ["updateAdvMainScrollbar"],
-    updated() {
-        this.$nextTick(() => {
-            this.updateAdvMainScrollbar();
-        });
-    },
-    data() {
-        return {
-            info: {},
-            contentRender: {
+        contentRender() {
+            return {
                 mode(key, val) {
                     return IGMP_MODES[val];
+                },
+                aging_mode(key, val) {
+                    return this.$lang(TGMP_AGING_MODE_MAP[val]);
                 },
                 fast_leave(key, val) {
                     return SWITCH_MAP[val];
@@ -114,7 +109,20 @@ export default {
                 sp_query_interval(key, val) {
                     return `${val} ms`;
                 },
-            },
+            };
+        },
+    },
+    mixins: [postData],
+    inject: ["updateAdvMainScrollbar"],
+    updated() {
+        this.$nextTick(() => {
+            this.updateAdvMainScrollbar();
+        });
+    },
+    data() {
+        return {
+            info: {},
+
             dialogVisible: false,
         };
     },
@@ -137,7 +145,7 @@ export default {
         },
         openDialog() {
             this.dialogVisible = true;
-            this.$nextTick((_) => {
+            this.$nextTick(() => {
                 this.$refs["igmp-info-form"].init(this.info);
             });
         },
@@ -165,7 +173,7 @@ export default {
                     },
                 };
             this.postData(url, post_params, false)
-                .then((_) => {
+                .then(() => {
                     if (data.mode !== 0) {
                         this.submitChange(data);
                     } else {
@@ -174,7 +182,7 @@ export default {
                         this.getData();
                     }
                 })
-                .catch((_) => {});
+                .catch(() => {});
         },
         submitChange(data) {
             const url = "/switch_igmp?form=config",
@@ -182,6 +190,7 @@ export default {
                     method: "set",
                     param: {
                         flags: data.flags,
+                        aging_mode: data.aging_mode,
                         protocol_policy: data.protocol_policy,
                         fast_leave: data.fast_leave,
                         group_aging_time: data.group_aging_time,
@@ -196,10 +205,10 @@ export default {
                     },
                 };
             this.postData(url, post_params)
-                .then((_) => {
+                .then(() => {
                     this.getData();
                 })
-                .catch((_) => {});
+                .catch(() => {});
             this.dialogVisible = false;
         },
     },

@@ -40,6 +40,11 @@
                 :label="$lang('multi_ip')"
                 prop="multi_ip"
             ></el-table-column>
+            <el-table-column :label="$lang('user_num')">
+                <template slot-scope="scope">
+                    {{ scope.row.user_num || "-" }}
+                </template>
+            </el-table-column>
             <el-table-column :label="$lang('vid')" prop="vid"></el-table-column>
             <el-table-column :label="$lang('action')" prop="action">
                 <template slot-scope="scope">

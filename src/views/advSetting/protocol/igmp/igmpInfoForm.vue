@@ -13,6 +13,16 @@
             </el-select>
         </el-form-item>
         <template v-if="form.mode !== 0">
+            <el-form-item :label="$lang('aging_mode')" prop="aging_mode">
+                <el-select v-model.number="form.aging_mode">
+                    <template v-for="(item, index) in TGMP_AGING_MODE_MAP">
+                        <el-option
+                            :value="index"
+                            :label="$lang(item)"
+                        ></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
             <el-form-item :label="$lang('fast_leave')" prop="fast_leave">
                 <el-select v-model.number="form.fast_leave">
                     <template v-for="(item, index) in SWITCH_MAP">
@@ -43,17 +53,15 @@
                     :label="$lang('gen_response_time')"
                     prop="gen_response_time"
                 >
-                    <el-input
-                        v-model.number="form.gen_response_time"
-                    ></el-input>
+                    <el-input v-model.number="form.gen_response_time">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('gen_query_interval')"
                     prop="gen_query_interval"
                 >
-                    <el-input
-                        v-model.number="form.gen_query_interval"
-                    ></el-input>
+                    <el-input v-model.number="form.gen_query_interval">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('sp_response_time')"
@@ -65,9 +73,8 @@
                     :label="$lang('sp_query_interval')"
                     prop="sp_query_interval"
                 >
-                    <el-input
-                        v-model.number="form.sp_query_interval"
-                    ></el-input>
+                    <el-input v-model.number="form.sp_query_interval">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     :label="$lang('sp_query_number')"
@@ -86,6 +93,7 @@ import {
     IGMP_MODES,
     SWITCH_MAP,
     IGMP_PROTOCOL_POLICIES,
+    TGMP_AGING_MODE_MAP,
 } from "@/utils/commonData";
 import { isDef, isFunction } from "@/utils/common";
 import { regRange } from "@/utils/validator";
@@ -100,8 +108,10 @@ export default {
             IGMP_MODES,
             SWITCH_MAP,
             IGMP_PROTOCOL_POLICIES,
+            TGMP_AGING_MODE_MAP,
             form: {
                 mode: 0,
+                aging_mode: 0,
                 fast_leave: 0,
                 protocol_policy: 0,
                 group_aging_time: "",
@@ -184,7 +194,7 @@ export default {
             });
         },
         // mode为disable(0)不显示以下所以信息
-        // mode为snooping(1)显示fast_leave、protocol_policy、group_aging_time信息
+        // mode为snooping(1)显示fast_leave、protocol_policy、group_aging_time, aging_mode信息
         // mode为proxy(2)除了group_aging_time不显示，其他信息都显示
         validateAgingTime(ruel, val, cb) {
             if (this.form.mode !== 1) {
@@ -282,6 +292,7 @@ export default {
                             sp_query_interval: 0x200,
                             sp_response_time: 0x400,
                             sp_query_number: 0x800,
+                            aging_mode: 0x1000,
                         };
                         Object.keys(FLAG_MAP).forEach((key) => {
                             if (this.form[key] !== this.cacheData[key]) {
