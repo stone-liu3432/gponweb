@@ -59,3 +59,4 @@ import "@/mock/content/system/log";
 import "@/mock/content/pon/ontPerf";
 import "@/mock/content/pon/ontDeny";
 import "@/mock/content/system/sysAcl";
+import "@/mock/content/pon/ontUpgrade";
