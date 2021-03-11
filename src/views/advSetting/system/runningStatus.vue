@@ -58,6 +58,37 @@
                             °C
                         </span>
                     </p>
+                    <p>
+                        <span>{{ $lang("lic_available") }}:</span>
+                        <span
+                            :style="{
+                                color: system.lic_available <= 5 ? 'red' : '',
+                            }"
+                        >
+                            {{ system.lic_available }}
+                        </span>
+                    </p>
+                    <p>
+                        <span>{{ $lang("lic_total") }}:</span>
+                        <span style="width: 80px">
+                            {{
+                                system.lic_tatol === 0
+                                    ? $lang("forever")
+                                    : system.lic_total
+                            }}
+                        </span>
+                        <template
+                            v-if="system.lic_total && system.lic_total !== 0"
+                        >
+                            <el-button
+                                type="primary"
+                                size="mini"
+                                @click="addLicTotal"
+                            >
+                                {{ $lang("add", "lic_total") }}
+                            </el-button>
+                        </template>
+                    </p>
                 </el-card>
             </el-col>
             <el-col :span="13">
@@ -264,7 +295,7 @@ export default {
         });
     },
     methods: {
-        ...mapActions(["getTime"]),
+        ...mapActions(["getTime", "getSystemInfo"]),
         getUsage() {
             this.usage = {};
             this.$http
@@ -401,7 +432,30 @@ export default {
                         .then(() => {
                             this.getDevName();
                         })
-                        .catch((_) => {});
+                        .catch(() => {});
+                })
+                .catch(() => {});
+        },
+        addLicTotal() {
+            this.$prompt("license: ", this.$lang("add"), {
+                confirmButtonText: this.$lang("apply"),
+                cancelButtonText: this.$lang("cancel"),
+                closeOnClickModal: false,
+                closeOnPressEscape: false,
+                inputPattern: /^[\da-z]{32}$/i,
+                inputErrorMessage: this.validateMsg("inputLength", 32),
+            })
+                .then(({ value }) => {
+                    this.postData("/board?info=trylic", {
+                        method: "set",
+                        param: {
+                            trylic: value,
+                        },
+                    })
+                        .then(() => {
+                            this.getSystemInfo();
+                        })
+                        .catch(() => {});
                 })
                 .catch(() => {});
         },
