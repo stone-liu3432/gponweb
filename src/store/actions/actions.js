@@ -65,16 +65,18 @@ const actions = {
             .catch((err) => {});
     },
     getPon({ commit }) {
-        axios
+        return axios
             .get("/board?info=pon")
             .then((res) => {
                 if (res.data.code === 1) {
                     if (isArray(res.data.data)) {
                         commit("updatePon", res.data.data);
+                        return Promise.resolve(res.data.data);
                     }
                 } else {
                     commit("updatePon", []);
                 }
+                return Promise.reject(res);
             })
             .catch((err) => {});
     },
