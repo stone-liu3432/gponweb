@@ -14,28 +14,64 @@
             </el-button>
         </div>
         <el-table :data="data" border>
-            <!-- 
-                "name":"wan0",
-                "index":0,
-                "ipmode":3,
-                "ctype":3,
-                "mtu":0,
-                "igmpproxy":0,
-                "ipproto":1,
-                "ipaddr":"192.168.5.11",
-                "ipmask":"255.255.255.0",
-                "gateway":"192.168.5.1",
-                "pppoemode":1,
-                "user":"123",
-                "password":"123",
-                "tagmode":1,
-                "vlan_id":100,
-                "requestdns":1,
-                "pridns":"8.8.8.8",
-                "secdns":"4.4.4.4",
-             -->
             <el-table-column type="expand">
-                <template slot-scope="scope"></template>
+                <template slot-scope="scope">
+                    <el-row class="ont-wan-detail">
+                        <el-col :span="8">
+                            <span>{{ $lang("ipmask") }}:</span>
+                            <span>{{ scope.row.ipmask || "-" }}</span>
+                        </el-col>
+                        <el-col :span="8">
+                            <span>{{ $lang("mtu") }}:</span>
+                            <span>{{ scope.row.mtu || "-" }}</span>
+                        </el-col>
+                        <el-col :span="8">
+                            <span>{{ $lang("ipproto") }}:</span>
+                            <span>{{ IP_PROTOS_MAP[scope.row.ipproto] }}</span>
+                        </el-col>
+                    </el-row>
+                    <el-row class="ont-wan-detail">
+                        <el-col :span="8">
+                            <span>{{ $lang("igmpproxy") }}:</span>
+                            <span>
+                                {{
+                                    NOT_CONCERNED_STATUS_MAP[
+                                        scope.row.igmpproxy
+                                    ]
+                                }}
+                            </span>
+                        </el-col>
+                        <el-col :span="8">
+                            <span>{{ $lang("pridns") }}:</span>
+                            <span>{{ scope.row.pridns || "-" }}</span>
+                        </el-col>
+                        <el-col :span="8">
+                            <span>{{ $lang("secdns") }}:</span>
+                            <span>{{ scope.row.secdns || "-" }}</span>
+                        </el-col>
+                    </el-row>
+                    <template v-if="scope.row.ipmode === 3">
+                        <el-row class="ont-wan-detail">
+                            <el-col :span="8">
+                                <span>{{ $lang("pppoemode") }}:</span>
+                                <span>
+                                    {{
+                                        PPPOE_MODE_MAP[scope.row.pppoemode] ||
+                                        "-"
+                                    }}
+                                </span>
+                            </el-col>
+                            <el-col :span="8">
+                                <span>{{ $lang("user") }}:</span>
+                                <span>{{ scope.row.user || "-" }}</span>
+                            </el-col>
+                            <el-col :span="8">
+                                <span>{{ $lang("password") }}:</span>
+                                <span>{{ scope.row.password || "-" }}</span>
+                            </el-col>
+                        </el-row>
+                    </template>
+                </template>
             </el-table-column>
             <el-table-column
                 :label="$lang('name')"
@@ -84,7 +120,10 @@
             destroy-on-close
         >
             <template slot="title">{{ $lang("add") }}</template>
-            <ont-wan-form ref="ont-wan-form"></ont-wan-form>
+            <ont-wan-form
+                ref="ont-wan-form"
+                :port-info="portInfo"
+            ></ont-wan-form>
             <template slot="footer">
                 <el-button @click="dialogVisible = false">
                     {{ $lang("cancel") }}
@@ -120,6 +159,9 @@ export default {
         identifier: {
             type: Number,
         },
+        portInfo: {
+            type: Object,
+        },
     },
     data() {
         return {
@@ -150,8 +192,7 @@ export default {
                     const post_params = {
                         method: "add",
                         param: {
-                            port_id: (this.identifier >> 8) & 0xff,
-                            onu_id: this.identifier & 0xff,
+                            identifier: this.identifier,
                             name: form.name,
                             index: form.index,
                             ipmode: form.ipmode,
@@ -222,4 +263,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ont-wan-detail {
+    margin: 12px 0;
+    span {
+        display: inline-block;
+        vertical-align: baseline;
+        &:first-child {
+            text-align: right;
+            padding: 0 12px;
+        }
+    }
+}
 </style>

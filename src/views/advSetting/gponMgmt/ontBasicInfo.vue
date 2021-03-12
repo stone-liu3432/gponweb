@@ -14,8 +14,9 @@
                     size="small"
                     style="margin-left: 30px"
                     @click="refreshData"
-                    >{{ $lang("refresh") }}</el-button
                 >
+                    {{ $lang("refresh") }}
+                </el-button>
             </template>
         </page-header>
         <el-tabs v-model="activeName" type="card" v-if="ont_id !== 0xffff">
@@ -101,16 +102,26 @@
                 <template v-if="portInfo.wan">
                     <ont-wan
                         :data="wanConnect"
+                        :port-info="portInfo"
                         :identifier="identifier"
                         @refresh-data="getData"
                     ></ont-wan>
                 </template>
                 <template v-else>
-                    <span class="wan-not-support">{{
-                        $lang("wan_not_support")
-                    }}</span>
+                    <span class="function-not-support">
+                        {{ $lang("wan_not_support") }}
+                    </span>
                 </template>
             </el-tab-pane>
+            <!-- <el-tab-pane :label="$lang('wlan')" name="wlan">
+                <template>
+                    <ont-wlan
+                        :data="wlanInfo"
+                        :identifier="identifier"
+                        @refresh-data="getData"
+                    ></ont-wlan>
+                </template>
+            </el-tab-pane> -->
         </el-tabs>
         <el-dialog :visible.sync="dialogVisible" append-to-body>
             <span slot="title">{{ $lang("config") }}</span>
@@ -144,9 +155,17 @@ import ontIpconfig from "./ontBasicInfo/ontIpconfig";
 import postData from "@/mixin/postData";
 import rebootOnt from "@/mixin/onu/rebootOnt";
 import ontWan from "./ontBasicInfo/ontWan";
+import ontWlan from "./ontBasicInfo/ontWlan";
 export default {
     name: "ontBasicInfo",
-    components: { ontBasicForm, ontAlarm, ontOptical, ontIpconfig, ontWan },
+    components: {
+        ontBasicForm,
+        ontAlarm,
+        ontOptical,
+        ontIpconfig,
+        ontWan,
+        ontWlan,
+    },
     computed: {
         ...mapGetters(["$lang"]),
         identifier() {
@@ -207,6 +226,7 @@ export default {
             alarmList: [],
             ontIpconfig: [],
             wanConnect: [],
+            wlanInfo: {},
         };
     },
     created() {
@@ -406,7 +426,7 @@ export default {
             this.wanConnect = [];
             this.$http
                 .get(
-                    `/gponont_mgmt?form=wanconfig&port_id=${port_id}&onu_id=${ont_id}`
+                    `/gponont_mgmt?form=wanconfig&port_id=${port_id}&ont_id=${ont_id}`
                 )
                 .then((res) => {
                     if (res.data.code === 1) {
@@ -450,7 +470,27 @@ export default {
                         this.getWanConnect(this.port_id, this.ont_id);
                     }
                 }
+                case "wlan": {
+                    if (this.port_id && this.ont_id !== 0xffff) {
+                        this.getWlanInfo(this.port_id, this.ont_id);
+                    }
+                }
             }
+        },
+        getWlanInfo(port_id, ont_id) {
+            this.wlanInfo = {};
+            this.$http
+                .get(
+                    `/gponont_mgmt?form=wlanconfig&port_id=${port_id}&ont_id=${ont_id}`
+                )
+                .then((res) => {
+                    if (res.data.code === 1) {
+                        if (isDef(res.data.data)) {
+                            this.wlanInfo = res.data.data;
+                        }
+                    }
+                })
+                .catch((err) => {});
         },
     },
     watch: {
@@ -462,7 +502,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.wan-not-support {
+.function-not-support {
     .base-font-style;
     margin-left: 12px;
 }

@@ -183,18 +183,35 @@ export default {
     name: "wanForm",
     computed: {
         ...mapGetters(["$lang", "validateMsg"]),
+        ONT_PORT_MAP() {
+            const res = {};
+            for (let i = 1; i <= this.portInfo.eth_uni; i++) {
+                if (ONT_PORT_MAP[i]) {
+                    res[i] = ONT_PORT_MAP[i];
+                }
+            }
+            // WLAN端口 添加在列表里
+            res[5] = "WLAN1";
+            res[9] = "WLAN2";
+            return res;
+        },
+    },
+    props: {
+        portInfo: {
+            type: Object,
+        },
     },
     data() {
         return {
             CTYPE_MAP,
             IPMODE_MAP,
-            ONT_PORT_MAP,
             NOT_CONCERNED_STATUS_MAP,
             PPPOE_MODE_MAP: ["AUTO", "CHAP", "PAP"],
             IP_PROTOS_MAP: { 1: "IPv4", 2: "IPv6", 3: "IPv4/IPv6" },
             form: {
                 name: "",
                 //  index 值为-1时，表示create，否则为set
+                //  目前无set，只有create
                 index: -1,
                 ipmode: 3,
                 ctype: 1,
