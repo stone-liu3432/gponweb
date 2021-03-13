@@ -309,7 +309,7 @@ export default {
             // gem下无mapping时，模式为vlan或tci时，允许配置untag
             if (
                 this.type === "mapping" &&
-                prop === "untag" &&
+                (prop === "untag" || prop === "transparent") &&
                 this.gemCache.mapping &&
                 !this.gemCache.mapping.length &&
                 this.form.mode !== 2
