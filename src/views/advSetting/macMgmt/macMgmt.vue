@@ -47,9 +47,15 @@
                 prop="vlan_id"
             ></el-table-column>
             <el-table-column :label="$lang('port_id')">
-                <template slot-scope="scope">{{
-                    getPortName(scope.row.port_id) || "CPU"
-                }}</template>
+                <template slot-scope="scope">
+                    {{
+                        scope.row.link_aggregation
+                            ? `LAG${scope.row.link_aggregation}`
+                            : scope.row.port_id
+                            ? getPortName(scope.row.port_id)
+                            : "CPU"
+                    }}
+                </template>
             </el-table-column>
             <el-table-column :label="$lang('mac_type')" prop="mac_type">
                 <template slot-scope="scope">{{
