@@ -127,7 +127,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { MAPPING_MODES } from "@/utils/commonData";
-import { isFunction, isArray } from "@/utils/common";
+import { isFunction, isArray, isUndef } from "@/utils/common";
 import { regRange } from "@/utils/validator";
 export default {
     name: "addForm",
@@ -310,8 +310,8 @@ export default {
             if (
                 this.type === "mapping" &&
                 (prop === "untag" || prop === "transparent") &&
-                this.gemCache.mapping &&
-                !this.gemCache.mapping.length &&
+                ((this.gemCache.mapping && !this.gemCache.mapping.length) ||
+                    isUndef(this.gemCache.mapping)) &&
                 this.form.mode !== 2
             ) {
                 return false;
