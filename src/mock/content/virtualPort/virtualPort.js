@@ -73,7 +73,7 @@ Mock.mock("/serviceport_af", "get", () => {
         port_id: Random.range(1, 16),
         ont_id: Random.range(1, 128),
         gemport: Random.range(1, 5),
-        user_vlan: Random.range(1, 4094),
+        user_vlan: Random.pick([0, Random.range(1, 4094), 0xfffe]),
     }));
     return {
         code: 1,
