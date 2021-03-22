@@ -1146,6 +1146,7 @@ var en = {
     timer: "Timer",
     "not-timer": "Not Timer",
     user_num: "User Numbers",
+    isp_oper: "ISP",
 };
 
 export default en;

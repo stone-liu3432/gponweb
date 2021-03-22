@@ -1117,6 +1117,7 @@ var zh = {
     timer: "定时器",
     "not-timer": "非定时器",
     user_num: "用户数",
+    isp_oper: "ISP",
 };
 
 export default zh;
