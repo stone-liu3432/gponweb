@@ -1118,6 +1118,12 @@ var zh = {
     "not-timer": "非定时器",
     user_num: "用户数",
     isp_oper: "ISP",
+    splitter_id: "分光器ID",
+    bind_onu: "绑定ONT",
+    add_sub_splitter: "添加下级分光器",
+    splitter_parent: "父节点",
+    onulist: "ONT列表",
+    wlan_client: "WLAN 客户端",
 };
 
 export default zh;

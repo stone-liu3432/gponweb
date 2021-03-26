@@ -1147,6 +1147,12 @@ var en = {
     "not-timer": "Not Timer",
     user_num: "User Numbers",
     isp_oper: "ISP",
+    splitter_id: "Splitter ID",
+    bind_onu: "Bind ONT",
+    add_sub_splitter: " Add sub-splitter",
+    splitter_parent: "Parent node",
+    onulist: "ONT List",
+    wlan_client: "WLAN Client",
 };
 
 export default en;
