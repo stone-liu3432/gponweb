@@ -6,13 +6,26 @@
         label-width="120px"
     >
         <el-form-item :label="$lang('type')">
-            <el-select v-model="formData.wlan_type">
+            <el-select v-model.number="formData.wlan_type">
                 <template v-for="(item, index) in WLAN_TYPE_MAP">
                     <el-option :label="item" :value="Number(index)"></el-option>
                 </template>
             </el-select>
         </el-form-item>
         <template v-if="formData.wlan_type === 1 || formData.wlan_type === 3">
+            <el-form-item
+                :label="$lang('admin_status')"
+                prop="wlan_2_4g_administrator"
+            >
+                <el-select v-model.number="formData.wlan_2_4g_administrator">
+                    <template v-for="(item, index) in SWITCH_MAP">
+                        <el-option
+                            :label="$lang(item)"
+                            :value="index"
+                        ></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
             <el-form-item
                 :label="'2.4G ' + $lang('encrypt')"
                 prop="wlan_2_4g_encrypt"
@@ -42,6 +55,19 @@
             </el-form-item>
         </template>
         <template v-if="formData.wlan_type === 2 || formData.wlan_type === 3">
+            <el-form-item
+                :label="$lang('admin_status')"
+                prop="wlan_5g_administrator"
+            >
+                <el-select v-model.number="formData.wlan_5g_administrator">
+                    <template v-for="(item, index) in SWITCH_MAP">
+                        <el-option
+                            :label="$lang(item)"
+                            :value="index"
+                        ></el-option>
+                    </template>
+                </el-select>
+            </el-form-item>
             <el-form-item
                 :label="'5G ' + $lang('encrypt')"
                 prop="wlan_5g_encrypt"
@@ -75,9 +101,9 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { ENCRYPT_MAP } from "@/utils/commonData";
+import { ENCRYPT_MAP, SWITCH_MAP } from "@/utils/commonData";
 import { regLength } from "@/utils/validator";
-import { isFunction } from "@/utils/common";
+import { isFunction, isDef } from "@/utils/common";
 export default {
     name: "wlanForm",
     computed: {
@@ -90,13 +116,16 @@ export default {
     },
     data() {
         return {
+            SWITCH_MAP,
             ENCRYPT_MAP,
             WLAN_TYPE_MAP: { 1: "2.4G", 2: "5G", 3: "All" },
             formData: {
                 wlan_type: 1,
+                wlan_2_4g_administrator: 1,
                 wlan_2_4g_encrypt: 0,
                 wlan_2_4g_ssid: "",
                 wlan_2_4g_password: "",
+                wlan_5g_administrator: 1,
                 wlan_5g_encrypt: 0,
                 wlan_5g_ssid: "",
                 wlan_5g_password: "",
@@ -118,7 +147,13 @@ export default {
         };
     },
     methods: {
-        init(data) {},
+        init(data) {
+            Object.keys(this.formData).forEach((key) => {
+                if (isDef(data[key])) {
+                    this.formData[key] = data[key];
+                }
+            });
+        },
         validSsid(rule, val, cb) {
             // 说明，ssid最大32个字符，
             const { field } = rule;
@@ -231,12 +266,18 @@ export default {
     },
     watch: {
         "formData.wlan_2_4g_encrypt"() {
+            if (this.formData.wlan_type === 2) {
+                return;
+            }
             this.$refs["wlan-form"].validateField([
                 "wlan_2_4g_password",
                 "wlan_2_4g_ssid",
             ]);
         },
         "formData.wlan_5g_encrypt"() {
+            if (this.formData.wlan_type === 1) {
+                return;
+            }
             this.$refs["wlan-form"].validateField([
                 "wlan_5g_password",
                 "wlan_5g_ssid",

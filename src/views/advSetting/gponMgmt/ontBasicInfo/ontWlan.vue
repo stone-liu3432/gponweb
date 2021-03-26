@@ -173,9 +173,13 @@ export default {
                             param: {
                                 identifier: this.identifier,
                                 wlan_type: form.wlan_type,
+                                wlan_2_4g_administrator:
+                                    form.wlan_2_4g_administrator,
                                 wlan_2_4g_encrypt: form.wlan_2_4g_encrypt,
                                 wlan_2_4g_ssid: form.wlan_2_4g_ssid,
                                 wlan_2_4g_password: form.wlan_2_4g_password,
+                                wlan_5g_administrator:
+                                    form.wlan_5g_administrator,
                                 wlan_5g_encrypt: form.wlan_5g_encrypt,
                                 wlan_5g_ssid: form.wlan_5g_ssid,
                                 wlan_5g_password: form.wlan_5g_password,
