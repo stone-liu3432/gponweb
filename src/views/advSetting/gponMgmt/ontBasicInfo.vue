@@ -224,6 +224,16 @@ export default {
                         ? this.$lang("support")
                         : this.$lang("not_support");
                 },
+                wlan(key, val) {
+                    return val > 0
+                        ? this.$lang("support")
+                        : this.$lang("not_support");
+                },
+                wlan5g(key, val) {
+                    return val > 0
+                        ? this.$lang("support")
+                        : this.$lang("not_support");
+                },
             },
             dialogVisible: false,
             activeName: "basic_info",
