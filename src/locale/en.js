@@ -1153,6 +1153,7 @@ var en = {
     splitter_parent: "Parent node",
     onulist: "ONT List",
     wlan_client: "WLAN Client",
+    wlan_not_support: "This ONT does not support configuring WLAN",
 };
 
 export default en;
