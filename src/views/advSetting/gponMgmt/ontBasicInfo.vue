@@ -113,7 +113,7 @@
                     </span>
                 </template>
             </el-tab-pane>
-            <!-- <el-tab-pane :label="$lang('wlan')" name="wlan">
+            <el-tab-pane :label="$lang('wlan')" name="wlan">
                 <template>
                     <ont-wlan
                         :data="wlanInfo"
@@ -121,7 +121,7 @@
                         @refresh-data="getData"
                     ></ont-wlan>
                 </template>
-            </el-tab-pane> -->
+            </el-tab-pane>
         </el-tabs>
         <el-dialog :visible.sync="dialogVisible" append-to-body>
             <span slot="title">{{ $lang("config") }}</span>
