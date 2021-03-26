@@ -242,9 +242,9 @@ Mock.mock(
                 macaddr: Random.mac(),
                 tx_pkts: Random.range(0, 1024000),
                 rx_pkts: Random.range(0, 1024000),
-                tx_rate: Random.rage(0, 1000),
+                tx_rate: Random.range(0, 1000),
                 rssi: Random.range(-120, 0),
-                expired_time: Range.range(0, 600),
+                expired_time: Random.range(0, 600),
             }));
         return {
             code: 1,
