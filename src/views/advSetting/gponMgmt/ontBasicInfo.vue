@@ -114,12 +114,17 @@
                 </template>
             </el-tab-pane>
             <el-tab-pane :label="$lang('wlan')" name="wlan">
-                <template>
+                <template v-if="portInfo.wlan || portInfo.wlan5g">
                     <ont-wlan
                         :data="wlanInfo"
                         :identifier="identifier"
                         @refresh-data="getData"
                     ></ont-wlan>
+                </template>
+                <template v-else>
+                    <span class="function-not-support">
+                        {{ $lang("wlan_not_support") }}
+                    </span>
                 </template>
             </el-tab-pane>
         </el-tabs>
