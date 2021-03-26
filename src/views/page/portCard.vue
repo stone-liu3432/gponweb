@@ -134,5 +134,8 @@ div.port-card-desc {
     text-align: center;
     padding: 10px 6px 0 6px;
     border-top: @border-style;
+    white-space: nowrap;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 </style>
