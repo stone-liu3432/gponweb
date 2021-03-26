@@ -65,6 +65,7 @@ const actions = {
             .catch((err) => {});
     },
     getPon({ commit }) {
+        commit("updatePon", []);
         return axios
             .get("/board?info=pon")
             .then((res) => {
@@ -73,8 +74,6 @@ const actions = {
                         commit("updatePon", res.data.data);
                         return Promise.resolve(res.data.data);
                     }
-                } else {
-                    commit("updatePon", []);
                 }
                 return Promise.reject(res);
             })
@@ -116,16 +115,18 @@ const actions = {
             })
             .catch((err) => {});
     },
-    getOnuList({ commit }, port_id) {
+    getOntList({ commit }, port_id) {
         commit("updateOnulist", []);
-        axios
-            .get("/onu_allow_list", { params: { port_id } })
+        return axios
+            .get("/gponont_mgmt?form=auth", { params: { port_id } })
             .then((res) => {
                 if (res.data.code === 1) {
                     if (isArray(res.data.data)) {
                         commit("updateOnulist", res.data.data);
+                        return Promise.resolve(res.data.data);
                     }
                 }
+                return Promise.reject(res);
             })
             .catch((err) => {});
     },
