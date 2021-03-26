@@ -81,6 +81,8 @@ Mock.mock(
                 iphost_num: Random.range(1, 4),
                 veip_num: Random.range(0, 1),
                 wan: Random.range(0, 1),
+                wlan: Random.range(0, 1),
+                wlan5g: Random.range(0, 1),
             },
         };
     }

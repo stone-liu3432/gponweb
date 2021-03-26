@@ -1125,6 +1125,7 @@ var zh = {
     onulist: "ONT列表",
     wlan_client: "WLAN 客户端",
     wlan_not_support: "当前ONT不支持配置WLAN",
+    wlan5g: "WLAN 5G",
 };
 
 export default zh;

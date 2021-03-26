@@ -1154,6 +1154,7 @@ var en = {
     onulist: "ONT List",
     wlan_client: "WLAN Client",
     wlan_not_support: "This ONT does not support configuring WLAN",
+    wlan5g: "WLAN 5G",
 };
 
 export default en;
